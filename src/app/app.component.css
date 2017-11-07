@@ -1,0 +1,8 @@
+.navbar-default .navbar-nav > li > a.active {
+    color: white;
+    background-color: #337ab7;
+}
+
+.navbar-default .navbar-brand img {
+    width: 100%;
+}

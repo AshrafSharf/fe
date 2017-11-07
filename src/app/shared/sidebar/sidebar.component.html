@@ -1,0 +1,72 @@
+<nav class="navbar navbar-default navbar-fixed-side">
+    <div class="container">
+    <div class="navbar-header">
+        <button class="navbar-toggle" data-target=".navbar-collapse" data-toggle="collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="./"><img src="assets/images/ids_logo.jpg" alt=""></a>
+    </div>
+    <div class="navbar-collapse collapse" aria-expanded="false" style="height: 1px;">
+        <ul class="nav navbar-nav">
+            <li>
+                <a 
+                    (click)="selectedMenu = 0"
+                    routerLink="projects"
+                    [class.active]="selectedMenu == 0" 
+                    href="#">Projects</a>
+            </li>
+            <li>
+                <a 
+                    (click)="selectedMenu = 1"
+                    routerLink="branches"
+                    [class.active]="selectedMenu == 1" 
+                    href="#">Branches</a>
+            </li>
+            <li>
+                <a 
+                    (click)="selectedMenu = 2"
+                    routerLink="variables"
+                    [class.active]="selectedMenu == 2" 
+                    href="#">Variables</a>
+            </li>
+            <li>
+                <a 
+                    (click)="selectedMenu = 3"
+                    routerLink="forecast_tabular"
+                    [class.active]="selectedMenu == 3" 
+                    href="#">Forecast Tabular</a>
+            </li>
+            <li>
+                <a 
+                    (click)="selectedMenu = 4"
+                    routerLink="forecast_graphical"
+                    [class.active]="selectedMenu == 4" 
+                    href="#">Forecast Graph</a>
+            </li>
+            <li>
+                <a 
+                    routerLink="data_flow"
+                    (click)="selectedMenu = 5"
+                    [class.active]="selectedMenu == 5" 
+                    href="#">Data Flow</a>
+            </li>
+            <li>
+                <a 
+                    routerLink="component_model"
+                    (click)="selectedMenu = 6"
+                    [class.active]="selectedMenu == 6" 
+                    href="#">Component Model</a>
+            </li>
+            <li>
+                <a 
+                    (click)="selectedMenu = 7"
+                    [class.active]="selectedMenu == 7" 
+                    href="#">Simulation</a>
+            </li>
+        </ul>
+    </div>
+    </div>
+</nav>

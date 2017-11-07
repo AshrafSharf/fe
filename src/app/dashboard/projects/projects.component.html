@@ -1,0 +1,60 @@
+<div class="container-fluid">
+    <div class="row">
+        <app-header title="Manage Project"></app-header>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <h4>Projects</h4>
+            <ul id="project-list" 
+                class="list-group" >
+                <li class="list-group-item" *ngFor="let project of projects">
+                    <list-item 
+                        [id]="project.id"
+                        [title]="project.title"
+                        (delete)="onDelete($event)"></list-item>
+                </li>
+                <li class="list-group-item" *ngIf="projects.length == 0">
+                    <h4>There is no project in the application</h4>
+                </li>
+            </ul>
+            
+        </div>
+
+        <div class="col-md-8">
+            <form #form="ngForm" (submit)="onSubmit(form.value)">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4>Add Project</h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label for="">Project Name</label>
+                            <input 
+                                name="title" 
+                                ngModel
+                                #title="ngModel" 
+                                type="text" 
+                                class="form-control" 
+                                placeholder="project name">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="">Description</label>
+                            <textarea 
+                                ngModel
+                                class="form-control project-description"
+                                name="description" 
+                                #description="ngModel"
+                                placeholder="project description"></textarea>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <input type="submit" class="btn btn-success" value="Save">
+                        <input type="reset" class="btn btn-danger" value="Clear">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

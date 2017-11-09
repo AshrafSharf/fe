@@ -1,0 +1,18 @@
+@import '~assets/css/bootstrap-datetimepicker.min.css';
+
+#comment {
+    resize: none;
+    height: 100px;
+}
+
+.panel-heading {
+    cursor: pointer;
+}
+
+.link {
+    cursor: pointer;    
+}
+
+.chevron {
+    margin-right: 10px;
+}

@@ -6,15 +6,17 @@
     <div class="row">
         <div class="col-md-4">
             <h4>Projects</h4>
+            <img src="assets/images/loading.gif" class="loader" *ngIf="isLoading">
             <ul id="project-list" 
                 class="list-group" >
                 <li class="list-group-item" *ngFor="let project of projects">
                     <list-item 
                         [id]="project.id"
                         [title]="project.title"
+                        (item-selected)="onProjectSelected($event)"
                         (delete)="onDelete($event)"></list-item>
                 </li>
-                <li class="list-group-item" *ngIf="projects.length == 0">
+                <li class="list-group-item" *ngIf="(projects.length == 0) && (isLoading == false)">
                     <h4>There is no project in the application</h4>
                 </li>
             </ul>
@@ -22,39 +24,35 @@
         </div>
 
         <div class="col-md-8">
-            <form #form="ngForm" (submit)="onSubmit(form.value)">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4>Add Project</h4>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4>{{selectedProject == null ? 'Add Project' : 'Update Project'}}</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="">Project Name</label>
+                        <input 
+                            name="title" 
+                            [(ngModel)]="title"
+                            type="text" 
+                            class="form-control" 
+                            placeholder="project name">
                     </div>
-                    <div class="panel-body">
-                        <div class="form-group">
-                            <label for="">Project Name</label>
-                            <input 
-                                name="title" 
-                                ngModel
-                                #title="ngModel" 
-                                type="text" 
-                                class="form-control" 
-                                placeholder="project name">
-                        </div>
 
-                        <div class="form-group">
-                            <label for="">Description</label>
-                            <textarea 
-                                ngModel
-                                class="form-control project-description"
-                                name="description" 
-                                #description="ngModel"
-                                placeholder="project description"></textarea>
-                        </div>
-                    </div>
-                    <div class="panel-footer">
-                        <input type="submit" class="btn btn-success" value="Save">
-                        <input type="reset" class="btn btn-danger" value="Clear">
+                    <div class="form-group">
+                        <label for="">Description</label>
+                        <textarea 
+                            [(ngModel)]="description"
+                            class="form-control project-description"
+                            name="description"
+                            placeholder="project description"></textarea>
                     </div>
                 </div>
-            </form>
+                <div class="panel-footer">
+                    <button class="btn btn-success" (click)="onSave()">Save</button>
+                    <button class="btn btn-danger" (click)="clearInputs()" >Cancel</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>

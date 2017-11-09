@@ -1,3 +1,6 @@
+import { ProjectService } from './services/project.service';
+import { VariableConstantComponent } from './dashboard/variables/constant/constant.variable.component';
+import { TimeSegmentComponent } from './dashboard/variables/time-segment/time.segment.component';
 import { ComponentModelComponent } from './dashboard/component-model/model.component';
 import { SimulationComponent } from './dashboard/simulation/simulation.component';
 import { ForecastGraphicalComponent } from './dashboard/forecasts/graphical/forecast.graphical.component';
@@ -22,6 +25,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AngularFontAwesomeModule } from 'angular-font-awesome/angular-font-awesome';
 
 import { AppComponent } from './app.component';
+import * as $ from 'jquery';
 
 @NgModule({
   declarations: [
@@ -36,7 +40,10 @@ import { AppComponent } from './app.component';
     ForecastTabularComponent,
     ForecastGraphicalComponent,
     SimulationComponent,
-    ComponentModelComponent
+    ComponentModelComponent,
+    TimeSegmentComponent,
+
+    VariableConstantComponent
   ],
   imports: [
     BrowserModule,
@@ -57,7 +64,9 @@ import { AppComponent } from './app.component';
       { path:'simulation', component: SimulationComponent }
     ]),
   ],
-  providers: [],
+  providers: [
+    ProjectService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

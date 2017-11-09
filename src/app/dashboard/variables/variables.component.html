@@ -4,5 +4,85 @@
     </div>
 
     <div class="row">
+        <div class="col-md-3">
+            <div class="row">
+                <div class="form-group">
+                    <label for="">Select Project</label>
+                    <select name="" class="form-control">
+                        <option value="project1">project 1</option>
+                        <option value="project2">project 2</option>
+                        <option value="project3">project 3</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <label for="">Select Branch</label>
+                    <select name="" class="form-control">
+                        <option value="branch1">Branch 1</option>
+                        <option value="branch2">Branch 2</option>
+                        <option value="branch3">Branch 3</option>
+                    </select>
+                </div>        
+            </div>
+
+            <div class="row">
+                <h4>Variables</h4>
+                <ul id="variable-list" 
+                    class="list-group" >
+                    <li class="list-group-item" *ngFor="let variable of variables">
+                        <list-item 
+                            [id]="variable.id"
+                            [title]="variable.title"
+                            (delete)="onDelete($event)"></list-item>
+                    </li>
+                    <li class="list-group-item" *ngIf="variables.length == 0">
+                        <h4>There is no variable in the branch</h4>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4>Add Variable</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="">Name</label>
+                        <input type="text" placeholder="name" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="">Owner</label>
+                        <select name="" class="form-control">
+                            <option value="owner1">Owner 1</option>
+                            <option value="owner2">Owner 2</option>
+                            <option value="owner3">Owner 3</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Type</label>
+                        <select name="" id="" class="form-control">
+                            <option value="integer">Integer</option>
+                            <option value="real">Real</option>
+                        </select>
+                    </div>
+
+                    <div class="row time-segment-button">
+                        <button class="btn btn-success pull-right" (click)="addTimeSegment()">Add Time Segment</button>
+                    </div>
+                    
+                    <div class="row">
+                        <time-segment class="col-md-4" *ngFor="let segment of timeSegments" (delete)="onDeleteSegment()"></time-segment>
+                    </div>            
+                </div>
+                <div class="panel-footer">
+                    <button class="btn btn-success">Save</button>
+                </div>
+            </div>  
+
+        </div>
     </div>
 </div>

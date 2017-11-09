@@ -1,0 +1,36 @@
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-heading" (click)="toggleCollapse()">
+            <span class="panel-title">Time Segment</span>
+            <fa name="times" (click)="onDelete()" class="link pull-right"></fa>
+            <fa [name]="isExpanded == true ? 'chevron-up' : 'chevron-down'" (click)="toggleCollapse()" class="link pull-right chevron"></fa>
+        </div>
+        <div [class.collapse]="!isExpanded" class="panel-collapse">
+            <div class="panel-body">
+                <div class="form-group">
+                    <label for="">Starting Time</label>
+                    <div class='input-group date inputText' id='startDate'>
+                        <input type="text" class = "form-control"/>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span> 
+                    </div>
+                </div>
+        
+                <div class="form-group">
+                    <label for="">Comment</label>
+                    <textarea name="" id="comment" class="form-control"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="">Input Method</label>
+                    <select id="input-method" name="" class="form-control">
+                        <option value="constant">Constant</option>
+                    </select>
+                </div>
+        
+                <variable-constant></variable-constant>
+            </div>
+        </div>
+    </div>
+</div>

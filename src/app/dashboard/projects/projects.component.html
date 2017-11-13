@@ -7,10 +7,10 @@
         <div class="col-md-4">
             <h4>Projects</h4>
             <img src="assets/images/loading.gif" class="loader" *ngIf="isLoading">
-            <ul id="project-list" 
+            <ul id="project-list"
                 class="list-group" >
                 <li class="list-group-item" *ngFor="let project of projects">
-                    <list-item 
+                    <list-item
                         [id]="project.id"
                         [title]="project.title"
                         (item-selected)="onProjectSelected($event)"
@@ -20,7 +20,7 @@
                     <h4>There is no project in the application</h4>
                 </li>
             </ul>
-            
+
         </div>
 
         <div class="col-md-8">
@@ -31,17 +31,17 @@
                 <div class="panel-body">
                     <div class="form-group">
                         <label for="">Project Name</label>
-                        <input 
-                            name="title" 
+                        <input
+                            name="title"
                             [(ngModel)]="title"
-                            type="text" 
-                            class="form-control" 
+                            type="text"
+                            class="form-control"
                             placeholder="project name">
                     </div>
 
                     <div class="form-group">
                         <label for="">Description</label>
-                        <textarea 
+                        <textarea
                             [(ngModel)]="description"
                             class="form-control project-description"
                             name="description"

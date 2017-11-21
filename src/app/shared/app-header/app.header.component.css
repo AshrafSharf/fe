@@ -1,8 +1,9 @@
-.header {
-    background-color: #f1f3f6;
-    padding: 10px;
-    padding-left: 20px;
-    display: block;
-    margin: 0 -15px 10px -15px;
+.horizontal-line {
+    width: 100%;
+    height: 1px;
+    background-color: lightgray;
 }
 
+.header {
+    margin-bottom: 30px;
+}

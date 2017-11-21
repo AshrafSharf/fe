@@ -1,57 +1,43 @@
 <div class="container-fluid">
     <div class="row">
-        <app-header title="Manage Project"></app-header>
+        <app-header [title]="selectedProject == null ? 'Add Project' : 'Update Project (' + this.title + ')'"></app-header>
     </div>
 
     <div class="row">
-        <div class="col-md-4">
-            <h4>Projects</h4>
-            <img src="assets/images/loading.gif" class="loader" *ngIf="isLoading">
-            <ul id="project-list"
-                class="list-group" >
-                <li class="list-group-item" *ngFor="let project of projects">
-                    <list-item
-                        [id]="project.id"
-                        [title]="project.title"
-                        (item-selected)="onProjectSelected($event)"
-                        (delete)="onDelete($event)"></list-item>
-                </li>
-                <li class="list-group-item" *ngIf="(projects.length == 0) && (isLoading == false)">
-                    <h4>There is no project in the application</h4>
-                </li>
-            </ul>
-
-        </div>
-
-        <div class="col-md-8">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4>{{selectedProject == null ? 'Add Project' : 'Update Project'}}</h4>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4>{{selectedProject == null ? 'Add Project' : 'Update Project (' + this.title + ')'}}</h4>
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label for="">Project Name</label>
+                    <input
+                        [(ngModel)]="title"
+                        type="text"
+                        class="form-control"
+                        placeholder="project name">
                 </div>
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label for="">Project Name</label>
-                        <input
-                            name="title"
-                            [(ngModel)]="title"
-                            type="text"
-                            class="form-control"
-                            placeholder="project name">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="">Description</label>
-                        <textarea
-                            [(ngModel)]="description"
-                            class="form-control project-description"
-                            name="description"
-                            placeholder="project description"></textarea>
-                    </div>
+                
+                <div class="form-group">
+                    <label for="">Owner</label>
+                    <select placeholder="select owner" class="form-control" [(ngModel)]="owner">
+                        <option value="5a0acb19f614371278463062">Owner 1</option>
+                        <option value="5a0acb19f614371278463062">Owner 2</option>
+                        <option value="5a0acb19f614371278463062">Owner 3</option>
+                    </select>
                 </div>
-                <div class="panel-footer">
-                    <button class="btn btn-success" (click)="onSave()">Save</button>
-                    <button class="btn btn-danger" (click)="clearInputs()" >Cancel</button>
+                
+                <div class="form-group">
+                    <label for="">Description</label>
+                    <textarea
+                        [(ngModel)]="description"
+                        class="form-control project-description"
+                        placeholder="project description"></textarea>
                 </div>
+            </div>
+            <div class="panel-footer">
+                <button class="btn btn-success" (click)="onSave()">Save</button>
+                <button class="btn btn-danger" (click)="clearInputs()" >Cancel</button>
             </div>
         </div>
     </div>

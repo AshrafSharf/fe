@@ -1,3 +1,5 @@
+import { LoginComponent } from './login/login.component';
+import { BranchService } from './services/branch.service';
 import { ProjectService } from './services/project.service';
 import { VariableConstantComponent } from './dashboard/variables/constant/constant.variable.component';
 import { TimeSegmentComponent } from './dashboard/variables/time-segment/time.segment.component';
@@ -12,6 +14,8 @@ import { ProjectsComponent } from './dashboard/projects/projects.component';
 import { DataFlowComponent } from './dashboard/data-flow/data.flow.component';
 import { BranchesComponent } from './dashboard/branches/branches.component';
 import { SidebarComponent } from './shared/sidebar/sidebar.component';
+import { NgDatepickerModule } from 'ng2-datepicker';
+import { DpDatePickerModule } from 'ng2-date-picker';
 
 import { ModalModule } from 'ngx-modialog';
 import { BootstrapModalModule } from 'ngx-modialog/plugins/bootstrap';
@@ -26,6 +30,10 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome/angular-font-awes
 
 import { AppComponent } from './app.component';
 import * as $ from 'jquery';
+
+import { TableViewComponent } from './shared/table-view/table.view.component';
+import { ProjectListComponent } from './dashboard/projects/project.list.component';
+import { BranchListComponent } from './dashboard/branches/branches-list.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +51,11 @@ import * as $ from 'jquery';
     ComponentModelComponent,
     TimeSegmentComponent,
 
-    VariableConstantComponent
+    VariableConstantComponent,
+    TableViewComponent,
+    ProjectListComponent,
+    BranchListComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -53,19 +65,25 @@ import * as $ from 'jquery';
     AngularFontAwesomeModule,
     ModalModule.forRoot(),
     BootstrapModalModule,
+    NgDatepickerModule,
+    DpDatePickerModule,
     RouterModule.forRoot([
-      { path:'projects', component: ProjectsComponent },
-      { path:'branches', component: BranchesComponent },
+      { path:'project-list', component: ProjectListComponent },
+      { path:'create-project', component: ProjectsComponent },
+      { path:'branches-list', component: BranchListComponent },
+      { path:'create-branch', component: BranchesComponent },
       { path:'variables', component: VariablesComponent },
       { path:'forecast_tabular', component: ForecastTabularComponent },
       { path:'forecast_graphical', component: ForecastGraphicalComponent },
       { path:'component_model', component: ComponentModelComponent },
       { path:'data_flow', component: DataFlowComponent },
+      { path:'login', component: LoginComponent },
       { path:'simulation', component: SimulationComponent }
     ]),
   ],
   providers: [
-    ProjectService
+    ProjectService,
+    BranchService
   ],
   bootstrap: [AppComponent]
 })

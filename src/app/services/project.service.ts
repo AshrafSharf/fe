@@ -20,10 +20,10 @@ export class ProjectService {
     }
 
     // create a new project
-    createProject(title:String, description:String) {
+    createProject(title:String, description:String, owner:String) {
         let url = Utils.createUrl(Utils.routeProject);
 
-        let body = { title: title, description: description };
+        let body = { title: title, description: description, ownerId: owner, ownerName: owner };
 
         let header = new Headers({'Content-Type':'application/json'});
         let requestOptions = new RequestOptions( {headers:header} );
@@ -31,6 +31,14 @@ export class ProjectService {
         return this.http
                 .post(url, body, requestOptions)
                 .map(result => result.json());
+    }
+
+    // get details
+    getDetails(id:String) {
+        let url = Utils.createUrl(Utils.routeProject) + "/" + id;
+        return this.http
+            .get(url)
+            .map(result => result.json());
     }
 
     // update project

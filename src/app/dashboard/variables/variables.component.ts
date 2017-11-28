@@ -1,9 +1,14 @@
+import { Router, ActivatedRoute } from '@angular/router';
+import { AppVariableService } from './../../services/variable.services';
+import { UserService } from './../../services/user.service';
 import { Project } from './../../shared/interfaces/project';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChildren } from '@angular/core';
 import { ProjectService } from '../../services/project.service';
 import { Branch } from './../../shared/interfaces/branch';
 import { BranchService } from '../../services/branch.service';
-
+import { User } from '../../shared/interfaces/user';
+import { TimeSegmentComponent } from './time-segment/time.segment.component';
+import { ModalDialogService } from '../../services/modal-dialog.service';
 
 @Component({
     selector: 'variables',
@@ -12,91 +17,41 @@ import { BranchService } from '../../services/branch.service';
 })
 
 export class VariablesComponent implements OnInit {
-    projects:Project[] = Array<Project>();
-    branches:Branch[] = Array<Branch>();
+    @ViewChildren(TimeSegmentComponent) timeSegmentWidgets:TimeSegmentComponent[];
 
-    variables =  [
-        {
-            "id": "5a01a1396d98d91f588b29f8",
-            "branchId": "5a007eaccc7a554883c7d959",
-            "title": "Uverse_Platform_Accounts",
-            "ownerId": "sm935j",
-            "type": "Integer",
-            "timeSegment": [{
-                    "startTime": "1/1/2018/00:00:00 PST",
-                    "inputMethod": "Constant",
-                    "constantValue": "5000",
-                    "distribution": "None"
-                }, 
-                {
-                    "startTime": "1/1/2018/00:00:00 PST",
-                    "inputMethod": "Table",
-                    "variableInput": [{
-                        "name": "Jan-18",
-                        "value": "5000"
-                    }, {
-                        "name": "Feb-18",
-                        "value": "6000"
-                    }, {
-                        "name": "Mar-18",
-                        "value": "7000"
-                    }]
-                }
-            ]
-        }, 
-        {
-            "id": "5a01a4cf6d98d91f588b29f9",
-            "branchId": "5a007eaccc7a554883c7d959",
-            "title": "Users_with_cDVR_service",
-            "ownerId": "sm935j",
-            "type": "Real",
-            "timeSegment": [{
-                "startTime": "1/1/2018/00:00:00 PST",
-                "inputMethod": "Constant",
-                "constantValue": "0.46",
-                "distribution": "None"
-            }]
-        }];
+    branchId = '';
+    projectId = '';
+
+    variables = [];
+    users: User[] = Array<User>();
+
+    variableName = '';
+    valueType = 'integer';
+    variableType = 'actual';
+    ownerId: String = '';
 
     timeSegments = [];
 
     constructor(
+        private route: ActivatedRoute,
+        private router: Router,
+        private variableService: AppVariableService,
+        private modal: ModalDialogService,
+        private userService: UserService,
         private projectService:ProjectService,
         private branchService:BranchService) { }
 
     ngOnInit() {
-        this.reloadProjects();
-    }
+        this.userService
+            .getOwners((users) => {
+                this.users = users;
+                this.ownerId = (this.users.length > 0) ? this.users[0].id : '';
+            })
 
-    reloadProjects() {
-        this.projectService
-            .getProjects()
-            .subscribe(result => {
-                if (result.status == "OK") {
-                    console.log(result);
-                    this.projects = result.data;
-                    this.reloadBranches();
-                }
-            });
-    }
-
-    reloadBranches(projectId:String = null) {
-        var id = projectId;
-        if ((projectId == null) && (this.projects.length > 0)) {
-            id = this.projects[0].id;
-        }
-
-        if (id != null) {
-            this.branchService
-                .getBranches(id)
-                .subscribe(result => {
-                    this.branches = result.data
-                });
-        }
-    }
-
-    selectBranch(event) {
-        this.reloadBranches(event.target.value);
+        this.route.queryParams.subscribe(params => {
+            this.projectId = params['projectId'];
+            this.branchId = params['branchId'];
+        });
     }
 
     addTimeSegment() {
@@ -105,6 +60,45 @@ export class VariablesComponent implements OnInit {
 
     onDeleteSegment() {
         this.timeSegments.pop();
+    }
+
+    onSave() {
+        if (this.variableName.length == 0) {
+            this.modal.showError('Variable name is mandatory');
+        } else if (this.variableType.length == 0) {
+            this.modal.showError('Variable type is mandatory');
+        } else if (this.ownerId.length == 0) {
+            this.modal.showError('Owner Id is mandatory');
+        } else {
+            var timeSegmentValues = Array();
+            this.timeSegmentWidgets.forEach(segment => {
+                var result = segment.getTimeSegmentValues();
+                if (result.result) {
+                    timeSegmentValues.push(result.reason);
+                }
+            });
+    
+            if (timeSegmentValues.length != this.timeSegmentWidgets.length) {
+                this.modal.showError('Incomplete time segment definition');
+            } else {
+                let body = {
+                    branchId: this.branchId,
+                    ownerId: this.ownerId,
+                    timeSegment: timeSegmentValues,
+                    title: this.variableName,
+                    variableType: this.variableType,
+                    valueType: this.valueType
+                }
+                console.log(body);
+
+                this.variableService
+                    .createVariable(body)
+                    .subscribe(response => {
+                        console.log(response);
+                        this.router.navigate(['/home/variable-list']);
+                    })
+            }
+        }
     }
 
     onDelete(event) {

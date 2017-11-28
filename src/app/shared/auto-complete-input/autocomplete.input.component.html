@@ -1,0 +1,19 @@
+<div>
+    <completed-word 
+        (deleted)="onDelete($event)" 
+        [is-operator]="word.type == 'operator'"
+        [is-const-value]="word.type == 'const'"
+        *ngFor="let word of completedWords" 
+        [title]="word.title"></completed-word>
+
+    <input 
+        #input
+        (keydown)="onKeydown($event)"
+        type="text" 
+        (keyup)="onKeyup($event)" 
+        placeholder="start here">
+    <div class="text-danger" *ngIf="isError">incorrect value</div>
+    <ul class="suggestion-list" *ngIf="suggestions.length > 0">
+        <li class="list-item" *ngFor="let s of suggestions" (click)="selectWord(s)">{{s}}</li>
+    </ul>
+</div>

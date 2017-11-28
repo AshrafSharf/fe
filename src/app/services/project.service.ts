@@ -42,10 +42,10 @@ export class ProjectService {
     }
 
     // update project
-    updateProject(id:String, title:String, description:String) {
+    updateProject(id:String, title:String, description:String, owner: String) {
         let url = Utils.createUrl(Utils.routeProject) + "/" + id;
 
-        let body = { id: id, title: title, description: description };
+        let body = { id: id, title: title, description: description, ownerId: owner };
         console.log(body);
         
         let header = new Headers({'Content-Type':'application/json'});
@@ -53,7 +53,10 @@ export class ProjectService {
 
         return this.http
                 .put(url, body, requestOptions)
-                .map(result => result.json());
+                .map(result => {
+                    console.log('result', result);
+                    result.json()
+                });
     }
 
     // delete project

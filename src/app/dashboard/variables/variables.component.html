@@ -4,43 +4,7 @@
     </div>
 
     <div class="row">
-        <div class="col-md-3">
-            <div class="row">
-                <div class="form-group">
-                    <label for="">Select Project</label>
-                    <select name="" class="form-control" (change)="selectBranch($event)">
-                        <option *ngFor="let project of projects" [value]="project.id">{{project.title}}</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="form-group">
-                    <label for="">Select Branch</label>
-                    <select name="" class="form-control">
-                        <option *ngFor="let branch of branches" [value]="branch.title">Branch 1</option>
-                    </select>
-                </div>        
-            </div>
-
-            <div class="row">
-                <h4>Variables</h4>
-                <ul id="variable-list" 
-                    class="list-group" >
-                    <li class="list-group-item" *ngFor="let variable of variables">
-                        <list-item 
-                            [id]="variable.id"
-                            [title]="variable.title"
-                            (delete)="onDelete($event)"></list-item>
-                    </li>
-                    <li class="list-group-item" *ngIf="variables.length == 0">
-                        <h4>There is no variable in the branch</h4>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="col-md-9">
+        <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4>Add Variable</h4>
@@ -48,22 +12,30 @@
                 <div class="panel-body">
                     <div class="form-group">
                         <label for="">Name</label>
-                        <input type="text" placeholder="name" class="form-control">
+                        <input type="text" [(ngModel)]="variableName" placeholder="name" class="form-control">
                     </div>
-                    <div class="form-group">
-                        <label for="">Owner</label>
-                        <select name="" class="form-control">
-                            <option value="owner1">Owner 1</option>
-                            <option value="owner2">Owner 2</option>
-                            <option value="owner3">Owner 3</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="">Type</label>
-                        <select name="" id="" class="form-control">
-                            <option value="integer">Integer</option>
-                            <option value="real">Real</option>
-                        </select>
+                    
+                    <div class="row">
+                        <div class="form-group col-md-4">
+                            <label for="">Owner</label>
+                            <select [(ngModel)]="ownerId" class="form-control">
+                                <option *ngFor="let user of users" [value]="user.id">{{user.userName}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="">Value Type</label>
+                            <select name="" id="" [(ngModel)]="valueType" class="form-control">
+                                <option value="integer">Integer</option>
+                                <option value="real">Real</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="">Variable Type</label>
+                            <select name="" id="" [(ngModel)]="variableType" class="form-control">
+                                <option value="actual">Actual</option>
+                                <option value="forecast">Forecast</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="row time-segment-button">
@@ -75,7 +47,7 @@
                     </div>            
                 </div>
                 <div class="panel-footer">
-                    <button class="btn btn-success">Save</button>
+                    <button class="btn btn-success" (click)="onSave()">Save</button>
                 </div>
             </div>  
 

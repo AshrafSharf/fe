@@ -1,3 +1,7 @@
+import { CompletedWordComponent } from './shared/auto-complete-input/completedword.component';
+import { AutocompleteInputComponent } from './shared/auto-complete-input/autocomplete.input.component';
+import { VariableListComponent } from './dashboard/variables/variable-list.component';
+import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { BranchService } from './services/branch.service';
 import { ProjectService } from './services/project.service';
@@ -27,6 +31,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AngularFontAwesomeModule } from 'angular-font-awesome/angular-font-awesome';
+import { routes } from './shared/routes';
 
 import { AppComponent } from './app.component';
 import * as $ from 'jquery';
@@ -34,6 +39,11 @@ import * as $ from 'jquery';
 import { TableViewComponent } from './shared/table-view/table.view.component';
 import { ProjectListComponent } from './dashboard/projects/project.list.component';
 import { BranchListComponent } from './dashboard/branches/branches-list.component';
+import { UserService } from './services/user.service';
+import { VariableDistributionComponent } from './dashboard/variables/distribution/distribution.variable.component';
+import { ModalDialogService } from './services/modal-dialog.service';
+import { VariableExpressionComponent } from './dashboard/variables/expression/expression.variable.component';
+import { AppVariableService } from './services/variable.services';
 
 @NgModule({
   declarations: [
@@ -45,6 +55,7 @@ import { BranchListComponent } from './dashboard/branches/branches-list.componen
     AppHeaderComponent,
     ListItemComponent,
     VariablesComponent,
+    VariableListComponent,
     ForecastTabularComponent,
     ForecastGraphicalComponent,
     SimulationComponent,
@@ -52,10 +63,17 @@ import { BranchListComponent } from './dashboard/branches/branches-list.componen
     TimeSegmentComponent,
 
     VariableConstantComponent,
+    VariableDistributionComponent,
+    VariableExpressionComponent,
+    
     TableViewComponent,
     ProjectListComponent,
     BranchListComponent,
-    LoginComponent
+    LoginComponent,
+    HomeComponent,
+
+    AutocompleteInputComponent,
+    CompletedWordComponent
   ],
   imports: [
     BrowserModule,
@@ -67,23 +85,14 @@ import { BranchListComponent } from './dashboard/branches/branches-list.componen
     BootstrapModalModule,
     NgDatepickerModule,
     DpDatePickerModule,
-    RouterModule.forRoot([
-      { path:'project-list', component: ProjectListComponent },
-      { path:'create-project', component: ProjectsComponent },
-      { path:'branches-list', component: BranchListComponent },
-      { path:'create-branch', component: BranchesComponent },
-      { path:'variables', component: VariablesComponent },
-      { path:'forecast_tabular', component: ForecastTabularComponent },
-      { path:'forecast_graphical', component: ForecastGraphicalComponent },
-      { path:'component_model', component: ComponentModelComponent },
-      { path:'data_flow', component: DataFlowComponent },
-      { path:'login', component: LoginComponent },
-      { path:'simulation', component: SimulationComponent }
-    ]),
+    RouterModule.forRoot(routes),
   ],
   providers: [
     ProjectService,
-    BranchService
+    BranchService,
+    UserService,
+    ModalDialogService,
+    AppVariableService
   ],
   bootstrap: [AppComponent]
 })

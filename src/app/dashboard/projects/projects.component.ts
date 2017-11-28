@@ -5,6 +5,8 @@ import { Component, OnInit } from '@angular/core';
 import { Overlay } from 'ngx-modialog';
 import { Modal } from 'ngx-modialog/plugins/bootstrap';
 import { ProjectService } from '../../services/project.service';
+import { User } from '../../shared/interfaces/user';
+import { UserService } from '../../services/user.service';
 
 @Component({
     selector: 'projects',
@@ -15,8 +17,8 @@ export class ProjectsComponent implements OnInit {
     
     title: String = '';
     description: String = '';
-    ownerId: String = 'owner1';
-    ownerName: String = 'owner1';
+    owner: String = '';
+    users: User[] = Array<User>();
 
     selectedProject: Project = null;
 
@@ -24,6 +26,7 @@ export class ProjectsComponent implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         private modal:Modal, 
+        private userService: UserService,
         private projectService: ProjectService) {
     }
 
@@ -40,10 +43,17 @@ export class ProjectsComponent implements OnInit {
                         this.selectedProject = result.data as Project;
                         this.title = this.selectedProject.title;
                         this.description = this.selectedProject.description;
-                        this.ownerId = this.selectedProject.ownerId;
-                        this.ownerName = this.selectedProject.ownerName;
+                        this.owner = this.selectedProject.ownerId;
                     });
             });
+
+        this.userService
+            .getOwners((users => {
+                this.users = users;
+                if (this.users.length > 0) {
+                    this.owner = this.users[0].id;
+                }
+            }));
     }
 
     // create project
@@ -53,7 +63,7 @@ export class ProjectsComponent implements OnInit {
                 .title('Warning')
                 .body('Please enter project name')
                 .open();
-        } else if (this.ownerId.length == 0) {
+        } else if (this.owner.length == 0) {
             this.modal.alert()
                 .title('Warning')
                 .body('Please select project owner')
@@ -62,16 +72,17 @@ export class ProjectsComponent implements OnInit {
             if (this.selectedProject != null) {
                 // update existing
                 this.projectService
-                    .updateProject(this.selectedProject.id, this.title, this.description)
+                    .updateProject(this.selectedProject.id, this.title, this.description, this.owner)
                     .subscribe(result => {
-                        console.log(result);
+                        console.log('result', result);
                         this.clearInputs();
                     });
             } else {
                 // create new 
                 this.projectService
-                    .createProject(this.title, this.description, this.ownerId)
+                    .createProject(this.title, this.description, this.owner)
                     .subscribe(result => {
+                        console.log('result',result);
                         this.clearInputs();
                     });
             }
@@ -82,11 +93,10 @@ export class ProjectsComponent implements OnInit {
     clearInputs() {
         this.title = '';
         this.description = '';
-        this.ownerId = '';
-        this.ownerName = '';
+        this.owner = '';
         this.selectedProject = null;
         
-        this.router.navigate(['project-list']);
+        this.router.navigate(['/home/project-list']);
     }
 
 }

@@ -21,9 +21,7 @@
                 <div class="form-group">
                     <label for="">Owner</label>
                     <select placeholder="select owner" class="form-control" [(ngModel)]="owner">
-                        <option value="5a0acb19f614371278463062">Owner 1</option>
-                        <option value="5a0acb19f614371278463062">Owner 2</option>
-                        <option value="5a0acb19f614371278463062">Owner 3</option>
+                        <option *ngFor="let user of users" [value]="user.id">{{user.userName}}</option>
                     </select>
                 </div>
                 

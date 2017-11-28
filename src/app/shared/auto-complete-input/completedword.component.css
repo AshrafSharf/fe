@@ -1,0 +1,19 @@
+.completed-word {
+    display: inline-block;
+    background-color: #0367ae;
+    color: white;
+    margin: 2px;
+    padding: 5px;
+}
+
+.operator {
+    background-color: #f58536;
+}
+
+.const-value {
+    background-color: #eb4236;
+}
+
+.close-button {
+    margin-left: 10px;
+}

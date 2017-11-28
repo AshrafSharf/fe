@@ -6,6 +6,8 @@ import { Modal } from 'ngx-modialog/plugins/bootstrap';
 import { BranchService } from '../../services/branch.service';
 import { Moment } from 'moment';
 import { Router, ActivatedRoute } from '@angular/router';
+import { User } from '../../shared/interfaces/user';
+import { UserService } from '../../services/user.service';
 
 @Component({
     selector: 'branches',
@@ -15,8 +17,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class BranchesComponent implements OnInit { 
     isLoading:Boolean = false;
 
-    ownerId: String = 'owner';
-    ownerName: String = 'owner';
+    users: User[] = Array<User>();
+    ownerId: String = '';
     selectedProjectId = '';
     selectedProjectTitle = '';
 
@@ -41,6 +43,7 @@ export class BranchesComponent implements OnInit {
     constructor(
         private route: ActivatedRoute,
         private router: Router,
+        private userService: UserService,
         private branchService:BranchService,
         private projectService:ProjectService,
         public modal:Modal) {
@@ -65,12 +68,19 @@ export class BranchesComponent implements OnInit {
                     this.title = this.selectedBranch.title;
                     this.description = this.selectedBranch.description;
                     this.ownerId = this.selectedBranch.ownerId;
-                    this.ownerName = this.selectedBranch.ownerName;
                     this.startDate = new Date('' + this.selectedBranch.startTime);
                     this.endDate = new Date('' + this.selectedBranch.endTime);
                     this.actualsDate = new Date('' + this.selectedBranch.actualsTime);
                 });
         });
+
+        this.userService
+            .getOwners((users => {
+                this.users = users;
+                if (this.users.length > 0) {
+                    this.ownerId = this.users[0].id;
+                }
+            }));
     }
 
     onChangeTimeUnit() {
@@ -96,7 +106,7 @@ export class BranchesComponent implements OnInit {
         this.datePickerMode = 'month';
         this.timeUnit = 'month';
 
-        this.router.navigate(['branches-list']);
+        this.router.navigate(['/home/branches-list']);
     }
 
     // create branch

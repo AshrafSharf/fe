@@ -39,7 +39,7 @@ export class ProjectListComponent implements OnInit {
         for (var index = 0; index < this.projects.length; index++) {
             var project = this.projects[index];
             if (project.id == id) {
-                this.router.navigate(['create-project'], { queryParams: {
+                this.router.navigate(['home/create-project'], { queryParams: {
                     id: project.id
                 }});
                 break;
@@ -48,7 +48,7 @@ export class ProjectListComponent implements OnInit {
     }
 
     addNewProject() {
-        this.router.navigate(['create-project']);
+        this.router.navigate(['home/create-project']);
     }
 
     onRowDelete(id) {

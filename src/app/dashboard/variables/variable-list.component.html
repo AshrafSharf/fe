@@ -1,0 +1,24 @@
+<div class="container-fluid">
+    <div class="row">
+        <app-header title="Branches"></app-header>
+    </div>
+
+    <div class="row">
+        <div class="form-group">
+            <select [(ngModel)]="selectedProject" (change)="selectBranch($event)" class="app-select" #projectList>
+                <option *ngFor="let project of projects" [value]="project.id"> {{project.title}} </option>
+            </select>
+            <select [(ngModel)]="selectedBranch" (change)="reloadVariables()" class="app-select" #branchList>
+                <option *ngFor="let branch of branches" [value]="branch.id"> {{branch.title}} </option>
+            </select>
+            <button class="app-button" (click)="addNewVariable()">NEW VARIABLE</button>
+        
+        </div>
+
+        <table-view 
+            (row-edited)="onRowEdit($event)"
+            (row-deleted)="onRowDelete($event)"
+            [cols]="columns" 
+            [rows]="rows"></table-view>
+    </div>
+</div>

@@ -39,9 +39,9 @@ export class TableViewComponent implements OnInit {
         this.filteredRows = new Array<TableViewRow>();
         this.originalRows.forEach(row => {
             for (var index = 0; index < row.columns.length; index++) {
-                if (row.columns[index].columnName == col.title) {
+                if (row.columns[index].columnName.toLowerCase() == col.title.toLowerCase()) {
                     // found column
-                    if (row.columns[index].value != undefined && row.columns[index].value.indexOf(event.target.value) >= 0) {
+                    if (row.columns[index].value != undefined && row.columns[index].value.toLowerCase().indexOf(event.target.value.toLowerCase()) >= 0) {
                         this.filteredRows.push(row);
                     }
                     break;

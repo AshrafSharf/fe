@@ -7,16 +7,5 @@ import { Router, NavigationStart } from '@angular/router';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'app'; 
-  selectedMenu = 'home'; // 'form', 'home'
   
-  constructor(router: Router) {
-    router.events
-        .subscribe(event => {
-          if (event instanceof NavigationStart) {
-            console.log(event);
-            this.selectedMenu = event.url.substr(1);
-          }
-        });
-  }
 }

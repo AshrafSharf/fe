@@ -1,0 +1,19 @@
+.suggestion-list {
+    border: 1px solid #333;
+    list-style: none;
+    padding: 5px;
+    margin: 5px;
+}
+
+.suggestion-list .list-item {
+    display: block;
+    cursor: pointer;
+}
+
+input, input:focus {
+    border: none;
+    border-bottom-style: solid;
+    border-bottom-color: #333;
+    border-bottom-width: 1px;
+    outline: none;
+}

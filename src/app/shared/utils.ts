@@ -6,9 +6,12 @@ export class Utils {
     static routeProject:String = "project";
     static routeBranch:String = "branch";
     static routeVariable:String = "variable";
+    static routeUser:String = "user";
+    static routeLogin:String = "login";
+
 
     // create url for route
-    static createUrl(route:String) {
+    public static createUrl(route:String) {
         return `${this.baseUrl}\\${route}`;
     }
 }

@@ -60,7 +60,7 @@ export class BranchListComponent implements OnInit {
         var projectId = this.selectedProject.nativeElement.value;
         for (var index = 0; index < this.projects.length; index++) {
             if (this.projects[index].id == projectId) {
-                this.router.navigate(['create-branch'], { queryParams: {
+                this.router.navigate(['/home/create-branch'], { queryParams: {
                     projectId: projectId,
                     title: this.projects[index].title
                 }});
@@ -102,7 +102,7 @@ export class BranchListComponent implements OnInit {
         for (var index = 0; index < this.projects.length; index++) {
             var branch = this.branches[index];
             if (branch.id == id) {
-                this.router.navigate(['create-branch'], { queryParams: {
+                this.router.navigate(['home/create-branch'], { queryParams: {
                     id: branch.id,
                     projectId: projectId
                 }});

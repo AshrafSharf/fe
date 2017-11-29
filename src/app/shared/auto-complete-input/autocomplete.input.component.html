@@ -14,6 +14,6 @@
         placeholder="start here">
     <div class="text-danger" *ngIf="isError">incorrect value</div>
     <ul class="suggestion-list" *ngIf="suggestions.length > 0">
-        <li class="list-item" *ngFor="let s of suggestions" (click)="selectWord(s)">{{s}}</li>
+        <li class="list-item" *ngFor="let s of suggestions" (click)="selectWord(s)">{{s.title}}</li>
     </ul>
 </div>

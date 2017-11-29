@@ -1,5 +1,7 @@
+import { ValidationResult } from './../interfaces/variables';
 import { SelectedWord } from './../interfaces/auto-complete-input';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { KeyValuePair, VariableComponentBehavior } from '../interfaces/variables';
 
 @Component({
     selector: 'autocomplete-input',
@@ -7,40 +9,18 @@ import { Component, OnInit, ViewChild } from '@angular/core';
     styleUrls: ['./autocomplete.input.component.css']
 })
 
-export class AutocompleteInputComponent implements OnInit {
+export class AutocompleteInputComponent implements OnInit, VariableComponentBehavior {
+    
     @ViewChild('input') input:any;
 
     mathExpressions = [
         "*", "+", "/", "%", "-", "^", "(", ")"
     ];
 
-    variables = [
-        "DTVE Accounts",
-        "Cumulative DTVN Accounts",
-        "Cumulative Front Porch Accounts",
-        "NFL Accounts",
-        "DFW Platform Accounts (AWS)",
-        "DTVN Platform Accounts (Azure)",
-        "DTVE Platform Accounts (POP)",
-        "NFL Platform Accounts (POP)",
-        "DTVE Streams (including FP)",
-        "DTVN Streams (including FP)",
-        "NFL Streams",
-        "DFW Platform Streams (AWS)",
-        "DTVN Platform Streams (Azure)",
-        "DTVE Platform Streams (POP)",
-        "NFL Platform Streams (POP)",
-        "DTVE Peak Concurrent Streams  (including FP)",
-        "DTVN Peak Concurrent Streams  (including FP)",
-        "NFL Peak Concurrent Streams",
-        "DFW Platform Peak Concurrent Streams (AWS)",
-        "DTVN Platform Peak Concurrent Streams (Azure)",
-        "DTVE Peak Concurrent Streams (POP)",
-        "NFL Platform Peak Concurrent Streams (POP)"
-    ];
+    @Input('variables') variables: KeyValuePair[] = Array<KeyValuePair>();
 
     expression: String[] = Array<String>();
-    suggestions: String[] = Array<String>();
+    suggestions: KeyValuePair[] = Array<KeyValuePair>();
 
     completedWords: SelectedWord[] = Array<SelectedWord>();
 
@@ -57,13 +37,14 @@ export class AutocompleteInputComponent implements OnInit {
     }
 
     onKeyup(event) {
-        this.suggestions = Array<String>();
+        this.suggestions = Array<KeyValuePair>();
         this.mathExpressions.forEach(element => {
             if (event.target.value.length > 0) {
                 if (element.toLowerCase().indexOf(event.target.value.toLowerCase()) !== -1) {
                     this.completedWords.push({
                         title: element,
-                        type: 'operator'
+                        type: 'operator',
+                        id: ''
                     });
                     this.input.nativeElement.value = '';
                 }
@@ -72,7 +53,7 @@ export class AutocompleteInputComponent implements OnInit {
 
         this.variables.forEach(element => {
             if (event.target.value.length > 0) {
-                if (element.toLowerCase().indexOf(event.target.value.toLowerCase()) !== -1) {
+                if (element.title.toLowerCase().indexOf(event.target.value.toLowerCase()) !== -1) {
                     this.suggestions.push(element);
                 }
             }
@@ -86,7 +67,8 @@ export class AutocompleteInputComponent implements OnInit {
                 } else {
                     this.completedWords.push({
                         title: parseInt(this.input.nativeElement.value.trim()).toString(),
-                        type: 'const'
+                        type: 'const',
+                        id: ''
                     });
                     this.clearInput();
                 }
@@ -111,9 +93,33 @@ export class AutocompleteInputComponent implements OnInit {
 
     selectWord(word) {
         this.completedWords.push({
-            title: word,
-            type: 'word'
+            title: word.title,
+            type: 'variable',
+            id: word.id
         });
         this.clearInput();
+    }
+
+    isValid(): ValidationResult {
+        var result: ValidationResult = {reason: '', result: true};
+        if (this.completedWords.length == 0) {
+            result.result = false;
+            result.reason = 'expression is empty';
+        }
+
+        return result;
+    }
+
+    getInput() {
+        var expression = "";
+        this.completedWords.forEach(word => {
+            if (word.type == 'variable') {
+                expression += `EXP_${word.id} `;
+            } else {
+                expression += `${word.title} `;
+            }
+        });
+
+        return expression;
     }
 }

@@ -31,4 +31,31 @@ export class AppVariableService {
                     return response.json()
                 });
     }
+
+    public calculateVariableValues(id) {
+        let url = Utils.createUrl(Utils.routeVariable) + "/docalc/" + id;
+        
+        return this.http
+                .get(url)
+                .map(response => {
+                    return response.json()
+                });
+    }
+
+    public getVariablesForSuggestions(branchId) {
+        let url = Utils.createUrl(Utils.routeVariable) + "/" + branchId + "/name";
+        
+        return this.http
+                .get(url)
+                .map(response => {
+                    return response.json()
+                });
+    }
+
+    public deleteVariable(id) {
+        let url = Utils.createUrl(Utils.routeVariable) + "/" + id;
+        return this.http
+                .delete(url)
+                .map(result => result.json());
+    }
 }

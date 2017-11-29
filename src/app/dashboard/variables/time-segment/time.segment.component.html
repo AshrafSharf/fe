@@ -25,13 +25,13 @@
                 <div class="form-group">
                     <label for="">Input Method</label>
                     <select id="input-method" [(ngModel)]="selectedInputMethod" class="form-control">
-                        <option value="1">Constant</option>
-                        <option value="2">Constant With Expression</option>
+                        <option value="constant">Constant</option>
+                        <option value="expression">Expression</option>
                     </select>
                 </div>
         
-                <variable-constant *ngIf="selectedInputMethod == '1'"></variable-constant>
-                <variable-expression *ngIf="selectedInputMethod == '2'"></variable-expression>
+                <variable-constant *ngIf="selectedInputMethod == 'constant'"></variable-constant>
+                <variable-expression *ngIf="selectedInputMethod == 'expression'" [branch-id]="branchId"></variable-expression>
             </div>
         </div>
     </div>

@@ -104,4 +104,8 @@ export class VariablesComponent implements OnInit {
     onDelete(event) {
 
     }
+
+    onCancel() {
+        this.router.navigate(['/home/variable-list']);        
+    }
 }

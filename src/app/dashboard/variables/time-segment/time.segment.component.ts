@@ -13,13 +13,14 @@ export class TimeSegmentComponent implements OnInit {
     @Input('segment-id') segmentId:String;
     @Output('delete') deleted = new EventEmitter();
     @Input('is-expanded') isExpanded:Boolean = false;
+    @Input('branch-id') branchId: String = '';
 
     
     @ViewChild(VariableConstantComponent) variableConstant: VariableConstantComponent;
     @ViewChild(VariableExpressionComponent) variableExpression: VariableExpressionComponent;
 
     startDate = '';
-    selectedInputMethod = '1';
+    selectedInputMethod = 'constant';
     comment = '';
     
     constructor(
@@ -46,25 +47,21 @@ export class TimeSegmentComponent implements OnInit {
         if (this.startDate == undefined) {
             result.result = false;
             result.reason = 'start date is missing';
-        } else if (this.selectedInputMethod == '1') {
+        } else if (this.selectedInputMethod == 'constant') {
             // constant
             result = this.variableConstant.isValid();
             method = this.variableConstant;
-        } else if (this.selectedInputMethod == '2') {
+        } else if (this.selectedInputMethod == 'expression') {
             // expression
-
+            result = this.variableExpression.isValid();
+            method = this.variableExpression;
         }
 
         if (result.result) {            
             var input = method.getInput();
             input['startTime'] = this.startDate;
             input['description'] = this.comment;
-
-            if (this.selectedInputMethod == '1') {
-                input['inputMethod'] = 'constant';
-            } else if (this.selectedInputMethod == '2') {
-                input['inputMethod'] = 'expression';
-            }
+            input['inputMethod'] = this.selectedInputMethod;
             
             result.reason = input;
         }

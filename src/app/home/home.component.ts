@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationStart, Router } from '@angular/router';
+import { Modal } from 'ngx-modialog/plugins/bootstrap';
 
 @Component({
     selector: 'app-home',
@@ -10,7 +11,9 @@ import { NavigationStart, Router } from '@angular/router';
 export class HomeComponent implements OnInit {
     selectedMenu = 'home';
     
-    constructor(private router: Router) {
+    constructor(
+      private modal:Modal,       
+      private router: Router) {
       router.events
           .subscribe(event => {
             if (event instanceof NavigationStart) {
@@ -24,7 +27,19 @@ export class HomeComponent implements OnInit {
 
     logout(event) {
       event.preventDefault();
-      sessionStorage.removeItem('user_auth_status');
-      this.router.navigate(['login']);
+      const dialog =
+          this.modal
+              .confirm()
+              .title('Confirmation')
+              .body('Are you sure you want logout?')
+              .okBtn('Yes').okBtnClass('btn btn-primary')
+              .cancelBtn('No')
+              .open();
+      dialog.then(promise => {
+          promise.result.then(result => {
+            sessionStorage.removeItem('user_auth_status');
+            this.router.navigate(['login']);
+          });
+      });
     }
 }

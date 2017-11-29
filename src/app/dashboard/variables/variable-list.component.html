@@ -1,6 +1,6 @@
 <div class="container-fluid">
     <div class="row">
-        <app-header title="Branches"></app-header>
+        <app-header title="Variables"></app-header>
     </div>
 
     <div class="row">
@@ -11,11 +11,13 @@
             <select [(ngModel)]="selectedBranch" (change)="reloadVariables()" class="app-select" #branchList>
                 <option *ngFor="let branch of branches" [value]="branch.id"> {{branch.title}} </option>
             </select>
+            <button class="app-button" *ngIf="variables.length > 0" (click)="calculateValues()">CALCULATE</button>
             <button class="app-button" (click)="addNewVariable()">NEW VARIABLE</button>
-        
         </div>
 
         <table-view 
+            [extra-buttons]="extraButtons"
+            [edit-required]="false"
             (row-edited)="onRowEdit($event)"
             (row-deleted)="onRowDelete($event)"
             [cols]="columns" 

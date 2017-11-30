@@ -20,3 +20,11 @@
 .column-value {
     font-size: 17px;
 }
+
+.table_output {
+    overflow: auto;
+}
+
+th {
+    min-width: 200px;
+}

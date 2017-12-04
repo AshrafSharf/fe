@@ -1,8 +1,8 @@
 <div class="table_output">
         <table class="table table-hover table-bordered table-striped col-md-12">
             <thead>
-                <tr>
-                    <th *ngFor="let col of cols" 
+                <tr *ngIf="deleteRequired || editRequired">
+                    <th *ngFor="let col of cols"
                         class="header-column"
                         [class]="col.colWidth" >
                         
@@ -12,7 +12,13 @@
                             class="input-search"
                             [placeholder]="col.placeHolder">
                     </th>
-                    <th *ngIf="deleteRequired || editRequired"></th>
+                    <th></th>
+                </tr>
+
+                <tr *ngIf="!deleteRequired && !editRequired">
+                    <th *ngFor="let col of cols"
+                        class="header-column"
+                        [class]="col.colWidth" type="text">{{col.placeHolder}}</th>
                 </tr>
             </thead>
             <tbody>

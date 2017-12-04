@@ -70,7 +70,7 @@ export class BranchesComponent implements OnInit {
                     this.ownerId = this.selectedBranch.ownerId;
                     this.startDate = new Date('' + this.selectedBranch.startTime);
                     this.endDate = new Date('' + this.selectedBranch.endTime);
-                    this.actualsDate = new Date('' + this.selectedBranch.actualsTime);
+                    this.actualsDate = new Date('' + this.selectedBranch.actuals);
                 });
         });
 
@@ -142,6 +142,4 @@ export class BranchesComponent implements OnInit {
             }
         }
     }
-
-
 }

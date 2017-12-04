@@ -7,7 +7,7 @@ export interface Branch {
     ownerId: String;
     ownerName: String;
     timeUnit: String;
+    actuals: String;
     startTime: String;
     endTime: String;
-    actualsTime: String;
 }

@@ -22,9 +22,7 @@
 }
 
 .table_output {
-    overflow: scroll;
-    display: block;
-    height: 650px;
+    overflow: auto;
 }
 
 th {

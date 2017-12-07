@@ -13,7 +13,7 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                             </button>
-                            <a class="navbar-brand" href="./"><img class="hidden-xs" src="assets/images/att-logo.png" alt=""></a>
+                            <a class="navbar-brand" href="./"><img class="hidden-xs" src="assets/images/ids_logo.jpg" alt=""></a>
                             <div>
                                 <a href="#" class="pull-right logout-button" (click)="logout($event)">Logout</a>
                             </div>
@@ -25,56 +25,56 @@
                                         (click)="selectedMenu = 'projects'"
                                         routerLink="project-list"
                                         [class.active]="selectedMenu == 'projects'"
-                                        href="#">HOME</a>
+                                        href="#">Projects</a>
                                 </li>
                                 <li>
                                     <a
                                         (click)="selectedMenu = 'branches'"
                                         routerLink="branches-list"
                                         [class.active]="selectedMenu == 'branches'"
-                                        href="#">GETTING STARTED</a>
+                                        href="#">Branches</a>
                                 </li>
                                 <li>
                                     <a
                                         (click)="selectedMenu = 'variables'"
                                         routerLink="variable-list"
                                         [class.active]="selectedMenu == 'variables'"
-                                        href="#">VARIABLES</a>
+                                        href="#">Variables</a>
                                 </li>
                                 <li>
                                     <a
                                         (click)="selectedMenu = 'forecast_tabular'"
                                         routerLink="forecast_tabular"
                                         [class.active]="selectedMenu == 'forecast_tabular'"
-                                        href="#">FORECAST TABULAR</a>
+                                        href="#">Forecast Tabular</a>
                                 </li>
                                 <li>
                                     <a
                                         (click)="selectedMenu = 'forecase_graphical'"
                                         routerLink="forecast_graphical"
                                         [class.active]="selectedMenu == 'forecase_graphical'"
-                                        href="#">FORECAST GRAPHICAL</a>
+                                        href="#">Forecast Graphical</a>
                                 </li>
                                 <li>
                                     <a
                                         routerLink="data_flow"
                                         (click)="selectedMenu = 'data_flow'"
                                         [class.active]="selectedMenu == 'data_flow'"
-                                        href="#">DATA FLOW</a>
+                                        href="#">Data Flow</a>
                                 </li>
                                 <li>
                                     <a
                                         routerLink="component_model"
                                         (click)="selectedMenu = 'component_model'"
                                         [class.active]="selectedMenu == 'component_model'"
-                                        href="#">COMPONENT MODEL</a>
+                                        href="#">Component Model</a>
                                 </li>
                                 <li>
                                     <a
                                         routerLink="simulation"
                                         (click)="selectedMenu = 'simulation'"
                                         [class.active]="selectedMenu == 'simulation'"
-                                        href="#">SIMULATION</a>
+                                        href="#">Simulation</a>
                                 </li>
                             </ul>
                         </div>

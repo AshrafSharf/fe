@@ -273,7 +273,7 @@ export class ForecastTabularComponent implements OnInit {
                     if (variableTimeSegments[timeSegIndex][index].timeSegmentResponse != null){
                         for (var index1 = 0; index1 < 18; index1++) {
                             if (variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data[index1] == null) {
-                                row.addColumn(new TableViewColumn("Column " + index1, "null data"));
+                                row.addColumn(new TableViewColumn("Column " + index1, "Null data"));
                             }
                             else {
                                 row.addColumn(new TableViewColumn("Column " + index1, variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data[index1].value));
@@ -291,7 +291,7 @@ export class ForecastTabularComponent implements OnInit {
                                 column = 0;
                                 for (var index2 = 0; index2 < 18; index2++) {
                                     if (variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data[index2] == null) {
-                                        row.addColumn(new TableViewColumn("Column " + column, "null data"));
+                                        row.addColumn(new TableViewColumn("Column " + column, "Null data"));
                                     }
                                     else {
                                         row.addColumn(new TableViewColumn("Column " + column, variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[index1+1].data[index2].value));
@@ -319,7 +319,7 @@ export class ForecastTabularComponent implements OnInit {
                         var column = 6;
                         for (var index1 = 0; index1 < 12; index1++) {
                             if (variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data[index1] == null) {
-                                row.addColumn(new TableViewColumn("Column " + column, "null data"));
+                                row.addColumn(new TableViewColumn("Column " + column, "Null data"));
                             }
                             else {
                                 row.addColumn(new TableViewColumn("Column " + column, variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data[index1].value));
@@ -341,7 +341,7 @@ export class ForecastTabularComponent implements OnInit {
                                 column = 6;
                                 for (var index2 = 0; index2 < 12; index2++) {
                                     if (variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data[index2] == null) {
-                                        row.addColumn(new TableViewColumn("Column " + column, "null data"));
+                                        row.addColumn(new TableViewColumn("Column " + column, "Null data"));
                                     }
                                     else {
                                         row.addColumn(new TableViewColumn("Column " + column, variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[index1+1].data[index2].value));

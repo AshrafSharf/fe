@@ -35,5 +35,5 @@ export interface TimeSegment {
     mean: String;
     stdDeviation: String;
     userSelectedParametricsStdDeviation: String;
-    timeSegmentResponse: { resultMap: {}[] };
+    timeSegmentResponse: { resultMap: { title:String, data: {title:String, value: Number}[] }[] };
 }

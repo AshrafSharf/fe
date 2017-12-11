@@ -2,7 +2,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AppVariableService } from './../../services/variable.services';
 import { UserService } from './../../services/user.service';
 import { Project } from './../../shared/interfaces/project';
-import { Component, OnInit, ViewChildren } from '@angular/core';
+import { Component, OnInit, ViewChildren, ElementRef, NgZone, ViewChild } from '@angular/core';
 import { ProjectService } from '../../services/project.service';
 import { Branch } from './../../shared/interfaces/branch';
 import { BranchService } from '../../services/branch.service';
@@ -11,6 +11,19 @@ import { TimeSegmentComponent } from './time-segment/time.segment.component';
 import { ModalDialogService } from '../../services/modal-dialog.service';
 import { Variable, TimeSegment } from '../../shared/interfaces/variables';
 
+import {
+    D3Service,
+    D3,
+    Axis,
+    BrushBehavior,
+    BrushSelection,
+    D3BrushEvent,
+    ScaleLinear,
+    ScaleOrdinal,
+    Selection,
+    Transition
+  } from 'd3-ng2-service';
+  
 @Component({
     selector: 'variables',
     templateUrl: './variables.component.html',
@@ -27,6 +40,9 @@ export class VariablesComponent implements OnInit {
     branchId = '';
     projectId = '';
 
+    @ViewChild('graph') svg;
+    @ViewChild('linegraph') graph;
+
     selectedProject: String = '';
     selectedBranch: String = '';
     selectedVariable: Variable = null
@@ -38,7 +54,33 @@ export class VariablesComponent implements OnInit {
     variableType = 'actual';
     ownerId: String = '';
 
+    private d3: D3;
+    private parentNativeElement: any;
+    private d3Svg: Selection<SVGSVGElement, any, null, undefined>;  
+
     timeSegments: TimeSegment[] = Array<TimeSegment>();
+
+    myDataSets = null;
+    
+    formatXAxisValue(colIndex: number) {
+        if (this.selectedVariable || this.selectedVariable == undefined) {
+            return '';
+        }
+
+        if (this.selectedVariable.timeSegment.length > 0) {
+            var element = this.selectedVariable.timeSegment[0];
+            if (element.timeSegmentResponse != null || element.timeSegmentResponse != undefined) {
+                if (element.timeSegmentResponse.resultMap.length > 0) {
+                    var value = element.timeSegmentResponse.resultMap[0];
+
+                    if (value.data.length > 0) {
+                        console.log(value.data);
+                        return value.data[colIndex].title;
+                    }
+                }
+            } 
+        }
+    }
 
     constructor(
         private route: ActivatedRoute,
@@ -47,7 +89,14 @@ export class VariablesComponent implements OnInit {
         private modal: ModalDialogService,
         private userService: UserService,
         private projectService:ProjectService,
-        private branchService:BranchService) { }
+        private branchService:BranchService,
+        element: ElementRef, 
+        private ngZone: NgZone, 
+        d3Service: D3Service) {
+
+        this.d3 = d3Service.getD3();
+        this.parentNativeElement = element.nativeElement;
+    }
 
     ngOnInit() {
         this.userService
@@ -70,6 +119,7 @@ export class VariablesComponent implements OnInit {
                         var variable = variables[index];
                         if (variable.id == varId) {
                             this.selectVariable(variable);
+                            this.createLineChartData();
                             break;
                         }
                     }
@@ -77,6 +127,133 @@ export class VariablesComponent implements OnInit {
         });
 
         //this.reloadProjects();
+
+        // if (this.selectedVariable != null) {
+        //     this.renderGraph();
+        // }
+    }
+
+    createLineChartData() {
+        
+        var values = [];
+        
+        // this.selectedVariable.timeSegment.forEach(element => {
+
+        // });
+
+        if (this.selectedVariable.timeSegment.length > 0) {
+            var element = this.selectedVariable.timeSegment[0];
+            if (element.timeSegmentResponse != null || element.timeSegmentResponse != undefined) {
+                // element.timeSegmentResponse.resultMap.forEach(value => {
+                    if (element.timeSegmentResponse.resultMap.length > 0) {
+                        var value = element.timeSegmentResponse.resultMap[0];
+
+                        if (value.data.length > 0) {
+                            var index = 0;
+                            value.data.forEach(tmpValue => {
+                                values.push({x: index, y: tmpValue.value})
+                                index += 1; 
+                            });
+                        }
+    
+                        console.log("====values====");
+                        console.log(values);
+                        
+                        this.myDataSets = [{
+                            name: 'Forecast Values',
+                            points: values
+                        }];
+                    }
+                    
+                // });
+            } 
+        }
+
+    }
+
+    renderGraph() {
+        let self = this;
+        let d3 = this.d3;
+        let d3ParentElement: any;
+        let svg: any;
+        let name: string;
+        let yVal: number;
+        let colors: any = [];
+        let data: {name: string, yVal: number}[] = [];
+        let padding: number = 25;
+        let width: number = 500;
+        let height: number = 150;
+        let xScale: any;
+        let yScale: any;
+        let xColor: any;
+        let xAxis: any;
+        let yAxis: any;
+
+        if (this.parentNativeElement !== null) {
+            // svg = d3.select(this.parentNativeElement)
+            //     .append('svg')        // create an <svg> element
+            //     .attr('width', width) // set its dimensions
+            //     .attr('height', height);
+
+            svg = d3.select('#graph');
+
+            colors = ['red', 'yellow', 'green', 'blue'];
+            
+            data = [
+                {name : 'A', yVal : 1},
+                {name : 'B', yVal : 4},
+                {name : 'C', yVal : 2},
+                {name : 'D', yVal : 3}
+            ];
+    
+            xScale = d3.scaleBand()
+                .domain(data.map(function(d){ return d.name; }))
+                .range([0, 200]);
+    
+            yScale = d3.scaleLinear()
+                .domain([0,d3.max(data, function(d) {return d.yVal})])
+                .range([100, 0]);
+    
+            xAxis = d3.axisBottom(xScale) // d3.js v.4
+                .ticks(5)
+                .scale(xScale);
+    
+            yAxis = d3.axisLeft(xScale) // d3.js v.4
+                .scale(yScale)
+                .ticks(7);
+    
+            svg.append("g")
+                .attr("class", "axis")
+                .attr("transform", "translate(" + (padding) + "," + padding + ")")
+                .call(yAxis);
+
+            svg.append('g')            // create a <g> element
+                .attr('class', 'axis')   // specify classes
+                .attr("transform", "translate(" + padding + "," + (height - padding) + ")")
+                .call(xAxis);            // let the axis do its thing
+
+            // var rects = svg.selectAll('rect')
+            //     .data(data);
+            //     rects.size();
+    
+            // var newRects = rects.enter();
+    
+            // newRects.append('rect')
+            //     .attr('x', function(d,i) {
+            //         return xScale(d.name );
+            //     })
+            //     .attr('y', function(d) {
+            //         return yScale(d.yVal);
+            //     })
+            //     .attr("transform","translate(" + (padding -5  + 25) + "," + (padding - 5) + ")")
+            //     .attr('height', function(d) {
+            //         return height - yScale(d.yVal) - (2*padding) + 5})
+            //     .attr('width', 10)
+            //     .attr('fill', function(d, i) {
+            //         return colors[i];
+            //     });
+        }      
+
     }
 
     addTimeSegment() {
@@ -101,9 +278,7 @@ export class VariablesComponent implements OnInit {
         this.reloadBranches(event.target.value);
     }
 
-    selectVariable(variable:Variable) {
-        console.log(variable);
-        
+    selectVariable(variable:Variable) {        
         this.selectedVariable = variable;
         this.variableName = variable.title.toString();
         this.ownerId = variable.ownerId;
@@ -163,7 +338,6 @@ export class VariablesComponent implements OnInit {
         this.variableService
             .getVariables(this.selectedBranch)
             .subscribe(response => {
-                console.log(response);
                 this.variables = response.data as Array<Variable>;
             })
     }
@@ -200,13 +374,11 @@ export class VariablesComponent implements OnInit {
                     variableType: this.variableType,
                     valueType: this.valueType
                 }
-                console.log(body);
 
                 if (this.selectedVariable == null) {
                     this.variableService
                     .createVariable(body)
                     .subscribe(response => {
-                        console.log(response);
                         this.selectedVariable = null;
                         this.onCancel();
                         //this.router.navigate(['/home/variable-list']);

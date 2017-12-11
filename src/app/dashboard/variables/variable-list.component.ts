@@ -29,14 +29,14 @@ export class VariableListComponent implements OnInit {
     selectedBranch: String = '';
 
     extraButtons = [
-        {
-            icon: 'th',
-            handler: (id) => { this.showValues(id) }
-        },
-        {
-            icon: 'info',
-            handler: (id) => { this.showInfo(id) }
-        }
+        // {
+        //     icon: 'th',
+        //     handler: (id) => { this.showValues(id) }
+        // },
+        // {
+        //     icon: 'info',
+        //     handler: (id) => { this.showInfo(id) }
+        // }
     ];
 
     constructor(
@@ -146,57 +146,57 @@ export class VariableListComponent implements OnInit {
         }
     }
 
-    showValues(id) {
-        var variable:Variable = null;
-        for (var index = 0; index < this.variables.length; index++) {
-            if (this.variables[index].id == id) {
-                variable = this.variables[index];
-                break;
-            }
-        }
+    // showValues(id) {
+    //     var variable:Variable = null;
+    //     for (var index = 0; index < this.variables.length; index++) {
+    //         if (this.variables[index].id == id) {
+    //             variable = this.variables[index];
+    //             break;
+    //         }
+    //     }
 
-        if (variable != null) {
-            var table = '';
-            for (index = 0; index < variable.timeSegment.length; index++) {
-                table += `<h4>Time Segment - ${index + 1}</h4>`;
-                var resultMap = variable.timeSegment[index].timeSegmentResponse.resultMap;
-                resultMap.forEach(obj => {
-                    if (obj['title'] != '0') {
-                        table += `<h5 class="text-danger text-center" style="margin-top: 10px;">${obj['title']}</h5>`;
-                    }
+    //     if (variable != null) {
+    //         var table = '';
+    //         for (index = 0; index < variable.timeSegment.length; index++) {
+    //             table += `<h4>Time Segment - ${index + 1}</h4>`;
+    //             var resultMap = variable.timeSegment[index].timeSegmentResponse.resultMap;
+    //             resultMap.forEach(obj => {
+    //                 if (obj['title'] != '0') {
+    //                     table += `<h5 class="text-danger text-center" style="margin-top: 10px;">${obj['title']}</h5>`;
+    //                 }
 
-                    var header = '<tr>'; 
-                    var body = '<tr>';
+    //                 var header = '<tr>'; 
+    //                 var body = '<tr>';
 
-                    var data = obj['data'] as Array<{title:String, value:String}>;
-                    data.forEach(element => {
-                        header += `<th>${element['title']}</th>`;
-                        body += `<td>${element['value']}</td>`;
-                    });
+    //                 var data = obj['data'] as Array<{title:String, value:String}>;
+    //                 data.forEach(element => {
+    //                     header += `<th>${element['title']}</th>`;
+    //                     body += `<td>${element['value']}</td>`;
+    //                 });
 
-                    header += '</tr>';
-                    body += '</tr>';
+    //                 header += '</tr>';
+    //                 body += '</tr>';
 
-                    table += '<table class="table table-striped table-bordered">';
-                    table += '<thead>';
-                    table += header;
-                    table += '</thead>';
+    //                 table += '<table class="table table-striped table-bordered">';
+    //                 table += '<thead>';
+    //                 table += header;
+    //                 table += '</thead>';
 
-                    table += '<tbody>';
-                    table += body;
-                    table += '</tbody>';
-                    table += '</table>';
-                });
-            }
+    //                 table += '<tbody>';
+    //                 table += body;
+    //                 table += '</tbody>';
+    //                 table += '</table>';
+    //             });
+    //         }
 
-            this.modalDialog
-                .alert()
-                .size('lg')
-                .title(variable.title.toString())
-                .body(table)
-                .open();
-        }
-    }
+    //         this.modalDialog
+    //             .alert()
+    //             .size('lg')
+    //             .title(variable.title.toString())
+    //             .body(table)
+    //             .open();
+    //     }
+    // }
 
     /*
     showValues(id) {

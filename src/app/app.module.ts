@@ -44,6 +44,10 @@ import { VariableDistributionComponent } from './dashboard/variables/distributio
 import { ModalDialogService } from './services/modal-dialog.service';
 import { VariableExpressionComponent } from './dashboard/variables/expression/expression.variable.component';
 import { AppVariableService } from './services/variable.services';
+import { D3Service } from 'd3-ng2-service';
+import { NgxLineChartModule } from 'ngx-line-chart';
+
+
 
 @NgModule({
   declarations: [
@@ -76,6 +80,7 @@ import { AppVariableService } from './services/variable.services';
     CompletedWordComponent
   ],
   imports: [
+    NgxLineChartModule,
     BrowserModule,
     HttpModule,
     FormsModule,
@@ -92,7 +97,8 @@ import { AppVariableService } from './services/variable.services';
     BranchService,
     UserService,
     ModalDialogService,
-    AppVariableService
+    AppVariableService,
+    D3Service
   ],
   bootstrap: [AppComponent]
 })

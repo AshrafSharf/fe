@@ -16,7 +16,7 @@ export class TableViewComponent implements OnInit {
     @Output('row-edited') rowEdited = new EventEmitter();
     @Output('row-deleted') rowDeleted = new EventEmitter();
 
-    @Input('extra-buttons') extraButtons = []
+	@Input('extra-buttons') extraButtons = []
     
     // for filtering
     originalRows:TableViewRow[];

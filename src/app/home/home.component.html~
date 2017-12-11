@@ -25,14 +25,14 @@
                                         (click)="selectedMenu = 'projects'"
                                         routerLink="project-list"
                                         [class.active]="selectedMenu == 'projects'"
-                                        href="#">PROJECTS</a>
+                                        href="#">HOME</a>
                                 </li>
                                 <li>
                                     <a
                                         (click)="selectedMenu = 'branches'"
                                         routerLink="branches-list"
                                         [class.active]="selectedMenu == 'branches'"
-                                        href="#">BRANCHES</a>
+                                        href="#">GETTING STARTED</a>
                                 </li>
                                 <li>
                                     <a

@@ -143,6 +143,4 @@ export class BranchesComponent implements OnInit {
             }
         }
     }
-
-
 }

@@ -20,3 +20,13 @@
 .column-value {
     font-size: 17px;
 }
+
+.table_output {
+    overflow: scroll;
+    display: block;
+    height: 650px;
+}
+
+th {
+    min-width: 100px;
+}

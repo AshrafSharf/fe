@@ -1,4 +1,4 @@
-import { ValidationResult } from './../../../shared/interfaces/variables';
+import { ValidationResult, TimeSegment } from './../../../shared/interfaces/variables';
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
@@ -13,10 +13,29 @@ export class VariableDistributionComponent implements OnInit {
     @Input('mean') mean: String;
     @Input('deviation') deviation: String;
     @Input('sigma') sigma: String;
+    @Input('time-segment') timeSegment: TimeSegment;
 
     constructor() { }
 
-    ngOnInit() { }
+    ngOnInit() {
+        if (this.timeSegment != null || this.timeSegment != undefined) {
+            this.setDistributionType(this.timeSegment.distributionType);
+            if (this.timeSegment.mean != undefined) { this.mean = this.timeSegment.mean; }
+            if (this.timeSegment.stdDeviation != undefined) { this.deviation = this.timeSegment.stdDeviation; } 
+            if (this.timeSegment.userSelectedParametricsStdDeviation != undefined) { this.sigma = this.timeSegment.userSelectedParametricsStdDeviation.toString(); }
+            if (this.timeSegment.userSelectedParametrics != undefined) { this.parametric = this.timeSegment.userSelectedParametrics; }
+        }
+    }
+
+    setDistributionType(type:String) {
+        if (type == "none") {
+            this.distribution = 1;
+        } else if (type == "percentage") {
+            this.distribution = 2;
+        } else if (type == "gaussian") {
+            this.distribution = 3;
+        }
+    }
 
     public isValid(): ValidationResult {
         var result: ValidationResult = { result: true, reason: '' };

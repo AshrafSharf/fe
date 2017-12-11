@@ -1,4 +1,4 @@
-import { VariableComponentBehavior } from './../../../shared/interfaces/variables';
+import { VariableComponentBehavior, TimeSegment } from './../../../shared/interfaces/variables';
 import { VariableDistributionComponent } from './../distribution/distribution.variable.component';
 import { Component, OnInit, Input ,ViewChild } from '@angular/core';
 import { ValidationResult } from '../../../shared/interfaces/variables';
@@ -13,11 +13,17 @@ export class VariableConstantComponent implements OnInit, VariableComponentBehav
     
     @Input('const-value') constValue: String = '';
     @Input('growth') growth: String = '';
+    @Input('time-segment') timeSegment: TimeSegment;
     @ViewChild(VariableDistributionComponent) distributionComponent:VariableDistributionComponent;
     
     constructor() { }
 
-    ngOnInit() { }
+    ngOnInit() { 
+        if (this.timeSegment != null || this.timeSegment != undefined) {
+            this.constValue = '' + this.timeSegment.constantValue;
+            this.growth = '' + this.timeSegment.growth;
+        }
+    }
 
     public isValid(): ValidationResult {
         var result: ValidationResult = { result: true, reason: '' };

@@ -19,13 +19,13 @@ export class BranchesComponent implements OnInit {
 
     users: User[] = Array<User>();
     ownerId: String = '';
-    selectedProjectId = '';
-    selectedProjectTitle = '';
+    selectedProjectId: String = '';
+    selectedProjectTitle: String = '';
 
     // time, hour, month
-    startDate: Date;
-    endDate: Date;
-    actualsDate: Date;
+    startDate: String;
+    endDate: String;
+    actualsDate: String;
     
     // week
     startWeek: String = '';
@@ -48,12 +48,10 @@ export class BranchesComponent implements OnInit {
         private projectService:ProjectService,
         public modal:Modal) {
 
-        this.startDate = new Date();
-        this.endDate = new Date();
-        this.actualsDate = new Date();
     }
     
     ngOnInit() {
+        // get the project and branch Id from route params
         this.route.queryParams.subscribe(params => {
             this.selectedProjectId = params['projectId'];
             this.selectedProjectTitle = params['title'];
@@ -68,12 +66,13 @@ export class BranchesComponent implements OnInit {
                     this.title = this.selectedBranch.title;
                     this.description = this.selectedBranch.description;
                     this.ownerId = this.selectedBranch.ownerId;
-                    this.startDate = new Date('' + this.selectedBranch.startTime);
-                    this.endDate = new Date('' + this.selectedBranch.endTime);
-                    this.actualsDate = new Date('' + this.selectedBranch.actualsTime);
+                    this.startDate = this.selectedBranch.startTime;
+                    this.endDate = this.selectedBranch.endTime;
+                    this.actualsDate = this.selectedBranch.actuals;
                 });
         });
 
+        // get all the users
         this.userService
             .getOwners((users => {
                 this.users = users;
@@ -83,6 +82,7 @@ export class BranchesComponent implements OnInit {
             }));
     }
 
+    // change time unit
     onChangeTimeUnit() {
         if (this.timeUnit == 'Month') {
             this.datePickerMode = 'month';
@@ -97,9 +97,9 @@ export class BranchesComponent implements OnInit {
         this.description = "";
         this.selectedBranch = null;
 
-        this.startDate = new Date();
-        this.endDate = new Date();
-        this.actualsDate = new Date();
+        this.startDate = '';
+        this.endDate = '';
+        this.actualsDate = '';
         this.startWeek = '';
         this.endWeek = '';
         this.actualsWeek = '';
@@ -117,6 +117,11 @@ export class BranchesComponent implements OnInit {
                 .body('Please enter branch name')
                 .open();
         } else {
+            var start = this.startDate;
+            var end = this.endDate;
+            var actuals = this.actualsDate;
+
+
             if (this.selectedBranch != null) {
                 // update existing
                 this.branchService
@@ -127,10 +132,6 @@ export class BranchesComponent implements OnInit {
                         this.clearInputs();
                     });
             } else {
-
-                var start = new Date(this.startDate).toDateString();
-                var end = new Date(this.endDate).toDateString();
-                var actuals = new Date(this.actualsDate).toDateString();
 
                 // create new 
                 this.branchService

@@ -1,4 +1,4 @@
-import { ValidationResult, VariableComponentBehavior } from './../../../shared/interfaces/variables';
+import { ValidationResult, VariableComponentBehavior, TimeSegment } from './../../../shared/interfaces/variables';
 import { VariableExpressionComponent } from './../expression/expression.variable.component';
 import { VariableConstantComponent } from './../constant/constant.variable.component';
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
@@ -14,12 +14,13 @@ export class TimeSegmentComponent implements OnInit {
     @Output('delete') deleted = new EventEmitter();
     @Input('is-expanded') isExpanded:Boolean = false;
     @Input('branch-id') branchId: String = '';
+    @Input('time-segment') timeSegment: TimeSegment = null;
 
     
     @ViewChild(VariableConstantComponent) variableConstant: VariableConstantComponent;
     @ViewChild(VariableExpressionComponent) variableExpression: VariableExpressionComponent;
 
-    startDate = '';
+    startDate:Date;
     selectedInputMethod = 'constant';
     comment = '';
     
@@ -36,7 +37,12 @@ export class TimeSegmentComponent implements OnInit {
     }
 
     ngOnInit() {
-
+        if (this.timeSegment != null) {
+            console.log(this.timeSegment);
+            if (this.timeSegment.startTime != null) { this.startDate = new Date(this.timeSegment.startTime.toString()); } 
+            if (this.timeSegment.inputMethod != null) { this.selectedInputMethod = this.timeSegment.inputMethod.toString(); }
+            if (this.timeSegment.description != null) { this.comment = this.timeSegment.description.toString(); }
+        }
     }
 
     getTimeSegmentValues(): ValidationResult {

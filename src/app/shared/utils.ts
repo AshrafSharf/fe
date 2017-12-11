@@ -1,3 +1,5 @@
+import { RequestOptions, Headers } from "@angular/http";
+
 
 export class Utils {
 
@@ -13,5 +15,19 @@ export class Utils {
     // create url for route
     public static createUrl(route:String) {
         return `${this.baseUrl}\\${route}`;
+    }
+
+    // get the token
+    public static getToken() {
+        return "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBbWl0IiwiZXhwIjoxNTEzNTk3OTYwfQ.OQW69mQA1gMxS41Aott2XnHeuglV-6Z9bja0yKamidl7nB1iQq-t9FOZpS65taP6TiMzKVjt658AkBD0wpDESA";
+    }
+
+    public static getRequestOptions() : RequestOptions {
+        let header = new Headers({
+            'Content-Type':'application/json', 
+            'Authorization': Utils.getToken()
+        });
+        
+        return new RequestOptions( {headers:header} );
     }
 }

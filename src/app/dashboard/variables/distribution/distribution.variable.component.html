@@ -9,7 +9,7 @@
 <div class="form-group" *ngIf="distribution == 2">
     <label for="">User Selected Parameteric</label>
     <div class="input-group">
-        <div class="input-group-addon">+/- %</div>
+        <div class="input-group-addon">Sigma</div>
         <input type="text" class="form-control" [(ngModel)]="parametric">
     </div>
     <span class="help-block">Use comma separated values</span>
@@ -25,7 +25,7 @@
 <div class="form-group" *ngIf="distribution == 3">
     <label for="">User Selected Parameteric (Sigma)</label>
     <div class="input-group">
-        <div class="input-group-addon">+/- %</div>
+        <div class="input-group-addon">Sigma</div>
         <input type="text" class="form-control" [(ngModel)]="sigma">
     </div>
     <span class="help-block">Use comma separated values</span>

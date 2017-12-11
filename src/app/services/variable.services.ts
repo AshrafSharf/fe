@@ -13,20 +13,24 @@ export class AppVariableService {
     public createVariable(body) {
         let url = Utils.createUrl(Utils.routeVariable);
         console.log(body);
-
-        let header = new Headers({'Content-Type':'application/json'});
-        let requestOptions = new RequestOptions( {headers:header} );
-
         return this.http
-                .post(url, body, requestOptions)
+                .post(url, body, Utils.getRequestOptions())
+                .map(result => result.json());
+    }
+
+    public updateVariable(body, id) {
+        let url = Utils.createUrl(Utils.routeVariable) + "/" + id;
+        console.log(body);
+        return this.http
+                .put(url, body, Utils.getRequestOptions())
                 .map(result => result.json());
     }
 
     public getVariables(branchId) {
         let url = Utils.createUrl(Utils.routeVariable) + "/" + branchId;
-        
+        console.log(url);
         return this.http
-                .get(url)
+                .get(url, Utils.getRequestOptions())
                 .map(response => {
                     return response.json()
                 });
@@ -36,7 +40,7 @@ export class AppVariableService {
         let url = Utils.createUrl(Utils.routeVariable) + "/docalc/" + id;
         
         return this.http
-                .get(url)
+                .get(url, Utils.getRequestOptions())
                 .map(response => {
                     return response.json()
                 });
@@ -46,7 +50,7 @@ export class AppVariableService {
         let url = Utils.createUrl(Utils.routeVariable) + "/" + branchId + "/name";
         
         return this.http
-                .get(url)
+                .get(url, Utils.getRequestOptions())
                 .map(response => {
                     return response.json()
                 });
@@ -55,7 +59,7 @@ export class AppVariableService {
     public deleteVariable(id) {
         let url = Utils.createUrl(Utils.routeVariable) + "/" + id;
         return this.http
-                .delete(url)
+                .delete(url, Utils.getRequestOptions())
                 .map(result => result.json());
     }
 }

@@ -4,5 +4,22 @@
     </div>
 
     <div class="row">
+        <div class="form-group">
+            <select (change)="selectBranch($event)" class="app-select" #projectList>
+                <option *ngFor="let project of projects" [value]="project.id"> {{project.title}} </option>
+            </select>
+            <select (change)="selectVariables($event)" class="app-select" #branchList>
+                <option *ngFor="let branch of branches" [value]="branch.id"> {{branch.title}} </option>
+            </select>
+
+        </div>
+
+        <table-view
+                [delete-required]="false"
+                [edit-required]="false"
+                (row-edited)="onRowEdit($event)"
+                (row-deleted)="onRowDelete($event)"
+                [cols]="columns"
+                [rows]="rows"></table-view>
     </div>
 </div>

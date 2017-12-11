@@ -4,6 +4,7 @@ import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from "@angul
 import { Router } from "@angular/router";
 import { Utils } from './../shared/utils';
 import { User } from '../shared/interfaces/user';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class UserService implements CanActivate {
@@ -32,13 +33,20 @@ export class UserService implements CanActivate {
 
         return this.http
                 .post(url, body, requestOptions)
-                .map(result => result.json());
+                .map(result => {
+                    console.log(result);
+                    console.log(result.headers.get('authorization'));
+                    return { status: "OK"};
+                })
+                .catch((error: any) => {
+                    return Observable.throw(error);
+                });
     }
 
     getOwners(callback: (users:User[])=> void) {
         let url = Utils.createUrl(Utils.routeUser);
         this.http
-            .get(url)
+            .get(url, Utils.getRequestOptions())
             .map(result => result.json())
             .subscribe(result => {
                 callback(result.data as User[]);

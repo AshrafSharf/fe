@@ -9,6 +9,7 @@ import { BranchService } from '../../services/branch.service';
 import { User } from '../../shared/interfaces/user';
 import { TimeSegmentComponent } from './time-segment/time.segment.component';
 import { ModalDialogService } from '../../services/modal-dialog.service';
+import { Variable, TimeSegment } from '../../shared/interfaces/variables';
 
 @Component({
     selector: 'variables',
@@ -19,10 +20,17 @@ import { ModalDialogService } from '../../services/modal-dialog.service';
 export class VariablesComponent implements OnInit {
     @ViewChildren(TimeSegmentComponent) timeSegmentWidgets:TimeSegmentComponent[];
 
+    projects:Project[] = Array<Project>();
+    branches:Branch[] = Array<Branch>();
+    variables: Variable[] = Array<Variable>();
+
     branchId = '';
     projectId = '';
 
-    variables = [];
+    selectedProject: String = '';
+    selectedBranch: String = '';
+    selectedVariable: Variable = null
+
     users: User[] = Array<User>();
 
     variableName = '';
@@ -30,7 +38,7 @@ export class VariablesComponent implements OnInit {
     variableType = 'actual';
     ownerId: String = '';
 
-    timeSegments = [];
+    timeSegments: TimeSegment[] = Array<TimeSegment>();
 
     constructor(
         private route: ActivatedRoute,
@@ -51,12 +59,115 @@ export class VariablesComponent implements OnInit {
         this.route.queryParams.subscribe(params => {
             this.projectId = params['projectId'];
             this.branchId = params['branchId'];
+            var varId = params['variableId'];
+            
+            this.variableService
+                .getVariables(this.branchId)
+                .subscribe(response => {
+                    console.log(response);
+                    var variables = response.data as Array<Variable>;
+                    for (var index = 0; index < variables.length; index++) {
+                        var variable = variables[index];
+                        if (variable.id == varId) {
+                            this.selectVariable(variable);
+                            break;
+                        }
+                    }
+                })
         });
+
+        //this.reloadProjects();
     }
 
     addTimeSegment() {
-        this.timeSegments.push({});
+        this.timeSegments.push({
+            constantValue: 0,
+            description: '',
+            inputMethod: 'constant',
+            distributionType: 'none',
+            growth: 0,
+            mean: '',
+            startTime: '',
+            stdDeviation: '',
+            timeSegmentResponse: {
+                resultMap: Array()
+            },
+            userSelectedParametrics: '',
+            userSelectedParametricsStdDeviation: ''
+        });
     }
+
+    selectBranch(event) {
+        this.reloadBranches(event.target.value);
+    }
+
+    selectVariable(variable:Variable) {
+        console.log(variable);
+        
+        this.selectedVariable = variable;
+        this.variableName = variable.title.toString();
+        this.ownerId = variable.ownerId;
+        this.valueType = variable.valueType.toString();
+        this.variableType = variable.variableType.toString();
+
+        this.timeSegments.splice(0, this.timeSegments.length);
+        variable.timeSegment.forEach(element => {
+            this.timeSegments.push(element);
+        });
+    }
+
+    reloadProjects() {
+        this.selectedVariable = null;
+        this.variables.splice(0, this.variables.length);
+
+        this.projectService
+            .getProjects()
+            .subscribe(result => {
+                if (result.status == "OK") {
+                    this.projects = result.data;
+                    this.selectedProject = '';
+                    if (this.projects.length > 0) {
+                        this.selectedProject = this.projects[0].id;
+                    }
+                    this.reloadBranches();
+                }
+            });
+    }
+
+    reloadBranches(projectId:String = null) {
+        this.selectedVariable = null;
+        this.variables.splice(0, this.variables.length);
+        
+        var id = projectId;
+        if ((projectId == null) && (this.projects.length > 0)) {
+            id = this.projects[0].id;
+        }
+
+        if (id != null) {
+            this.branchService
+                .getBranches(id)
+                .subscribe(result => {
+                    this.branches = result.data;
+                    this.selectedBranch = '';
+                    if (this.branches.length > 0) {
+                        this.selectedBranch = this.branches[0].id;
+                        this.reloadVariables();
+                    }
+                });
+        }
+    }
+    
+
+    reloadVariables() {
+        this.selectedVariable = null;
+        this.variableService
+            .getVariables(this.selectedBranch)
+            .subscribe(response => {
+                console.log(response);
+                this.variables = response.data as Array<Variable>;
+            })
+    }
+
 
     onDeleteSegment() {
         this.timeSegments.pop();
@@ -91,12 +202,25 @@ export class VariablesComponent implements OnInit {
                 }
                 console.log(body);
 
-                this.variableService
+                if (this.selectedVariable == null) {
+                    this.variableService
                     .createVariable(body)
                     .subscribe(response => {
                         console.log(response);
-                        this.router.navigate(['/home/variable-list']);
+                        this.selectedVariable = null;
+                        this.onCancel();
+                        //this.router.navigate(['/home/variable-list']);
                     })
+                } else {
+                    this.variableService
+                        .updateVariable(body, this.selectedVariable.id)
+                        .subscribe(response => {
+                            console.log(response);
+                            this.selectedVariable = null;
+                            this.onCancel();
+                            //this.reloadVariables();
+                        })
+                }
             }
         }
     }
@@ -106,6 +230,12 @@ export class VariablesComponent implements OnInit {
     }
 
     onCancel() {
+        this.selectedVariable = null;
         this.router.navigate(['/home/variable-list']);        
+        // this.variableName = '';
+        // this.ownerId = '';
+        // this.valueType = '';
+        // this.variableType = '';
+        // this.timeSegments.splice(0, this.timeSegments.length);
     }
 }

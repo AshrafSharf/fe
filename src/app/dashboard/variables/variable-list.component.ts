@@ -323,8 +323,14 @@ export class VariableListComponent implements OnInit {
         }
     }
 
-    onRowEdit(event) {
-        console.log(event);
+    onRowEdit(id) {
+        this.router.navigate(['/home/create-variable'], {
+            queryParams: {
+                projectId: this.selectedProject,
+                branchId: this.selectedBranch,
+                variableId: id
+            }
+        });
     }
 
     onRowDelete(id) {

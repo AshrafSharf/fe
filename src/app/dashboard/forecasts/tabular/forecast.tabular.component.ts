@@ -157,7 +157,8 @@ export class ForecastTabularComponent implements OnInit {
             // Assigning each table column header it's appropriate month
             // Actual months
             if (actualsMonthIndex > 5) {
-                for (var index = startMonthIndex; index < 12; index++) {
+
+                for (var index = actualsMonthIndex; index < 12; index++) {
                     this.columns.push(new TableViewHeader("Column " + noOfColumns, this.months[index] + " " + actualsStartDate.getFullYear(), "col-md-3", "", ""));
                     noOfColumns++;
                 }

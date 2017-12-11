@@ -25,5 +25,15 @@ export interface KeyValuePair {
 }
 
 export interface TimeSegment {
+    userSelectedParametrics: String;
+    startTime: String;
+    inputMethod: String;
+    growth: Number;
+    distributionType: String;
+    description: String;
+    constantValue: Number;
+    mean: String;
+    stdDeviation: String;
+    userSelectedParametricsStdDeviation: String;
     timeSegmentResponse: { resultMap: {}[] };
 }

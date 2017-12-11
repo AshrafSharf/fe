@@ -29,15 +29,14 @@ export class LoginComponent implements OnInit {
             this.ueserService
                 .authenticateUser(this.userName, this.password)
                 .subscribe(result => {
-                    if (result.status == 'OK') {
-                        sessionStorage["user_auth_status"] = "1";
-                        this.router.navigate(['home']);
-                    } else {
-                        this.modal.alert()
-                            .title('error')
-                            .body('Invalid user name or password')
-                            .open();
-                    }
+                    sessionStorage["user_auth_status"] = "1";
+                    this.router.navigate(['home']);
+                }, 
+                error => {
+                    this.modal.alert()
+                    .title('error')
+                    .body('Invalid user name or password')
+                    .open();
                 });
         }
     }

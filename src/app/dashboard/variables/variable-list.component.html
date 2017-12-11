@@ -16,8 +16,6 @@
         </div>
 
         <table-view 
-            [extra-buttons]="extraButtons"
-            [edit-required]="false"
             (row-edited)="onRowEdit($event)"
             (row-deleted)="onRowDelete($event)"
             [cols]="columns" 

@@ -1,43 +1,43 @@
 <div class="table_output">
-        <table class="table table-hover table-bordered table-striped col-md-12">
-            <thead>
-                <tr *ngIf="deleteRequired || editRequired">
-                    <th *ngFor="let col of cols"
-                        class="header-column"
-                        [class]="col.colWidth" >
-                        
-                        <input
-                            (keyup)="filterResult($event, col)"
-                            type="text" 
-                            class="input-search"
-                            [placeholder]="col.placeHolder">
-                    </th>
-                    <th></th>
-                </tr>
+    <table class="table table-hover table-bordered table-striped col-md-12">
+        <thead>
+        <tr *ngIf="deleteRequired || editRequired">
+            <th *ngFor="let col of cols"
+                class="header-column"
+                [class]="col.colWidth" >
 
-                <tr *ngIf="!deleteRequired && !editRequired">
-                    <th *ngFor="let col of cols"
-                        class="header-column"
-                        [class]="col.colWidth" type="text">{{col.placeHolder}}</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let row of filteredRows">
-                    <td *ngFor="let col of row.columns">
-                        <div *ngIf="!col.isDelete && !col.isEdit" class="column-data">
-                            <div class="column-value">{{col.value}}</div>
-                            <!-- <div *ngIf="row.id.length > 0">
-                                <a href="#" (click)="onRowSelected($event, row.id)">{{col.value}}</a>
-                            </div> -->
-                        </div>
-                    </td>
+                <input
+                        (keyup)="filterResult($event, col)"
+                        type="text"
+                        class="input-search"
+                        [placeholder]="col.placeHolder">
+            </th>
+            <th></th>
+        </tr>
 
-                    <td class="col-md-1" *ngIf="deleteRequired || editRequired">
-                        <fa name="trash" class="btn btn-danger" *ngIf="deleteRequired" (click)="onDeleteRow(row.id)"></fa>
-                        <fa name="pencil" class="btn btn-primary" *ngIf="editRequired" (click)="onEditRow(row.id)"></fa>
-						<fa class="btn btn-primary" style="margin-left:3px" *ngFor="let b of extraButtons" [name]="b.icon" (click)="b.handler(row.id)"></fa>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <tr *ngIf="!deleteRequired && !editRequired">
+            <th *ngFor="let col of cols"
+                class="header-column"
+                [class]="col.colWidth" type="text">{{col.placeHolder}}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let row of filteredRows">
+            <td *ngFor="let col of row.columns">
+                <div *ngIf="!col.isDelete && !col.isEdit" class="column-data">
+                    <div class="column-value">{{col.value}}</div>
+                    <!-- <div *ngIf="row.id.length > 0">
+                        <a href="#" (click)="onRowSelected($event, row.id)">{{col.value}}</a>
+                    </div> -->
+                </div>
+            </td>
+
+            <td class="col-md-1" *ngIf="deleteRequired || editRequired">
+                <fa name="trash" class="btn btn-danger" *ngIf="deleteRequired" (click)="onDeleteRow(row.id)"></fa>
+                <fa name="pencil" class="btn btn-primary" *ngIf="editRequired" (click)="onEditRow(row.id)"></fa>
+                <fa class="btn btn-primary" style="margin-left:3px" *ngFor="let b of extraButtons" [name]="b.icon" (click)="b.handler(row.id)"></fa>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </div>

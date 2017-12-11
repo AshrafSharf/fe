@@ -6,26 +6,27 @@ import { Http, Response, RequestOptions, Headers } from '@angular/http';
 export class BranchService {
     constructor(private http: Http) { }
     
-    // get all branches
+    // get all branches from project
     getBranches(projectId:String) {
         let url = Utils.createUrl(Utils.routeBranch) + "/project/" + projectId;
         return this.http
-                .get(url)
+                .get(url, Utils.getRequestOptions())
                 .map(result => result.json());
     }
 
-    // get branch details
+    // get branch details by id
     getDetails(branchId:String) {
         let url = Utils.createUrl(Utils.routeBranch) + "/" + branchId;
         return this.http
-                .get(url)
+                .get(url, Utils.getRequestOptions())
                 .map(result => result.json());
     }
 
+    // delete branch by id
     deleteBranch(branchId:String) {
         let url = Utils.createUrl(Utils.routeBranch) + "/" + branchId;
         return this.http
-                .delete(url)
+                .delete(url, Utils.getRequestOptions())
                 .map(result => result.json());
     }
 
@@ -48,12 +49,8 @@ export class BranchService {
             isMaster:false 
         };
         console.log(body);
-
-        let header = new Headers({'Content-Type':'application/json'});
-        let requestOptions = new RequestOptions( {headers:header} );
-
         return this.http
-                .post(url, body, requestOptions)
+                .post(url, body, Utils.getRequestOptions())
                 .map(result => result.json());
     }
 
@@ -77,11 +74,8 @@ export class BranchService {
 
         console.log(body);
         
-        let header = new Headers({'Content-Type':'application/json'});
-        let requestOptions = new RequestOptions( {headers:header} );
-
         return this.http
-                .put(url, body, requestOptions)
+                .put(url, body, Utils.getRequestOptions())
                 .map(result => result.json());
     }
 }

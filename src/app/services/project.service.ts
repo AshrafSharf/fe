@@ -13,23 +13,18 @@ export class ProjectService {
     // get all projects
     getProjects() {
         let url = Utils.createUrl(Utils.routeProject);
-
         return this.http
-                .get(url)
+                .get(url, Utils.getRequestOptions())
                 .map(result => result.json());
     }
 
     // create a new project
     createProject(title:String, description:String, owner:String) {
         let url = Utils.createUrl(Utils.routeProject);
-
         let body = { title: title, description: description, ownerId: owner, ownerName: owner };
 
-        let header = new Headers({'Content-Type':'application/json'});
-        let requestOptions = new RequestOptions( {headers:header} );
-
         return this.http
-                .post(url, body, requestOptions)
+                .post(url, body, Utils.getRequestOptions())
                 .map(result => result.json());
     }
 
@@ -37,7 +32,7 @@ export class ProjectService {
     getDetails(id:String) {
         let url = Utils.createUrl(Utils.routeProject) + "/" + id;
         return this.http
-            .get(url)
+            .get(url, Utils.getRequestOptions())
             .map(result => result.json());
     }
 
@@ -47,12 +42,9 @@ export class ProjectService {
 
         let body = { id: id, title: title, description: description, ownerId: owner };
         console.log(body);
-        
-        let header = new Headers({'Content-Type':'application/json'});
-        let requestOptions = new RequestOptions( {headers:header} );
 
         return this.http
-                .put(url, body, requestOptions)
+                .put(url, body, Utils.getRequestOptions())
                 .map(result => {
                     console.log('result', result);
                     result.json()
@@ -63,7 +55,7 @@ export class ProjectService {
     deleteProject(id) {
         let url = Utils.createUrl(Utils.routeProject) + "/" + id;
         return this.http
-                .delete(url)
+                .delete(url, Utils.getRequestOptions())
                 .map(result => result.json());
     }
 }

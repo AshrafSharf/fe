@@ -1,13 +1,13 @@
 <div class="container-fluid">
     <div class="row">
-        <app-header title="Add Variable"></app-header>
+        <app-header title="Manage Variable"></app-header>
     </div>
 
-    <div class="row">
+    <div class="row">        
         <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h4>Add Variable</h4>
+                    <h4>{{selectedVariable == null ? 'Add Variable' : 'Update Variable'}}</h4>
                 </div>
                 <div class="panel-body">
                     <div class="form-group">
@@ -43,7 +43,12 @@
                     </div>
                     
                     <div class="row">
-                        <time-segment [branch-id]="branchId" class="col-md-4" *ngFor="let segment of timeSegments" (delete)="onDeleteSegment()"></time-segment>
+                        <time-segment 
+                            [branch-id]="branchId" 
+                            class="col-md-12" 
+                            *ngFor="let segment of timeSegments" 
+                            [time-segment]="segment"
+                            (delete)="onDeleteSegment()"></time-segment>
                     </div>            
                 </div>
                 <div class="panel-footer">

@@ -9,11 +9,12 @@
         <div [class.collapse]="!isExpanded" class="panel-collapse">
             <div class="panel-body">
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label for="">Starting Time</label>
                             <div class='input-group date inputText' id='startDate'>
                                 <dp-date-picker 
+                                    [config]="datePickerConfig"
                                     [(ngModel)]="startDate" 
                                     mode="daytime" 
                                     [theme]="'dp-material dp-main'"></dp-date-picker>
@@ -24,7 +25,9 @@
                             <label for="">Comment</label>
                             <textarea name="" [(ngModel)]="comment" id="comment" class="form-control"></textarea>
                         </div>
-                        
+                    </div>
+
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label for="">Input Method</label>
                             <select id="input-method" [(ngModel)]="selectedInputMethod" class="form-control">

@@ -18,30 +18,37 @@
                         placeholder="branch name">
                 </div>
 
-                <div class="form-group">
-                    <label for="">Owner</label>
-                    <select [(ngModel)]="ownerId" class="form-control">
-                        <option *ngFor="let user of users" [value]="user.id">{{user.userName}}</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="">Time Unit</label>
-                    <select (change)="onChangeTimeUnit()" class="form-control" [(ngModel)]="timeUnit">
-                        <option value="Month">Month</option>
-                        <option value="Week">Week</option>
-                        <option value="Hour">Hour</option>
-                        <option value="Time">Time</option>
-                    </select>
-                </div>
-
                 <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="">Owner</label>
+                            <select [(ngModel)]="ownerId" class="form-control">
+                                <option *ngFor="let user of users" [value]="user.id">{{user.userName}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="">Time Unit</label>
+                            <select (change)="onChangeTimeUnit()" class="form-control" [(ngModel)]="timeUnit">
+                                <option value="Month">Month</option>
+                                <option value="Week">Week</option>
+                                <option value="Hour">Hour</option>
+                                <option value="Time">Time</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row" style="display:none">
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="">Start Time</label>
                             <dp-date-picker 
                                 style="display:block; border-radius: 5px; padding: 5px; width: 100%" 
                                 class="datePicker" 
+                                [config]="datePickerConfig"
                                 [(ngModel)]="startDate" 
                                 mode="daytime" 
                                 [theme]="'dp-material dp-main'"></dp-date-picker>                                
@@ -53,6 +60,7 @@
                             <dp-date-picker 
                                 style="display:block; border-radius: 5px; padding: 5px;" 
                                 class="datePicker" 
+                                [config]="datePickerConfig"
                                 [(ngModel)]="endDate" 
                                 mode="daytime" 
                                 [theme]="'dp-material dp-main'"></dp-date-picker>                                
@@ -64,6 +72,7 @@
                             <dp-date-picker 
                                 style="display:block; border-radius: 5px; padding: 5px;" 
                                 class="datePicker" 
+                                [config]="datePickerConfig"
                                 mode="daytime" 
                                 [(ngModel)]="actualsDate" 
                                 [theme]="'dp-material dp-main'"></dp-date-picker>                                

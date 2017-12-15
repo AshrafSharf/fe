@@ -274,7 +274,7 @@ export class ForecastTabularComponent implements OnInit {
                     if (variableTimeSegments[timeSegIndex][index].timeSegmentResponse != null){
                         for (var index1 = 0; index1 < 18; index1++) {
                             if (variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data[index1] == null) {
-                                row.addColumn(new TableViewColumn("Column " + index1, "Null data"));
+                                row.addColumn(new TableViewColumn("Column " + index1, " "));
                             }
                             else {
                                 row.addColumn(new TableViewColumn("Column " + index1, variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data[index1].value));
@@ -292,7 +292,7 @@ export class ForecastTabularComponent implements OnInit {
                                 column = 0;
                                 for (var index2 = 0; index2 < 18; index2++) {
                                     if (variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data[index2] == null) {
-                                        row.addColumn(new TableViewColumn("Column " + column, "Null data"));
+                                        row.addColumn(new TableViewColumn("Column " + column, " "));
                                     }
                                     else {
                                         row.addColumn(new TableViewColumn("Column " + column, variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[index1+1].data[index2].value));
@@ -305,22 +305,22 @@ export class ForecastTabularComponent implements OnInit {
                     }
                     else {
                         for (var column = 0; column < 18; column++) {
-                            row.addColumn(new TableViewColumn("Column " + column, "Not calculated"));
+                            row.addColumn(new TableViewColumn("Column " + column, "n/a"));
                         }
                         this.rows.push(row);
                     }
                 }
                 // If variable is of type 'forecast' add empty data cells for the first 6 months of time period
                 else if (variable.variableType == "forecast") {
-                    for (var column = 0; column < 6; column++) {
-                        row.addColumn(new TableViewColumn("Column " + column, "No actual data"));
-                    }
-
                     if (variableTimeSegments[timeSegIndex][index].timeSegmentResponse != null){
+                        for (var column = 0; column < 6; column++) {
+                            row.addColumn(new TableViewColumn("Column " + column, "-"));
+                        }
+                        
                         var column = 6;
                         for (var index1 = 0; index1 < 12; index1++) {
                             if (variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data[index1] == null) {
-                                row.addColumn(new TableViewColumn("Column " + column, "Null data"));
+                                row.addColumn(new TableViewColumn("Column " + column, "n/a"));
                             }
                             else {
                                 row.addColumn(new TableViewColumn("Column " + column, variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data[index1].value));
@@ -336,13 +336,13 @@ export class ForecastTabularComponent implements OnInit {
                                 row.addColumn(new TableViewColumn("name", varTitle + " " + variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[index1+1].title));
 
                                 for (var column = 0; column < 6; column++) {
-                                    row.addColumn(new TableViewColumn("Column " + column, "No actual data"));
+                                    row.addColumn(new TableViewColumn("Column " + column, "-"));
                                 }
 
                                 column = 6;
                                 for (var index2 = 0; index2 < 12; index2++) {
                                     if (variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data[index2] == null) {
-                                        row.addColumn(new TableViewColumn("Column " + column, "Null data"));
+                                        row.addColumn(new TableViewColumn("Column " + column, "n/a"));
                                     }
                                     else {
                                         row.addColumn(new TableViewColumn("Column " + column, variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[index1+1].data[index2].value));
@@ -354,8 +354,8 @@ export class ForecastTabularComponent implements OnInit {
                         }
                     }
                     else {
-                        for (var column = 0; column < 12; column++) {
-                            row.addColumn(new TableViewColumn("Column " + column, "Not calculated"));
+                        for (var column = 0; column < 18; column++) {
+                            row.addColumn(new TableViewColumn("Column " + column, "n/a"));
                         }
                         this.rows.push(row);
                     }

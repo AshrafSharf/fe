@@ -17,6 +17,7 @@ export interface Variable {
     timeSegment: Array<TimeSegment>;
     variableType: String;
     valueType: String;
+    description: String;
 }
 
 export interface KeyValuePair {
@@ -35,5 +36,5 @@ export interface TimeSegment {
     mean: String;
     stdDeviation: String;
     userSelectedParametricsStdDeviation: String;
-    timeSegmentResponse: { resultMap: {}[] };
+    timeSegmentResponse: { resultMap: { title:String, data: {title:String, value: Number}[] }[] };
 }

@@ -5,7 +5,7 @@
     
         <div class="row">
             <div class="form-group">
-                <select (change)="selectBranch($event)" class="app-select" #projectList>
+                <select (change)="selectBranch($event)" class="app-select" [(ngModel)]="selectedProject">
                     <option *ngFor="let project of projects" [value]="project.id"> {{project.title}} </option>
                 </select>
                 <button class="app-button" (click)="addNewBranch()">NEW BRANCH</button>

@@ -32,6 +32,9 @@ export class BranchesComponent implements OnInit {
     endWeek: String = '';
     actualsWeek: String = '';
 
+    //dd-MM-yyyy hh:mm
+    datePickerConfig = { format : 'DD-MM-YYYY hh:mm' };
+
     selectedBranch:Branch = null;
 
     datePickerMode: String = 'month';
@@ -106,7 +109,9 @@ export class BranchesComponent implements OnInit {
         this.datePickerMode = 'month';
         this.timeUnit = 'month';
 
-        this.router.navigate(['/home/branches-list']);
+        this.router.navigate(['/home/branches-list'], { queryParams: {
+            projectId: this.selectedProjectId
+        }});
     }
 
     // create branch
@@ -120,7 +125,6 @@ export class BranchesComponent implements OnInit {
             var start = this.startDate;
             var end = this.endDate;
             var actuals = this.actualsDate;
-
 
             if (this.selectedBranch != null) {
                 // update existing

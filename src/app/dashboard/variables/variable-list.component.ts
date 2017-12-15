@@ -4,7 +4,7 @@ import { Project } from '../../shared/interfaces/project';
 import { Branch } from '../../shared/interfaces/branch';
 import { ProjectService } from '../../services/project.service';
 import { BranchService } from '../../services/branch.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ModalDialogService } from '../../services/modal-dialog.service';
 import { TableViewHeader } from '../../shared/interfaces/tableview-header';
 import { TableViewRow } from '../../shared/interfaces/tableview-row';
@@ -25,21 +25,14 @@ export class VariableListComponent implements OnInit {
     columns: Array<TableViewHeader>;
     rows: TableViewRow[] = new Array<TableViewRow>();
     
-    selectedProject: String = '';
-    selectedBranch: String = '';
+    selectedProject: String = null;
+    selectedBranch: String = null;
 
-    extraButtons = [
-        {
-            icon: 'th',
-            handler: (id) => { this.showValues(id) }
-        },
-        {
-            icon: 'info',
-            handler: (id) => { this.showInfo(id) }
-        }
-    ];
+    selectedProjectId = null;
+    selectedBranchId = null;
 
     constructor(
+        private route: ActivatedRoute,
         private modalDialog:Modal, 
         private variableService: AppVariableService,
         private modal: ModalDialogService,
@@ -48,7 +41,12 @@ export class VariableListComponent implements OnInit {
         private branchService:BranchService) { }
 
     ngOnInit() {
-        this.reloadProjects();
+        this.route.queryParams.subscribe(params => {
+            this.selectedProjectId = params['projectId'];
+            this.selectedBranchId = params['branchId'];
+
+            this.reloadProjects();
+        });
 
         this.columns = new Array<TableViewHeader>();
         this.columns.push(new TableViewHeader("name", "Variable Name", "col-md-3", "", ""));
@@ -75,6 +73,124 @@ export class VariableListComponent implements OnInit {
 
     selectBranch(event) {
         this.reloadBranches(event.target.value);
+    }
+
+    calculateValues() {
+        this.variableService
+            .calculateVariableValues(this.selectedBranch)
+            .subscribe(response => {
+                this.modal.showError('Calculations are done', '');
+                this.reloadVariables();
+            });
+    }
+
+    reloadVariables() {
+        this.variableService
+            .getVariables(this.selectedBranch)
+            .subscribe(response => {
+                console.log(response);
+                this.variables = response.data as Array<Variable>;
+
+                this.rows = new Array<TableViewRow>();
+                this.variables.forEach(variable => {
+                    var row = new TableViewRow(variable.id);
+                    row.addColumn(new TableViewColumn("name", variable.title));
+                    row.addColumn(new TableViewColumn("owner", variable.ownerName));
+                    row.addColumn(new TableViewColumn("varType", variable.variableType));
+                    row.addColumn(new TableViewColumn("valueType", variable.valueType));
+                    row.addColumn(new TableViewColumn("timesegment", variable.timeSegment.length.toString()));
+                    this.rows.push(row);
+                });
+            })
+    }
+
+    reloadProjects() {
+        // clear rows
+        this.rows.splice(0, this.rows.length);
+        this.variables.splice(0, this.variables.length);
+
+        this.projectService
+            .getProjects()
+            .subscribe(result => {
+                if (result.status == "OK") {
+                    this.projects = result.data;
+                    console.log(this.projects);
+
+                    this.selectedProject = '';
+                    if (this.selectedProjectId != null) {
+                        this.selectedProject = this.selectedProjectId;
+                    } else if (this.projects.length > 0) {
+                        this.selectedProject = this.projects[0].id;
+                    }
+                    console.log("project id: " + this.selectedProject);
+                    this.reloadBranches();
+                }
+            });
+    }
+
+    reloadBranches(projectId:String = null) {
+        // clear rows
+        this.rows.splice(0, this.rows.length);
+        this.variables.splice(0, this.variables.length);
+        
+        var id = projectId;
+        if (projectId == null) { 
+            if (this.selectedProjectId != null) {
+                id = this.selectedProjectId;
+            } else if (this.projects.length > 0) {
+                id = this.projects[0].id;
+            }
+        }
+        console.log("project id: " + id);
+        
+        if (id != null) {
+            this.branchService
+                .getBranches(id)
+                .subscribe(result => {
+                    this.branches = result.data;
+                    this.selectedBranch = '';
+                    if (this.selectedBranchId != null) {
+                        this.selectedBranch = this.selectedBranchId;
+                    } else if (this.branches.length > 0) {
+                        this.selectedBranch = this.branches[0].id;
+                    }
+
+                    this.reloadVariables();
+                });
+        }
+    }
+
+    onRowEdit(id) {
+        this.router.navigate(['/home/create-variable'], {
+            queryParams: {
+                projectId: this.selectedProject,
+                branchId: this.selectedBranch,
+                variableId: id
+            }
+        });
+    }
+
+    onRowDelete(id) {
+        const dialog =
+        this.modalDialog
+            .confirm()
+            .title('Confirmation')
+            .body('Are you sure you want to delete this variable?')
+            .okBtn('Yes').okBtnClass('btn btn-danger')
+            .cancelBtn('No')
+            .open();
+        dialog.then(promise => {
+            promise.result.then(result => {
+                this.variableService
+                    .deleteVariable(id)
+                    .subscribe(result => {
+                        if (result.status == 'OK') {
+                            this.reloadVariables();
+                        }
+                
+                    });
+            });
+        });
     }
 
     showInfo(id) {
@@ -144,215 +260,114 @@ export class VariableListComponent implements OnInit {
                 .body(info)
                 .open();
         }
-    }
 
-    showValues(id) {
-        var variable:Variable = null;
-        for (var index = 0; index < this.variables.length; index++) {
-            if (this.variables[index].id == id) {
-                variable = this.variables[index];
-                break;
-            }
-        }
 
-        if (variable != null) {
-            var table = '';
-            for (index = 0; index < variable.timeSegment.length; index++) {
-                table += `<h4>Time Segment - ${index + 1}</h4>`;
-                var resultMap = variable.timeSegment[index].timeSegmentResponse.resultMap;
-                resultMap.forEach(obj => {
-                    if (obj['title'] != '0') {
-                        table += `<h5 class="text-danger text-center" style="margin-top: 10px;">${obj['title']}</h5>`;
-                    }
 
-                    var header = '<tr>'; 
-                    var body = '<tr>';
+          // showValues(id) {
+        //     var variable:Variable = null;
+        //     for (var index = 0; index < this.variables.length; index++) {
+        //         if (this.variables[index].id == id) {
+        //             variable = this.variables[index];
+        //             break;
+        //         }
+        //     }
 
-                    var data = obj['data'] as Array<{title:String, value:String}>;
-                    data.forEach(element => {
-                        header += `<th>${element['title']}</th>`;
-                        body += `<td>${element['value']}</td>`;
-                    });
+        //     if (variable != null) {
+        //         var table = '';
+        //         for (index = 0; index < variable.timeSegment.length; index++) {
+        //             table += `<h4>Time Segment - ${index + 1}</h4>`;
+        //             var resultMap = variable.timeSegment[index].timeSegmentResponse.resultMap;
+        //             resultMap.forEach(obj => {
+        //                 if (obj['title'] != '0') {
+        //                     table += `<h5 class="text-danger text-center" style="margin-top: 10px;">${obj['title']}</h5>`;
+        //                 }
 
-                    header += '</tr>';
-                    body += '</tr>';
+        //                 var header = '<tr>'; 
+        //                 var body = '<tr>';
 
-                    table += '<table class="table table-striped table-bordered">';
-                    table += '<thead>';
-                    table += header;
-                    table += '</thead>';
+        //                 var data = obj['data'] as Array<{title:String, value:String}>;
+        //                 data.forEach(element => {
+        //                     header += `<th>${element['title']}</th>`;
+        //                     body += `<td>${element['value']}</td>`;
+        //                 });
 
-                    table += '<tbody>';
-                    table += body;
-                    table += '</tbody>';
-                    table += '</table>';
-                });
-            }
+        //                 header += '</tr>';
+        //                 body += '</tr>';
 
-            this.modalDialog
-                .alert()
-                .size('lg')
-                .title(variable.title.toString())
-                .body(table)
-                .open();
-        }
-    }
+        //                 table += '<table class="table table-striped table-bordered">';
+        //                 table += '<thead>';
+        //                 table += header;
+        //                 table += '</thead>';
 
-    /*
-    showValues(id) {
-        var variable:Variable = null;
-        for (var index = 0; index < this.variables.length; index++) {
-            if (this.variables[index].id == id) {
-                variable = this.variables[index];
-                break;
-            }
-        }
+        //                 table += '<tbody>';
+        //                 table += body;
+        //                 table += '</tbody>';
+        //                 table += '</table>';
+        //             });
+        //         }
 
-        var table = '';
-        if (variable != null) {
-            console.log(variable);
-            for (index = 0; index < variable.timeSegment.length; index++) {
-                var segment = variable.timeSegment[index];
-                if (segment.resultMap == undefined) continue;
-                var topKeys = Object.keys(segment.resultMap);
-                var count = 1;
-                topKeys.forEach(topKey => {
-                    var valuesObj = segment.resultMap[topKey];
-                    console.log(valuesObj);
+        //         this.modalDialog
+        //             .alert()
+        //             .size('lg')
+        //             .title(variable.title.toString())
+        //             .body(table)
+        //             .open();
+        //     }
+        // }
 
-                    table += `<h3>Time Segment - ${count}</h3><table class="table table-striped">`;
-                    table += '<tbody>';
-
-                    count += 1;
-
-                    var header = '<tr>'; 
-                    var body = '<tr>';
-                    var innerKeys = Object.keys(valuesObj);
-                    innerKeys.forEach(innerKey => {
-                        console.log(valuesObj[innerKey]);
-                        header += `<th>${innerKey}</th>`;
-                        body += `<td>${valuesObj[innerKey]}</td>`;
-                    });
-
-                    header += '</tr>';
-                    body += '</tr>';
-                    table += header + body + '</tbody>';
-                    table += '</table>';
-                });
-            }
-
-            this.modalDialog
-                .alert()
-                .size('lg')
-                .title(variable.title.toString())
-                .body(table)
-                .open();
-        }        
-    }
-    */
-
-    calculateValues() {
-        this.variableService
-            .calculateVariableValues(this.selectedBranch)
-            .subscribe(response => {
-                this.modal.showError('Calculations are done', '');
-                this.reloadVariables();
-            });
-    }
-
-    reloadVariables() {
-        this.variableService
-            .getVariables(this.selectedBranch)
-            .subscribe(response => {
-                console.log(response);
-                this.variables = response.data as Array<Variable>;
-
-                this.rows = new Array<TableViewRow>();
-                this.variables.forEach(variable => {
-                    var row = new TableViewRow(variable.id);
-                    row.addColumn(new TableViewColumn("name", variable.title));
-                    row.addColumn(new TableViewColumn("owner", variable.ownerName));
-                    row.addColumn(new TableViewColumn("varType", variable.variableType));
-                    row.addColumn(new TableViewColumn("valueType", variable.valueType));
-                    row.addColumn(new TableViewColumn("timesegment", variable.timeSegment.length.toString()));
-                    this.rows.push(row);
-                });
-            })
-    }
-
-    reloadProjects() {
-        // clear rows
-        this.rows.splice(0, this.rows.length);
-        this.variables.splice(0, this.variables.length);
-
-        this.projectService
-            .getProjects()
-            .subscribe(result => {
-                if (result.status == "OK") {
-                    this.projects = result.data;
-                    this.selectedProject = '';
-                    if (this.projects.length > 0) {
-                        this.selectedProject = this.projects[0].id;
-                    }
-                    this.reloadBranches();
+        /*
+        showValues(id) {
+            var variable:Variable = null;
+            for (var index = 0; index < this.variables.length; index++) {
+                if (this.variables[index].id == id) {
+                    variable = this.variables[index];
+                    break;
                 }
-            });
-    }
-
-    reloadBranches(projectId:String = null) {
-        // clear rows
-        this.rows.splice(0, this.rows.length);
-        this.variables.splice(0, this.variables.length);
-        
-        var id = projectId;
-        if ((projectId == null) && (this.projects.length > 0)) {
-            id = this.projects[0].id;
-        }
-
-        if (id != null) {
-            this.branchService
-                .getBranches(id)
-                .subscribe(result => {
-                    this.branches = result.data;
-                    this.selectedBranch = '';
-                    if (this.branches.length > 0) {
-                        this.selectedBranch = this.branches[0].id;
-                        this.reloadVariables();
-                    }
-                });
-        }
-    }
-
-    onRowEdit(id) {
-        this.router.navigate(['/home/create-variable'], {
-            queryParams: {
-                projectId: this.selectedProject,
-                branchId: this.selectedBranch,
-                variableId: id
             }
-        });
+
+            var table = '';
+            if (variable != null) {
+                console.log(variable);
+                for (index = 0; index < variable.timeSegment.length; index++) {
+                    var segment = variable.timeSegment[index];
+                    if (segment.resultMap == undefined) continue;
+                    var topKeys = Object.keys(segment.resultMap);
+                    var count = 1;
+                    topKeys.forEach(topKey => {
+                        var valuesObj = segment.resultMap[topKey];
+                        console.log(valuesObj);
+
+                        table += `<h3>Time Segment - ${count}</h3><table class="table table-striped">`;
+                        table += '<tbody>';
+
+                        count += 1;
+
+                        var header = '<tr>'; 
+                        var body = '<tr>';
+                        var innerKeys = Object.keys(valuesObj);
+                        innerKeys.forEach(innerKey => {
+                            console.log(valuesObj[innerKey]);
+                            header += `<th>${innerKey}</th>`;
+                            body += `<td>${valuesObj[innerKey]}</td>`;
+                        });
+
+                        header += '</tr>';
+                        body += '</tr>';
+                        table += header + body + '</tbody>';
+                        table += '</table>';
+                    });
+                }
+
+                this.modalDialog
+                    .alert()
+                    .size('lg')
+                    .title(variable.title.toString())
+                    .body(table)
+                    .open();
+            }        
+        }
+        */
+
     }
 
-    onRowDelete(id) {
-        const dialog =
-        this.modalDialog
-            .confirm()
-            .title('Confirmation')
-            .body('Are you sure you want to delete this variable?')
-            .okBtn('Yes').okBtnClass('btn btn-danger')
-            .cancelBtn('No')
-            .open();
-        dialog.then(promise => {
-            promise.result.then(result => {
-                this.variableService
-                    .deleteVariable(id)
-                    .subscribe(result => {
-                        if (result.status == 'OK') {
-                            this.reloadVariables();
-                        }
-                
-                    });
-            });
-        });
-    }
 }

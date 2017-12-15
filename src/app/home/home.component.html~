@@ -1,0 +1,95 @@
+<div class="container-fluid">
+    <div class="row">
+
+        <!-- header bar -->
+        <div>
+            <nav class="a navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="navbar-header col-sm-12 col-lg-12">
+                            <button class="navbar-toggle" data-target="#app-menu" data-toggle="collapse">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            </button>
+                            <a class="navbar-brand" href="./"><img class="hidden-xs" src="assets/images/att-logo.png" alt=""></a>
+                            <div>
+                                <a href="#" class="pull-right logout-button" (click)="logout($event)">Logout</a>
+                            </div>
+                        </div>
+                        <div id="app-menu" class="navbar-collapse collapse" aria-expanded="false" style="height: 1px;">
+                            <ul class="nav navbar-nav">
+                                <li class="list">
+                                    <a
+                                        (click)="selectedMenu = 'projects'"
+                                        routerLink="project-list"
+                                        [class.active]="selectedMenu == 'projects'"
+                                        href="#">HOME</a>
+                                </li>
+                                <li>
+                                    <a
+                                        (click)="selectedMenu = 'branches'"
+                                        routerLink="branches-list"
+                                        [class.active]="selectedMenu == 'branches'"
+                                        href="#">GETTING STARTED</a>
+                                </li>
+                                <li>
+                                    <a
+                                        (click)="selectedMenu = 'variables'"
+                                        routerLink="variable-list"
+                                        [class.active]="selectedMenu == 'variables'"
+                                        href="#">VARIABLES</a>
+                                </li>
+                                <li>
+                                    <a
+                                        (click)="selectedMenu = 'forecast_tabular'"
+                                        routerLink="forecast_tabular"
+                                        [class.active]="selectedMenu == 'forecast_tabular'"
+                                        href="#">FORECAST TABULAR</a>
+                                </li>
+                                <li>
+                                    <a
+                                        (click)="selectedMenu = 'forecase_graphical'"
+                                        routerLink="forecast_graphical"
+                                        [class.active]="selectedMenu == 'forecase_graphical'"
+                                        href="#">FORECAST GRAPHICAL</a>
+                                </li>
+                                <li>
+                                    <a
+                                        routerLink="data_flow"
+                                        (click)="selectedMenu = 'data_flow'"
+                                        [class.active]="selectedMenu == 'data_flow'"
+                                        href="#">DATA FLOW</a>
+                                </li>
+                                <li>
+                                    <a
+                                        routerLink="component_model"
+                                        (click)="selectedMenu = 'component_model'"
+                                        [class.active]="selectedMenu == 'component_model'"
+                                        href="#">COMPONENT MODEL</a>
+                                </li>
+                                <li>
+                                    <a
+                                        routerLink="simulation"
+                                        (click)="selectedMenu = 'simulation'"
+                                        [class.active]="selectedMenu == 'simulation'"
+                                        href="#">SIMULATION</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+
+    <!-- components will be shown here -->
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+  
+</div>

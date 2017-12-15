@@ -14,6 +14,7 @@
                             <label for="">Starting Time</label>
                             <div class='input-group date inputText' id='startDate'>
                                 <dp-date-picker 
+                                    [config]="datePickerConfig"
                                     [(ngModel)]="startDate" 
                                     mode="daytime" 
                                     [theme]="'dp-material dp-main'"></dp-date-picker>

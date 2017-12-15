@@ -17,6 +17,7 @@ export interface Variable {
     timeSegment: Array<TimeSegment>;
     variableType: String;
     valueType: String;
+    description: String;
 }
 
 export interface KeyValuePair {

@@ -37,6 +37,19 @@ export class VariablesComponent implements OnInit {
     branches:Branch[] = Array<Branch>();
     variables: Variable[] = Array<Variable>();
 
+    public lineChartData:Array<any> = [];
+
+    public lineChartLabels:Array<any> = [];
+    public lineChartOptions:any = {
+        responsive: true
+    };
+
+    public lineChartColors:Array<any> = [];
+    public lineChartLegend:boolean = true;
+    public lineChartType:string = 'line';
+
+
+    description = '';
     branchId = '';
     projectId = '';
 
@@ -106,6 +119,7 @@ export class VariablesComponent implements OnInit {
             })
 
         this.route.queryParams.subscribe(params => {
+            console.log(params);
             this.projectId = params['projectId'];
             this.branchId = params['branchId'];
             var varId = params['variableId'];
@@ -119,7 +133,6 @@ export class VariablesComponent implements OnInit {
                         var variable = variables[index];
                         if (variable.id == varId) {
                             this.selectVariable(variable);
-                            this.createLineChartData();
                             break;
                         }
                     }
@@ -136,11 +149,6 @@ export class VariablesComponent implements OnInit {
     createLineChartData() {
         
         var values = [];
-        
-        // this.selectedVariable.timeSegment.forEach(element => {
-
-        // });
-
         if (this.selectedVariable.timeSegment.length > 0) {
             var element = this.selectedVariable.timeSegment[0];
             if (element.timeSegmentResponse != null || element.timeSegmentResponse != undefined) {
@@ -278,17 +286,54 @@ export class VariablesComponent implements OnInit {
         this.reloadBranches(event.target.value);
     }
 
-    selectVariable(variable:Variable) {        
+    selectVariable(variable:Variable) { 
         this.selectedVariable = variable;
+        this.description = variable.description.toString();
         this.variableName = variable.title.toString();
         this.ownerId = variable.ownerId;
         this.valueType = variable.valueType.toString();
         this.variableType = variable.variableType.toString();
 
         this.timeSegments.splice(0, this.timeSegments.length);
+
+        var index = 1;
         variable.timeSegment.forEach(element => {
             this.timeSegments.push(element);
+
+            console.log(element)
+
+            if (element.timeSegmentResponse != undefined || element.timeSegmentResponse != null) {
+                element.timeSegmentResponse.resultMap.forEach(resultMap => {
+                    var label = `Time Segment: ${index} - ${resultMap.title}`;
+                    var dataValues = [];
+                    resultMap.data.forEach(dataPair => {
+                        dataValues.push(dataPair.value.toFixed(2));
+                    });
+
+                    this.lineChartData.push({
+                        data: dataValues,
+                        label: label
+                    });
+
+                    this.lineChartColors.push({
+                        borderColor: this.getRandomColor()
+                    });
+                });
+            }
+
+            index += 1;
         });
+
+        this.lineChartLabels = ['2017-12', '2018-01', '2018-02', '2018-03', '2018-04', '2018-05', '2018-06', '2018-07', '2018-08', '2018-09', '2018-10', '2018-11'];
+    }
+
+    getRandomColor() {
+        var letters = '0123456789ABCDEF';
+        var color = '#';
+        for (var i = 0; i < 6; i++) {
+          color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
     }
 
     reloadProjects() {
@@ -367,6 +412,7 @@ export class VariablesComponent implements OnInit {
                 this.modal.showError('Incomplete time segment definition');
             } else {
                 let body = {
+                    description: this.description,
                     branchId: this.branchId,
                     ownerId: this.ownerId,
                     timeSegment: timeSegmentValues,
@@ -403,7 +449,12 @@ export class VariablesComponent implements OnInit {
 
     onCancel() {
         this.selectedVariable = null;
-        this.router.navigate(['/home/variable-list']);        
+        this.router.navigate(['/home/variable-list'], {
+            queryParams: {
+                projectId: this.projectId,
+                branchId: this.branchId
+            }
+        });        
         // this.variableName = '';
         // this.ownerId = '';
         // this.valueType = '';

@@ -2,11 +2,11 @@
     <label for="">Distribution</label>
     <select name="" class="form-control" [(ngModel)]="distribution">
         <option value="1">None</option>
-        <option value="2">+/- %</option>
-        <option value="3">Gaussian</option>
+        <!-- <option value="2">+/- %</option> -->
+        <option value="2">Gaussian</option>
     </select>
 </div>
-<div class="form-group" *ngIf="distribution == 2">
+<div class="form-group" *ngIf="distribution == 3">
     <label for="">User Selected Parameteric</label>
     <div class="input-group">
         <div class="input-group-addon">Sigma</div>
@@ -14,15 +14,15 @@
     </div>
     <span class="help-block">Use comma separated values</span>
 </div>
-<div class="form-group" *ngIf="distribution == 3">
+<div class="form-group" *ngIf="distribution == 2">
     <label for="">Mean</label>
     <input type="text" class="form-control" [(ngModel)]="mean">
 </div>
-<div class="form-group" *ngIf="distribution == 3">
+<div class="form-group" *ngIf="distribution == 2">
     <label for="">Standard Deviation</label>
     <input type="text" class="form-control" [(ngModel)]="deviation">
 </div>
-<div class="form-group" *ngIf="distribution == 3">
+<div class="form-group" *ngIf="distribution == 2">
     <label for="">User Selected Parameteric (Sigma)</label>
     <div class="input-group">
         <div class="input-group-addon">Sigma</div>

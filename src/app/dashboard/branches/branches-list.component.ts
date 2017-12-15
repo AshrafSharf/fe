@@ -5,7 +5,7 @@ import { TableViewHeader } from '../../shared/interfaces/tableview-header';
 import { TableViewRow } from '../../shared/interfaces/tableview-row';
 import { TableViewColumn } from '../../shared/interfaces/tableview-column';
 import { Modal } from 'ngx-modialog/plugins/bootstrap';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { BranchService } from '../../services/branch.service';
 import { Branch } from '../../shared/interfaces/branch';
 
@@ -16,15 +16,18 @@ import { Branch } from '../../shared/interfaces/branch';
 })
 
 export class BranchListComponent implements OnInit {
-    @ViewChild('projectList') selectedProject:ElementRef;
+    //@ViewChild('projectList') selectedProject:ElementRef;
+    selectedProject = '';
     columns: TableViewHeader[];
     rows: TableViewRow[] = new Array<TableViewRow>();
     projects: Project[] = new Array<Project>();
     branches:Branch[] = Array<Branch>();
     
     isLoading: Boolean = false;
+    private selectedProjectId = null;
     
     constructor(
+        private route: ActivatedRoute,
         private router: Router,
         private branchService:BranchService,
         private modal:Modal, 
@@ -37,6 +40,9 @@ export class BranchListComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.route.queryParams.subscribe(params => {
+            this.selectedProjectId = params['projectId'];
+        });
         this.reloadProjects();
     }
 
@@ -49,19 +55,26 @@ export class BranchListComponent implements OnInit {
             .getProjects()
             .subscribe(result => {
                 if (result.status == "OK") {
-                    console.log(result);
                     this.projects = result.data;
+                    if (this.selectedProjectId != null) {
+                        this.selectedProject = this.selectedProjectId;
+                        console.log("projectId: " + this.selectedProject);
+                    } else {
+                        if (this.projects.length > 0) {
+                            this.selectedProject = this.projects[0].id.toString();
+                        }
+                    }
+
                     this.reloadBranches();
                 }
             });
     }
 
     addNewBranch() {
-        var projectId = this.selectedProject.nativeElement.value;
         for (var index = 0; index < this.projects.length; index++) {
-            if (this.projects[index].id == projectId) {
+            if (this.projects[index].id == this.selectedProject) {
                 this.router.navigate(['/home/create-branch'], { queryParams: {
-                    projectId: projectId,
+                    projectId: this.selectedProject,
                     title: this.projects[index].title
                 }});
                 break;
@@ -72,8 +85,12 @@ export class BranchListComponent implements OnInit {
     reloadBranches(projectId:String = null) {
 
         var id = projectId;
-        if ((projectId == null) && (this.projects.length > 0)) {
-            id = this.projects[0].id;
+        if (projectId == null){ 
+            if (this.selectedProjectId != null) {
+                id = this.selectedProjectId;
+            } else if (this.projects.length > 0) {
+                id = this.projects[0].id;
+            }
         }
 
         console.log(id);
@@ -97,14 +114,13 @@ export class BranchListComponent implements OnInit {
     }
 
     onRowEdit(id) {
-        var projectId = this.selectedProject.nativeElement.value;
-        
-        for (var index = 0; index < this.projects.length; index++) {
+        for (var index = 0; index < this.branches.length; index++) {
             var branch = this.branches[index];
+            console.log(branch);
             if (branch.id == id) {
                 this.router.navigate(['home/create-branch'], { queryParams: {
                     id: branch.id,
-                    projectId: projectId
+                    projectId: this.selectedProject
                 }});
                 break;
             }

@@ -24,6 +24,8 @@ export class TimeSegmentComponent implements OnInit {
     selectedInputMethod = 'constant';
     comment = '';
     
+    datePickerConfig = { format : 'DD-MM-YYYY hh:mm' };
+    
     constructor(
         private modal: ModalDialogService
     ) { }
@@ -38,7 +40,6 @@ export class TimeSegmentComponent implements OnInit {
 
     ngOnInit() {
         if (this.timeSegment != null) {
-            console.log(this.timeSegment);
             if (this.timeSegment.startTime != null) { this.startDate = new Date(this.timeSegment.startTime.toString()); } 
             if (this.timeSegment.inputMethod != null) { this.selectedInputMethod = this.timeSegment.inputMethod.toString(); }
             if (this.timeSegment.description != null) { this.comment = this.timeSegment.description.toString(); }
@@ -46,7 +47,6 @@ export class TimeSegmentComponent implements OnInit {
     }
 
     getTimeSegmentValues(): ValidationResult {
-
         var result: ValidationResult = { result:true, reason: '' };
         var method: VariableComponentBehavior;
 

@@ -46,7 +46,7 @@ import { VariableExpressionComponent } from './dashboard/variables/expression/ex
 import { AppVariableService } from './services/variable.services';
 import { D3Service } from 'd3-ng2-service';
 import { NgxLineChartModule } from 'ngx-line-chart';
-
+import { ChartsModule } from 'ng2-charts';
 
 
 @NgModule({
@@ -80,6 +80,7 @@ import { NgxLineChartModule } from 'ngx-line-chart';
     CompletedWordComponent
   ],
   imports: [
+    ChartsModule,
     NgxLineChartModule,
     BrowserModule,
     HttpModule,

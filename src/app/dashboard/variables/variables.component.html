@@ -10,33 +10,46 @@
                     <h4>{{selectedVariable == null ? 'Add Variable' : 'Update Variable'}}</h4>
                 </div>
                 <div class="panel-body">
-                    <div class="form-group">
-                        <label for="">Name</label>
-                        <input type="text" [(ngModel)]="variableName" placeholder="name" class="form-control">
-                    </div>
-                    
                     <div class="row">
-                        <div class="form-group col-md-4">
-                            <label for="">Owner</label>
-                            <select [(ngModel)]="ownerId" class="form-control">
-                                <option *ngFor="let user of users" [value]="user.id">{{user.userName}}</option>
-                            </select>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="">Name</label>
+                                <input type="text" [(ngModel)]="variableName" placeholder="name" class="form-control">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="">Description</label>
+                                <textarea id="comment" type="text" [(ngModel)]="description" placeholder="description" class="form-control"></textarea>
+                            </div>
                         </div>
-                        <div class="form-group col-md-4">
-                            <label for="">Value Type</label>
-                            <select name="" id="" [(ngModel)]="valueType" class="form-control">
-                                <option value="integer">Integer</option>
-                                <option value="real">Real</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label for="">Variable Type</label>
-                            <select name="" id="" [(ngModel)]="variableType" class="form-control">
-                                <option value="actual">Actual</option>
-                                <option value="forecast">Forecast</option>
-                            </select>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="">Owner</label>
+                                <select [(ngModel)]="ownerId" class="form-control">
+                                    <option *ngFor="let user of users" [value]="user.id">{{user.userName}}</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="">Value Type</label>
+                                <select name="" id="" [(ngModel)]="valueType" class="form-control">
+                                    <option value="integer">Integer</option>
+                                    <option value="real">Real</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="">Variable Type</label>
+                                <select name="" id="" [(ngModel)]="variableType" class="form-control">
+                                    <option value="actual">Actual</option>
+                                    <option value="forecast">Forecast</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
+
+                    
+                    
+                    
 
                     <div class="row time-segment-button">
                         <button class="btn btn-success pull-right" (click)="addTimeSegment()">Add Time Segment</button>
@@ -51,10 +64,17 @@
                             (delete)="onDeleteSegment()"></time-segment>
                     </div>  
                     
-                    <div class="row">
-                        <div class="graph">
+                    <div class="row" *ngIf="lineChartData.length > 0">
+                        <div style="padding:20px;">
                             <!-- <svg id="graph" class="col-md-12"></svg> -->
-                            <ngx-line-chart #linegraph  [dataSets]="myDataSets" *ngIf="myDataSets != null" ></ngx-line-chart>                            
+                            <!-- <ngx-line-chart #linegraph  [dataSets]="myDataSets" *ngIf="myDataSets != null" ></ngx-line-chart> -->
+                            <canvas baseChart 
+                                [datasets]="lineChartData"
+                                [labels]="lineChartLabels"
+                                [colors]="lineChartColors"
+                                [legend]="lineChartLegend"
+                                [chartType]="lineChartType"></canvas>
+
                         </div>
                     </div>
                 </div>

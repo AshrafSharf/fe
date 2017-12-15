@@ -38,7 +38,6 @@ export class VariablesComponent implements OnInit {
     variables: Variable[] = Array<Variable>();
 
     public lineChartData:Array<any> = [];
-
     public lineChartLabels:Array<any> = [];
     public lineChartOptions:any = {
         responsive: true

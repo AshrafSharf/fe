@@ -4,5 +4,28 @@
     </div>
 
     <div class="row">
+        <div class="form-group">
+            <select (change)="selectBranch($event)" class="app-select">
+                <option *ngFor="let project of projects" [value]="project.id"> {{project.title}} </option>
+            </select>
+            <select (change)="selectVariables($event)" class="app-select">
+                <option *ngFor="let branch of branches" [value]="branch.id"> {{branch.title}} </option>
+            </select>
+        </div>
+
+        <div class="row" *ngIf="lineChartData.length > 0">
+            <div style="padding:20px;">
+                <!-- <svg id="graph" class="col-md-12"></svg> -->
+                <!-- <ngx-line-chart #linegraph  [dataSets]="myDataSets" *ngIf="myDataSets != null" ></ngx-line-chart> -->
+                <canvas baseChart 
+                    [datasets]="lineChartData"
+                    [labels]="lineChartLabels"
+                    [colors]="lineChartColors"
+                    [legend]="true"
+                    [chartType]="line"></canvas>
+
+            </div>
+        </div>
+
     </div>
 </div>

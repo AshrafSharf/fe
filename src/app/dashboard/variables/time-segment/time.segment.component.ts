@@ -20,7 +20,7 @@ export class TimeSegmentComponent implements OnInit {
     @ViewChild(VariableConstantComponent) variableConstant: VariableConstantComponent;
     @ViewChild(VariableExpressionComponent) variableExpression: VariableExpressionComponent;
 
-    startDate:Date;
+    startDate:String;
     selectedInputMethod = 'constant';
     comment = '';
     
@@ -40,7 +40,7 @@ export class TimeSegmentComponent implements OnInit {
 
     ngOnInit() {
         if (this.timeSegment != null) {
-            if (this.timeSegment.startTime != null) { this.startDate = new Date(this.timeSegment.startTime.toString()); } 
+            if (this.timeSegment.startTime != null) { this.startDate = this.timeSegment.startTime.toString(); }
             if (this.timeSegment.inputMethod != null) { this.selectedInputMethod = this.timeSegment.inputMethod.toString(); }
             if (this.timeSegment.description != null) { this.comment = this.timeSegment.description.toString(); }
         }

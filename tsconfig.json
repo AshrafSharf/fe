@@ -15,5 +15,11 @@
       "es2017",
       "dom"
     ]
-  }
+  },
+  "include": [
+      "src/**/*",
+	  "node_modules/angular-font-awesome/angular-font-awesome.ts",
+	  "node_modules/angular-font-awesome/index.ts",
+	  "node_modules/angular-font-awesome/lib/angular-font-awesome.component.ts"
+  ]
 }

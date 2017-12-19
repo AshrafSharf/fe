@@ -20,7 +20,7 @@ export class TimeSegmentComponent implements OnInit {
     @ViewChild(VariableConstantComponent) variableConstant: VariableConstantComponent;
     @ViewChild(VariableExpressionComponent) variableExpression: VariableExpressionComponent;
 
-    startDate:String;
+    startDate: String;
     selectedInputMethod = 'constant';
     comment = '';
     

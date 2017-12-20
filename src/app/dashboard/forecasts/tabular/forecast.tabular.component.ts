@@ -123,16 +123,24 @@ export class ForecastTabularComponent implements OnInit {
 
         if ((this.timeUnit).toLowerCase() == "month") {
 
-            var newStartTime = this.startTime.split("-");
+            //var newStartTime = this.startTime.split("-");
             //var newEndTime = this.endTime.split("-");
 
-            var startDate = new Date((newStartTime[1] + "/" + newStartTime[0] + "/" + newStartTime[2]).toString());
-            var endDate = new Date((newStartTime[1] + "/" + newStartTime[0] + "/" + newStartTime[2]).toString());
-            var actualsStartDate = new Date((newStartTime[1] + "/" + newStartTime[0] + "/" + newStartTime[2]).toString());
+            //var newDate = (startDate[1] + "/" + startDate[0] + "/" + startDate[2]).toString();
+            //console.log(newDate);
+
+            //var startDate = new Date((newStartTime[1] + "/" + newStartTime[0] + "/" + newStartTime[2]).toString());
+            //var endDate = new Date((newStartTime[1] + "/" + newStartTime[0] + "/" + newStartTime[2]).toString());
+
+            //var actualsStartDate = new Date((newStartTime[1] + "/" + newStartTime[0] + "/" + newStartTime[2]).toString());
             //var endDate = new Date((newEndTime[1]+"/"+newEndTime[0]+"/"+newEndTime[2]).toString());
 
+            var startDate = new Date();
 
+            var endDate = new Date();
             endDate.setMonth(startDate.getMonth() + 12);
+
+            var actualsStartDate = new Date();
             actualsStartDate.setMonth(startDate.getMonth() - 6);
 
             //var monthDifference = this.getMonthDifference(startDate, endDate);
@@ -141,7 +149,9 @@ export class ForecastTabularComponent implements OnInit {
             var maxYearsBetween = (endDate.getFullYear()) - (startDate.getFullYear());
 
             var startMonthIndex = startDate.getMonth();
+
             var endMonthIndex = endDate.getMonth();
+
             var actualsMonthIndex = actualsStartDate.getMonth();
 
             //var monthCounter = monthDifference;

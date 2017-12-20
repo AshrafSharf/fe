@@ -19,28 +19,27 @@ import { Variable } from '../../../shared/interfaces/variables';
 
 export class ForecastTabularComponent implements OnInit {
     @ViewChild('projectList') selectedProject:ElementRef;
-    columns: TableViewHeader[];
-    rows: TableViewRow[] = new Array<TableViewRow>();
-    projects: Project[] = new Array<Project>();
+    columns:TableViewHeader[];
+    rows:TableViewRow[] = new Array<TableViewRow>();
+    projects:Project[] = new Array<Project>();
     branches:Branch[] = new Array<Branch>();
     variables:Variable[] = new Array<Variable>();
 
-    timeUnit: String;
-    startTime: String;
-    endTime: String;
-    actualsStartTime: String;
+    timeUnit:String;
+    startTime:String;
+    endTime:String;
+    actualsStartTime:String;
 
     months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-    isLoading: Boolean = false;
+    isLoading:Boolean = false;
 
-    constructor(
-        private router: Router,
-        private branchService:BranchService,
-        private modal:Modal,
-        private projectService: ProjectService,
-        private variableService: AppVariableService) {
+    constructor(private router:Router,
+                private branchService:BranchService,
+                private modal:Modal,
+                private projectService:ProjectService,
+                private variableService:AppVariableService) {
     }
 
     ngOnInit() {
@@ -113,7 +112,7 @@ export class ForecastTabularComponent implements OnInit {
 
     // Populate table view component
     populateTable(id) {
-        for (var index = 0; index < (this.branches).length; index++){
+        for (var index = 0; index < (this.branches).length; index++) {
             if (this.branches[index].id == id) {
                 this.timeUnit = this.branches[index].timeUnit;
                 this.startTime = this.branches[index].startTime;
@@ -127,14 +126,14 @@ export class ForecastTabularComponent implements OnInit {
             var newStartTime = this.startTime.split("-");
             //var newEndTime = this.endTime.split("-");
 
-            var startDate = new Date((newStartTime[1]+"/"+newStartTime[0]+"/"+newStartTime[2]).toString());
-            var endDate = new Date((newStartTime[1]+"/"+newStartTime[0]+"/"+newStartTime[2]).toString());
-            var actualsStartDate = new Date((newStartTime[1]+"/"+newStartTime[0]+"/"+newStartTime[2]).toString());
+            var startDate = new Date((newStartTime[1] + "/" + newStartTime[0] + "/" + newStartTime[2]).toString());
+            var endDate = new Date((newStartTime[1] + "/" + newStartTime[0] + "/" + newStartTime[2]).toString());
+            var actualsStartDate = new Date((newStartTime[1] + "/" + newStartTime[0] + "/" + newStartTime[2]).toString());
             //var endDate = new Date((newEndTime[1]+"/"+newEndTime[0]+"/"+newEndTime[2]).toString());
 
 
-            endDate.setMonth(startDate.getMonth()+12);
-            actualsStartDate.setMonth(startDate.getMonth()-6);
+            endDate.setMonth(startDate.getMonth() + 12);
+            actualsStartDate.setMonth(startDate.getMonth() - 6);
 
             //var monthDifference = this.getMonthDifference(startDate, endDate);
             var monthDifference = 12;
@@ -255,6 +254,8 @@ export class ForecastTabularComponent implements OnInit {
         var timeSegIndex = 0;
         var varTitle;
 
+        var value = 0;
+
         // Add data to rows
         this.rows = new Array<TableViewRow>();
         this.variables.forEach(variable => {
@@ -263,7 +264,7 @@ export class ForecastTabularComponent implements OnInit {
 
             for (var index = 0; index < variableTimeSegments[timeSegIndex].length; index++) {
                 if (variableTimeSegments[timeSegIndex].length > 1) {
-                    varTitle = variable.title + " Time Segment " + (index+1);
+                    varTitle = variable.title + " Time Segment " + (index + 1);
                 }
 
                 var row = new TableViewRow(variable.id);
@@ -271,13 +272,14 @@ export class ForecastTabularComponent implements OnInit {
 
                 // If a variable is of type 'actual' add data to appropriate columns
                 if (variable.variableType == "actual") {
-                    if (variableTimeSegments[timeSegIndex][index].timeSegmentResponse != null){
+                    if (variableTimeSegments[timeSegIndex][index].timeSegmentResponse != null) {
                         for (var index1 = 0; index1 < 18; index1++) {
                             if (variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data[index1] == null) {
                                 row.addColumn(new TableViewColumn("Column " + index1, " "));
                             }
                             else {
-                                row.addColumn(new TableViewColumn("Column " + index1, variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data[index1].value));
+                                value = parseFloat(variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data[index1].value);
+                                row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
                             }
                             column++;
                         }
@@ -285,9 +287,9 @@ export class ForecastTabularComponent implements OnInit {
 
                         // If a variable's resultMap contains more than 1 instance then add the appropriate data to the associated columns
                         if ((variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap).length > 1) {
-                            for (var index1 = 0; index1 < ((variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap).length)-1; index1++) {
-                                row = new TableViewRow(variable.id + "." + (index1+1));
-                                row.addColumn(new TableViewColumn("name", varTitle + " " + variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[index1+1].title));
+                            for (var index1 = 0; index1 < ((variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap).length) - 1; index1++) {
+                                row = new TableViewRow(variable.id + "." + (index1 + 1));
+                                row.addColumn(new TableViewColumn("name", varTitle + " " + variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[index1 + 1].title));
 
                                 column = 0;
                                 for (var index2 = 0; index2 < 18; index2++) {
@@ -295,7 +297,8 @@ export class ForecastTabularComponent implements OnInit {
                                         row.addColumn(new TableViewColumn("Column " + column, " "));
                                     }
                                     else {
-                                        row.addColumn(new TableViewColumn("Column " + column, variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[index1+1].data[index2].value));
+                                        value = parseFloat(variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[index1 + 1].data[index2].value);
+                                        row.addColumn(new TableViewColumn("Column " + column, ((Math.round(value*100))/100).toString()));
                                     }
                                     column++;
                                 }
@@ -312,18 +315,19 @@ export class ForecastTabularComponent implements OnInit {
                 }
                 // If variable is of type 'forecast' add empty data cells for the first 6 months of time period
                 else if (variable.variableType == "forecast") {
-                    if (variableTimeSegments[timeSegIndex][index].timeSegmentResponse != null){
+                    if (variableTimeSegments[timeSegIndex][index].timeSegmentResponse != null) {
                         for (var column = 0; column < 6; column++) {
                             row.addColumn(new TableViewColumn("Column " + column, "-"));
                         }
-                        
+
                         var column = 6;
                         for (var index1 = 0; index1 < 12; index1++) {
                             if (variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data[index1] == null) {
                                 row.addColumn(new TableViewColumn("Column " + column, "n/a"));
                             }
                             else {
-                                row.addColumn(new TableViewColumn("Column " + column, variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data[index1].value));
+                                value = parseFloat(variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data[index1].value);
+                                row.addColumn(new TableViewColumn("Column " + column, ((Math.round(value*100))/100).toString()));
                             }
                             column++;
                         }
@@ -331,9 +335,9 @@ export class ForecastTabularComponent implements OnInit {
 
                         // If a variable's resultMap contains more than 1 instance then add the appropriate data to the associated columns
                         if ((variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap).length > 1) {
-                            for (var index1 = 0; index1 < ((variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap).length)-1; index1++) {
-                                row = new TableViewRow(variable.id + "." + (index1+1));
-                                row.addColumn(new TableViewColumn("name", varTitle + " " + variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[index1+1].title));
+                            for (var index1 = 0; index1 < ((variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap).length) - 1; index1++) {
+                                row = new TableViewRow(variable.id + "." + (index1 + 1));
+                                row.addColumn(new TableViewColumn("name", varTitle + " " + variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[index1 + 1].title));
 
                                 for (var column = 0; column < 6; column++) {
                                     row.addColumn(new TableViewColumn("Column " + column, "-"));
@@ -345,7 +349,8 @@ export class ForecastTabularComponent implements OnInit {
                                         row.addColumn(new TableViewColumn("Column " + column, "n/a"));
                                     }
                                     else {
-                                        row.addColumn(new TableViewColumn("Column " + column, variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[index1+1].data[index2].value));
+                                        value = parseFloat(variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[index1 + 1].data[index2].value);
+                                        row.addColumn(new TableViewColumn("Column " + column, ((Math.round(value*100))/100).toString()));
                                     }
                                     column++;
                                 }
@@ -371,9 +376,9 @@ export class ForecastTabularComponent implements OnInit {
     getMonthDifference(date1, date2) {
         var months;
 
-        months= (date2.getFullYear() - date1.getFullYear()) * 12;
-        months-= date1.getMonth() + 1;
-        months+= date2.getMonth() +1;
+        months = (date2.getFullYear() - date1.getFullYear()) * 12;
+        months -= date1.getMonth() + 1;
+        months += date2.getMonth() + 1;
         return months <= 0 ? 0 : months;
     }
 }

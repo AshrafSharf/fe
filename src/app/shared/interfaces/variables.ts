@@ -25,10 +25,16 @@ export interface KeyValuePair {
     title: String;
 }
 
+export interface TableInputPair {
+    key: String;
+    value: String;
+}
+
 export interface TimeSegment {
     userSelectedParametrics: String;
     startTime: String;
     inputMethod: String;
+    tableInput:TableInputPair[];
     growth: Number;
     distributionType: String;
     description: String;

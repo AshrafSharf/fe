@@ -19,7 +19,7 @@ export class Utils {
 
     // get the token
     public static getToken() {
-        return "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBbWl0IiwiZXhwIjoxNTE0NTQwOTQyfQ.c2GBkg-1dY9NXHutGPVNq1tfgBfgAN4Io2-6mFio4hkYON-CdooGRXKPc0spmyrHOknvRFlBDekH6NBG6p0cZw";
+        return "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBbWl0IiwiZXhwIjoxNTE0NjI5NTUxfQ.IR-cwR5IfvxvI5nzXkMwB5yMf1vUHVyFBAQmMnSNJ6a4a3eiEJtMrbNgOXCRICDvzSVqIG5NJ5niTKL53KlDmQ";
     }
 
     public static getRequestOptions() : RequestOptions {

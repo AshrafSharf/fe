@@ -1,3 +1,4 @@
+import { VariableTableComponent } from './dashboard/variables/table/table.variable.component';
 import { CompletedWordComponent } from './shared/auto-complete-input/completedword.component';
 import { AutocompleteInputComponent } from './shared/auto-complete-input/autocomplete.input.component';
 import { VariableListComponent } from './dashboard/variables/variable-list.component';
@@ -69,6 +70,7 @@ import { ChartsModule } from 'ng2-charts';
     VariableConstantComponent,
     VariableDistributionComponent,
     VariableExpressionComponent,
+    VariableTableComponent,
     
     TableViewComponent,
     ProjectListComponent,

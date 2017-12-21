@@ -10,6 +10,7 @@ import { User } from '../../shared/interfaces/user';
 import { TimeSegmentComponent } from './time-segment/time.segment.component';
 import { ModalDialogService } from '../../services/modal-dialog.service';
 import { Variable, TimeSegment } from '../../shared/interfaces/variables';
+import { Moment, unix } from 'moment';
 
 import {
     D3Service,
@@ -270,6 +271,7 @@ export class VariablesComponent implements OnInit {
             inputMethod: 'constant',
             distributionType: 'none',
             growth: 0,
+            tableInput: null,
             mean: '',
             startTime: '',
             stdDeviation: '',
@@ -295,35 +297,91 @@ export class VariablesComponent implements OnInit {
 
         this.timeSegments.splice(0, this.timeSegments.length);
 
-        var index = 1;
+        var timeSegmentIndex = 0;
         variable.timeSegment.forEach(element => {
             this.timeSegments.push(element);
-
-            console.log(element)
-
             if (element.timeSegmentResponse != undefined || element.timeSegmentResponse != null) {
+
+                // get all the labels
                 element.timeSegmentResponse.resultMap.forEach(resultMap => {
-                    var label = `Time Segment: ${index} - ${resultMap.title}`;
-                    var dataValues = [];
                     resultMap.data.forEach(dataPair => {
-                        dataValues.push(dataPair.value.toFixed(2));
+                        if (!this.isLabelAdded(dataPair.title)) {                            
+                            this.lineChartLabels.push(dataPair.title);
+                        }
                     });
 
-                    this.lineChartData.push({
-                        data: dataValues,
-                        label: label
-                    });
 
                     this.lineChartColors.push({
                         borderColor: this.getRandomColor()
                     });
                 });
+
+
+                // collect all the values
+                //element.timeSegmentResponse.resultMap.forEach(resultMap => 
+                for (var resultMapIndex = 0; resultMapIndex < element.timeSegmentResponse.resultMap.length; resultMapIndex++) {
+                    let resultMap = element.timeSegmentResponse.resultMap[resultMapIndex];
+
+                    var labelTitle = `Time Segment: ${timeSegmentIndex + 1} - ${resultMap.title}`;
+                    var dataValues = [];
+
+                    let labelPosition = 0;
+                    let lastValue:Number = 0;
+                    
+                    //resultMap.data.forEach(dataPair => 
+                    for (var dataIndex = 0; dataIndex < resultMap.data.length; dataIndex++) {
+                        let dataPair = resultMap.data[dataIndex];
+
+                        /*
+                        for (var index = labelPosition; index < this.lineChartLabels.length; index++) {
+                            let label = this.lineChartLabels[index];
+                            if (label == dataPair.title) {
+                                dataValues.push(dataPair.value.toFixed(2));
+                                labelPosition = index + 1;
+                                break;
+                            } else {
+                                dataValues.push('');
+                                if (timeSegmentIndex > 0) {
+                                    if ((index + 1) < resultMap.data.length) {
+                                        if (dataPair.title == this.lineChartLabels[index + 1]) {
+                                            dataValues.splice(0, dataValues.length);
+                                            for (var x = 0; x < index; x ++) {
+                                                dataValues.push('');
+                                            }
+                                            dataValues.push(lastValue);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        */
+                        
+                        dataValues.push(dataPair.value.toFixed(2));
+                        lastValue = dataPair.value;
+                    }
+
+                    this.lineChartData.push({
+                        data: dataValues,
+                        label: labelTitle
+                    });
+                }
             }
 
-            index += 1;
+            timeSegmentIndex += 1;
         });
+    }
 
-        this.lineChartLabels = ['2017-12', '2018-01', '2018-02', '2018-03', '2018-04', '2018-05', '2018-06', '2018-07', '2018-08', '2018-09', '2018-10', '2018-11'];
+    isLabelAdded(title):Boolean {
+        
+        let result: Boolean = false;
+        for (var index = 0; index < this.lineChartLabels.length; index++) {
+            if (this.lineChartLabels[index] == title) {
+                result = true;
+                break;
+            }
+        }
+
+        return result;
     }
 
     getRandomColor() {
@@ -459,5 +517,9 @@ export class VariablesComponent implements OnInit {
         // this.valueType = '';
         // this.variableType = '';
         // this.timeSegments.splice(0, this.timeSegments.length);
+    }
+
+    onVariableTypeChanged() {
+        
     }
 }

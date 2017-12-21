@@ -1,0 +1,30 @@
+.input-search,
+.input-search:hover,
+.input-search:focus {
+    width: 100%;
+    border: none;
+    border-bottom: solid 2px lightgray;
+    padding: 5px;
+    outline: none;
+    font-weight: normal;
+}
+
+.header-column {
+    padding: 10px;
+}
+
+.column-data {
+    line-height: 2.5em;
+}
+
+.column-value {
+    font-size: 17px;
+}
+
+.table_output {
+    overflow: auto;
+}
+
+th {
+    min-width: 100px;
+}

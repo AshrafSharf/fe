@@ -1,0 +1,19 @@
+<div class="form-group">
+    <label for="">Entries</label>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="">
+                <table class="table table-bordered input-group">
+                    <tr class="active">
+                        <td *ngFor="let col of columns">{{col.key}}</td>
+                    </tr>
+                    <tr>
+                        <td *ngFor="let col of columns">
+                            <input type="text" class="table_input" [(ngModel)]="col.value">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

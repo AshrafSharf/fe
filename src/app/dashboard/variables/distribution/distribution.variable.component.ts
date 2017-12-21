@@ -1,5 +1,8 @@
-import { ValidationResult, TimeSegment } from './../../../shared/interfaces/variables';
-import { Component, OnInit, Input } from '@angular/core';
+import { ValidationResult, TimeSegment, KeyValuePair } from './../../../shared/interfaces/variables';
+import { Component, OnInit, Input, ViewChildren } from '@angular/core';
+import { AppVariableService } from '../../../services/variable.services';
+import { AutocompleteInputComponent } from '../../../shared/auto-complete-input/autocomplete.input.component';
+import { QueryList } from '@angular/core/src/linker/query_list';
 
 @Component({
     selector: 'variable-distribution',
@@ -14,8 +17,13 @@ export class VariableDistributionComponent implements OnInit {
     @Input('deviation') deviation: String;
     @Input('sigma') sigma: String;
     @Input('time-segment') timeSegment: TimeSegment;
+    @Input('branch-id') branchId: String = '';
+    @ViewChildren(AutocompleteInputComponent) autoCompleteInputs: AutocompleteInputComponent[];
 
-    constructor() { }
+    variables: KeyValuePair[] = Array<KeyValuePair>(); 
+
+    constructor(
+        private variableService: AppVariableService) { }
 
     ngOnInit() {
         if (this.timeSegment != null || this.timeSegment != undefined) {
@@ -25,6 +33,14 @@ export class VariableDistributionComponent implements OnInit {
             if (this.timeSegment.userSelectedParametricsStdDeviation != undefined) { this.sigma = this.timeSegment.userSelectedParametricsStdDeviation.toString(); }
             if (this.timeSegment.userSelectedParametrics != undefined) { this.parametric = this.timeSegment.userSelectedParametrics; }
         }
+
+        console.log(this.branchId);
+        this.variableService
+            .getVariablesForSuggestions(this.branchId)
+            .subscribe(response => {
+                console.log(response);
+                this.variables = response.data as Array<KeyValuePair>;
+            });
     }
 
     setDistributionType(type:String) {
@@ -38,6 +54,14 @@ export class VariableDistributionComponent implements OnInit {
     }
 
     public isValid(): ValidationResult {
+        var values = [];
+        this.autoCompleteInputs.forEach(control => {
+            values.push(control.getInput());
+        });
+        this.mean = values[0]
+        this.deviation = values[1];
+        
+
         var result: ValidationResult = { result: true, reason: '' };
         if (this.distribution == 2) {
             if (this.parametric.length == 0) {

@@ -10,14 +10,31 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="">Starting Time</label>
-                            <div class='input-group date inputText' id='startDate'>
-                                <dp-date-picker 
-                                    [config]="datePickerConfig"
-                                    [(ngModel)]="startDate" 
-                                    mode="daytime" 
-                                    [theme]="'dp-material dp-main'"></dp-date-picker>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Starting Time</label>
+                                    <div class='input-group date inputText' id='startDate'>
+                                        <dp-date-picker 
+                                            [config]="datePickerConfig"
+                                            [(ngModel)]="startDate" 
+                                            mode="daytime" 
+                                            [theme]="'dp-material dp-main'"></dp-date-picker>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6" *ngIf="selectedInputMethod == 'table'">
+                                <div class="form-group">
+                                    <label for="">End</label>
+                                    <div class='input-group date inputText' id='endDate'>
+                                        <dp-date-picker 
+                                            [config]="datePickerConfig"
+                                            [(ngModel)]="endDate" 
+                                            mode="daytime" 
+                                            [theme]="'dp-material dp-main'"></dp-date-picker>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                 
@@ -33,11 +50,19 @@
                             <select id="input-method" [(ngModel)]="selectedInputMethod" class="form-control">
                                 <option value="constant">Constant</option>
                                 <option value="expression">Expression</option>
+                                <option value="table">Input Table</option>
                             </select>
                         </div>
                 
-                        <variable-constant [time-segment]="timeSegment" *ngIf="selectedInputMethod == 'constant'"></variable-constant>
+                        <variable-constant [time-segment]="timeSegment" *ngIf="selectedInputMethod == 'constant'" [branch-id]="branchId" ></variable-constant>
                         <variable-expression  *ngIf="selectedInputMethod == 'expression'" [branch-id]="branchId"></variable-expression>                                        
+                        <variable-table 
+                            *ngIf="selectedInputMethod == 'table'" 
+                            [branch-id]="branchId" 
+                            [variable-type]="variableType" 
+                            [start-time]="startDate"
+                            [end-time]="endDate"
+                            [time-segment]="timeSegment" ></variable-table>
                     </div>
                 </div>
             </div>

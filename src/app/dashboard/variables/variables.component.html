@@ -39,17 +39,13 @@
                             </div>
                             <div class="form-group">
                                 <label for="">Variable Type</label>
-                                <select name="" id="" [(ngModel)]="variableType" class="form-control">
+                                <select (change)="onVariableTypeChanged()" [(ngModel)]="variableType" class="form-control">
                                     <option value="actual">Actual</option>
                                     <option value="forecast">Forecast</option>
                                 </select>
                             </div>
                         </div>
                     </div>
-
-                    
-                    
-                    
 
                     <div class="row time-segment-button">
                         <button class="btn btn-success pull-right" (click)="addTimeSegment()">Add Time Segment</button>
@@ -61,6 +57,7 @@
                             class="col-md-12" 
                             *ngFor="let segment of timeSegments" 
                             [time-segment]="segment"
+                            [variable-type]="variableType"
                             (delete)="onDeleteSegment()"></time-segment>
                     </div>  
                     

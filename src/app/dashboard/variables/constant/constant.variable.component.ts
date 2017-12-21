@@ -10,7 +10,7 @@ import { ValidationResult } from '../../../shared/interfaces/variables';
 })
 
 export class VariableConstantComponent implements OnInit, VariableComponentBehavior {
-    
+    @Input('branch-id') branchId: String = '';
     @Input('const-value') constValue: String = '';
     @Input('growth') growth: String = '';
     @Input('time-segment') timeSegment: TimeSegment;

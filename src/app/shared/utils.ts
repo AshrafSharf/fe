@@ -4,7 +4,7 @@ import { RequestOptions, Headers } from "@angular/http";
 export class Utils {
 
     // base url
-    static baseUrl:String = "http://ec2-34-241-101-149.eu-west-1.compute.amazonaws.com:8443";
+    static baseUrl:String = "http://ec2-34-243-45-92.eu-west-1.compute.amazonaws.com:8443";
     static routeProject:String = "project";
     static routeBranch:String = "branch";
     static routeVariable:String = "variable";
@@ -19,7 +19,7 @@ export class Utils {
 
     // get the token
     public static getToken() {
-        return "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBbWl0IiwiZXhwIjoxNTE0NjI5NTUxfQ.IR-cwR5IfvxvI5nzXkMwB5yMf1vUHVyFBAQmMnSNJ6a4a3eiEJtMrbNgOXCRICDvzSVqIG5NJ5niTKL53KlDmQ";
+        return "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBbWl0IiwiZXhwIjoxNTE1NzcwMzYyfQ.E2DEXn7TrWhMF2IndfIev9zJqw87iE2ZERU3kRYF6BaX8kucbFPUDzmK34HhVEDsanfojxmvE-2y6inCa9FoKA";
     }
 
     public static getRequestOptions() : RequestOptions {

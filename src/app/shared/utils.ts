@@ -19,7 +19,21 @@ export class Utils {
 
     // get the token
     public static getToken() {
-        return "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBbWl0IiwiZXhwIjoxNTE1NzcwMzYyfQ.E2DEXn7TrWhMF2IndfIev9zJqw87iE2ZERU3kRYF6BaX8kucbFPUDzmK34HhVEDsanfojxmvE-2y6inCa9FoKA";
+        return "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBbWl0IiwiZXhwIjoxNTE1ODkzMTMyfQ.k2fg04xIIlhRDFKglFInV5YuolsETLkJeT7gfc1vtPKd7f3bCJzpIC_DT3RFmcIypdyWaKE85pyz4BCVHsGqgw";
+    }
+
+    public static getShadeOfColor(color, percent) {   
+        var f = parseInt(color.slice(1),16),t=percent<0?0:255,p=percent<0?percent*-1:percent,R=f>>16,G=f>>8&0x00FF,B=f&0x0000FF;
+        return "#"+(0x1000000+(Math.round((t-R)*p)+R)*0x10000+(Math.round((t-G)*p)+G)*0x100+(Math.round((t-B)*p)+B)).toString(16).slice(1);
+    }
+
+    public static getRandomColor() {
+        var letters = '0123456789ABCDEF';
+        var color = '#';
+        for (var i = 0; i < 6; i++) {
+          color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
     }
 
     public static getRequestOptions() : RequestOptions {

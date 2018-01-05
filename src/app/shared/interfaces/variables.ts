@@ -44,3 +44,16 @@ export interface TimeSegment {
     userSelectedParametricsStdDeviation: String;
     timeSegmentResponse: { resultMap: { title:String, data: {title:String, value: Number}[] }[] };
 }
+
+export interface Subvariable {
+    id: String;
+    title: String;
+    value: String;
+}
+
+export interface DiscreteComponent {
+    id: String;
+    title: String;
+    value: String;
+    percentage: String;
+}

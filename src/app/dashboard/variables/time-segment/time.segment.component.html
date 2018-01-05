@@ -26,7 +26,7 @@
 
                             <div class="col-md-6" *ngIf="selectedInputMethod == 'table'">
                                 <div class="form-group">
-                                    <label for="">End</label>
+                                    <label for="">End Time</label>
                                     <div class='input-group date inputText' id='endDate'>
                                         <dp-date-picker 
                                             [config]="datePickerConfig"
@@ -45,24 +45,45 @@
                     </div>
 
                     <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="">Input Method</label>
-                            <select id="input-method" [(ngModel)]="selectedInputMethod" class="form-control">
-                                <option value="constant">Constant</option>
-                                <option value="expression">Expression</option>
-                                <option value="table">Input Table</option>
-                            </select>
+                        <div *ngIf="variableType != 'breakdown'">
+                            <div class="form-group">
+                                <label for="">Input Method</label>
+                                <select id="input-method" [(ngModel)]="selectedInputMethod" class="form-control">
+                                    <option value="constant">Constant</option>
+                                    <option value="expression">Expression</option>
+                                    <option value="table">Input Table</option>
+                                    <option value="breakdown">Breakdown</option>
+                                    <option value="discrete">Discrete Random</option>
+                                </select>
+                            </div>
+                    
+                            <variable-constant 
+                                [time-segment]="timeSegment"
+                                *ngIf="selectedInputMethod == 'constant'" 
+                                [branch-id]="branchId"></variable-constant>
+
+                            <variable-expression
+                                *ngIf="selectedInputMethod == 'expression'" 
+                                [branch-id]="branchId"></variable-expression>                                        
+
+                            <variable-table 
+                                *ngIf="selectedInputMethod == 'table'" 
+                                [branch-id]="branchId" 
+                                [variable-type]="variableType" 
+                                [start-time]="startDate"
+                                [end-time]="endDate"
+                                [time-segment]="timeSegment" ></variable-table>
+
+                            <variable-breakdown 
+                                *ngIf="selectedInputMethod == 'breakdown'" 
+                                [branch-id]="branchId" 
+                                [sub-variable-list]="subVariableList"></variable-breakdown>
+
+                            <variable-discrete-random 
+                                *ngIf="selectedInputMethod == 'discrete'" 
+                                [branch-id]="branchId"></variable-discrete-random>
+
                         </div>
-                
-                        <variable-constant [time-segment]="timeSegment" *ngIf="selectedInputMethod == 'constant'" [branch-id]="branchId" ></variable-constant>
-                        <variable-expression  *ngIf="selectedInputMethod == 'expression'" [branch-id]="branchId"></variable-expression>                                        
-                        <variable-table 
-                            *ngIf="selectedInputMethod == 'table'" 
-                            [branch-id]="branchId" 
-                            [variable-type]="variableType" 
-                            [start-time]="startDate"
-                            [end-time]="endDate"
-                            [time-segment]="timeSegment" ></variable-table>
                     </div>
                 </div>
             </div>

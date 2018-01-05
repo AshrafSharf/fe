@@ -50,12 +50,12 @@
                     <div class="row time-segment-button">
                         <button class="btn btn-success pull-right" (click)="addTimeSegment()">Add Time Segment</button>
                     </div>
-                    
+
                     <div class="row">
                         <time-segment 
                             [branch-id]="branchId" 
                             class="col-md-12" 
-                            *ngFor="let segment of timeSegments" 
+                            *ngFor="let segment of timeSegments"
                             [time-segment]="segment"
                             [variable-type]="variableType"
                             (delete)="onDeleteSegment()"></time-segment>

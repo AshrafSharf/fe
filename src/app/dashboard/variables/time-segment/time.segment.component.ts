@@ -1,24 +1,27 @@
 import { ValidationResult, VariableComponentBehavior, TimeSegment } from './../../../shared/interfaces/variables';
 import { VariableExpressionComponent } from './../expression/expression.variable.component';
 import { VariableConstantComponent } from './../constant/constant.variable.component';
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, SimpleChanges } from '@angular/core';
 import { ModalDialogService } from '../../../services/modal-dialog.service';
 import { VariableTableComponent } from '../table/table.variable.component';
 import { Moment, unix } from 'moment';
+import { OnChanges } from '@angular/core/src/metadata/lifecycle_hooks';
 
 @Component({
     selector: 'time-segment',
     templateUrl: './time.segment.component.html',
     styleUrls: ['./time.segment.component.css']
 })
-export class TimeSegmentComponent implements OnInit {
+export class TimeSegmentComponent implements OnInit, OnChanges {
+    
     @Input('segment-id') segmentId:String;
     @Input('variable-type') variableType:String;
     @Output('delete') deleted = new EventEmitter();
     @Input('is-expanded') isExpanded:Boolean = false;
     @Input('branch-id') branchId: String = '';
     @Input('time-segment') timeSegment: TimeSegment = null;
-
+    private subVariableList:{id:String, title:String, value: String}[];
+    
     
     @ViewChild(VariableConstantComponent) variableConstant: VariableConstantComponent;
     @ViewChild(VariableExpressionComponent) variableExpression: VariableExpressionComponent;
@@ -35,6 +38,10 @@ export class TimeSegmentComponent implements OnInit {
     constructor(
         private modal: ModalDialogService
     ) { }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        console.log(changes);
+    }
 
     onDelete() {
         this.deleted.emit();

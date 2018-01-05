@@ -11,21 +11,28 @@
             <select (change)="selectVariables($event)" class="app-select">
                 <option *ngFor="let branch of branches" [value]="branch.id"> {{branch.title}} </option>
             </select>
-        </div>
+        </div>        
+    </div>
 
-        <div class="row" *ngIf="lineChartData.length > 0">
-            <div style="padding:20px;">
-                <!-- <svg id="graph" class="col-md-12"></svg> -->
-                <!-- <ngx-line-chart #linegraph  [dataSets]="myDataSets" *ngIf="myDataSets != null" ></ngx-line-chart> -->
-                <canvas baseChart 
-                    [datasets]="lineChartData"
-                    [labels]="lineChartLabels"
-                    [colors]="lineChartColors"
-                    [legend]="true"
-                    [chartType]="line"></canvas>
-
+    <div class="row" >
+        <div class="col-md-2 form-group">
+            <div *ngFor="let v of variables" class="checkbox">
+                <label>
+                    <input type="checkbox" checked (click)="excludeVariable($event)" [value]="v.id"> {{v.title}}
+                </label>
             </div>
         </div>
 
+        <div class="col-md-10" *ngIf="lineChartData.length > 0">
+            <!-- <svg id="graph" class="col-md-12"></svg> -->
+            <!-- <ngx-line-chart #linegraph  [dataSets]="myDataSets" *ngIf="myDataSets != null" ></ngx-line-chart> -->
+            <canvas baseChart 
+                [datasets]="lineChartData"
+                [labels]="lineChartLabels"
+                [colors]="lineChartColors"
+                [legend]="lineChartLegend"
+                [chartType]="lineChartType"></canvas>
+
+        </div>
     </div>
 </div>

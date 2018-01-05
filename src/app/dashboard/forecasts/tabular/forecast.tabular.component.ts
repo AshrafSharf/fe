@@ -31,8 +31,10 @@ export class ForecastTabularComponent implements OnInit {
     actualsStartTime:String;
 
     earliestStart:Date;
+    latestEnd:Date;
     distribution:Boolean = false;
     timeSegDistributionIndexes = [];
+    started:Boolean = false;
 
     months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -123,6 +125,7 @@ export class ForecastTabularComponent implements OnInit {
         }
 
         this.earliestStart = null;
+        this.latestEnd = null;
 
         if ((this.timeUnit).toLowerCase() == "month") {
 
@@ -136,6 +139,14 @@ export class ForecastTabularComponent implements OnInit {
 
                 for (var index = 0; index < timeSeg.length; index++) {
                     var startDate = new Date((timeSeg[index].startTime[3] + timeSeg[index].startTime[4] + "/" + timeSeg[index].startTime[0] + timeSeg[index].startTime[1] + "/" + timeSeg[index].startTime[6]+timeSeg[index].startTime[7]+timeSeg[index].startTime[8]+timeSeg[index].startTime[9]).toString());
+
+                    if (timeSeg[index].endTime == null) {
+                        var endDate = new Date(null);
+                    }
+                    else {
+                        var endDate = new Date((timeSeg[index].endTime[3] + timeSeg[index].endTime[4] + "/" + timeSeg[index].endTime[0] + timeSeg[index].endTime[1] + "/" + timeSeg[index].endTime[6]+timeSeg[index].endTime[7]+timeSeg[index].endTime[8]+timeSeg[index].endTime[9]).toString());
+
+                    }
                     //console.log(timeSeg[index].startTime);
                     //console.log(startDate);
 
@@ -147,12 +158,21 @@ export class ForecastTabularComponent implements OnInit {
                             this.earliestStart = startDate;
                         }
                     }
+
+                    if (this.latestEnd == null) {
+                        this.latestEnd = endDate;
+                    }
+                    else {
+                        if (endDate > this.latestEnd) {
+                            this.latestEnd = endDate;
+                        }
+                    }
                 }
 
             });
 
-            //console.log("Earliest start time: "+this.earliestStart);
-
+            console.log("Earliest start time: "+this.earliestStart);
+            console.log("Latest end time: "+this.latestEnd);
 
 
             //var newStartTime = this.startTime.split("-");
@@ -177,6 +197,37 @@ export class ForecastTabularComponent implements OnInit {
             var actualsStartDate = new Date();
             actualsStartDate.setMonth(startDate.getMonth() - 6);
 
+            var monthDifference = this.getMonthDifference(this.earliestStart, this.latestEnd);
+            console.log("monthDifference: "+monthDifference);
+            //var monthDifference = 12;
+
+            //var maxYearsBetween = (endDate.getFullYear()) - (startDate.getFullYear());
+
+            var startMonthIndex = this.earliestStart.getMonth();
+
+            var endMonthIndex = this.latestEnd.getMonth();
+
+            //var actualsMonthIndex = actualsStartDate.getMonth();
+
+            //var monthCounter = monthDifference;
+
+            var noOfColumns = 0;
+
+            //var addedYears = addedMonths/12;
+
+            this.columns = new Array<TableViewHeader>();
+            this.columns.push(new TableViewHeader("name", "Variable Name", "col-md-3", "", ""));
+
+
+/*
+            var startDate = new Date();
+
+            var endDate = new Date();
+            endDate.setMonth(startDate.getMonth() + 12);
+
+            var actualsStartDate = new Date();
+            actualsStartDate.setMonth(startDate.getMonth() - 6);
+
             //var monthDifference = this.getMonthDifference(startDate, endDate);
             var monthDifference = 12;
 
@@ -190,7 +241,6 @@ export class ForecastTabularComponent implements OnInit {
 
             //var monthCounter = monthDifference;
 
-            var noOfColumns = 0;
 
             //var addedYears = addedMonths/12;
 
@@ -216,16 +266,52 @@ export class ForecastTabularComponent implements OnInit {
                     noOfColumns++;
                 }
             }
+*/
+
+            var noOfColumns = 0;
+
+
+            if (monthDifference != 0) {
+
+                var year = this.earliestStart.getFullYear();
+                var diff = monthDifference +1;
+
+                for (var index1 = 0; index1 < (diff); index1++) {
+                    for (var index2 = startMonthIndex; index2 < 12; index2++) {
+                        this.columns.push(new TableViewHeader("Column " + noOfColumns, this.months[index2] + " " + year, "col-md-3", "", ""));
+                        diff--;
+                        noOfColumns++;
+                        if (diff == 0) {
+                            break;
+                        }
+                    }
+                    startMonthIndex = 0;
+                    year++;
+                }
+
+                //for (var index = startMonthIndex; index < monthDifference; index++) {
+                  //  this.columns.push(new TableViewHeader("Column " + noOfColumns, this.months[index] + " " + this.earliestStart.getFullYear(), "col-md-3", "", ""));
+                    //monthDifference--;
+                    //noOfColumns++;
+                //}
+            }
+
+
+
+/*
+-------------------------------------------------------------
 
             // Forecast months
             if (startMonthIndex > 0) {
                 // If startMonthIndex > 0, finish the year
                 for (var index = startMonthIndex; index < 12; index++) {
-                    this.columns.push(new TableViewHeader("Column " + noOfColumns, this.months[index] + " " + startDate.getFullYear(), "col-md-3", "", ""));
+                    this.columns.push(new TableViewHeader("Column " + noOfColumns, this.months[index] + " " + this.earliestStart.getFullYear(), "col-md-3", "", ""));
                     monthDifference--;
                     noOfColumns++;
                 }
-                /*
+
+
+                --------------------------
                  // If there are more than 12 month left between startMonthIndex and endMonthIndex add appropriate months
                  if (monthCounter > 12) {
                  for (var index1 = 0; index1 < addedYears; index1++) {
@@ -236,10 +322,12 @@ export class ForecastTabularComponent implements OnInit {
                  }
                  }
                  }
-                 */
+                 -------------------------------
+
+
                 // Finish the time frame
                 for (var index = 0; index < monthDifference; index++) {
-                    this.columns.push(new TableViewHeader("Column " + noOfColumns, this.months[index] + " " + endDate.getFullYear(), "col-md-3", "", ""));
+                    this.columns.push(new TableViewHeader("Column " + noOfColumns, this.months[index] + " " + this.latestEnd.getFullYear(), "col-md-3", "", ""));
                     //monthDifference--;
                     noOfColumns++;
                 }
@@ -248,11 +336,12 @@ export class ForecastTabularComponent implements OnInit {
             else {
                 // Finish the time frame
                 for (var index = 0; index < 12; index++) {
-                    this.columns.push(new TableViewHeader("Column " + noOfColumns, this.months[index] + " " + startDate.getFullYear(), "col-md-3", "", ""));
+                    this.columns.push(new TableViewHeader("Column " + noOfColumns, this.months[index] + " " + this.earliestStart.getFullYear(), "col-md-3", "", ""));
                     //monthCounter--;
                     noOfColumns++;
                 }
-                /*
+
+                ----------------------------------
                  if (monthCounter > 12) {
                  for (var index1 = 0; index1 < addedYears; index1++) {
                  for (var index2 = 0; index2< 12; index2++) {
@@ -278,14 +367,23 @@ export class ForecastTabularComponent implements OnInit {
                  noOfColumns++;
                  }
                  }
-                 */
+                 --------------------------------
             }
 
-
-
+----------------------------------------------------------
+    */
 
             var timeSegIndex = 0;
             var varTitle;
+
+            var timeSegStart;
+
+            var timeSegStartMonth;
+            var timeSegStartYear;
+            var timeSegStartDate;
+
+
+
 
             var value = 0;
 
@@ -294,8 +392,11 @@ export class ForecastTabularComponent implements OnInit {
             this.variables.forEach(variable => {
 
                 varTitle = variable.title;
+                this.started = false;
 
                 for (var index = 0; index < variableTimeSegments[timeSegIndex].length; index++) {
+
+
 
                     var row = new TableViewRow(variable.id);
                     row.addColumn(new TableViewColumn("name", variable.title));
@@ -309,16 +410,68 @@ export class ForecastTabularComponent implements OnInit {
 
                             for (var index = 0; index < variableTimeSegments[timeSegIndex].length; index++) {
                                 if (variableTimeSegments[timeSegIndex][index].timeSegmentResponse != null) {
-                                    for (var index1 = 0; index1 < (variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data).length; index1++) {
-                                        if (variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data[index1] == null) {
-                                            row.addColumn(new TableViewColumn("Column " + index1, " "));
+
+                                    // Determining the start time for a specific time segment
+                                    timeSegStart = variable.timeSegment[index].startTime;
+
+                                    if (timeSegStart[3] == 0) {
+                                        timeSegStartMonth = timeSegStart[4];
+                                        timeSegStartMonth = timeSegStartMonth - 1;
+                                    }
+                                    else {
+                                        timeSegStartMonth = timeSegStart[3]+timeSegStart[4];
+                                        timeSegStartMonth = timeSegStartMonth - 1;
+                                    }
+
+                                    timeSegStartYear = timeSegStart[6]+timeSegStart[7]+timeSegStart[8]+timeSegStart[9];
+
+                                    timeSegStartDate = this.months[timeSegStartMonth] + " " + timeSegStartYear;
+
+
+                                    for (var x = 1; x < this.columns.length; x ++) {
+
+                                        if (this.started) {
+                                            if (this.columns[x].placeHolder == timeSegStartDate) {
+                                                for (var index1 = 0; index1 < (variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data).length; index1++) {
+
+                                                    if (variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data[index1] == null) {
+                                                        row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                    }
+                                                    else {
+                                                        value = parseFloat(variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data[index1].value);
+                                                        row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                    }
+                                                    column++;
+                                                }
+                                                break;
+                                            }
                                         }
                                         else {
-                                            value = parseFloat(variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data[index1].value);
-                                            row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                            if (this.columns[x].placeHolder == timeSegStartDate) {
+                                                this.started = true;
+                                                for (var index1 = 0; index1 < (variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data).length; index1++) {
+
+                                                    if (variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data[index1] == null) {
+                                                        row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                    }
+                                                    else {
+                                                        value = parseFloat(variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data[index1].value);
+                                                        row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                    }
+                                                    column++;
+                                                }
+                                                break;
+                                            }
+                                            else {
+                                                row.addColumn(new TableViewColumn("Column " + x, "-X-"));
+                                                column++;
+                                                //console.log("Its Not");
+                                                //row.addColumn(new TableViewColumn("Column " + index1, "Its Not"));
+                                            }
                                         }
-                                        column++;
+
                                     }
+
 
                                     // If a variable's resultMap contains more than 1 instance then set the this.distribution boolean to true and add the index of the time segment to the this.timeSegDistributionIndexes array
                                     if ((variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap).length > 1) {
@@ -351,7 +504,7 @@ export class ForecastTabularComponent implements OnInit {
 */
                                 }
                                 else {
-                                    for (var column = 0; column < 18; column++) {
+                                    for (var column = 0; column < this.columns.length; column++) {
                                         row.addColumn(new TableViewColumn("Column " + column, "n/a"));
                                     }
                                     //this.rows.push(row);
@@ -360,6 +513,7 @@ export class ForecastTabularComponent implements OnInit {
 
 
                             this.rows.push(row);
+                            this.started = false;
 
                             if (this.distribution == true) {
 
@@ -409,18 +563,70 @@ export class ForecastTabularComponent implements OnInit {
                             }
                         }
                         else {
+
+                            timeSegStart = variable.timeSegment[0].startTime;
+
+                            if (timeSegStart[3] == 0) {
+                                timeSegStartMonth = timeSegStart[4];
+                                timeSegStartMonth = timeSegStartMonth - 1;
+                            }
+                            else {
+                                timeSegStartMonth = timeSegStart[3]+timeSegStart[4];
+                                timeSegStartMonth = timeSegStartMonth - 1;
+                            }
+
+                            timeSegStartYear = timeSegStart[6]+timeSegStart[7]+timeSegStart[8]+timeSegStart[9];
+
+                            timeSegStartDate = this.months[timeSegStartMonth] + " " + timeSegStartYear;
+
+
                             if (variableTimeSegments[timeSegIndex][0].timeSegmentResponse != null) {
-                                for (var index1 = 0; index1 < (variableTimeSegments[timeSegIndex][0].timeSegmentResponse.resultMap[0].data).length; index1++) {
-                                    if (variableTimeSegments[timeSegIndex][0].timeSegmentResponse.resultMap[0].data[index1] == null) {
-                                        row.addColumn(new TableViewColumn("Column " + index1, " "));
+
+                                for (var x = 1; x < this.columns.length; x ++) {
+
+                                    if (this.started) {
+                                        if (this.columns[x].placeHolder == timeSegStartDate) {
+                                            for (var index1 = 0; index1 < (variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data).length; index1++) {
+
+                                                if (variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data[index1] == null) {
+                                                    row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                }
+                                                else {
+                                                    value = parseFloat(variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data[index1].value);
+                                                    row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                }
+                                                column++;
+                                            }
+                                            this.rows.push(row);
+                                            break;
+                                        }
                                     }
                                     else {
-                                        value = parseFloat(variableTimeSegments[timeSegIndex][0].timeSegmentResponse.resultMap[0].data[index1].value);
-                                        row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                        if (this.columns[x].placeHolder == timeSegStartDate) {
+                                            this.started = true;
+                                            for (var index1 = 0; index1 < (variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data).length; index1++) {
+
+                                                if (variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data[index1] == null) {
+                                                    row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                }
+                                                else {
+                                                    value = parseFloat(variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data[index1].value);
+                                                    row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                }
+                                                column++;
+                                            }
+                                            this.rows.push(row);
+                                            break;
+                                        }
+                                        else {
+                                            row.addColumn(new TableViewColumn("Column " + x, "-X-"));
+                                            column++;
+                                            //console.log("Its Not");
+                                            //row.addColumn(new TableViewColumn("Column " + index1, "Its Not"));
+                                        }
                                     }
-                                    column++;
+
                                 }
-                                this.rows.push(row);
 
                                 // If a variable's resultMap contains more than 1 instance then add the appropriate data to the associated columns
                                 if ((variableTimeSegments[timeSegIndex][0].timeSegmentResponse.resultMap).length > 1) {
@@ -561,6 +767,7 @@ export class ForecastTabularComponent implements OnInit {
 
                     }
                     */
+                    //timeSegCounter++;
                 }
                 this.timeSegDistributionIndexes.length = 0;
                 this.distribution = false;

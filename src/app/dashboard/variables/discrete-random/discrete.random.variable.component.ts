@@ -9,10 +9,11 @@ import { DiscreteComponent } from '../../../shared/interfaces/variables';
 export class VariableDiscreteRandomComponent implements OnInit {
     @Input('branch-id') branchId: String;
 
-    private title:String = '';
-    private value:String = '';
-    private percentage:String = '';
-    private components:DiscreteComponent[] = [];
+    constValue:String = '';
+    title:String = '';
+    value:String = '';
+    components:DiscreteComponent[] = [];
+    percentage:String = '';
 
     constructor() { }
 

@@ -48,6 +48,8 @@ import { AppVariableService } from './services/variable.services';
 import { D3Service } from 'd3-ng2-service';
 import { NgxLineChartModule } from 'ngx-line-chart';
 import { ChartsModule } from 'ng2-charts';
+import { VariableBreakdownComponent } from './dashboard/variables/breakdown/breakdown.variable.component';
+import { VariableDiscreteRandomComponent } from './dashboard/variables/discrete-random/discrete.random.variable.component';
 
 
 @NgModule({
@@ -71,6 +73,8 @@ import { ChartsModule } from 'ng2-charts';
     VariableDistributionComponent,
     VariableExpressionComponent,
     VariableTableComponent,
+    VariableBreakdownComponent,
+    VariableDiscreteRandomComponent,
     
     TableViewComponent,
     ProjectListComponent,

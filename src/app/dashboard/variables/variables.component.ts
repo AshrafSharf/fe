@@ -23,7 +23,8 @@ import {
     ScaleOrdinal,
     Selection,
     Transition
-  } from 'd3-ng2-service';
+} from 'd3-ng2-service';
+import { Utils } from '../../shared/utils';
   
 @Component({
     selector: 'variables',
@@ -47,7 +48,6 @@ export class VariablesComponent implements OnInit {
     public lineChartColors:Array<any> = [];
     public lineChartLegend:boolean = true;
     public lineChartType:string = 'line';
-
 
     description = '';
     branchId = '';
@@ -138,12 +138,6 @@ export class VariablesComponent implements OnInit {
                     }
                 })
         });
-
-        //this.reloadProjects();
-
-        // if (this.selectedVariable != null) {
-        //     this.renderGraph();
-        // }
     }
 
     createLineChartData() {
@@ -152,115 +146,27 @@ export class VariablesComponent implements OnInit {
         if (this.selectedVariable.timeSegment.length > 0) {
             var element = this.selectedVariable.timeSegment[0];
             if (element.timeSegmentResponse != null || element.timeSegmentResponse != undefined) {
-                // element.timeSegmentResponse.resultMap.forEach(value => {
-                    if (element.timeSegmentResponse.resultMap.length > 0) {
-                        var value = element.timeSegmentResponse.resultMap[0];
+                if (element.timeSegmentResponse.resultMap.length > 0) {
+                    var value = element.timeSegmentResponse.resultMap[0];
 
-                        if (value.data.length > 0) {
-                            var index = 0;
-                            value.data.forEach(tmpValue => {
-                                values.push({x: index, y: tmpValue.value})
-                                index += 1; 
-                            });
-                        }
-    
-                        console.log("====values====");
-                        console.log(values);
-                        
-                        this.myDataSets = [{
-                            name: 'Forecast Values',
-                            points: values
-                        }];
+                    if (value.data.length > 0) {
+                        var index = 0;
+                        value.data.forEach(tmpValue => {
+                            values.push({x: index, y: tmpValue.value})
+                            index += 1; 
+                        });
                     }
+
+                    console.log("====values====");
+                    console.log(values);
                     
-                // });
+                    this.myDataSets = [{
+                        name: 'Forecast Values',
+                        points: values
+                    }];
+                }
             } 
         }
-
-    }
-
-    renderGraph() {
-        let self = this;
-        let d3 = this.d3;
-        let d3ParentElement: any;
-        let svg: any;
-        let name: string;
-        let yVal: number;
-        let colors: any = [];
-        let data: {name: string, yVal: number}[] = [];
-        let padding: number = 25;
-        let width: number = 500;
-        let height: number = 150;
-        let xScale: any;
-        let yScale: any;
-        let xColor: any;
-        let xAxis: any;
-        let yAxis: any;
-
-        if (this.parentNativeElement !== null) {
-            // svg = d3.select(this.parentNativeElement)
-            //     .append('svg')        // create an <svg> element
-            //     .attr('width', width) // set its dimensions
-            //     .attr('height', height);
-
-            svg = d3.select('#graph');
-
-            colors = ['red', 'yellow', 'green', 'blue'];
-            
-            data = [
-                {name : 'A', yVal : 1},
-                {name : 'B', yVal : 4},
-                {name : 'C', yVal : 2},
-                {name : 'D', yVal : 3}
-            ];
-    
-            xScale = d3.scaleBand()
-                .domain(data.map(function(d){ return d.name; }))
-                .range([0, 200]);
-    
-            yScale = d3.scaleLinear()
-                .domain([0,d3.max(data, function(d) {return d.yVal})])
-                .range([100, 0]);
-    
-            xAxis = d3.axisBottom(xScale) // d3.js v.4
-                .ticks(5)
-                .scale(xScale);
-    
-            yAxis = d3.axisLeft(xScale) // d3.js v.4
-                .scale(yScale)
-                .ticks(7);
-    
-            svg.append("g")
-                .attr("class", "axis")
-                .attr("transform", "translate(" + (padding) + "," + padding + ")")
-                .call(yAxis);
-
-            svg.append('g')            // create a <g> element
-                .attr('class', 'axis')   // specify classes
-                .attr("transform", "translate(" + padding + "," + (height - padding) + ")")
-                .call(xAxis);            // let the axis do its thing
-
-            // var rects = svg.selectAll('rect')
-            //     .data(data);
-            //     rects.size();
-    
-            // var newRects = rects.enter();
-    
-            // newRects.append('rect')
-            //     .attr('x', function(d,i) {
-            //         return xScale(d.name );
-            //     })
-            //     .attr('y', function(d) {
-            //         return yScale(d.yVal);
-            //     })
-            //     .attr("transform","translate(" + (padding -5  + 25) + "," + (padding - 5) + ")")
-            //     .attr('height', function(d) {
-            //         return height - yScale(d.yVal) - (2*padding) + 5})
-            //     .attr('width', 10)
-            //     .attr('fill', function(d, i) {
-            //         return colors[i];
-            //     });
-        }      
 
     }
 
@@ -297,8 +203,9 @@ export class VariablesComponent implements OnInit {
 
         this.timeSegments.splice(0, this.timeSegments.length);
 
-        var timeSegmentIndex = 0;
-        variable.timeSegment.forEach(element => {
+        for (var timeSegmentIndex = 0; timeSegmentIndex < variable.timeSegment.length; timeSegmentIndex++) {
+            let element = variable.timeSegment[timeSegmentIndex];
+
             this.timeSegments.push(element);
             if (element.timeSegmentResponse != undefined || element.timeSegmentResponse != null) {
 
@@ -309,18 +216,23 @@ export class VariablesComponent implements OnInit {
                             this.lineChartLabels.push(dataPair.title);
                         }
                     });
-
-
-                    this.lineChartColors.push({
-                        borderColor: this.getRandomColor()
-                    });
                 });
 
+                var color = '';
+                var shade = 0.1;
 
                 // collect all the values
-                //element.timeSegmentResponse.resultMap.forEach(resultMap => 
                 for (var resultMapIndex = 0; resultMapIndex < element.timeSegmentResponse.resultMap.length; resultMapIndex++) {
                     let resultMap = element.timeSegmentResponse.resultMap[resultMapIndex];
+                    if (resultMapIndex == 0) {
+                        color = Utils.getRandomColor();
+                        shade = 0;
+                    }
+
+                    let borderColor = resultMapIndex == 0 ? color : Utils.getShadeOfColor(color, shade)
+                    this.lineChartColors.push({ borderColor: borderColor });
+                    console.log("borderColor: " + resultMapIndex + ", " + resultMap.title, borderColor);
+                    shade += 0.1;
 
                     var labelTitle = `Time Segment: ${timeSegmentIndex + 1} - ${resultMap.title}`;
                     var dataValues = [];
@@ -328,36 +240,33 @@ export class VariablesComponent implements OnInit {
                     let labelPosition = 0;
                     let lastValue:Number = 0;
                     
-                    //resultMap.data.forEach(dataPair => 
                     for (var dataIndex = 0; dataIndex < resultMap.data.length; dataIndex++) {
                         let dataPair = resultMap.data[dataIndex];
 
-                        /*
                         for (var index = labelPosition; index < this.lineChartLabels.length; index++) {
                             let label = this.lineChartLabels[index];
                             if (label == dataPair.title) {
                                 dataValues.push(dataPair.value.toFixed(2));
                                 labelPosition = index + 1;
-                                break;
-                            } else {
-                                dataValues.push('');
-                                if (timeSegmentIndex > 0) {
-                                    if ((index + 1) < resultMap.data.length) {
-                                        if (dataPair.title == this.lineChartLabels[index + 1]) {
-                                            dataValues.splice(0, dataValues.length);
-                                            for (var x = 0; x < index; x ++) {
-                                                dataValues.push('');
-                                            }
-                                            dataValues.push(lastValue);
+                                if (index == this.lineChartLabels.length - 1) {
+                                    console.log("adding new entry");
+
+                                    // add the last value from next timesegment
+                                    let tempElement = variable.timeSegment[timeSegmentIndex + 1];
+                                    if (tempElement != undefined) {
+                                        let resultMapTemp = tempElement.timeSegmentResponse.resultMap[0];
+                                        console.log("resultMapTemp", resultMapTemp);
+                                        if (resultMapTemp != undefined) {
+                                            let entry = resultMapTemp.data[0];
+                                            dataValues.push(entry.value.toFixed(2));
                                         }
                                     }
                                 }
+                                break;
+                            } else {
+                                dataValues.push(undefined);
                             }
                         }
-                        */
-                        
-                        dataValues.push(dataPair.value.toFixed(2));
-                        lastValue = dataPair.value;
                     }
 
                     this.lineChartData.push({
@@ -366,9 +275,7 @@ export class VariablesComponent implements OnInit {
                     });
                 }
             }
-
-            timeSegmentIndex += 1;
-        });
+        }
     }
 
     isLabelAdded(title):Boolean {
@@ -382,15 +289,6 @@ export class VariablesComponent implements OnInit {
         }
 
         return result;
-    }
-
-    getRandomColor() {
-        var letters = '0123456789ABCDEF';
-        var color = '#';
-        for (var i = 0; i < 6; i++) {
-          color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
     }
 
     reloadProjects() {

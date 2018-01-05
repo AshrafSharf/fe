@@ -35,6 +35,7 @@ export class UserService implements CanActivate {
                 .post(url, body, requestOptions)
                 .map(result => {
                     console.log(result);
+                    console.log(result.status);
                     console.log(result.headers.get('authorization'));
                     return { status: "OK"};
                 })

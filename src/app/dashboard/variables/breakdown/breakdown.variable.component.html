@@ -1,0 +1,74 @@
+
+<div class="row">
+    <div class="form-group col-md-12">
+        <label for="">Constant Value</label>
+        <input type="number" class="form-control" [(ngModel)]="constValue">
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="">Growth (aggregated per month)</label>
+            <div class="input-group">
+                <div class="input-group-addon">%</div>
+                <input type="number" class="form-control" [(ngModel)]="growth">
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <label for="">Growth Period</label>
+        <select [(ngModel)]="selectedGrowthPeriod" class="form-control">
+            <option value="monthly">Monthly</option>
+            <option value="yearly">Yearly</option>
+        </select>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4>Subvariables</h4>
+            </div>
+            <div class="panel-body">
+                <div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="">Subvariable Name</label>
+                                <input type="text" [(ngModel)]="subvariableName" class="form-control" placeholder="subvariable name">
+                            </div>                
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="">Value</label>
+                                <input type="text" [(ngModel)]="subvariableValue" class="form-control" placeholder="subvariable value">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-success" (click)="addVariable()">Add</button>
+                </div>
+
+                <div class="list">
+                    <label class="text-bold">Subvariables</label>
+                    <ul class="list-group">
+                        <li class="list-group-item" *ngFor="let s of subvariables">
+                            <div class="pull-left">
+                                <label class="text-bold">{{s.title}} ({{s.value}})</label>
+                            </div>
+                            <div class="pull-right">
+                                <fa name="trash" class="trash" (click)="deleteVariable(s)"></fa>
+                            </div>
+                            <div class="clearfix"></div>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

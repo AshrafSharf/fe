@@ -36,6 +36,7 @@ export interface TimeSegment {
     inputMethod: String;
     tableInput:TableInputPair[];
     growth: Number;
+    growthPeriod: Number;
     distributionType: String;
     description: String;
     constantValue: Number;
@@ -43,16 +44,15 @@ export interface TimeSegment {
     stdDeviation: String;
     userSelectedParametricsStdDeviation: String;
     timeSegmentResponse: { resultMap: { title:String, data: {title:String, value: Number}[] }[] };
+    breakdownInput: Subvariable[];
 }
 
 export interface Subvariable {
-    id: String;
-    title: String;
+    name: String;
     value: String;
 }
 
 export interface DiscreteComponent {
-    id: String;
     title: String;
     value: String;
     percentage: String;

@@ -185,7 +185,9 @@ export class VariablesComponent implements OnInit {
                 resultMap: Array()
             },
             userSelectedParametrics: '',
-            userSelectedParametricsStdDeviation: ''
+            userSelectedParametricsStdDeviation: '',
+            growthPeriod: 0,
+            breakdownInput: []
         });
     }
 
@@ -356,15 +358,19 @@ export class VariablesComponent implements OnInit {
             this.modal.showError('Owner Id is mandatory');
         } else {
             var timeSegmentValues = Array();
+
+            let lastResult = null;
             this.timeSegmentWidgets.forEach(segment => {
                 var result = segment.getTimeSegmentValues();
                 if (result.result) {
                     timeSegmentValues.push(result.reason);
+                } else {
+                    lastResult = result;
                 }
             });
     
             if (timeSegmentValues.length != this.timeSegmentWidgets.length) {
-                this.modal.showError('Incomplete time segment definition');
+                this.modal.showError(lastResult.reason.toString(), 'Incomplete definition');
             } else {
                 let body = {
                     description: this.description,

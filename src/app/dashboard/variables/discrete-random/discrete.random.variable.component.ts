@@ -8,7 +8,7 @@ import { DiscreteComponent } from '../../../shared/interfaces/variables';
 })
 export class VariableDiscreteRandomComponent implements OnInit {
     @Input('branch-id') branchId: String;
-
+    
     constValue:String = '';
     title:String = '';
     value:String = '';
@@ -26,7 +26,7 @@ export class VariableDiscreteRandomComponent implements OnInit {
             }
         }
 
-        this.components.push({title: this.title, id: '', value: this.value, percentage: this.percentage});
+        this.components.push({title: this.title, value: this.value, percentage: this.percentage});
         this.title = '';
         this.value = '';
         this.percentage = '';

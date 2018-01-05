@@ -1,3 +1,4 @@
+import { VariableBreakdownComponent } from './../breakdown/breakdown.variable.component';
 import { ValidationResult, VariableComponentBehavior, TimeSegment } from './../../../shared/interfaces/variables';
 import { VariableExpressionComponent } from './../expression/expression.variable.component';
 import { VariableConstantComponent } from './../constant/constant.variable.component';
@@ -19,13 +20,12 @@ export class TimeSegmentComponent implements OnInit, OnChanges {
     @Output('delete') deleted = new EventEmitter();
     @Input('is-expanded') isExpanded:Boolean = false;
     @Input('branch-id') branchId: String = '';
-    @Input('time-segment') timeSegment: TimeSegment = null;
-    private subVariableList:{id:String, title:String, value: String}[];
-    
+    @Input('time-segment') timeSegment: TimeSegment = null;    
     
     @ViewChild(VariableConstantComponent) variableConstant: VariableConstantComponent;
     @ViewChild(VariableExpressionComponent) variableExpression: VariableExpressionComponent;
     @ViewChild(VariableTableComponent) variableTable: VariableTableComponent;
+    @ViewChild(VariableBreakdownComponent) variableBreakDown: VariableBreakdownComponent;
 
     endDate: any;
     startDate: any;
@@ -102,6 +102,10 @@ export class TimeSegmentComponent implements OnInit, OnChanges {
             // table
             result = this.variableTable.isValid();
             method = this.variableTable;
+        } else if (this.selectedInputMethod == 'breakdown') {
+            // breakdown variable
+            result = this.variableBreakDown.isValid();
+            method = this.variableBreakDown;
         }
 
         if (result.result) {            

@@ -56,9 +56,9 @@
                 <div class="list">
                     <label class="text-bold">Subvariables</label>
                     <ul class="list-group">
-                        <li class="list-group-item" *ngFor="let s of subvariables">
+                        <li class="list-group-item" *ngFor="let s of subvariableList">
                             <div class="pull-left">
-                                <label class="text-bold">{{s.title}} ({{s.value}})</label>
+                                <label class="text-bold">{{s.name}} ({{s.value}})</label>
                             </div>
                             <div class="pull-right">
                                 <fa name="trash" class="trash" (click)="deleteVariable(s)"></fa>

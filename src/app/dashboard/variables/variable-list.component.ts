@@ -45,7 +45,7 @@ export class VariableListComponent implements OnInit {
             this.selectedProjectId = params['projectId'];
             this.selectedBranchId = params['branchId'];
 
-            this.reloadProjects();
+            this.reloadProjects(false);
         });
 
         this.columns = new Array<TableViewHeader>();
@@ -72,7 +72,7 @@ export class VariableListComponent implements OnInit {
     }
 
     selectBranch(event) {
-        this.reloadBranches(event.target.value);
+        this.reloadBranches(this.selectedProject, true);
     }
 
     calculateValues() {
@@ -104,7 +104,7 @@ export class VariableListComponent implements OnInit {
             })
     }
 
-    reloadProjects() {
+    reloadProjects(forceReload = true) {
         // clear rows
         this.rows.splice(0, this.rows.length);
         this.variables.splice(0, this.variables.length);
@@ -122,13 +122,14 @@ export class VariableListComponent implements OnInit {
                     } else if (this.projects.length > 0) {
                         this.selectedProject = this.projects[0].id;
                     }
+
                     console.log("project id: " + this.selectedProject);
-                    this.reloadBranches();
+                    this.reloadBranches(this.selectedProject);
                 }
             });
     }
 
-    reloadBranches(projectId:String = null) {
+    reloadBranches(projectId:String = null, forceReload = false) {
         // clear rows
         this.rows.splice(0, this.rows.length);
         this.variables.splice(0, this.variables.length);
@@ -149,10 +150,14 @@ export class VariableListComponent implements OnInit {
                 .subscribe(result => {
                     this.branches = result.data;
                     this.selectedBranch = '';
-                    if (this.selectedBranchId != null) {
-                        this.selectedBranch = this.selectedBranchId;
-                    } else if (this.branches.length > 0) {
+                    if (forceReload) {
                         this.selectedBranch = this.branches[0].id;
+                    } else {
+                        if (this.selectedBranchId != null) {
+                            this.selectedBranch = this.selectedBranchId;
+                        } else if (this.branches.length > 0) {
+                            this.selectedBranch = this.branches[0].id;
+                        }
                     }
 
                     this.reloadVariables();

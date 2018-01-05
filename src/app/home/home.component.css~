@@ -34,7 +34,12 @@ a.active {
     width: 100%;
 }
 
+.navbar-brand {
+    padding-top:12px;
+}
+
 .navbar-nav {
+    height: 47px;
     width: 100%;
 }
 

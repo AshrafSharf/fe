@@ -168,6 +168,9 @@ export class ForecastTabularComponent implements OnInit {
 
             });
 
+            console.log("Earliest start: "+this.earliestStart);
+            console.log("Latest end: "+this.latestEnd);
+
             var monthDifference = this.getMonthDifference(this.earliestStart, this.latestEnd);
             var startMonthIndex = this.earliestStart.getMonth();
             var endMonthIndex = this.latestEnd.getMonth();
@@ -292,7 +295,7 @@ export class ForecastTabularComponent implements OnInit {
                                 }
                             }
                             else {
-                                for (var col = 0; col < this.columns.length; col++) {
+                                for (var col = 0; col < (this.columns.length)-1; col++) {
                                     row.addColumn(new TableViewColumn("Column " + col, "n/a"));
                                     columnCounter++;
                                 }
@@ -494,7 +497,7 @@ export class ForecastTabularComponent implements OnInit {
                             }
                         }
                         else {
-                            for (var column = 0; column < this.columns.length; column++) {
+                            for (var column = 0; column < (this.columns.length)-1; column++) {
                                 row.addColumn(new TableViewColumn("Column " + column, "n/a"));
                                 columnCounter++;
                             }

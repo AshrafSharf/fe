@@ -45,15 +45,30 @@
                     </div>
 
                     <div class="col-md-6">
-                        <div *ngIf="variableType != 'breakdown'">
+                        <div class="row" *ngIf="variableTypeList != undefined && (variableType == 'breakdown' || variableType == 'discrete')">
+                            <table class="table input-group table-bordered">
+                                <tr>
+                                    <th class="active">Title</th>
+                                    <th *ngFor="let subVar of variableTypeList">{{subVar.name}}</th>
+                                </tr>
+                                <tr>
+                                    <th class="active">Value</th>
+                                    <td *ngFor="let subVar of variableTypeList">
+                                        <input class="table_input" type="text" placeholder="value" [(ngModel)]="subVar.value">
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div *ngIf="variableType == 'forecast' || variableType == 'actual'">
                             <div class="form-group">
                                 <label for="">Input Method</label>
                                 <select id="input-method" [(ngModel)]="selectedInputMethod" class="form-control">
                                     <option value="constant">Constant</option>
                                     <option value="expression">Expression</option>
                                     <option value="table">Input Table</option>
-                                    <option value="breakdown">Breakdown</option>
-                                    <option value="discrete">Discrete Random</option>
+                                    <!-- <option value="breakdown">Breakdown</option>
+                                    <option value="discrete">Discrete Random</option> -->
                                 </select>
                             </div>
                     
@@ -63,6 +78,7 @@
                                 [branch-id]="branchId"></variable-constant>
 
                             <variable-expression
+                                [time-segment]="timeSegment" 
                                 *ngIf="selectedInputMethod == 'expression'" 
                                 [branch-id]="branchId"></variable-expression>                                        
 

@@ -1,3 +1,4 @@
+import { VariableTypeComponent } from './../dashboard/variable-type/variable.type.component';
 import { HomeComponent } from './../home/home.component';
 import { UserService } from './../services/user.service';
 
@@ -17,6 +18,7 @@ import { ComponentModelComponent } from '../dashboard/component-model/model.comp
 import { LoginComponent } from '../login/login.component';
 import { SimulationComponent } from '../dashboard/simulation/simulation.component';
 import { VariableListComponent } from '../dashboard/variables/variable-list.component';
+import { VariableTypeListComponent } from '../dashboard/variable-type/variable.type.list.component';
 
 export const routes: Routes = [
     { path:'login', component: LoginComponent },
@@ -36,7 +38,9 @@ export const routes: Routes = [
             { path:'component_model', component: ComponentModelComponent, canActivate:[UserService] },
             { path:'data_flow', component: DataFlowComponent, canActivate:[UserService] },
             { path:'login', component: LoginComponent },
-            { path:'simulation', component: SimulationComponent, canActivate:[UserService] }
+            { path:'simulation', component: SimulationComponent, canActivate:[UserService] },
+            { path:'variable-type-list', component: VariableTypeListComponent, canActivate: [UserService]},
+            { path:'create-variable-type', component: VariableTypeComponent, canActivate: [UserService]}
         ] 
     },
 

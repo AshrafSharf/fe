@@ -20,7 +20,7 @@
                         </div>
                         <div id="app-menu" class="navbar-collapse collapse" aria-expanded="false" style="height: 1px;">
                             <ul class="nav navbar-nav">
-                                <li class="list">
+                                <li>
                                     <a
                                         (click)="selectedMenu = 'projects'"
                                         routerLink="project-list"
@@ -41,6 +41,13 @@
                                         [class.active]="selectedMenu == 'variables'"
                                         href="#">VARIABLES</a>
                                 </li>
+                                <!-- <li>
+                                    <a
+                                        (click)="selectedMenu = 'variableTypes'"
+                                        routerLink="variable-type-list"
+                                        [class.active]="selectedMenu == 'variableTypes'"
+                                        href="#">VARIABLE TYPES</a>
+                                </li> -->
                                 <li>
                                     <a
                                         (click)="selectedMenu = 'forecast_tabular'"

@@ -1,0 +1,14 @@
+<div class="container-fliud">
+    <div class="row">
+        <app-header title="Variable Types"></app-header>
+    </div>
+
+    <div class="row">
+        <button class="app-button" (click)="addNewVariableType()">NEW TYPE</button>
+        <table-view
+            (row-edited)="onRowEdit($event)"
+            (row-deleted)="onRowDelete($event)"
+            [cols]="columns" 
+            [rows]="rows"></table-view>
+    </div>
+</div>

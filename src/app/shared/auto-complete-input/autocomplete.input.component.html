@@ -12,6 +12,7 @@
         type="text" 
         (keyup)="onKeyup($event)" 
         placeholder="start here">
+    <div>Please use space as delimiter</div>
     <div class="text-danger" *ngIf="isError">incorrect value</div>
     <ul class="suggestion-list" *ngIf="suggestions.length > 0">
         <li class="list-item" *ngFor="let s of suggestions" (click)="selectWord(s)">{{s.title}}</li>

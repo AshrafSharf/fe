@@ -1,5 +1,5 @@
 import { AutocompleteInputComponent } from './../../../shared/auto-complete-input/autocomplete.input.component';
-import { VariableComponentBehavior, ValidationResult, KeyValuePair } from './../../../shared/interfaces/variables';
+import { VariableComponentBehavior, ValidationResult, KeyValuePair, TimeSegment } from './../../../shared/interfaces/variables';
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { AppVariableService } from '../../../services/variable.services';
 import { VariableDistributionComponent } from '../distribution/distribution.variable.component';
@@ -12,6 +12,7 @@ import { VariableDistributionComponent } from '../distribution/distribution.vari
 
 export class VariableExpressionComponent implements OnInit, VariableComponentBehavior {
     @Input('branch-id') branchId: String = '';
+    @Input('time-segment') timeSegment:TimeSegment;
     @ViewChild(AutocompleteInputComponent) autoCompleteInput: AutocompleteInputComponent;
     variables: KeyValuePair[] = Array<KeyValuePair>(); 
     @ViewChild(VariableDistributionComponent) distributionComponent:VariableDistributionComponent;
@@ -36,6 +37,7 @@ export class VariableExpressionComponent implements OnInit, VariableComponentBeh
     getInput() {
         return {
             expression: this.autoCompleteInput.getInput(),
+            completedWordsArray: this.autoCompleteInput.completedWords,
             distributionType: this.distributionComponent.distributionType,
             mean: this.distributionComponent.mean,
             stdDeviation: this.distributionComponent.deviation,

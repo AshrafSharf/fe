@@ -6,35 +6,28 @@ import 'rxjs/add/operator/catch';
 import { Utils } from '../shared/utils';
 
 @Injectable()
-export class AppVariableService {
+export class AppVariableTypeService {
     
     constructor(private http: Http) { }
-
-    public getBreakdownVariables(type) {
-        let url = Utils.createUrl(Utils.routeVariable + "/findByVariableType/" + type);
-        return this.http
-                .get(url, Utils.getRequestOptions())
-                .map(result => result.json());
-    }
     
-    public createVariable(body) {
-        let url = Utils.createUrl(Utils.routeVariable);
+    public createType(body) {
+        let url = Utils.createUrl(Utils.routeVariableType);
         console.log(body);
         return this.http
                 .post(url, body, Utils.getRequestOptions())
                 .map(result => result.json());
     }
 
-    public updateVariable(body, id) {
-        let url = Utils.createUrl(Utils.routeVariable) + "/" + id;
+    public updateType(body, id) {
+        let url = Utils.createUrl(Utils.routeVariableType) + "/" + id;
         console.log(body);
         return this.http
                 .put(url, body, Utils.getRequestOptions())
                 .map(result => result.json());
     }
 
-    public getVariables(branchId) {
-        let url = Utils.createUrl(Utils.routeVariable) + "/" + branchId;
+    public getTypes() {
+        let url = Utils.createUrl(Utils.routeVariableType);
         console.log(url);
         return this.http
                 .get(url, Utils.getRequestOptions())
@@ -43,9 +36,9 @@ export class AppVariableService {
                 });
     }
 
-    public calculateVariableValues(id) {
-        let url = Utils.createUrl(Utils.routeVariable) + "/docalc/" + id;
-        
+    public findByType(type) {
+        let url = Utils.createUrl(Utils.routeVariableType) + '/searchByType/' + type;
+        console.log(url);
         return this.http
                 .get(url, Utils.getRequestOptions())
                 .map(response => {
@@ -53,18 +46,12 @@ export class AppVariableService {
                 });
     }
 
-    public getVariablesForSuggestions(branchId) {
-        let url = Utils.createUrl(Utils.routeVariable) + "/" + branchId + "/name";
+    public getDetails(id) {
         
-        return this.http
-                .get(url, Utils.getRequestOptions())
-                .map(response => {
-                    return response.json()
-                });
     }
 
-    public deleteVariable(id) {
-        let url = Utils.createUrl(Utils.routeVariable) + "/" + id;
+    public deleteType(id) {
+        let url = Utils.createUrl(Utils.routeVariableType) + "/" + id;
         return this.http
                 .delete(url, Utils.getRequestOptions())
                 .map(result => result.json());

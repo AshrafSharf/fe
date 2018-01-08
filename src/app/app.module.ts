@@ -1,3 +1,5 @@
+import { AppVariableTypeService } from './services/variable.type.service';
+import { VariableTypeListComponent } from './dashboard/variable-type/variable.type.list.component';
 import { VariableTableComponent } from './dashboard/variables/table/table.variable.component';
 import { CompletedWordComponent } from './shared/auto-complete-input/completedword.component';
 import { AutocompleteInputComponent } from './shared/auto-complete-input/autocomplete.input.component';
@@ -50,6 +52,7 @@ import { NgxLineChartModule } from 'ngx-line-chart';
 import { ChartsModule } from 'ng2-charts';
 import { VariableBreakdownComponent } from './dashboard/variables/breakdown/breakdown.variable.component';
 import { VariableDiscreteRandomComponent } from './dashboard/variables/discrete-random/discrete.random.variable.component';
+import { VariableTypeComponent } from './dashboard/variable-type/variable.type.component';
 
 
 @NgModule({
@@ -75,6 +78,9 @@ import { VariableDiscreteRandomComponent } from './dashboard/variables/discrete-
     VariableTableComponent,
     VariableBreakdownComponent,
     VariableDiscreteRandomComponent,
+    
+    VariableTypeComponent,
+    VariableTypeListComponent,
     
     TableViewComponent,
     ProjectListComponent,
@@ -105,6 +111,7 @@ import { VariableDiscreteRandomComponent } from './dashboard/variables/discrete-
     UserService,
     ModalDialogService,
     AppVariableService,
+    AppVariableTypeService,
     D3Service
   ],
   bootstrap: [AppComponent]

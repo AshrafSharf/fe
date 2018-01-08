@@ -22,12 +22,14 @@ export class AutocompleteInputComponent implements OnInit, VariableComponentBeha
     expression: String[] = Array<String>();
     suggestions: KeyValuePair[] = Array<KeyValuePair>();
 
-    completedWords: SelectedWord[] = Array<SelectedWord>();
+    @Input('completedWords') completedWords: SelectedWord[] = Array<SelectedWord>();
 
     isError: boolean = false;
 
     constructor() {
-        
+        if (this.completedWords == undefined) {
+            this.completedWords = Array<SelectedWord>();
+        }
     }
 
     ngOnInit() { }
@@ -92,6 +94,9 @@ export class AutocompleteInputComponent implements OnInit, VariableComponentBeha
     }
 
     selectWord(word) {
+        if (this.completedWords == undefined) {
+            this.completedWords = Array<SelectedWord>();
+        }
         this.completedWords.push({
             title: word.title,
             type: 'variable',

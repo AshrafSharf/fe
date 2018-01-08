@@ -135,6 +135,8 @@ export class ForecastTabularComponent implements OnInit {
                 variableTimeSegments.push(variable.timeSegment);
             });
 
+
+            // Determine the earliest start and latest end time for a branch
             variableTimeSegments.forEach(timeSeg => {
 
                 for (var index = 0; index < timeSeg.length; index++) {
@@ -168,8 +170,6 @@ export class ForecastTabularComponent implements OnInit {
 
             });
 
-            console.log("Earliest start: "+this.earliestStart);
-            console.log("Latest end: "+this.latestEnd);
 
             var monthDifference = this.getMonthDifference(this.earliestStart, this.latestEnd);
             var startMonthIndex = this.earliestStart.getMonth();
@@ -182,6 +182,7 @@ export class ForecastTabularComponent implements OnInit {
 
             var noOfColumns = 0;
 
+            // Set the column headers for the table
             if (monthDifference != 0) {
 
                 var year = this.earliestStart.getFullYear();
@@ -247,8 +248,10 @@ export class ForecastTabularComponent implements OnInit {
 
                                 timeSegStartDate = this.months[timeSegStartMonth] + " " + timeSegStartYear;
 
+                                // Adding the data under the appropriate columns
                                 for (var x = 1; x < this.columns.length; x ++) {
 
+                                    // If the start time for a variable has been found, output all data values for all time segments
                                     if (this.started) {
                                         if (this.columns[x].placeHolder == timeSegStartDate) {
                                             for (var index1 = 0; index1 < (variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data).length; index1++) {
@@ -288,7 +291,8 @@ export class ForecastTabularComponent implements OnInit {
                                     }
                                 }
 
-                                // If a variable's resultMap contains more than 1 instance then set the this.distribution boolean to true and add the index of the time segment to the this.timeSegDistributionIndexes array
+                                // If a variable's resultMap contains more than 1 instance then set the 'this.distribution'
+                                // boolean to true and add the index of the time segment to the this.timeSegDistributionIndexes array
                                 if ((variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap).length > 1) {
                                     this.distribution = true;
                                     this.timeSegDistributionIndexes.push(index);
@@ -302,6 +306,7 @@ export class ForecastTabularComponent implements OnInit {
                             }
                         }
 
+                        // If there is empty space between the end of the of the result map and the end of the table, add 'n/a' for empty values
                         if (columnCounter < this.columns.length) {
                             for (var col = columnCounter; col < (this.columns.length)-1; col++) {
                                 row.addColumn(new TableViewColumn("Column " + col, "n/a"));
@@ -313,6 +318,7 @@ export class ForecastTabularComponent implements OnInit {
                         columnCounter = 0;
                         this.started = false;
 
+                        // If a variable has a distribution in any time segments, output the results on a new line under the correct date column header
                         if (this.distribution == true) {
 
                             this.timeSegDistributionIndexes.forEach(dist => {

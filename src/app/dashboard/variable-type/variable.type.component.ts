@@ -1,6 +1,6 @@
 import { AppVariableTypeService } from './../../services/variable.type.service';
 import { Component, OnInit } from '@angular/core';
-import { Subvariable, VariableComponentBehavior, ValidationResult, TimeSegment } from '../../../shared/interfaces/variables';
+import { Subvariable, VariableComponentBehavior, ValidationResult, TimeSegment } from '../../shared/interfaces/variables';
 import { UserService } from '../../services/user.service';
 import { ModalDialogService } from '../../services/modal-dialog.service';
 import { Router, ActivatedRoute } from '@angular/router';

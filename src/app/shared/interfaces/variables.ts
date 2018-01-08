@@ -1,3 +1,5 @@
+import { SelectedWord } from "./auto-complete-input";
+
 export interface ValidationResult {
     result: boolean;
     reason: String;
@@ -49,6 +51,7 @@ export interface TimeSegment {
     userSelectedParametricsStdDeviation: String;
     timeSegmentResponse: { resultMap: { title:String, data: {title:String, value: Number}[] }[] };
     breakdownInput: Subvariable[];
+    completedWordsArray: SelectedWord[];
 }
 
 export interface VariableType {

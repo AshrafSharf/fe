@@ -286,7 +286,8 @@ export class VariablesComponent implements OnInit {
             userSelectedParametrics: '',
             userSelectedParametricsStdDeviation: '',
             growthPeriod: 0,
-            breakdownInput: []
+            breakdownInput: [],
+            completedWordsArray: []
         });
     }
 

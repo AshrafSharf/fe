@@ -59,7 +59,7 @@ export class VariableTypeComponent implements OnInit {
             }
         }
 
-        this.subvariableList.push({name: this.subvariableName, value: this.subvariableValue});
+        this.subvariableList.push({name: this.subvariableName, value: this.subvariableValue, percentageTime: '0'});
         this.subvariableName = '';
         this.subvariableValue = '';
     }

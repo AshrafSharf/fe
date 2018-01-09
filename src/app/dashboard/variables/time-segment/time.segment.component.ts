@@ -57,12 +57,14 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
 
     ngDoCheck(): void {
         // make copy of the existing key-value pairs
-        if (this.compositVariableTypeList != undefined) {
-            this.compositVariableTypeList.forEach(type => {
-                if (!this.isSubvariableAdded(type.name)) {
-                    this.variableTypeList.push({name: type.name, value: type.value});
-                }
-            });
+        if (this.timeSegment.subVariables == undefined || this.timeSegment.subVariables.length == 0) {
+            if (this.compositVariableTypeList != undefined) {
+                this.compositVariableTypeList.forEach(type => {
+                    if (!this.isSubvariableAdded(type.name)) {
+                        this.variableTypeList.push({name: type.name, value: type.value, percentageTime: type.percentageTime});
+                    }
+                });
+            }
         }
     }
 
@@ -104,22 +106,36 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
             } 
             if (this.timeSegment.inputMethod != null) { this.selectedInputMethod = this.timeSegment.inputMethod.toString(); }
             if (this.timeSegment.description != null) { this.comment = this.timeSegment.description.toString(); }
+
+            if (this.timeSegment.subVariables != undefined) {
+                this.timeSegment.subVariables.forEach(type => {
+                    if (!this.isSubvariableAdded(type.name)) {
+                        this.variableTypeList.push({name: type.name, value: type.value, percentageTime: type.percentageTime});
+                    }
+                });
+            }
         }
     }
 
     getTimeSegmentValues(): ValidationResult {
         var result: ValidationResult = { result:true, reason: '' };
-        if (this.variableType == 'breakdown' || this.variableType == 'discrete') {
+        if (this.variableType == 'breakdown') {
 
-            let finalValue = 0;
+            let finalValue = 0, finalPercentage = 0;
             this.variableTypeList.forEach((variable) => {
                 finalValue += parseFloat(variable.value.toString());
+                if (this.variableType == 'discrete') {
+                    finalPercentage += parseFloat(variable.percentageTime.toString());
+                }
             });
 
-            // if (finalValue != 0) {
-            //     result.result = false;
-            //     result.reason = "All the subvariable value must add up to 1.0"
-            // } else {
+            if (this.variableType == 'breakdown' && finalValue != 1) {
+                result.result = false;
+                result.reason = "All the subvariable value must add up to 1.0"
+            } else if (this.variableType == 'discrete' && finalPercentage != 100) {
+                result.result = false;
+                result.reason = "All the subvariable value must add up to 100%"
+            } else {
                 let input:any = {};
                 if (typeof(this.startDate) != "string") {
                     this.startDate = this.startDate.format("DD-MM-YYYY hh:mm");
@@ -129,7 +145,7 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
                 input['description'] = this.comment;
                 input['subVariables'] = this.variableTypeList;
                 result.reason = input;
-            // }
+            }
         } else {
             var method: VariableComponentBehavior;
 

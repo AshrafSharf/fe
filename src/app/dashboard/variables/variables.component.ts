@@ -76,6 +76,7 @@ export class VariablesComponent implements OnInit {
     
     subvariableName:string = '';
     subvariableValue:string = '';
+    subvariablePercentage:string = '';
 
     subvariableList: Subvariable[];
 
@@ -102,9 +103,15 @@ export class VariablesComponent implements OnInit {
             }
         }
 
-        this.subvariableList.push({name: this.subvariableName, value: this.subvariableValue});
+        this.subvariableList.push({
+            name: this.subvariableName, 
+            value: this.subvariableValue, 
+            percentageTime: this.subvariablePercentage
+        });
+
         this.subvariableName = '';
         this.subvariableValue = '';
+        this.subvariablePercentage = '';
     }
 
     deleteVariable(s) {
@@ -213,7 +220,7 @@ export class VariablesComponent implements OnInit {
 
     loadCompositeVariables(type) {
         this.variableService
-            .getBreakdownVariables(type)
+            .getBreakdownVariables(this.branchId, type)
             .subscribe(response => {
                 if (response.status == 'OK') {
                     this.variableTypeList.splice(0, this.variableTypeList.length);
@@ -287,7 +294,8 @@ export class VariablesComponent implements OnInit {
             userSelectedParametricsStdDeviation: '',
             growthPeriod: 0,
             breakdownInput: [],
-            completedWordsArray: []
+            completedWordsArray: [],
+            subVariables: []
         });
     }
 
@@ -456,10 +464,15 @@ export class VariablesComponent implements OnInit {
     }
 
     onSave() {
-        // let finalValue = 0;
-        // this.subvariableList.forEach((variable) => {
-        //     finalValue += parseFloat(variable.value.toString());
-        // });
+        let finalValue = 0, finalPercentage = 0;
+        if (this.subvariableList != undefined) {
+            this.subvariableList.forEach((variable) => {
+                finalValue += parseFloat(variable.value.toString());
+                if (this.variableType == 'discrete') {
+                    finalPercentage += parseFloat(variable.percentageTime.toString());
+                }
+            });
+        }
 
         if (this.variableName.length == 0) {
             this.modal.showError('Variable name is mandatory');
@@ -467,9 +480,13 @@ export class VariablesComponent implements OnInit {
             this.modal.showError('Variable type is mandatory');
         } else if (this.ownerId.length == 0) {
             this.modal.showError('Owner Id is mandatory');
-        }/*else if (this.variableType == 'breakdown' && finalValue != 1.0) {
+        } else if (this.variableType == 'breakdown' && finalValue != 1.0) {
             this.modal.showError('All the subvariables value must add upto 1.0');
-        }*/ else {
+        } else if (this.variableType == 'discrete' && finalPercentage != 100.0) {
+            this.modal.showError('All the subvariables value must add upto 100%');
+        } else if ((this.variableType == 'breakdown' || this.variableType == 'discrete') && (this.timeSegmentWidgets == undefined || this.timeSegmentWidgets.length == 0)) {
+            this.modal.showError(this.variableType + ' requires at lease one time segment');
+        } else {
             
             var timeSegmentValues = Array();
 
@@ -513,7 +530,6 @@ export class VariablesComponent implements OnInit {
                     .subscribe(response => {
                         this.selectedVariable = null;
                         this.onCancel();
-                        //this.router.navigate(['/home/variable-list']);
                     })
                 } else {
                     this.variableService
@@ -522,7 +538,6 @@ export class VariablesComponent implements OnInit {
                             console.log(response);
                             this.selectedVariable = null;
                             this.onCancel();
-                            //this.reloadVariables();
                         })
                 }
             }
@@ -549,6 +564,8 @@ export class VariablesComponent implements OnInit {
     }
 
     onVariableTypeChanged() {
-        
+        if (this.subvariableList != undefined) {
+            this.subvariableList.splice(0, this.subvariableList.length);
+        }
     }
 }

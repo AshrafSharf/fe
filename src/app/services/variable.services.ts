@@ -10,8 +10,8 @@ export class AppVariableService {
     
     constructor(private http: Http) { }
 
-    public getBreakdownVariables(type) {
-        let url = Utils.createUrl(Utils.routeVariable + "/findByVariableType/" + type);
+    public getBreakdownVariables(branchId, type) {
+        let url = Utils.createUrl(Utils.routeVariable + "/findByVariableType/" + branchId + "/"  + type);
         return this.http
                 .get(url, Utils.getRequestOptions())
                 .map(result => result.json());

@@ -52,6 +52,7 @@ export interface TimeSegment {
     timeSegmentResponse: { resultMap: { title:String, data: {title:String, value: Number}[] }[] };
     breakdownInput: Subvariable[];
     completedWordsArray: SelectedWord[];
+    subVariables: Subvariable[];
 }
 
 export interface VariableType {
@@ -66,6 +67,7 @@ export interface VariableType {
 export interface Subvariable {
     name: String;
     value: String;
+    percentageTime:String;
 }
 
 export interface DiscreteComponent {

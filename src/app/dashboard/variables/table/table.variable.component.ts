@@ -38,7 +38,7 @@ export class VariableTableComponent implements OnInit, OnChanges, VariableCompon
             for (var index = 0; index < count; index++) {
                 let year = date.year();
                 let month = date.format('MMM');
-                this.columns.push({key:month + " - " + year, value: '100'});
+                this.columns.push({key:month + " - " + year, value: '0'});
                 date.add(1, 'M');
             }
         }

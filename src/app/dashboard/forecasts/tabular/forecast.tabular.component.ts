@@ -133,15 +133,15 @@ export class ForecastTabularComponent implements OnInit {
 
         if ((this.timeUnit).toLowerCase() == "month") {
 
-            // Each variable time segment object is stored in variableTimeSegments array
-            var variableTimeSegments = [];
+            // Each variable time segment object is stored in variables array
+            var variables = [];
             this.variables.forEach(variable => {
-                variableTimeSegments.push(variable.timeSegment);
+                variables.push(variable.timeSegment);
             });
 
 
             // Determine the earliest start and latest end time for a branch
-            variableTimeSegments.forEach(timeSeg => {
+            variables.forEach(timeSeg => {
 
                 for (var index = 0; index < timeSeg.length; index++) {
                     var startDate = new Date((timeSeg[index].startTime[3] + timeSeg[index].startTime[4] + "/" + timeSeg[index].startTime[0] + timeSeg[index].startTime[1] + "/" + timeSeg[index].startTime[6]+timeSeg[index].startTime[7]+timeSeg[index].startTime[8]+timeSeg[index].startTime[9]).toString());
@@ -192,7 +192,7 @@ export class ForecastTabularComponent implements OnInit {
                 var year = this.earliestStart.getFullYear();
                 var diff = monthDifference +1;
 
-                for (var index1 = 0; index1 < (diff); index1++) {
+                for (var index1 = 0; index1 < (diff+1); index1++) {
                     for (var index2 = startMonthIndex; index2 < 12; index2++) {
                         this.columns.push(new TableViewHeader("Column " + noOfColumns, this.months[index2] + " " + year, "col-md-3", "", ""));
                         diff--;
@@ -206,7 +206,7 @@ export class ForecastTabularComponent implements OnInit {
                 }
             }
 
-            var timeSegIndex = 0;
+            var varIndex = 0;
             var varTitle;
 
             var timeSegStart;
@@ -224,17 +224,17 @@ export class ForecastTabularComponent implements OnInit {
                 varTitle = variable.title;
                 this.started = false;
 
-                for (var index = 0; index < variableTimeSegments[timeSegIndex].length; index++) {
+                for (var index = 0; index < variables[varIndex].length; index++) {
 
                     var row = new TableViewRow(variable.id);
                     row.addColumn(new TableViewColumn("name", variable.title));
 
 
                     // If a variable has more than 1 time segment
-                    if (variableTimeSegments[timeSegIndex].length > 1) {
+                    if (variables[varIndex].length > 1) {
 
-                        for (var index = 0; index < variableTimeSegments[timeSegIndex].length; index++) {
-                            if (variableTimeSegments[timeSegIndex][index].timeSegmentResponse != null) {
+                        for (var index = 0; index < variables[varIndex].length; index++) {
+                            if (variables[varIndex][index].timeSegmentResponse != null) {
 
                                 // Determining the start time for a specific time segment
                                 timeSegStart = variable.timeSegment[index].startTime;
@@ -258,13 +258,13 @@ export class ForecastTabularComponent implements OnInit {
                                     // If the start time for a variable has been found, output all data values for all time segments
                                     if (this.started) {
                                         if (this.columns[x].placeHolder == timeSegStartDate) {
-                                            for (var index1 = 0; index1 < (variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data).length; index1++) {
+                                            for (var index1 = 0; index1 < (variables[varIndex][index].timeSegmentResponse.resultMap[0].data).length; index1++) {
 
-                                                if (variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data[index1] == null) {
+                                                if (variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1] == null) {
                                                     row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
                                                 }
                                                 else {
-                                                    value = parseFloat(variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data[index1].value);
+                                                    value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1].value);
                                                     row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
                                                 }
                                                 columnCounter++;
@@ -275,13 +275,13 @@ export class ForecastTabularComponent implements OnInit {
                                     else {
                                         if (this.columns[x].placeHolder == timeSegStartDate) {
                                             this.started = true;
-                                            for (var index1 = 0; index1 < (variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data).length; index1++) {
+                                            for (var index1 = 0; index1 < (variables[varIndex][index].timeSegmentResponse.resultMap[0].data).length; index1++) {
 
-                                                if (variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data[index1] == null) {
+                                                if (variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1] == null) {
                                                     row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
                                                 }
                                                 else {
-                                                    value = parseFloat(variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data[index1].value);
+                                                    value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1].value);
                                                     row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
                                                 }
                                                 columnCounter++;
@@ -297,7 +297,7 @@ export class ForecastTabularComponent implements OnInit {
 
                                 // If a variable's resultMap contains more than 1 instance then set the 'this.distribution'
                                 // boolean to true and add the index of the time segment to the this.timeSegDistributionIndexes array
-                                if ((variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap).length > 1) {
+                                if ((variables[varIndex][index].timeSegmentResponse.resultMap).length > 1) {
                                     this.distribution = true;
                                     this.timeSegDistributionIndexes.push(index);
                                 }
@@ -326,170 +326,44 @@ export class ForecastTabularComponent implements OnInit {
                         if (this.distribution == true) {
 
                             this.timeSegDistributionIndexes.forEach(dist => {
-                                for (var index1 = 0; index1 < ((variableTimeSegments[timeSegIndex][dist].timeSegmentResponse.resultMap).length) - 1; index1++) {
+                                for (var index1 = 0; index1 < ((variables[varIndex][dist].timeSegmentResponse.resultMap).length) - 1; index1++) {
 
-                                    timeSegStart = variableTimeSegments[timeSegIndex][dist].startTime;
-
-                                    if (timeSegStart[3] == 0) {
-                                        timeSegStartMonth = timeSegStart[4];
-                                        timeSegStartMonth = timeSegStartMonth - 1;
-                                    }
-                                    else {
-                                        timeSegStartMonth = timeSegStart[3]+timeSegStart[4];
-                                        timeSegStartMonth = timeSegStartMonth - 1;
-                                    }
-
-                                    timeSegStartYear = timeSegStart[6]+timeSegStart[7]+timeSegStart[8]+timeSegStart[9];
-                                    timeSegStartDate = this.months[timeSegStartMonth] + " " + timeSegStartYear;
-
-
-                                    row = new TableViewRow(variable.id + "." + (index1 + 1));
-                                    row.addColumn(new TableViewColumn("name", varTitle + " " + variableTimeSegments[timeSegIndex][dist].timeSegmentResponse.resultMap[index1 + 1].title));
-
-                                    for (var col = 1; col < this.columns.length; col ++) {
-
-                                            if (this.columns[col].placeHolder == timeSegStartDate) {
-                                                this.started = true;
-                                                    for (var index2 = 0; index2 < (variableTimeSegments[timeSegIndex][dist].timeSegmentResponse.resultMap[index1 + 1].data).length; index2++) {
-                                                        if (variableTimeSegments[timeSegIndex][dist].timeSegmentResponse.resultMap[index1 + 1].data[index2] == null) {
-                                                            row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                                            columnCounter++
-                                                        }
-                                                        else {
-                                                            value = parseFloat(variableTimeSegments[timeSegIndex][dist].timeSegmentResponse.resultMap[index1 + 1].data[index2].value);
-                                                            row.addColumn(new TableViewColumn("Column " + col, ((Math.round(value * 100)) / 100).toString()));
-                                                            columnCounter++;
-                                                        }
-                                                    }
-
-                                                    if (columnCounter < this.columns.length) {
-                                                        for (var col = columnCounter; col < (this.columns.length)-1; col++) {
-                                                            row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                                            columnCounter++;
-                                                        }
-                                                    }
-                                                    this.rows.push(row);
-                                                    columnCounter = 0;
-                                                    break;
-
-                                            }
-                                            else {
-                                                row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                                columnCounter++;
-                                            }
-                                    }
-                                }
-                            });
-                        }
-                    }
-                    else {
-
-                        timeSegStart = variable.timeSegment[0].startTime;
-
-                        if (timeSegStart[3] == 0) {
-                            timeSegStartMonth = timeSegStart[4];
-                            timeSegStartMonth = timeSegStartMonth - 1;
-                        }
-                        else {
-                            timeSegStartMonth = timeSegStart[3]+timeSegStart[4];
-                            timeSegStartMonth = timeSegStartMonth - 1;
-                        }
-
-                        timeSegStartYear = timeSegStart[6]+timeSegStart[7]+timeSegStart[8]+timeSegStart[9];
-
-                        timeSegStartDate = this.months[timeSegStartMonth] + " " + timeSegStartYear;
-
-
-                        if (variableTimeSegments[timeSegIndex][0].timeSegmentResponse != null) {
-
-                            for (var x = 1; x < this.columns.length; x ++) {
-
-                                if (this.started) {
-                                    if (this.columns[x].placeHolder == timeSegStartDate) {
-                                        for (var index1 = 0; index1 < (variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data).length; index1++) {
-
-                                            if (variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data[index1] == null) {
-                                                row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
-                                                columnCounter++;
-                                            }
-                                            else {
-                                                value = parseFloat(variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data[index1].value);
-                                                row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                columnCounter++;
-                                            }
-                                        }
-
-                                        if (columnCounter < this.columns.length) {
-                                            for (var col = columnCounter; col < (this.columns.length)-1; col++) {
-                                                row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                                columnCounter++;
-                                            }
-                                        }
-                                        this.rows.push(row);
-                                        columnCounter = 0;
-                                        break;
-                                    }
-                                }
-                                else {
-                                    if (this.columns[x].placeHolder == timeSegStartDate) {
-                                        this.started = true;
-                                        for (var index1 = 0; index1 < (variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data).length; index1++) {
-
-                                            if (variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data[index1] == null) {
-                                                row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
-                                                columnCounter++;
-                                            }
-                                            else {
-                                                value = parseFloat(variableTimeSegments[timeSegIndex][index].timeSegmentResponse.resultMap[0].data[index1].value);
-                                                row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                columnCounter++;
-                                            }
-                                        }
-
-                                        if (columnCounter < this.columns.length) {
-                                            for (var col = columnCounter; col < (this.columns.length)-1; col++) {
-                                                row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                                columnCounter++;
-                                            }
-                                        }
-                                        this.rows.push(row);
-                                        columnCounter = 0;
-                                        break;
-                                    }
-                                    else {
-                                        row.addColumn(new TableViewColumn("Column " + x, "n/a"));
-                                        columnCounter++;
-                                    }
-                                }
-
-                            }
-
-                            // If a variable's resultMap contains more than 1 instance then add the appropriate data to the associated columns
-                            if ((variableTimeSegments[timeSegIndex][0].timeSegmentResponse.resultMap).length > 1) {
-
-                                for (var index1 = 0; index1 < ((variableTimeSegments[timeSegIndex][0].timeSegmentResponse.resultMap).length) - 1; index1++) {
-                                    if ((variableTimeSegments[timeSegIndex][0].timeSegmentResponse.resultMap[index1 + 1].title).indexOf(' ') > -1) {
-                                        this.subVarTitleIndexes.push(index1 + 1);
-                                    }
-
-                                    if ((variableTimeSegments[timeSegIndex][0].timeSegmentResponse.resultMap[index1 + 1].title).indexOf('Σ') > -1) {
-                                        if ((variableTimeSegments[timeSegIndex][0].timeSegmentResponse.resultMap[index1 + 1].title).indexOf('.') > -1) {
+                                    if ((variables[varIndex][dist].timeSegmentResponse.resultMap[index1 + 1].title).indexOf('Σ') > -1) {
+                                        if ((variables[varIndex][dist].timeSegmentResponse.resultMap[index1 + 1].title).indexOf('.') > -1) {
                                             this.distributionAndSubVariableTitleIndexes.push(index1 + 1);
                                         }
                                         else {
                                             this.distributionTitleIndexes.push(index1 + 1);
                                         }
                                     }
+                                    else if ((variables[varIndex][dist].timeSegmentResponse.resultMap[index1 + 1].title).indexOf('.') > -1) {
+                                        this.subVarTitleIndexes.push(index1 + 1);
+                                    }
                                 }
 
-                                for (var index1 = 0; index1 < ((variableTimeSegments[timeSegIndex][0].timeSegmentResponse.resultMap).length) - 1; index1++) {
+                                timeSegStart = variables[varIndex][dist].startTime;
+
+                                if (timeSegStart[3] == 0) {
+                                    timeSegStartMonth = timeSegStart[4];
+                                    timeSegStartMonth = timeSegStartMonth - 1;
+                                }
+                                else {
+                                    timeSegStartMonth = timeSegStart[3]+timeSegStart[4];
+                                    timeSegStartMonth = timeSegStartMonth - 1;
+                                }
+
+                                timeSegStartYear = timeSegStart[6]+timeSegStart[7]+timeSegStart[8]+timeSegStart[9];
+                                timeSegStartDate = this.months[timeSegStartMonth] + " " + timeSegStartYear;
+
+
+                                for (var index1 = 0; index1 < ((variables[varIndex][dist].timeSegmentResponse.resultMap).length) - 1; index1++) {
 
                                     if (this.distributionTitleIndexes[0] != null) {
 
                                         this.distributionTitleIndexes.forEach(distIndex => {
 
                                             row = new TableViewRow(variable.id + "." + (index1 + 1));
-                                            row.addColumn(new TableViewColumn("name", varTitle + " " + variableTimeSegments[timeSegIndex][0].timeSegmentResponse.resultMap[distIndex].title));
+                                            row.addColumn(new TableViewColumn("name", varTitle + " " + variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].title));
 
                                             column = 0;
 
@@ -497,13 +371,13 @@ export class ForecastTabularComponent implements OnInit {
 
                                                 if (this.columns[col].placeHolder == timeSegStartDate) {
                                                     this.started = true;
-                                                    for (var index2 = 0; index2 < (variableTimeSegments[timeSegIndex][0].timeSegmentResponse.resultMap[0].data).length; index2++) {
-                                                        if (variableTimeSegments[timeSegIndex][0].timeSegmentResponse.resultMap[0].data[index2] == null) {
+                                                    for (var index2 = 0; index2 < (variables[varIndex][dist].timeSegmentResponse.resultMap[0].data).length; index2++) {
+                                                        if (variables[varIndex][dist].timeSegmentResponse.resultMap[0].data[index2] == null) {
                                                             row.addColumn(new TableViewColumn("Column " + col, "n/a"));
                                                             columnCounter++;
                                                         }
                                                         else {
-                                                            value = parseFloat(variableTimeSegments[timeSegIndex][0].timeSegmentResponse.resultMap[distIndex].data[index2].value);
+                                                            value = parseFloat(variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data[index2].value);
                                                             row.addColumn(new TableViewColumn("Column " + col, ((Math.round(value * 100)) / 100).toString()));
                                                             columnCounter++;
                                                         }
@@ -532,7 +406,265 @@ export class ForecastTabularComponent implements OnInit {
                                         this.subVarTitleIndexes.forEach(subVarIndex => {
 
                                             row = new TableViewRow(variable.id + "." + (index1 + 1));
-                                            row.addColumn(new TableViewColumn("name", varTitle + " " + variableTimeSegments[timeSegIndex][0].timeSegmentResponse.resultMap[subVarIndex].title));
+                                            row.addColumn(new TableViewColumn("name", varTitle + " " + variables[varIndex][dist].timeSegmentResponse.resultMap[subVarIndex].title));
+
+                                            column = 0;
+
+                                            ///////////////////////////////////////////////////////////////////////
+
+                                            for (var index = 0; index < variables[varIndex].length; index++) {
+                                                if (variables[varIndex][index].timeSegmentResponse != null) {
+
+                                                    // Determining the start time for a specific time segment
+                                                    timeSegStart = variable.timeSegment[index].startTime;
+
+                                                    if (timeSegStart[3] == 0) {
+                                                        timeSegStartMonth = timeSegStart[4];
+                                                        timeSegStartMonth = timeSegStartMonth - 1;
+                                                    }
+                                                    else {
+                                                        timeSegStartMonth = timeSegStart[3] + timeSegStart[4];
+                                                        timeSegStartMonth = timeSegStartMonth - 1;
+                                                    }
+
+                                                    timeSegStartYear = timeSegStart[6] + timeSegStart[7] + timeSegStart[8] + timeSegStart[9];
+
+                                                    timeSegStartDate = this.months[timeSegStartMonth] + " " + timeSegStartYear;
+
+                                                    for (var col = 1; col < this.columns.length; col ++) {
+
+                                                        if (this.started) {
+                                                            if (this.columns[x].placeHolder == timeSegStartDate) {
+                                                                for (var index1 = 0; index1 < (variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data).length; index1++) {
+
+                                                                    if (variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data[index1] == null) {
+                                                                        row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                    }
+                                                                    else {
+                                                                        value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data[index1].value);
+                                                                        row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                                    }
+                                                                    columnCounter++;
+                                                                }
+                                                                break;
+                                                            }
+                                                        }
+
+                                                        else
+                                                        {
+                                                            if (this.columns[col].placeHolder == timeSegStartDate) {
+                                                                this.started = true;
+                                                                for (var index2 = 0; index2 < (variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data).length; index2++) {
+                                                                    if (variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data[index2] == null) {
+                                                                        row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                                        columnCounter++;
+                                                                    }
+                                                                    else {
+                                                                        value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data[index2].value);
+                                                                        row.addColumn(new TableViewColumn("Column " + col, ((Math.round(value * 100)) / 100).toString()));
+                                                                        columnCounter++;
+                                                                    }
+                                                                }
+                                                                break;
+                                                            }
+                                                            else {
+                                                                row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                                columnCounter++;
+                                                            }
+                                                        }
+
+                                                    }
+
+                                                }
+                                            }
+
+                                            if (columnCounter < this.columns.length) {
+                                                for (var col = columnCounter; col < (this.columns.length)-1; col++) {
+                                                    row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                    columnCounter++;
+                                                }
+                                            }
+
+                                            columnCounter = 0;
+
+
+                                            this.rows.push(row);
+
+                                            if (this.distributionAndSubVariableTitleIndexes[0] != null) {
+
+                                                var match = false;
+
+                                                this.distributionAndSubVariableTitleIndexes.forEach(distSubVarIndex => {
+
+                                                    var title = variables[varIndex][dist].timeSegmentResponse.resultMap[subVarIndex].title;
+                                                    title = title.replace(' ', '');
+
+                                                    if ((variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].title).indexOf(title) > -1) {
+                                                        match = true;
+                                                    }
+
+                                                    if (match) {
+
+                                                        row = new TableViewRow(variable.id + "." + (index1 + 1));
+                                                        row.addColumn(new TableViewColumn("name", varTitle + " " + variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].title));
+
+                                                        column = 0;
+
+                                                        for (var col = 1; col < this.columns.length; col ++) {
+
+                                                            if (this.columns[col].placeHolder == timeSegStartDate) {
+                                                                this.started = true;
+                                                                for (var index2 = 0; index2 < (variables[varIndex][dist].timeSegmentResponse.resultMap[0].data).length; index2++) {
+                                                                    if (variables[varIndex][dist].timeSegmentResponse.resultMap[0].data[index2] == null) {
+                                                                        row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                                        columnCounter++;
+                                                                    }
+                                                                    else {
+                                                                        value = parseFloat(variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data[index2].value);
+                                                                        row.addColumn(new TableViewColumn("Column " + col, ((Math.round(value * 100)) / 100).toString()));
+                                                                        columnCounter++;
+                                                                    }
+                                                                }
+
+                                                                if (columnCounter < this.columns.length) {
+                                                                    for (var col = columnCounter; col < (this.columns.length)-1; col++) {
+                                                                        row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                                        columnCounter++;
+                                                                    }
+                                                                }
+                                                                columnCounter = 0;
+                                                                break;
+                                                            }
+                                                            else {
+                                                                row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                                columnCounter++;
+                                                            }
+                                                        }
+                                                        this.rows.push(row);
+                                                        match = false;
+                                                    }
+                                                });
+                                            }
+                                            this.started = false;
+
+                                        });
+                                    }
+                                    break;
+                                }
+
+                                this.distributionTitleIndexes = [];
+                                this.subVarTitleIndexes = [];
+                                this.distributionAndSubVariableTitleIndexes = [];
+                            });
+                        }
+                    }
+                    else {
+
+                        timeSegStart = variable.timeSegment[0].startTime;
+
+                        if (timeSegStart[3] == 0) {
+                            timeSegStartMonth = timeSegStart[4];
+                            timeSegStartMonth = timeSegStartMonth - 1;
+                        }
+                        else {
+                            timeSegStartMonth = timeSegStart[3]+timeSegStart[4];
+                            timeSegStartMonth = timeSegStartMonth - 1;
+                        }
+
+                        timeSegStartYear = timeSegStart[6]+timeSegStart[7]+timeSegStart[8]+timeSegStart[9];
+
+                        timeSegStartDate = this.months[timeSegStartMonth] + " " + timeSegStartYear;
+
+
+                        if (variables[varIndex][0].timeSegmentResponse != null) {
+
+                            for (var x = 1; x < this.columns.length; x ++) {
+
+                                if (this.started) {
+                                    if (this.columns[x].placeHolder == timeSegStartDate) {
+                                        for (var index1 = 0; index1 < (variables[varIndex][index].timeSegmentResponse.resultMap[0].data).length; index1++) {
+
+                                            if (variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1] == null) {
+                                                row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                columnCounter++;
+                                            }
+                                            else {
+                                                value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1].value);
+                                                row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                columnCounter++;
+                                            }
+                                        }
+
+                                        if (columnCounter < this.columns.length) {
+                                            for (var col = columnCounter; col < (this.columns.length)-1; col++) {
+                                                row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                columnCounter++;
+                                            }
+                                        }
+                                        this.rows.push(row);
+                                        columnCounter = 0;
+                                        break;
+                                    }
+                                }
+                                else {
+                                    if (this.columns[x].placeHolder == timeSegStartDate) {
+                                        this.started = true;
+                                        for (var index1 = 0; index1 < (variables[varIndex][index].timeSegmentResponse.resultMap[0].data).length; index1++) {
+
+                                            if (variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1] == null) {
+                                                row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                columnCounter++;
+                                            }
+                                            else {
+                                                value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1].value);
+                                                row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                columnCounter++;
+                                            }
+                                        }
+
+                                        if (columnCounter < this.columns.length) {
+                                            for (var col = columnCounter; col < (this.columns.length)-1; col++) {
+                                                row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                columnCounter++;
+                                            }
+                                        }
+                                        this.rows.push(row);
+                                        columnCounter = 0;
+                                        break;
+                                    }
+                                    else {
+                                        row.addColumn(new TableViewColumn("Column " + x, "n/a"));
+                                        columnCounter++;
+                                    }
+                                }
+
+                            }
+
+                            // If a variable's resultMap contains more than 1 instance then add the appropriate data to the associated columns
+                            if ((variables[varIndex][0].timeSegmentResponse.resultMap).length > 1) {
+
+                                for (var index1 = 0; index1 < ((variables[varIndex][0].timeSegmentResponse.resultMap).length) - 1; index1++) {
+                                    if ((variables[varIndex][0].timeSegmentResponse.resultMap[index1 + 1].title).indexOf('Σ') > -1) {
+                                        if ((variables[varIndex][0].timeSegmentResponse.resultMap[index1 + 1].title).indexOf('.') > -1) {
+                                            this.distributionAndSubVariableTitleIndexes.push(index1 + 1);
+                                        }
+                                        else {
+                                            this.distributionTitleIndexes.push(index1 + 1);
+                                        }
+                                    }
+                                    else if ((variables[varIndex][0].timeSegmentResponse.resultMap[index1 + 1].title).indexOf('.') > -1) {
+                                        this.subVarTitleIndexes.push(index1 + 1);
+                                    }
+                                }
+
+                                for (var index1 = 0; index1 < ((variables[varIndex][0].timeSegmentResponse.resultMap).length) - 1; index1++) {
+
+                                    if (this.distributionTitleIndexes[0] != null) {
+
+                                        this.distributionTitleIndexes.forEach(distIndex => {
+
+                                            row = new TableViewRow(variable.id + "." + (index1 + 1));
+                                            row.addColumn(new TableViewColumn("name", varTitle + " " + variables[varIndex][0].timeSegmentResponse.resultMap[distIndex].title));
 
                                             column = 0;
 
@@ -540,13 +672,56 @@ export class ForecastTabularComponent implements OnInit {
 
                                                 if (this.columns[col].placeHolder == timeSegStartDate) {
                                                     this.started = true;
-                                                    for (var index2 = 0; index2 < (variableTimeSegments[timeSegIndex][0].timeSegmentResponse.resultMap[0].data).length; index2++) {
-                                                        if (variableTimeSegments[timeSegIndex][0].timeSegmentResponse.resultMap[0].data[index2] == null) {
+                                                    for (var index2 = 0; index2 < (variables[varIndex][0].timeSegmentResponse.resultMap[0].data).length; index2++) {
+                                                        if (variables[varIndex][0].timeSegmentResponse.resultMap[0].data[index2] == null) {
                                                             row.addColumn(new TableViewColumn("Column " + col, "n/a"));
                                                             columnCounter++;
                                                         }
                                                         else {
-                                                            value = parseFloat(variableTimeSegments[timeSegIndex][0].timeSegmentResponse.resultMap[subVarIndex].data[index2].value);
+                                                            value = parseFloat(variables[varIndex][0].timeSegmentResponse.resultMap[distIndex].data[index2].value);
+                                                            row.addColumn(new TableViewColumn("Column " + col, ((Math.round(value * 100)) / 100).toString()));
+                                                            columnCounter++;
+                                                        }
+                                                    }
+
+                                                    if (columnCounter < this.columns.length) {
+                                                        for (var col = columnCounter; col < (this.columns.length)-1; col++) {
+                                                            row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                            columnCounter++;
+                                                        }
+                                                    }
+                                                    columnCounter = 0;
+                                                    break;
+                                                }
+                                                else {
+                                                    row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                    columnCounter++;
+                                                }
+                                            }
+                                            this.rows.push(row);
+                                        });
+                                    }
+
+                                    if (this.subVarTitleIndexes[0] != null) {
+
+                                        this.subVarTitleIndexes.forEach(subVarIndex => {
+
+                                            row = new TableViewRow(variable.id + "." + (index1 + 1));
+                                            row.addColumn(new TableViewColumn("name", varTitle + " " + variables[varIndex][0].timeSegmentResponse.resultMap[subVarIndex].title));
+
+                                            column = 0;
+
+                                            for (var col = 1; col < this.columns.length; col ++) {
+
+                                                if (this.columns[col].placeHolder == timeSegStartDate) {
+                                                    this.started = true;
+                                                    for (var index2 = 0; index2 < (variables[varIndex][0].timeSegmentResponse.resultMap[0].data).length; index2++) {
+                                                        if (variables[varIndex][0].timeSegmentResponse.resultMap[0].data[index2] == null) {
+                                                            row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                            columnCounter++;
+                                                        }
+                                                        else {
+                                                            value = parseFloat(variables[varIndex][0].timeSegmentResponse.resultMap[subVarIndex].data[index2].value);
                                                             row.addColumn(new TableViewColumn("Column " + col, ((Math.round(value * 100)) / 100).toString()));
                                                             columnCounter++;
                                                         }
@@ -575,17 +750,17 @@ export class ForecastTabularComponent implements OnInit {
 
                                                 this.distributionAndSubVariableTitleIndexes.forEach(distSubVarIndex => {
 
-                                                    var title = variableTimeSegments[timeSegIndex][0].timeSegmentResponse.resultMap[subVarIndex].title;
+                                                    var title = variables[varIndex][0].timeSegmentResponse.resultMap[subVarIndex].title;
                                                     title = title.replace(' ', '');
 
-                                                   if ((variableTimeSegments[timeSegIndex][0].timeSegmentResponse.resultMap[distSubVarIndex].title).indexOf(title) > -1) {
+                                                   if ((variables[varIndex][0].timeSegmentResponse.resultMap[distSubVarIndex].title).indexOf(title) > -1) {
                                                        match = true;
                                                    }
 
                                                     if (match) {
 
                                                         row = new TableViewRow(variable.id + "." + (index1 + 1));
-                                                        row.addColumn(new TableViewColumn("name", varTitle + " " + variableTimeSegments[timeSegIndex][0].timeSegmentResponse.resultMap[distSubVarIndex].title));
+                                                        row.addColumn(new TableViewColumn("name", varTitle + " " + variables[varIndex][0].timeSegmentResponse.resultMap[distSubVarIndex].title));
 
                                                         column = 0;
 
@@ -593,13 +768,13 @@ export class ForecastTabularComponent implements OnInit {
 
                                                             if (this.columns[col].placeHolder == timeSegStartDate) {
                                                                 this.started = true;
-                                                                for (var index2 = 0; index2 < (variableTimeSegments[timeSegIndex][0].timeSegmentResponse.resultMap[0].data).length; index2++) {
-                                                                    if (variableTimeSegments[timeSegIndex][0].timeSegmentResponse.resultMap[0].data[index2] == null) {
+                                                                for (var index2 = 0; index2 < (variables[varIndex][0].timeSegmentResponse.resultMap[0].data).length; index2++) {
+                                                                    if (variables[varIndex][0].timeSegmentResponse.resultMap[0].data[index2] == null) {
                                                                         row.addColumn(new TableViewColumn("Column " + col, "n/a"));
                                                                         columnCounter++;
                                                                     }
                                                                     else {
-                                                                        value = parseFloat(variableTimeSegments[timeSegIndex][0].timeSegmentResponse.resultMap[distSubVarIndex].data[index2].value);
+                                                                        value = parseFloat(variables[varIndex][0].timeSegmentResponse.resultMap[distSubVarIndex].data[index2].value);
                                                                         row.addColumn(new TableViewColumn("Column " + col, ((Math.round(value * 100)) / 100).toString()));
                                                                         columnCounter++;
                                                                     }
@@ -654,7 +829,7 @@ export class ForecastTabularComponent implements OnInit {
                 }
                 this.timeSegDistributionIndexes.length = 0;
                 this.distribution = false;
-                timeSegIndex++;
+                varIndex++;
             });
 
         }

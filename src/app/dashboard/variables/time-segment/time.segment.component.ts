@@ -121,7 +121,7 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
 
     getTimeSegmentValues(): ValidationResult {
         var result: ValidationResult = { result:true, reason: '' };
-        if (this.variableType == 'breakdown') {
+        if ((this.variableType == 'breakdown') || (this.variableType == 'discrete')) {
 
             let finalValue = 0, finalPercentage = 0;
             this.variableTypeList.forEach((variable) => {

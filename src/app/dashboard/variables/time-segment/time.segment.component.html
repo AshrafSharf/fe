@@ -45,7 +45,7 @@
                     </div>
 
                     <div class="col-md-6">
-                        <div class="row" *ngIf="variableTypeList != undefined && (variableType == 'breakdown')">
+                        <div class="row" *ngIf="variableTypeList != undefined && (variableType == 'breakdown' || variableType == 'discrete')">
                             <table class="table input-group table-bordered">
                                 <tr>
                                     <th class="active">Title</th>
@@ -66,7 +66,7 @@
                             </table>
                         </div>
 
-                        <div *ngIf="variableType != 'breakdown'">
+                        <div *ngIf="variableType == 'actual' || variableType == 'forecast'">
                             <div class="form-group">
                                 <label for="">Input Method</label>
                                 <select id="input-method" [(ngModel)]="selectedInputMethod" class="form-control">

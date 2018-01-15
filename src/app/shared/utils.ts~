@@ -20,7 +20,7 @@ export class Utils {
 
     // get the token
     public static getToken() {
-        return "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBbWl0IiwiZXhwIjoxNTE2ODc0ODkyfQ.eOFLXyfxStxY4lP_sH8ssmCOxaWoy1vvfmJE2S7dUq7SAeBpDXsjKlbT17vFM6gzME97xdpLI69zp89yvFtXQA";
+        return "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBbWl0IiwiZXhwIjoxNTE1ODkzMTMyfQ.k2fg04xIIlhRDFKglFInV5YuolsETLkJeT7gfc1vtPKd7f3bCJzpIC_DT3RFmcIypdyWaKE85pyz4BCVHsGqgw";
     }
 
     public static getShadeOfColor(color, percent) {   

@@ -12,7 +12,6 @@ export class Utils {
     static routeLogin:String = "login";
     static routeVariableType:String = "variableType";
 
-
     // create url for route
     public static createUrl(route:String) {
         return `${this.baseUrl}\\${route}`;

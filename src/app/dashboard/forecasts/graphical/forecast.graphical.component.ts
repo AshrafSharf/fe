@@ -58,12 +58,12 @@ export class ForecastGraphicalComponent implements OnInit {
     }
 
     loadPreviousMonths() {
-        this.navigationIndex += 1;
+        this.navigationIndex -= 1;
         this.reloadMonths();
     }
 
     loadNextMonths() {
-        this.navigationIndex -= 1;
+        this.navigationIndex += 1;
         this.reloadMonths();
     }
 

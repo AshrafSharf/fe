@@ -44,4 +44,12 @@ export class Utils {
         
         return new RequestOptions( {headers:header} );
     }
+
+    public static getUserName() {
+        return sessionStorage['userName'];
+    }
+
+    public static getUserId() {
+        return sessionStorage['userId'];
+    }
 }

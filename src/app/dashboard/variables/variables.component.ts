@@ -79,7 +79,6 @@ export class VariablesComponent implements OnInit {
     subvariablePercentage:string = '';
 
     subvariableList: Subvariable[];
-
     compositVariableIds: {id:String}[] = Array<{id:String}>();
     
 
@@ -89,29 +88,64 @@ export class VariablesComponent implements OnInit {
 
     timeSegments: TimeSegment[] = Array<TimeSegment>();
 
+    editSubvariableIndex = -1;
     myDataSets = null;
 
+
+    clearVariable() {
+        this.editSubvariableIndex = -1;
+        this.subvariableName = '';
+        this.subvariableValue = '';
+        this.subvariablePercentage = '';
+    }
+
+    editVariable(index) {
+        console.log('edit : ', index);
+
+        this.editSubvariableIndex = index;
+        this.subvariableName = this.subvariableList[index].name.toString();
+        this.subvariableValue = this.subvariableList[index].value.toString();
+        if (this.valueType == 'discrete') {
+            this.subvariablePercentage = this.subvariableList[index].percentageTime.toString();
+        }
+    }
 
     addVariable() {
         if (this.subvariableList == undefined) {
             this.subvariableList = [];
+        }
+
+        if (this.editSubvariableIndex != -1) {
+            console.log('editing');
+            // // edit variable
+            // for (var index = 0; index < this.subvariableList.length; index++) {
+            //     if (this.subvariableList[index].name == this.subvariableName) {
+            //         return;
+            //     }
+            // }
+
+            this.subvariableList[this.editSubvariableIndex].name = this.subvariableName;
+            this.subvariableList[this.editSubvariableIndex].value = this.subvariableValue;
+            if (this.valueType == 'discrete') {        
+                this.subvariableList[this.editSubvariableIndex].percentageTime = this.subvariablePercentage;
+            }
         } else {
+            console.log('adding');
+            // add new 
             for (var index = 0; index < this.subvariableList.length; index++) {
                 if (this.subvariableList[index].name == this.subvariableName) {
                     return;
                 }
             }
+
+            this.subvariableList.push({
+                name: this.subvariableName, 
+                value: this.subvariableValue, 
+                percentageTime: this.subvariablePercentage
+            });
         }
 
-        this.subvariableList.push({
-            name: this.subvariableName, 
-            value: this.subvariableValue, 
-            percentageTime: this.subvariablePercentage
-        });
-
-        this.subvariableName = '';
-        this.subvariableValue = '';
-        this.subvariablePercentage = '';
+        this.clearVariable();        
     }
 
     deleteVariable(s) {
@@ -186,7 +220,7 @@ export class VariablesComponent implements OnInit {
         this.userService
             .getOwners((users) => {
                 this.users = users;
-                this.ownerId = (this.users.length > 0) ? this.users[0].id : '';
+                this.ownerId = (this.users.length > 0) ? Utils.getUserId() : '';
             })
 
         this.route.queryParams.subscribe(params => {

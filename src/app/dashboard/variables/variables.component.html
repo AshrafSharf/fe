@@ -74,6 +74,7 @@
                                     </div>
                                     
                                     <button class="btn btn-success" (click)="addVariable()">Add</button>
+                                    <button class="btn btn-danger" (click)="clearVariable()">Cancel</button>
                                 </div>
                 
                                 <div class="list" class="col-md-6">
@@ -86,11 +87,14 @@
                                                 <th *ngIf="variableType == 'discrete'">Percentage</th>
                                                 <th></th>
                                             </tr>
-                                            <tr *ngFor="let s of subvariableList">
+                                            <tr *ngFor="let s of subvariableList; let i = index">
                                                 <td>{{s.name}}</td>
                                                 <td>{{s.value}}</td>
                                                 <td *ngIf="variableType == 'discrete'">{{s.percentageTime}}%</td>
-                                                <td><fa name="trash" class="trash" (click)="deleteVariable(s)"></fa></td>
+                                                <td>
+                                                    <fa name="trash" class="trash" (click)="deleteVariable(s)"></fa>
+                                                    <fa name="pencil" class="edit" (click)="editVariable(i)"></fa>
+                                                </td>
                                             </tr>
                                         </thead>
                                     </table>

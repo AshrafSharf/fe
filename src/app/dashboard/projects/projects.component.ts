@@ -7,6 +7,7 @@ import { Modal } from 'ngx-modialog/plugins/bootstrap';
 import { ProjectService } from '../../services/project.service';
 import { User } from '../../shared/interfaces/user';
 import { UserService } from '../../services/user.service';
+import { Utils } from '../../shared/utils';
 
 @Component({
     selector: 'projects',
@@ -51,7 +52,7 @@ export class ProjectsComponent implements OnInit {
             .getOwners((users => {
                 this.users = users;
                 if (this.users.length > 0) {
-                    this.owner = this.users[0].id;
+                    this.owner = Utils.getUserId();
                 }
             }));
     }

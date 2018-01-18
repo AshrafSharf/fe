@@ -16,7 +16,10 @@
                             <a class="navbar-brand" href="./"><img class="hidden-xs" src="assets/images/att-logo.png" alt=""></a>
                             <div class="header-buttons">
                                 <a class="title" href="./">CAPACITY PLANNING TOOL</a>
-                                <a href="#" class="pull-right logout-button" (click)="logout($event)">Logout</a>
+                                <div class="pull-right">
+                                    <span class="welcome_user">Welcome {{userName}}</span>
+                                    <a href="#" class="logout-button" (click)="logout($event)">Logout</a>                                    
+                                </div>
                             </div>
                         </div>
                         <div id="app-menu" class="navbar-collapse collapse" aria-expanded="false" style="height: 1px;">

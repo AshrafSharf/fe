@@ -42,7 +42,9 @@ export class ForecastGraphicalComponent implements OnInit {
     public lineChartColors:Array<any> = [];
     public lineChartLegend:boolean = true;
     public lineChartType:string = 'line';
+    private navigationIndex = 0;
 
+    private currentBranch = '';
 
     constructor(
         private router: Router,
@@ -55,11 +57,33 @@ export class ForecastGraphicalComponent implements OnInit {
         this.reloadProjects();
     }
 
+    loadPreviousMonths() {
+        this.navigationIndex -= 1;
+        this.reloadMonths();
+    }
+
+    loadNextMonths() {
+        this.navigationIndex += 1;
+        this.reloadMonths();
+    }
+
+    reloadMonths() {
+        this.variableService
+            .extendValuesForMonths(this.currentBranch, this.navigationIndex)
+            .subscribe(result => {
+                console.log(result);
+                this.variables = result.data as Array<Variable>;  
+                this.clearChart();
+                setTimeout(() => {this.renderChart();}, 100);
+            })
+    }
+
     selectBranch(event) {
         this.reloadBranches(event.target.value);
     }
 
     selectVariables(event) {
+        this.currentBranch = event.target.value;
         console.log(event.target.value);
         this.reloadVariables(event.target.value);
     }
@@ -81,6 +105,8 @@ export class ForecastGraphicalComponent implements OnInit {
         if ((projectId == null) && (this.projects.length > 0)) {
             id = this.projects[0].id;
         }
+
+        this.currentBranch = id.toString();
 
         if (id != null) {
             this.branchService

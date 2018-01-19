@@ -8,6 +8,7 @@ import { Moment } from 'moment';
 import { Router, ActivatedRoute } from '@angular/router';
 import { User } from '../../shared/interfaces/user';
 import { UserService } from '../../services/user.service';
+import { Utils } from '../../shared/utils';
 
 @Component({
     selector: 'branches',
@@ -80,7 +81,7 @@ export class BranchesComponent implements OnInit {
             .getOwners((users => {
                 this.users = users;
                 if (this.users.length > 0) {
-                    this.ownerId = this.users[0].id;
+                    this.ownerId = Utils.getUserId();
                 }
             }));
     }

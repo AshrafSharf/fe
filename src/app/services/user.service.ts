@@ -44,6 +44,13 @@ export class UserService implements CanActivate {
                 });
     }
 
+    getUserByName(userName) {
+        let url = Utils.createUrl(Utils.routeUser + '/username/' + userName);
+        return this.http
+                .get(url, Utils.getRequestOptions())
+                .map(result => result.json());
+    }
+
     getOwners(callback: (users:User[])=> void) {
         let url = Utils.createUrl(Utils.routeUser);
         this.http

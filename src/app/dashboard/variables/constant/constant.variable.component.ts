@@ -28,7 +28,7 @@ export class VariableConstantComponent implements OnInit, VariableComponentBehav
     public isValid(): ValidationResult {
         var result: ValidationResult = { result: true, reason: '' };
 
-        if (this.constValue.length == 0) {
+        if (this.constValue == undefined || this.constValue.length == 0) {
             result.result = false;
             result.reason = 'Constant value is missing';
         } else {

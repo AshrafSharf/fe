@@ -23,6 +23,8 @@ import { BranchesComponent } from './dashboard/branches/branches.component';
 import { SidebarComponent } from './shared/sidebar/sidebar.component';
 import { NgDatepickerModule } from 'ng2-datepicker';
 import { DpDatePickerModule } from 'ng2-date-picker';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+
 
 import { ModalModule } from 'ngx-modialog';
 import { BootstrapModalModule } from 'ngx-modialog/plugins/bootstrap';
@@ -106,6 +108,7 @@ import { VariableTypeComponent } from './dashboard/variable-type/variable.type.c
     RouterModule.forRoot(routes),
   ],
   providers: [
+    {provide: LocationStrategy, useClass: HashLocationStrategy},
     ProjectService,
     BranchService,
     UserService,

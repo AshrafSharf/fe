@@ -56,17 +56,34 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
         return false;
     }
 
+    isSubvariableRemoved(name) {
+        for (var index = 0; index < this.compositVariableTypeList.length; index++) {
+            if (this.compositVariableTypeList[index].name == name) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     ngDoCheck(): void {
         // make copy of the existing key-value pairs
-        if (this.timeSegment.subVariables == undefined || this.timeSegment.subVariables.length == 0) {
+        //if (this.timeSegment.subVariables == undefined || this.timeSegment.subVariables.length == 0) {
             if (this.compositVariableTypeList != undefined) {
                 this.compositVariableTypeList.forEach(type => {
                     if (!this.isSubvariableAdded(type.name)) {
                         this.variableTypeList.push({name: type.name, value: type.value, percentageTime: type.percentageTime});
                     }
                 });
+
+                // check if anything is removed
+                for (var index = 0; index < this.variableTypeList.length; index++) {
+                    if (this.isSubvariableRemoved(this.variableTypeList[index].name)) {
+                        this.variableTypeList.splice(index, 1);
+                    }
+                }
             }
-        }
+        //}
     }
 
     onDelete() {
@@ -121,7 +138,7 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
 
     getTimeSegmentValues(): ValidationResult {
         var result: ValidationResult = { result:true, reason: '' };
-        if (this.variableType == 'breakdown') {
+        if ((this.variableType == 'breakdown') || (this.variableType == 'discrete')) {
 
             let finalValue = 0, finalPercentage = 0;
             this.variableTypeList.forEach((variable) => {

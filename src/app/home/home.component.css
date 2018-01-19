@@ -52,3 +52,7 @@ a.active {
     padding-left: 5%;
 }
 
+.welcome_user {
+    color: white;
+    margin-right: 10px;
+}

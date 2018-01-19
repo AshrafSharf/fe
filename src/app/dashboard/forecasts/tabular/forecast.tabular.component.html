@@ -19,5 +19,12 @@
                 [edit-required]="false"
                 [cols]="columns"
                 [rows]="rows"></table-view>
+
+        <div class="row">
+            <div class="col-md-12">
+                <button class="btn btn-success" (click)="loadPreviousMonths()">Previous</button>
+                <button class="btn btn-success pull-right" (click)="loadNextMonths()">Next</button>
+            </div>
+        </div>
     </div>
 </div>

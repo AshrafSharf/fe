@@ -55,7 +55,6 @@ export class AppVariableService {
 
     public extendValuesForMonths(id, index) {
         let url = Utils.createUrl(Utils.routeVariable) + "/doextendcalc/" + id + "/" + index;
-        
         return this.http
                 .get(url, Utils.getRequestOptions())
                 .map(response => {

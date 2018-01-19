@@ -68,7 +68,7 @@ export class VariablesComponent implements OnInit {
 
     variableName = '';
     valueType = 'integer';
-    variableType = 'actual';
+    variableType = 'forecast';
     ownerId: String = '';
 
     variableTypeList: Subvariable[] = Array<Subvariable>();

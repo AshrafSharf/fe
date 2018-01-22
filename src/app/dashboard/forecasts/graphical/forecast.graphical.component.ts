@@ -154,15 +154,6 @@ export class ForecastGraphicalComponent implements OnInit {
         return result;
     }
 
-    getRandomColor() {
-        var letters = '0123456789ABCDEF';
-        var color = '#';
-        for (var i = 0; i < 6; i++) {
-          color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
-    }
-
     excludeVariable(event) {
         if (event.target.checked == false) {
             this.exludedVariables.push(event.target.value);
@@ -227,7 +218,7 @@ export class ForecastGraphicalComponent implements OnInit {
                     for (var resultMapIndex = 0; resultMapIndex < element.timeSegmentResponse.resultMap.length; resultMapIndex++) {
                         let resultMap = element.timeSegmentResponse.resultMap[resultMapIndex];
                         if (resultMapIndex == 0) {
-                            color = Utils.getRandomColor();
+                            color = Utils.getRandomColor(timeSegmentIndex);
                             shade = 0;
                         }
     

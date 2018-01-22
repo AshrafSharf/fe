@@ -39,7 +39,11 @@ export class VariableConstantComponent implements OnInit, VariableComponentBehav
     }
 
     getInput() {
+        var words = this.distributionComponent.getCompletedWords();
+        console.log(words);
         return {
+            stdDevCompletedWordsArray: words[0],
+            meanCompletedWordsArray: words[1],
             constantValue: this.constValue,
             growth: this.growth,
             distributionType: this.distributionComponent.distributionType,

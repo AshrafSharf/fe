@@ -22,7 +22,7 @@ export class AutocompleteInputComponent implements OnInit, VariableComponentBeha
     expression: String[] = Array<String>();
     suggestions: KeyValuePair[] = Array<KeyValuePair>();
 
-    @Input('completedWords') completedWords: SelectedWord[] = Array<SelectedWord>();
+    @Input('completedWords') completedWords: SelectedWord[] = new Array<SelectedWord>();
 
     isError: boolean = false;
 
@@ -67,6 +67,7 @@ export class AutocompleteInputComponent implements OnInit, VariableComponentBeha
                 if (isNaN(value)) {
                     this.isError = true;
                 } else {
+                    if (this.completedWords == undefined) this.completedWords = new Array<SelectedWord>();
                     this.completedWords.push({
                         title: parseInt(this.input.nativeElement.value.trim()).toString(),
                         type: 'const',

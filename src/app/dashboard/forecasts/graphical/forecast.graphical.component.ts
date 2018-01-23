@@ -31,7 +31,16 @@ export class ForecastGraphicalComponent implements OnInit {
     projects: Project[] = new Array<Project>();
     branches:Branch[] = new Array<Branch>();
     variables:Variable[] = new Array<Variable>();
+    filteredVariables: Variable[] = new Array<Variable>();
     private exludedVariables: String[] = new Array<String>();
+    searchName:String = '';
+    searchType:String = '';
+    searchOwner:String = '';
+
+    breakdownVariables:Boolean = true;
+    discreteVariables:Boolean = true;
+    breakdownLines:Boolean = true;
+    discreteLines:Boolean = true;
 
     public lineChartData:Array<any> = [];
     public lineChartLabels:Array<any> = [];
@@ -57,6 +66,26 @@ export class ForecastGraphicalComponent implements OnInit {
         this.reloadProjects();
     }
 
+    toggleBreakdownVariables(event) {
+        this.breakdownVariables = event.target.checked;
+        setTimeout(() => {this.renderChart();}, 100);
+    }
+
+    toggleBreakdownLines(event) {
+        this.breakdownLines = event.target.checked;
+        setTimeout(() => {this.renderChart();}, 100);
+    }
+
+    toggleDiscreteVariables(event) {
+        this.discreteVariables = event.target.checked;
+        setTimeout(() => {this.renderChart();}, 100);
+    }
+
+    toggleDiscreteLines(event) {
+        this.discreteLines = event.target.checked;
+        setTimeout(() => {this.renderChart();}, 100);
+    }
+
     loadPreviousMonths() {
         this.navigationIndex -= 1;
         this.reloadMonths();
@@ -65,6 +94,18 @@ export class ForecastGraphicalComponent implements OnInit {
     loadNextMonths() {
         this.navigationIndex += 1;
         this.reloadMonths();
+    }
+
+    filterResult(event, type) {
+        this.filteredVariables.splice(0, this.filteredVariables.length);
+
+        this.variables.forEach(variable => {
+            if ((variable.title.toLowerCase().indexOf(this.searchName.toLowerCase()) >= 0) &&
+            (variable.variableType.toLowerCase().indexOf(this.searchType.toLowerCase()) >= 0) &&
+            (variable.ownerName.toLowerCase().indexOf(this.searchOwner.toLowerCase()) >= 0)) {
+                this.filteredVariables.push(variable);
+            }
+        });
     }
 
     reloadMonths() {
@@ -121,6 +162,26 @@ export class ForecastGraphicalComponent implements OnInit {
         }
     }
 
+    isVariableExcluded(id) {
+        this.exludedVariables.forEach(varId => {
+            if (varId == id) {
+                return true;
+            }
+        })
+
+        return false;
+    }
+
+    clearAllVariables() {
+        this.filteredVariables.splice(0, this.filteredVariables.length);
+
+        this.exludedVariables.splice(0, this.exludedVariables.length);
+        this.variables.forEach(variable => {
+            this.exludedVariables.push(variable.id);
+            this.filteredVariables.push(variable);
+        })
+    }
+
     reloadVariables(branchId:String = null) {
         var id = branchId;
         if ((branchId == null) && (this.branches.length > 0)) {
@@ -133,6 +194,12 @@ export class ForecastGraphicalComponent implements OnInit {
                 .subscribe(result => {
                     if (result.status == "OK") {
                         this.variables = result.data as Array<Variable>;  
+                        this.exludedVariables = [];
+                        this.variables.forEach(variable => {
+                            this.exludedVariables.push(variable.id);
+                            this.filteredVariables.push(variable);
+                        })
+
                         console.log("rendering chart");
                         this.clearChart();
                         setTimeout(() => {this.renderChart();}, 100);
@@ -152,15 +219,6 @@ export class ForecastGraphicalComponent implements OnInit {
         }
 
         return result;
-    }
-
-    getRandomColor() {
-        var letters = '0123456789ABCDEF';
-        var color = '#';
-        for (var i = 0; i < 6; i++) {
-          color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
     }
 
     excludeVariable(event) {
@@ -190,6 +248,7 @@ export class ForecastGraphicalComponent implements OnInit {
         this.lineChartColors.splice(0, this.lineChartColors.length);
         this.lineChartData.splice(0, this.lineChartData.length);
 
+        var totalSegments = 0;
         for (var variableIndex = 0; variableIndex < this.variables.length; variableIndex ++) {
             let variable = this.variables[variableIndex];
 
@@ -205,6 +264,11 @@ export class ForecastGraphicalComponent implements OnInit {
 
             for (var timeSegmentIndex = 0; timeSegmentIndex < variable.timeSegment.length; timeSegmentIndex++) {
                 let element = variable.timeSegment[timeSegmentIndex];
+                if (variable.variableType == 'breakdown') {
+                    if (timeSegmentIndex > 0 && !this.breakdownLines) {
+                        continue;
+                    }
+                }
     
                 if (element.timeSegmentResponse != undefined || element.timeSegmentResponse != null) {
     
@@ -227,7 +291,7 @@ export class ForecastGraphicalComponent implements OnInit {
                     for (var resultMapIndex = 0; resultMapIndex < element.timeSegmentResponse.resultMap.length; resultMapIndex++) {
                         let resultMap = element.timeSegmentResponse.resultMap[resultMapIndex];
                         if (resultMapIndex == 0) {
-                            color = Utils.getRandomColor();
+                            color = Utils.getRandomColor(variableIndex);
                             shade = 0;
                         }
     

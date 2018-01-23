@@ -53,6 +53,15 @@ export class VariableDistributionComponent implements OnInit {
         }
     }
 
+    public getCompletedWords() {
+        var words = [];
+        this.autoCompleteInputs.forEach(control => {
+            words.push(control.completedWords);
+        });
+
+        return words;
+    }
+
     public isValid(): ValidationResult {
         var values = [];
         this.autoCompleteInputs.forEach(control => {

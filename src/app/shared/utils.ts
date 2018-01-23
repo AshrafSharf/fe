@@ -27,12 +27,31 @@ export class Utils {
         return "#"+(0x1000000+(Math.round((t-R)*p)+R)*0x10000+(Math.round((t-G)*p)+G)*0x100+(Math.round((t-B)*p)+B)).toString(16).slice(1);
     }
 
-    public static getRandomColor() {
+    public static getRandomColor(index) {
+        var colors = [
+            {name: 'blue', code: '#0000FF'},
+            {name: 'Brown', code: '#A52A2A'},
+            {name: 'CadetBlue', code: '#5F9EA0'},
+            {name: 'Chartreuse', code: '#7FFF00'},
+            {name: 'Coral', code: '#FF7F50'},
+            {name: 'CornflowerBlue', code: '#6495ED'},
+            {name: 'Crimson ', code: '#DC143C'},
+            {name: 'DarkGreen', code: '#006400'},
+            {name: 'red', code: '#ff0000'}
+        ]
+
+        var color = colors[index].code;
+        if (index > colors.length) {
+            index = 0;
+        }
+
+        console.log('index: ', index);
+        /*
         var letters = '0123456789ABCDEF';
         var color = '#';
         for (var i = 0; i < 6; i++) {
           color += letters[Math.floor(Math.random() * 16)];
-        }
+        }*/
         return color;
     }
 

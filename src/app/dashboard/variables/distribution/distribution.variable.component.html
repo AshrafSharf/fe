@@ -17,12 +17,12 @@
 <div class="form-group" *ngIf="distribution == 3">
     <label for="">Mean</label>
     <!-- <input type="text" class="form-control" [(ngModel)]="mean"> -->
-    <autocomplete-input [variables]="variables"></autocomplete-input>
+    <autocomplete-input [completedWords]="timeSegment != undefined ? timeSegment.meanCompletedWordsArray : []" [variables]="variables"></autocomplete-input>
 </div>
 <div class="form-group" *ngIf="distribution == 3">
     <label for="">Standard Deviation</label>
     <!-- <input type="text" class="form-control" [(ngModel)]="deviation"> -->
-    <autocomplete-input [variables]="variables"></autocomplete-input>
+    <autocomplete-input [completedWords]="timeSegment != undefined ? timeSegment.stdDevCompletedWordsArray : []" [variables]="variables"></autocomplete-input>
 </div>
 <div class="form-group" *ngIf="distribution == 3">
     <label for="">User Selected Parameteric (Sigma)</label>

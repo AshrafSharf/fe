@@ -375,14 +375,14 @@ export class VariablesComponent implements OnInit {
                 for (var resultMapIndex = 0; resultMapIndex < element.timeSegmentResponse.resultMap.length; resultMapIndex++) {
                     let resultMap = element.timeSegmentResponse.resultMap[resultMapIndex];
                     if (resultMapIndex == 0) {
-                        color = Utils.getRandomColor();
+                        color = Utils.getRandomColor(timeSegmentIndex);
                         shade = 0;
                     }
 
                     let borderColor = resultMapIndex == 0 ? color : Utils.getShadeOfColor(color, shade)
                     this.lineChartColors.push({ borderColor: borderColor });
                     console.log("borderColor: " + resultMapIndex + ", " + resultMap.title, borderColor);
-                    shade += 0.1;
+                    shade += 0.2;
 
                     var labelTitle = `Time Segment: ${timeSegmentIndex + 1} - ${resultMap.title}`;
                     var dataValues = [];

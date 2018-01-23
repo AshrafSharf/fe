@@ -15,15 +15,60 @@
     </div>
 
     <div class="row" >
-        <div class="col-md-2 form-group">
-            <div *ngFor="let v of variables" class="checkbox">
+        <div class="col-md-3">
+            <div class="row">
+                <h4>Configuration</h4>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div>Show Variales</div>
+                        <div>
+                            <label>
+                                <input type="checkbox" (click)="toggleBreakdownVariables($event)" checked> Breakdown
+                            </label>
+                        </div>
+
+                        <div>
+                            <label>
+                                <input type="checkbox" (click)="toggleDiscreteVariables($event)" checked> Discrete
+                            </label>        
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div>Show Lines for</div>
+                        <div>
+                            <label>
+                                <input type="checkbox" (click)="toggleBreakdownLines($event)" checked> Breakdown
+                            </label>
+                        </div>
+
+                        <div>
+                            <label>
+                                <input type="checkbox" (click)="toggleDiscreteLines($event)" checked> Discrete
+                            </label>        
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" style="margin-top: 10px">
+                <h4>Variables</h4>
+                <input type="text" [(ngModel)]="searchName" (keyup)="filterResult($event, 'name')" class="col-md-4" placeholder="variable name">
+                <input type="text" [(ngModel)]="searchType" (keyup)="filterResult($event, 'type')" class="col-md-4" placeholder="type">
+                <input type="text" [(ngModel)]="searchOwner" (keyup)="filterResult($event, 'owner')" class="col-md-4" placeholder="owner">
+            </div>
+            
+            <div style="margin-top:5px">
+                <!--<button class="btn btn-danger" (click)="reloadBranches()">Clear</button>-->
+            </div>
+            <div *ngFor="let v of filteredVariables" class="checkbox">
                 <label>
-                    <input type="checkbox" checked (click)="excludeVariable($event)" [value]="v.id"> {{v.title}}
+                    <input type="checkbox" (click)="excludeVariable($event)" [value]="v.id"> {{v.title}}
                 </label>
             </div>
         </div>
 
-        <div class="col-md-10" *ngIf="lineChartData.length > 0">
+        <div class="col-md-9" *ngIf="lineChartData.length > 0">
             <!-- <svg id="graph" class="col-md-12"></svg> -->
             <!-- <ngx-line-chart #linegraph  [dataSets]="myDataSets" *ngIf="myDataSets != null" ></ngx-line-chart> -->
             <canvas baseChart 

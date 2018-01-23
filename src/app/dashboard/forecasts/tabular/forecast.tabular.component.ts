@@ -51,7 +51,7 @@ export class ForecastTabularComponent implements OnInit {
 
     private navigationIndex = 0;
 
-    private currentBranch = '';
+    private currentBranch: String;
 
 
     constructor(private router:Router,
@@ -70,7 +70,7 @@ export class ForecastTabularComponent implements OnInit {
     }
 
     selectVariables(event) {
-        this.currentBranch = event.target.value;
+        //this.currentBranch = event.target.value;
         this.reloadVariables(event.target.value);
     }
 
@@ -118,6 +118,9 @@ export class ForecastTabularComponent implements OnInit {
         if ((branchId == null) && (this.branches.length > 0)) {
             id = this.branches[0].id;
         }
+
+        this.currentBranch = id;
+        this.navigationIndex = 0;
 
         if (id != null) {
             this.variableService
@@ -1244,6 +1247,21 @@ export class ForecastTabularComponent implements OnInit {
         this.reloadMonths();
     }
 
+    /*
+    reloadMonths() {
+        this.variableService
+            .extendValuesForMonths("5a65f4c7d49fee09a042bcfd", this.navigationIndex)
+            .subscribe(result => {
+                console.log(result);
+                this.variables = result.data as Array<Variable>;
+                console.log("reloadMonths: "+this.currentBranch+ " "+this.navigationIndex);
+                this.populateTable(this.currentBranch);
+                //this.clearChart();
+                //setTimeout(() => {this.renderChart();}, 100);
+            })
+    }
+
+*/
     reloadMonths() {
         this.variableService
             .extendValuesForMonths(this.currentBranch, this.navigationIndex)
@@ -1257,3 +1275,4 @@ export class ForecastTabularComponent implements OnInit {
     }
 
 }
+

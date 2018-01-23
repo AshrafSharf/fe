@@ -53,7 +53,7 @@ export class ForecastGraphicalComponent implements OnInit {
     public lineChartType:string = 'line';
     private navigationIndex = 0;
 
-    private currentBranch = '';
+    private currentBranch: String;
 
     constructor(
         private router: Router,
@@ -124,7 +124,7 @@ export class ForecastGraphicalComponent implements OnInit {
     }
 
     selectVariables(event) {
-        this.currentBranch = event.target.value;
+        //this.currentBranch = event.target.value;
         console.log(event.target.value);
         this.reloadVariables(event.target.value);
     }
@@ -187,6 +187,9 @@ export class ForecastGraphicalComponent implements OnInit {
         if ((branchId == null) && (this.branches.length > 0)) {
             id = this.branches[0].id;
         }
+
+        this.currentBranch = id;
+        this.navigationIndex = 0;
 
         if (id != null) {
             this.variableService

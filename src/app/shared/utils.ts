@@ -19,7 +19,7 @@ export class Utils {
 
     // get the token
     public static getToken() {
-        return "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBbWl0IiwiZXhwIjoxNTE2ODc0ODkyfQ.eOFLXyfxStxY4lP_sH8ssmCOxaWoy1vvfmJE2S7dUq7SAeBpDXsjKlbT17vFM6gzME97xdpLI69zp89yvFtXQA";
+        return sessionStorage["authorization_token"];
     }
 
     public static getShadeOfColor(color, percent) {   

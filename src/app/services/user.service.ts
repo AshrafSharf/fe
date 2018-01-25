@@ -34,21 +34,12 @@ export class UserService implements CanActivate {
         return this.http
                 .post(url, body, requestOptions)
                 .map(result => {
-                    console.log(result);
-                    console.log(result.status);
-                    console.log(result.headers.get('authorization'));
+                    sessionStorage["authorization_token"] = result.headers.get('authorization');
                     return { status: "OK"};
                 })
                 .catch((error: any) => {
                     return Observable.throw(error);
                 });
-    }
-
-    getUserByName(userName) {
-        let url = Utils.createUrl(Utils.routeUser + '/username/' + userName);
-        return this.http
-                .get(url, Utils.getRequestOptions())
-                .map(result => result.json());
     }
 
     getOwners(callback: (users:User[])=> void) {

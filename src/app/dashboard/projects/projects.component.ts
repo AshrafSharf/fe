@@ -14,8 +14,8 @@ import { Utils } from '../../shared/utils';
     templateUrl: './projects.component.html',
     styleUrls: ['./projects.component.css']
 })
-export class ProjectsComponent implements OnInit { 
-    
+export class ProjectsComponent implements OnInit {
+
     title: String = '';
     description: String = '';
     owner: String = '';
@@ -26,7 +26,7 @@ export class ProjectsComponent implements OnInit {
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        private modal:Modal, 
+        private modal:Modal,
         private userService: UserService,
         private projectService: ProjectService) {
     }
@@ -37,7 +37,7 @@ export class ProjectsComponent implements OnInit {
             .subscribe(params => {
                 var id = params["id"];
                 if (id == undefined) return;
-                
+
                 this.projectService
                     .getDetails(id)
                     .subscribe(result => {
@@ -64,7 +64,15 @@ export class ProjectsComponent implements OnInit {
                 .title('Warning')
                 .body('Please enter project name')
                 .open();
-        } else if (this.owner.length == 0) {
+        }
+        //if the title has special characters
+        else if (this.title.match(/[^a-zA-Z_-]/)){
+              this.modal.alert()
+              .title('Warning')
+              .body('Names can only include Alphabetical characters,underscores and hyphens')
+              .open();
+
+        }else if (this.owner.length == 0) {
             this.modal.alert()
                 .title('Warning')
                 .body('Please select project owner')
@@ -76,15 +84,32 @@ export class ProjectsComponent implements OnInit {
                     .updateProject(this.selectedProject.id, this.title, this.description, this.owner)
                     .subscribe(result => {
                         console.log('result', result);
-                        this.clearInputs();
+                        if (result.status == "UNPROCESSABLE_ENTITY"){
+                            this.modal.alert()
+                              .title("Warning")
+                              .body("Failed to update project called \"" + this.title +
+                                    "\". This name is already associated with another project")
+                              .open();
+                        } else {
+                            this.clearInputs();
+                        }
                     });
             } else {
-                // create new 
+                // create new
                 this.projectService
                     .createProject(this.title, this.description, this.owner)
                     .subscribe(result => {
                         console.log('result',result);
-                        this.clearInputs();
+
+                        if (result.status == "UNPROCESSABLE_ENTITY"){
+                            this.modal.alert()
+                              .title("Warning")
+                              .body("Failed to create project called \"" + this.title +
+                                    "\". This name is already associated with another project")
+                              .open();
+                        } else {
+                          this.clearInputs();
+                        }
                     });
             }
         }
@@ -96,7 +121,7 @@ export class ProjectsComponent implements OnInit {
         this.description = '';
         this.owner = '';
         this.selectedProject = null;
-        
+
         this.router.navigate(['/home/project-list']);
     }
 

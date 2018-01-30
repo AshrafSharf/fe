@@ -7,7 +7,7 @@ import { Utils } from '../shared/utils';
 
 @Injectable()
 export class AppVariableService {
-    
+
     constructor(private http: Http) { }
 
     public getBreakdownVariables(branchId, type) {
@@ -16,7 +16,7 @@ export class AppVariableService {
                 .get(url, Utils.getRequestOptions())
                 .map(result => result.json());
     }
-    
+
     public createVariable(body) {
         let url = Utils.createUrl(Utils.routeVariable);
         console.log(body);
@@ -43,9 +43,18 @@ export class AppVariableService {
                 });
     }
 
+    public getVariableByName(branchId, varName){
+      let url = Utils.createUrl(Utils.routeVariable) + "/" + branchId+ "/"+varName;
+      return this.http
+                .get(url, Utils.getRequestOptions())
+                .map(response => {
+                  return response.json()
+                });
+    }
+
     public calculateVariableValues(id) {
         let url = Utils.createUrl(Utils.routeVariable) + "/docalc/" + id;
-        
+
         return this.http
                 .get(url, Utils.getRequestOptions())
                 .map(response => {
@@ -64,7 +73,7 @@ export class AppVariableService {
 
     public getVariablesForSuggestions(branchId) {
         let url = Utils.createUrl(Utils.routeVariable) + "/" + branchId + "/name";
-        
+
         return this.http
                 .get(url, Utils.getRequestOptions())
                 .map(response => {

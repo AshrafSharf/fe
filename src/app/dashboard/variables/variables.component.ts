@@ -510,7 +510,10 @@ export class VariablesComponent implements OnInit {
 
         if (this.variableName.length == 0) {
             this.modal.showError('Variable name is mandatory');
-        } else if (this.variableType.length == 0) {
+        } else if(this.variableName.match(/[^a-zA-Z_-]/)){
+		this.modal.showError('Names can only include Alphabetical characters,underscores and 			hyphens');
+	}
+	 else if (this.variableType.length == 0) {
             this.modal.showError('Variable type is mandatory');
         } else if (this.ownerId.length == 0) {
             this.modal.showError('Owner Id is mandatory');
@@ -562,16 +565,25 @@ export class VariablesComponent implements OnInit {
                     this.variableService
                     .createVariable(body)
                     .subscribe(response => {
-                        this.selectedVariable = null;
-                        this.onCancel();
+			if(response.status == "UNPROCESSABLE_ENTITY"){
+				 this.modal.showError("Failed to create variable called \"" + 					this.variableName + "\". This name is already associated with another 					variable in this branch");
+                 
+			}else{
+                        	this.selectedVariable = null;
+                        	this.onCancel();
+			}
                     })
                 } else {
                     this.variableService
                         .updateVariable(body, this.selectedVariable.id)
                         .subscribe(response => {
                             console.log(response);
-                            this.selectedVariable = null;
-                            this.onCancel();
+			    if(response.status == "UNPROCESSABLE_ENTITY"){
+				 this.modal.showError("Failed to update variable called \"" + 					this.variableName + "\". This name is already associated with another 					variable in this branch");
+			    }else{
+                            	this.selectedVariable = null;
+                            	this.onCancel();
+			    }
                         })
                 }
             }

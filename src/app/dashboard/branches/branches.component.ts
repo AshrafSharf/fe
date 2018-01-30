@@ -15,7 +15,7 @@ import { Utils } from '../../shared/utils';
     templateUrl: './branches.component.html',
     styleUrls: ['./branches.component.css']
 })
-export class BranchesComponent implements OnInit { 
+export class BranchesComponent implements OnInit {
     isLoading:Boolean = false;
 
     users: User[] = Array<User>();
@@ -27,7 +27,7 @@ export class BranchesComponent implements OnInit {
     startDate: String;
     endDate: String;
     actualsDate: String;
-    
+
     // week
     startWeek: String = '';
     endWeek: String = '';
@@ -43,7 +43,7 @@ export class BranchesComponent implements OnInit {
     title: String = "";
     description: String = "";
     timeUnit: String = 'Month';
-    
+
     constructor(
         private route: ActivatedRoute,
         private router: Router,
@@ -53,7 +53,7 @@ export class BranchesComponent implements OnInit {
         public modal:Modal) {
 
     }
-    
+
     ngOnInit() {
         // get the project and branch Id from route params
         this.route.queryParams.subscribe(params => {
@@ -122,6 +122,13 @@ export class BranchesComponent implements OnInit {
                 .title('Warning')
                 .body('Please enter branch name')
                 .open();
+        }
+  	else if (this.title.match(/[^a-zA-Z_-]/)){
+              this.modal.alert()
+              .title('Warning')
+              .body('Names can only include Alphabetical characters,underscores and hyphens')
+              .open();
+
         } else {
             var start = this.startDate;
             var end = this.endDate;
@@ -130,20 +137,37 @@ export class BranchesComponent implements OnInit {
             if (this.selectedBranch != null) {
                 // update existing
                 this.branchService
-                    .updateBranch(this.title, this.description, this.selectedProjectId, 
+                    .updateBranch(this.title, this.description, this.selectedProjectId,
                         actuals, start, end, this.ownerId, this.timeUnit, this.selectedBranch.id)
                     .subscribe(result => {
                         console.log(result);
-                        this.clearInputs();
+                        if (  result.status == "UNPROCESSABLE_ENTITY"){
+                            this.modal.alert()
+                              .title("Warning")
+                              .body("Failed to update branch called \"" + this.title +
+                                    "\" This name is already associated with another branch in this project")
+                              .open();
+                        } else {
+                            this.clearInputs();
+                        }
                     });
             } else {
 
-                // create new 
+                // create new
                 this.branchService
-                    .createBranch(this.title, this.description, this.selectedProjectId, 
+                    .createBranch(this.title, this.description, this.selectedProjectId,
                             actuals, start, end, this.ownerId, this.timeUnit)
                     .subscribe(result => {
-                        this.clearInputs();
+                          console.log(result);
+                          if (  result.status == "UNPROCESSABLE_ENTITY"){
+                              this.modal.alert()
+                                .title("Warning")
+                                .body("Failed to create branch called " + this.title +
+                                      "This name is already associated with another branch in this project")
+                                .open();
+                          } else{
+                            this.clearInputs();
+                          }
                     });
             }
         }

@@ -9,7 +9,7 @@ import { Utils } from '../shared/utils';
 @Injectable()
 export class ProjectService {
     constructor(private http: Http) { }
-    
+
     // get all projects
     getProjects() {
         let url = Utils.createUrl(Utils.routeProject);
@@ -41,14 +41,10 @@ export class ProjectService {
         let url = Utils.createUrl(Utils.routeProject) + "/" + id;
 
         let body = { id: id, title: title, description: description, ownerId: owner };
-        console.log(body);
-
+      //  console.log(body);
         return this.http
                 .put(url, body, Utils.getRequestOptions())
-                .map(result => {
-                    console.log('result', result);
-                    result.json()
-                });
+                .map(result => result.json());
     }
 
     // delete project

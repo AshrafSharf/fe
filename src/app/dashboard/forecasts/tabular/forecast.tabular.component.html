@@ -11,20 +11,46 @@
             <select (change)="selectVariables($event)" class="app-select" #branchList>
                 <option *ngFor="let branch of branches" [value]="branch.id"> {{branch.title}} </option>
             </select>
+        </div>
+
+        <div class="form-group">
+            <div style="display: inline-block">
+                <label for="">Start Time</label>
+                <div class='date inputText' id='startDate'>
+                    <dp-date-picker
+                            [config]="datePickerConfig"
+                            [(ngModel)]="userSelectedStartDate"
+                            mode="daytime"
+                            [theme]="'dp-material dp-main'"></dp-date-picker>
+                </div>
+            </div>
+
+            <div style="display: inline-block">
+                <label for="">End Time</label>
+                <div class='date inputText' id='endDate'>
+                    <dp-date-picker
+                            [config]="datePickerConfig"
+                            [(ngModel)]="userSelectedEndDate"
+                            mode="daytime"
+                            [theme]="'dp-material dp-main'"></dp-date-picker>
+                </div>
+            </div>
+
+            <div style="display: inline-block">
+                <button class="btn btn-success" (click)="setNewDates(userSelectedStartDate, userSelectedEndDate)">Save and Refresh</button>
+                <button class="btn btn-danger" (click)="reset()">Reset to Default Dates</button>
+            </div>
 
         </div>
+
 
         <table-view
                 [delete-required]="false"
                 [edit-required]="false"
                 [cols]="columns"
-                [rows]="rows"></table-view>
+                [rows]="rows">
 
-        <div class="row">
-            <div class="col-md-12">
-                <button class="btn btn-success" (click)="loadPreviousMonths()">Previous</button>
-                <button class="btn btn-success pull-right" (click)="loadNextMonths()">Next</button>
-            </div>
-        </div>
+        </table-view>
+
     </div>
 </div>

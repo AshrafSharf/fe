@@ -3,7 +3,7 @@
         <app-header title="Manage Variable"></app-header>
     </div>
 
-    <div class="row">        
+    <div class="row">
         <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -58,8 +58,8 @@
                                     <div class="form-group">
                                         <label for="">Subvariable Name</label>
                                         <input type="text" [(ngModel)]="subvariableName" class="form-control" placeholder="subvariable name">
-                                    </div>                
-            
+                                    </div>
+
                                     <div class="form-group">
                                         <label for="">Value</label>
                                         <input type="text" [(ngModel)]="subvariableValue" class="form-control" placeholder="subvariable value">
@@ -72,11 +72,11 @@
                                             <input type="text" class="form-control" [(ngModel)]="subvariablePercentage" placeholder="subvariable percentage">
                                         </div>
                                     </div>
-                                    
+
                                     <button class="btn btn-success" (click)="addVariable()">Add</button>
                                     <button class="btn btn-danger" (click)="clearVariable()">Cancel</button>
                                 </div>
-                
+
                                 <div class="list" class="col-md-6">
                                     <label class="text-bold">Subvariables</label>
                                     <table class="table" >
@@ -134,7 +134,7 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                </div>    
+                                </div>
                             </div>
 
                         </div>
@@ -145,21 +145,21 @@
                     </div>
 
                     <div class="row">
-                        <time-segment 
-                            [branch-id]="branchId" 
-                            class="col-md-12" 
+                        <time-segment
+                            [branch-id]="branchId"
+                            class="col-md-12"
                             *ngFor="let segment of timeSegments"
                             [time-segment]="segment"
                             [variable-type]="variableType"
                             [composit-variable-type-list]="subvariableList"
                             (delete)="onDeleteSegment()"></time-segment>
-                    </div>  
-                    
+                    </div>
+
                     <div class="row" *ngIf="lineChartData.length > 0">
                         <div style="padding:20px;">
                             <!-- <svg id="graph" class="col-md-12"></svg> -->
                             <!-- <ngx-line-chart #linegraph  [dataSets]="myDataSets" *ngIf="myDataSets != null" ></ngx-line-chart> -->
-                            <canvas baseChart 
+                            <canvas baseChart
                                 [datasets]="lineChartData"
                                 [labels]="lineChartLabels"
                                 [colors]="lineChartColors"
@@ -170,10 +170,12 @@
                     </div>
                 </div>
                 <div class="panel-footer">
-                    <button class="btn btn-success" (click)="onSave()">Save</button>
+                    <button class="btn btn-success" name="saveAndExit" (click)="onSave($event)">Save and Exit</button>
+                    <button class="btn btn-success" name="saveAndRefresh"(click)="onSave($event)">Save and Refresh</button>
                     <button class="btn btn-danger" (click)="onCancel()">Cancel</button>
+                    <button class="btn btn-danger" [disabled]="selectedVariable == null"(click)="onDelete()">Delete</button>
                 </div>
-            </div>  
+            </div>
 
         </div>
     </div>

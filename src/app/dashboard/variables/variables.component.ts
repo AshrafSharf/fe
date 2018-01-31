@@ -512,8 +512,8 @@ export class VariablesComponent implements OnInit {
 
         if (this.variableName.length == 0) {
             this.modal.showError('Variable name is mandatory');
-        } else if(this.variableName.match(/[^a-zA-Z_-]/)){
-		this.modal.showError('Names can only include Alphabetical characters,underscores and 			hyphens');
+        } else if(this.variableName.match(/[^0-9a-zA-Z_-]/)){
+		this.modal.showError('Names can only include Alphanumerical characters,underscores and hyphens');
 	}
 	 else if (this.variableType.length == 0) {
             this.modal.showError('Variable type is mandatory');

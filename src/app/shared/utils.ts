@@ -65,10 +65,10 @@ export class Utils {
     }
 
     public static getUserName() {
-        return sessionStorage['userName'];
+        return sessionStorage['user_name'];
     }
 
     public static getUserId() {
-        return sessionStorage['userId'];
+        return sessionStorage['user_id'];
     }
 }

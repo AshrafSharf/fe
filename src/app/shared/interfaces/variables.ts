@@ -24,6 +24,7 @@ export interface Variable {
     compositeVariables: {id:String}[];
     compositeType: String;
     isSelected: Boolean;
+    allTimesegmentsResultList:{title:String, data:{title:String, value:number}[]}[];
 }
 
 export interface KeyValuePair {

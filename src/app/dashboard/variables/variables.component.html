@@ -157,15 +157,7 @@
 
                     <div class="row" *ngIf="lineChartData.length > 0">
                         <div style="padding:20px;">
-                            <!-- <svg id="graph" class="col-md-12"></svg> -->
-                            <!-- <ngx-line-chart #linegraph  [dataSets]="myDataSets" *ngIf="myDataSets != null" ></ngx-line-chart> -->
-                            <canvas baseChart
-                                [datasets]="lineChartData"
-                                [labels]="lineChartLabels"
-                                [colors]="lineChartColors"
-                                [legend]="lineChartLegend"
-                                [chartType]="lineChartType"></canvas>
-
+                            <nvd3 [options]="options" [data]="lineChartData"></nvd3>
                         </div>
                     </div>
                 </div>

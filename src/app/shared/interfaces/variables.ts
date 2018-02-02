@@ -68,7 +68,7 @@ export interface VariableType {
 export interface Subvariable {
     name: String;
     value: String;
-    percentageTime:String;
+    probability:String;
 }
 
 export interface DiscreteComponent {

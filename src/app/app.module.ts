@@ -37,6 +37,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AngularFontAwesomeModule } from 'angular-font-awesome/angular-font-awesome';
 import { routes } from './shared/routes';
+import {ShContextMenuModule} from 'ng2-right-click-menu';
 
 import { AppComponent } from './app.component';
 import * as $ from 'jquery';
@@ -106,7 +107,8 @@ import { VariableTypeComponent } from './dashboard/variable-type/variable.type.c
     NgDatepickerModule,
     DpDatePickerModule,
     RouterModule.forRoot(routes),
-    NvD3Module
+    NvD3Module,
+    ShContextMenuModule
   ],
   providers: [
     {provide: LocationStrategy, useClass: HashLocationStrategy},

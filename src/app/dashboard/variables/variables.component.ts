@@ -23,16 +23,16 @@ import { Modal } from 'ngx-modialog/plugins/bootstrap';
 })
 
 export class VariablesComponent implements OnInit {
-    @ViewChildren(TimeSegmentComponent) timeSegmentWidgets:TimeSegmentComponent[];
+    @ViewChildren(TimeSegmentComponent) timeSegmentWidgets: TimeSegmentComponent[];
 
-    projects:Project[] = Array<Project>();
-    branches:Branch[] = Array<Branch>();
+    projects: Project[] = Array<Project>();
+    branches: Branch[] = Array<Branch>();
     variables: Variable[] = Array<Variable>();
 
-    public lineChartData:Array<any> = [];
-    public lineChartLabels:Array<{key: number, value:string}> = [];
+    public lineChartData: Array<any> = [];
+    public lineChartLabels: Array<{ key: number, value: string }> = [];
 
-    compositeVariableList:Variable[] = Array<Variable>();
+    compositeVariableList: Variable[] = Array<Variable>();
 
     compositType = 'none';
     description = '';
@@ -56,13 +56,13 @@ export class VariablesComponent implements OnInit {
     variableTypeList: Subvariable[] = Array<Subvariable>();
     selectedVariableTypeList: VariableType[] = Array<VariableType>();
 
-    subvariableName:string = '';
-    subvariableValue:string = '';
-    subvariablePercentage:string = '';
+    subvariableName: string = '';
+    subvariableValue: string = '';
+    subvariablePercentage: string = '';
 
     subvariableList: Subvariable[];
-    compositVariableIds: {id:String}[] = Array<{id:String}>();
-    
+    compositVariableIds: { id: String }[] = Array<{ id: String }>();
+
     data;
     options;
 
@@ -87,8 +87,8 @@ export class VariablesComponent implements OnInit {
         this.editSubvariableIndex = index;
         this.subvariableName = this.subvariableList[index].name.toString();
         this.subvariableValue = this.subvariableList[index].value.toString();
-        if (this.valueType == 'discrete') {
-            this.subvariablePercentage = this.subvariableList[index].percentageTime.toString();
+        if (this.variableType == 'discrete') {
+            this.subvariablePercentage = this.subvariableList[index].probability.toString();
         }
     }
 
@@ -109,34 +109,39 @@ export class VariablesComponent implements OnInit {
             this.subvariableList[this.editSubvariableIndex].name = this.subvariableName;
             this.subvariableList[this.editSubvariableIndex].value = this.subvariableValue;
             if (this.valueType == 'discrete') {
-                this.subvariableList[this.editSubvariableIndex].percentageTime = this.subvariablePercentage;
+                this.subvariableList[this.editSubvariableIndex].probability = this.subvariablePercentage;
             }
         } else {
             console.log('adding');
-            // add new
-            for (var index = 0; index < this.subvariableList.length; index++) {
-                if (this.subvariableList[index].name == this.subvariableName) {
-                    return;
+
+            if (this.variableType == 'breakdown') {
+                // add new
+                for (var index = 0; index < this.subvariableList.length; index++) {
+                    if (this.subvariableList[index].name == this.subvariableName) {
+                        return;
+                    }
                 }
             }
 
             this.subvariableList.push({
                 name: this.subvariableName,
                 value: this.subvariableValue,
-                percentageTime: this.subvariablePercentage
+                probability: this.subvariablePercentage
             });
         }
 
         this.clearVariable();
     }
 
-    deleteVariable(s) {
-        for (var index = 0; index < this.subvariableList.length; index++) {
-            if (this.subvariableList[index].name == s.name) {
-                this.subvariableList.splice(index, 1);
-                break;
-            }
-        }
+    deleteVariable(i) {
+        // for (var index = 0; index < this.subvariableList.length; index++) {
+        //     if (this.subvariableList[index].name == s.name) {
+        //         this.subvariableList.splice(index, 1);
+        //         break;
+        //     }
+        // }
+
+        this.subvariableList.splice(i, 1);
     }
 
     formatXAxisValue(colIndex: number) {
@@ -162,13 +167,13 @@ export class VariablesComponent implements OnInit {
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        private modalDialog:Modal,
+        private modalDialog: Modal,
         private variableService: AppVariableService,
         private variableTypeService: AppVariableTypeService,
         private modal: ModalDialogService,
         private userService: UserService,
-        private projectService:ProjectService,
-        private branchService:BranchService,
+        private projectService: ProjectService,
+        private branchService: BranchService,
         element: ElementRef,
         private ngZone: NgZone) {
 
@@ -227,28 +232,39 @@ export class VariablesComponent implements OnInit {
 
         this.options = {
             chart: {
-              type: 'lineChart',
-              height: 450,
-              x: (d) => { return d.x; },
-              y: function(d){ return d.y; },
-              useInteractiveGuideline: true,
-              xAxis: {
-                axisLabel: '',
-                tickFormat: (d) => {
-                    let pair = this.lineChartLabels[d];
-                    if (pair == undefined) return '';
-                    return pair.value;
-                }
-              },
-              yAxis: {
-                axisLabel: '',
-                tickFormat: function(d){
-                  return d;
+                type: 'lineChart',
+                height: 450,
+                x: (d) => { return d.x; },
+                y: function (d) { return d.y; },
+                useInteractiveGuideline: true,
+                xAxis: {
+                    axisLabel: '',
+                    tickFormat: (d) => {
+                        if (this.valueType == 'discrete') {
+                            let timeSegment = this.timeSegments[d];
+                            let datePart = timeSegment.startTime.split(' ')[0];
+                            let parts = datePart.split('-');
+                            let day = parts[0]; 
+                            let month = parts[1];
+                            let year = parts[2];
+
+                            return `${month}-${year}`;
+                        } else {
+                            let pair = this.lineChartLabels[d];
+                            if (pair == undefined) return '';
+                            return pair.value;
+                        }
+                    }
                 },
-                axisLabelDistance: -10
-              },
-              
-              showLegend: false,
+                yAxis: {
+                    axisLabel: '',
+                    tickFormat: function (d) {
+                        return d;
+                    },
+                    axisLabelDistance: -10
+                },
+
+                showLegend: false,
             },
         };
     }
@@ -276,7 +292,7 @@ export class VariablesComponent implements OnInit {
             .subscribe(response => {
                 if (response.status == 'OK') {
                     this.variableTypeList.splice(0, this.variableTypeList.length);
-                    let types:Variable[] = response.data as Array<Variable>;
+                    let types: Variable[] = response.data as Array<Variable>;
                     for (var index = 0; index < types.length; index++) {
                         let varType = types[index];
                         if (this.isCompositeVariableSelectedInVariable(varType.id.toString()) != null) {
@@ -325,7 +341,7 @@ export class VariablesComponent implements OnInit {
         this.reloadBranches(event.target.value);
     }
 
-    selectVariable(variable:Variable) {
+    selectVariable(variable: Variable) {
         this.selectedVariable = variable;
         this.description = variable.description.toString();
         this.variableName = variable.title.toString();
@@ -341,42 +357,86 @@ export class VariablesComponent implements OnInit {
             this.loadCompositeVariables(this.compositType);
         }
 
-        var keyIndex = 0;
-        if (variable.allTimesegmentsResultList != undefined || variable.allTimesegmentsResultList != null) {
-            for (var index = 0; index < variable.allTimesegmentsResultList.length; index++) {
+        for (var timeSegmentIndex = 0; timeSegmentIndex < variable.timeSegment.length; timeSegmentIndex++) {
+            let element = variable.timeSegment[timeSegmentIndex];
+            this.timeSegments.push(element);
+        }
+
+        // change the chart
+        if (this.valueType == 'discrete') {
+            this.options.chart.type = 'multiBarChart';
+            this.options.chart.stacked = true;
+            // this.options.chart.showControls = false;
+
+            let keys = new Set();
+            for (var timeSegmentIndex = 0; timeSegmentIndex < variable.timeSegment.length; timeSegmentIndex++) {
+                let element = variable.timeSegment[timeSegmentIndex];
+                for (var index = 0; index < element.subVariables.length; index++) {
+                    keys.add(element.subVariables[index].name);
+                }
+            }
+
+            var keyIndex = 1;
+            keys.forEach(key => {
                 var dataValues = [];
-                let item = variable.allTimesegmentsResultList[index];
-                for (var dataIndex = 0; dataIndex < item.data.length; dataIndex++) {
-                    var valueItem = item.data[dataIndex];
-                    var labelIndex = this.isLabelAdded(valueItem.title);
-                    if (labelIndex == -1) {
-                        this.lineChartLabels.push(
-                            {
-                                key: keyIndex,
-                                value: valueItem.title.toString()
-                            }
-                        );
-                        labelIndex = keyIndex;
-                        keyIndex += 1;
+                
+                for (var timeSegmentIndex = 0; timeSegmentIndex < variable.timeSegment.length; timeSegmentIndex++) {
+                    let element = variable.timeSegment[timeSegmentIndex];
+                    var keyFound = false;
+
+                    for (var index = 0; index < element.subVariables.length; index++) {
+                        let item = element.subVariables[index];
+                        if (item.name == key) {
+                            keyFound = true;
+                            dataValues.push({x:timeSegmentIndex, y:item.probability})
+                            break;
+                        }
                     }
-                    dataValues.push({x:labelIndex, y: valueItem.value});
+
+                    if (!keyFound) {
+                        dataValues.push({x:timeSegmentIndex, y:0})
+                    }
                 }
 
                 this.lineChartData.push({
                     values: dataValues,
-                    key: item.title
+                    key: 'value: ' + keyIndex
                 });
+                keyIndex += 1;                
+            });
+
+        } else {
+            var keyIndex = 0;
+            if (variable.allTimesegmentsResultList != undefined || variable.allTimesegmentsResultList != null) {
+                for (var index = 0; index < variable.allTimesegmentsResultList.length; index++) {
+                    var dataValues = [];
+                    let item = variable.allTimesegmentsResultList[index];
+                    for (var dataIndex = 0; dataIndex < item.data.length; dataIndex++) {
+                        var valueItem = item.data[dataIndex];
+                        var labelIndex = this.isLabelAdded(valueItem.title);
+                        if (labelIndex == -1) {
+                            this.lineChartLabels.push(
+                                {
+                                    key: keyIndex,
+                                    value: valueItem.title.toString()
+                                }
+                            );
+                            labelIndex = keyIndex;
+                            keyIndex += 1;
+                        }
+                        dataValues.push({ x: labelIndex, y: valueItem.value });
+                    }
+
+                    this.lineChartData.push({
+                        values: dataValues,
+                        key: item.title
+                    });
+                }
             }
-        }
-
-        for (var timeSegmentIndex = 0; timeSegmentIndex < variable.timeSegment.length; timeSegmentIndex++) {
-            let element = variable.timeSegment[timeSegmentIndex];
-
-            this.timeSegments.push(element);
         }
     }
 
-    isLabelAdded(title):number {
+    isLabelAdded(title): number {
         for (var index = 0; index < this.lineChartLabels.length; index++) {
             if (this.lineChartLabels[index].value == title) {
                 return this.lineChartLabels[index].key;
@@ -404,7 +464,7 @@ export class VariablesComponent implements OnInit {
             });
     }
 
-    reloadBranches(projectId:String = null) {
+    reloadBranches(projectId: String = null) {
         this.selectedVariable = null;
         this.variables.splice(0, this.variables.length);
 
@@ -448,17 +508,16 @@ export class VariablesComponent implements OnInit {
             this.subvariableList.forEach((variable) => {
                 finalValue += parseFloat(variable.value.toString());
                 if (this.variableType == 'discrete') {
-                    finalPercentage += parseFloat(variable.percentageTime.toString());
+                    finalPercentage += parseFloat(variable.probability.toString());
                 }
             });
         }
 
         if (this.variableName.length == 0) {
             this.modal.showError('Variable name is mandatory');
-        } else if(this.variableName.match(/[^a-zA-Z_-]/)){
-		this.modal.showError('Names can only include Alphabetical characters,underscores and 			hyphens');
-	}
-	 else if (this.variableType.length == 0) {
+        } else if (this.variableName.match(/[^a-zA-Z_-]/)) {
+            this.modal.showError('Names can only include Alphabetical characters,underscores and 			hyphens');
+        } else if (this.variableType.length == 0) {
             this.modal.showError('Variable type is mandatory');
         } else if (this.ownerId.length == 0) {
             this.modal.showError('Owner Id is mandatory');
@@ -486,10 +545,10 @@ export class VariablesComponent implements OnInit {
                 this.modal.showError(lastResult.reason.toString(), 'Incomplete definition');
             } else {
 
-                let tempCompositeVariables:{id:String}[] = Array<{id:String}>();
+                let tempCompositeVariables: { id: String }[] = Array<{ id: String }>();
                 this.compositeVariableList.forEach(variable => {
                     if (variable.isSelected) {
-                        tempCompositeVariables.push({id: variable.id});
+                        tempCompositeVariables.push({ id: variable.id });
                     }
                 });
 
@@ -508,42 +567,42 @@ export class VariablesComponent implements OnInit {
 
                 if (this.selectedVariable == null) {
                     this.variableService
-                    .createVariable(body)
-                    .subscribe(response => {
-                        if(response.status == "UNPROCESSABLE_ENTITY"){
-                            this.modal.showError("Failed to create variable called \"" + this.variableName +
-                            "\". This name is already associated with another variable in this branch");
-                        } else {
-                            this.variableService
-                            .calculateVariableValues(this.branchId)
-                            .subscribe(response => {
-                                this.selectedVariable = null;
-                                if (event.srcElement.name == "saveAndExit"){
-                                this.onCancel();
-                                } else{
-                                this.refreshPage();
-                                }
+                        .createVariable(body)
+                        .subscribe(response => {
+                            if (response.status == "UNPROCESSABLE_ENTITY") {
+                                this.modal.showError("Failed to create variable called \"" + this.variableName +
+                                    "\". This name is already associated with another variable in this branch");
+                            } else {
+                                this.variableService
+                                    .calculateVariableValues(this.branchId)
+                                    .subscribe(response => {
+                                        this.selectedVariable = null;
+                                        if (event.srcElement.name == "saveAndExit") {
+                                            this.onCancel();
+                                        } else {
+                                            this.refreshPage();
+                                        }
 
-                            });
-                        }
-                    });
+                                    });
+                            }
+                        });
                 } else {
                     this.variableService
                         .updateVariable(body, this.selectedVariable.id)
                         .subscribe(response => {
-                            if(response.status == "UNPROCESSABLE_ENTITY"){
+                            if (response.status == "UNPROCESSABLE_ENTITY") {
                                 this.modal.showError("Failed to update variable called \"" + this.variableName + "\". This name is already associated with another 					variable in this branch");
                             } else {
                                 this.variableService
-                                .calculateVariableValues(this.branchId)
-                                .subscribe(response => {
-                                    this.selectedVariable = null;
-                                    if (event.srcElement.name == "saveAndExit"){
-                                        this.onCancel();
-                                    } else{
-                                        location.reload();
-                                    }
-                                });
+                                    .calculateVariableValues(this.branchId)
+                                    .subscribe(response => {
+                                        this.selectedVariable = null;
+                                        if (event.srcElement.name == "saveAndExit") {
+                                            this.onCancel();
+                                        } else {
+                                            location.reload();
+                                        }
+                                    });
                             }
                         });
                 }
@@ -562,12 +621,12 @@ export class VariablesComponent implements OnInit {
         dialog.then(promise => {
             promise.result.then(result => {
                 this.variableService.deleteVariable(this.selectedVariable.id)
-                .subscribe(result => {
-                    if (result.status =="OK"){
-                        this.selectedVariable = null;
-                        this.onCancel();
-                    }
-                });
+                    .subscribe(result => {
+                        if (result.status == "OK") {
+                            this.selectedVariable = null;
+                            this.onCancel();
+                        }
+                    });
             });
         });
     }
@@ -593,18 +652,18 @@ export class VariablesComponent implements OnInit {
         }
     }
 
-    refreshPage(){
+    refreshPage() {
         this.variableService
             .getVariableByName(this.branchId, this.variableName)
-            .subscribe(result =>{
+            .subscribe(result => {
                 console.log("result", result);
                 this.selectedVariable = result.data as Variable
                 this.router.navigate(["home/create-variable"], {
-                queryParams: {
-                    projectId: this.projectId,
-                    branchId: this.branchId,
-                    variableId: this.selectedVariable.id
-                }
+                    queryParams: {
+                        projectId: this.projectId,
+                        branchId: this.branchId,
+                        variableId: this.selectedVariable.id
+                    }
                 });
             });
     }

@@ -3,7 +3,7 @@ export interface Branch {
     projectId: String;
     title: String;
     description: String;
-    master: Boolean;
+    isMaster: Boolean;
     ownerId: String;
     ownerName: String;
     timeUnit: String;

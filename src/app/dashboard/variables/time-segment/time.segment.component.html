@@ -38,7 +38,7 @@
                             </div>
                         </div>
                 
-                        <div class="form-group">
+                        <div class="form-group"   *ngIf="selectedInputMethod != 'table'" >
                             <label for="">Comment</label>
                             <textarea name="" [(ngModel)]="comment" id="comment" class="form-control"></textarea>
                         </div>
@@ -101,6 +101,7 @@
                                     [branch-id]="branchId"></variable-discrete-random>
                             </div>
 
+
                             <div *ngIf="valueType == 'discrete'">
                                 <table class="table input-group table-bordered">
                                     <tr>
@@ -130,6 +131,20 @@
                         </div>
 
                     </div>
+                </div>
+                <div id="row">
+                        <div class="form-group"  *ngIf="selectedInputMethod == 'table'" >
+                            <label for="">Comment</label>
+                            <textarea name="" [(ngModel)]="comment" id="comment" class="form-control"></textarea>
+                        </div>
+                         <variable-table id="inputTable"
+                                *ngIf="selectedInputMethod == 'table'" 
+                                [branch-id]="branchId" 
+                                [variable-type]="variableType" 
+                                [start-time]="startDate"
+                                [end-time]="endDate"
+                                [time-segment]="timeSegment" ></variable-table>
+
                 </div>
             </div>
         </div>

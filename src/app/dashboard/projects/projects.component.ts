@@ -22,6 +22,7 @@ export class ProjectsComponent implements OnInit {
     users: User[] = Array<User>();
 
     selectedProject: Project = null;
+    createdProject: Project = null;
 
     constructor(
         private route: ActivatedRoute,
@@ -66,10 +67,10 @@ export class ProjectsComponent implements OnInit {
                 .open();
         }
         //if the title has special characters
-        else if (this.title.match(/[^a-zA-Z_-]/)){
+        else if (this.title.match(/[^0-9a-zA-Z_-]/)){
               this.modal.alert()
               .title('Warning')
-              .body('Names can only include Alphabetical characters,underscores and hyphens')
+              .body('Names can only include Alphanumerical characters, underscores and hyphens')
               .open();
 
         }else if (this.owner.length == 0) {
@@ -108,7 +109,12 @@ export class ProjectsComponent implements OnInit {
                                     "\". This name is already associated with another project")
                               .open();
                         } else {
-                          this.clearInputs();
+                          this.projectService.getProjectByName(this.title)
+                          .subscribe(result =>{
+                                console.log('result', result);
+                                this.createdProject = result.data as Project
+                                this.clearInputs();
+                          }); 
                         }
                     });
             }
@@ -121,8 +127,13 @@ export class ProjectsComponent implements OnInit {
         this.description = '';
         this.owner = '';
         this.selectedProject = null;
-
-        this.router.navigate(['/home/project-list']);
+         if (this.createdProject != null){
+            this.router.navigate(['/home/branches-list'], { queryParams: {
+                projectId: this.createdProject.id
+            }});
+        } else{
+              this.router.navigate(['/home/project-list']);
+        }
     }
 
 }

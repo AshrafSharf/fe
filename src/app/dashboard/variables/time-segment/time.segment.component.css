@@ -13,6 +13,18 @@
     cursor: pointer;    
 }
 
+.button_add {
+    background-color: #5cb85c;
+    color: white;
+    display: block;
+    font-size: 20px;
+    text-align: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+    border: solid 1px black;
+}
+
 .chevron {
     margin-right: 10px;
 }

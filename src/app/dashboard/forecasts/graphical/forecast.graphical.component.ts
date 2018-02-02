@@ -6,19 +6,7 @@ import { BranchService } from '../../../services/branch.service';
 import { ProjectService } from '../../../services/project.service';
 import { AppVariableService } from '../../../services/variable.services';
 import { Variable } from '../../../shared/interfaces/variables';
-
-import {
-    D3Service,
-    D3,
-    Axis,
-    BrushBehavior,
-    BrushSelection,
-    D3BrushEvent,
-    ScaleLinear,
-    ScaleOrdinal,
-    Selection,
-    Transition
-} from 'd3-ng2-service';
+import 'nvd3';
 import { Utils } from '../../../shared/utils';
   
 
@@ -43,17 +31,16 @@ export class ForecastGraphicalComponent implements OnInit {
     discreteLines:Boolean = true;
 
     public lineChartData:Array<any> = [];
-    public lineChartLabels:Array<any> = [];
-    public lineChartOptions:any = {
-        responsive: true
-    };
+    public lineChartLabels:Array<{key: number, value:string}> = [];
 
     public lineChartColors:Array<any> = [];
-    public lineChartLegend:boolean = true;
-    public lineChartType:string = 'line';
     private navigationIndex = 0;
 
     private currentBranch: String;
+
+    data;
+    options;
+
 
     constructor(
         private router: Router,
@@ -63,26 +50,88 @@ export class ForecastGraphicalComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.options = {
+            chart: {
+              type: 'lineChart',
+              height: 450,
+              x: (d) => { return d.x; },
+              y: function(d){ return d.y; },
+              useInteractiveGuideline: true,
+              xAxis: {
+                axisLabel: '',
+                tickFormat: (d) => {
+                    let pair = this.lineChartLabels[d];
+                    if (pair == undefined) return '';
+                    return pair.value;
+                }
+              },
+              yAxis: {
+                axisLabel: '',
+                tickFormat: function(d){
+                  return d;
+                },
+                axisLabelDistance: -10
+              },
+              
+              showLegend: false,
+            },
+        };
+
         this.reloadProjects();
     }
+    
 
     toggleBreakdownVariables(event) {
         this.breakdownVariables = event.target.checked;
+        this.filteredVariables.splice(0, this.filteredVariables.length);
+        for (var index = 0; index < this.variables.length; index++) {
+            let variable = this.variables[index];
+            if (this.shouldSkipVariable(variable) == true) {
+                continue;
+            }
+
+            this.filteredVariables.push(variable);
+        }
+        this.clearChart();
         setTimeout(() => {this.renderChart();}, 100);
     }
 
     toggleBreakdownLines(event) {
         this.breakdownLines = event.target.checked;
+        this.clearChart();
         setTimeout(() => {this.renderChart();}, 100);
+    }
+
+    shouldSkipVariable(variable): Boolean {
+        if ((variable.variableType == 'breakdown') && (!this.breakdownVariables) ){
+            return true;
+        }
+        
+        if ((variable.variableType == 'discrete') && (!this.discreteVariables) ){
+            return true;
+        }
+
+        return false;
     }
 
     toggleDiscreteVariables(event) {
         this.discreteVariables = event.target.checked;
+        this.filteredVariables.splice(0, this.filteredVariables.length);
+        for (var index = 0; index < this.variables.length; index++) {
+            let variable = this.variables[index];
+            if (this.shouldSkipVariable(variable) == true) {
+                continue;
+            }
+
+            this.filteredVariables.push(variable);
+        }
+        this.clearChart();
         setTimeout(() => {this.renderChart();}, 100);
     }
 
     toggleDiscreteLines(event) {
         this.discreteLines = event.target.checked;
+        this.clearChart();
         setTimeout(() => {this.renderChart();}, 100);
     }
 
@@ -99,13 +148,19 @@ export class ForecastGraphicalComponent implements OnInit {
     filterResult(event, type) {
         this.filteredVariables.splice(0, this.filteredVariables.length);
 
-        this.variables.forEach(variable => {
+        for (var index = 0; index < this.variables.length; index++) {
+            var variable = this.variables[index];
             if ((variable.title.toLowerCase().indexOf(this.searchName.toLowerCase()) >= 0) &&
             (variable.variableType.toLowerCase().indexOf(this.searchType.toLowerCase()) >= 0) &&
             (variable.ownerName.toLowerCase().indexOf(this.searchOwner.toLowerCase()) >= 0)) {
+
+                if (this.shouldSkipVariable(variable) == true) {
+                    continue;
+                }
+                
                 this.filteredVariables.push(variable);
             }
-        });
+        }
     }
 
     reloadMonths() {
@@ -197,6 +252,8 @@ export class ForecastGraphicalComponent implements OnInit {
                 .subscribe(result => {
                     if (result.status == "OK") {
                         this.variables = result.data as Array<Variable>;  
+                        this.filteredVariables.splice(0, this.filteredVariables.length);
+
                         this.exludedVariables = [];
                         this.variables.forEach(variable => {
                             this.exludedVariables.push(variable.id);
@@ -211,17 +268,14 @@ export class ForecastGraphicalComponent implements OnInit {
         }
     }
 
-    isLabelAdded(title):Boolean {
-        
-        let result: Boolean = false;
+    isLabelAdded(title):number {
         for (var index = 0; index < this.lineChartLabels.length; index++) {
-            if (this.lineChartLabels[index] == title) {
-                result = true;
-                break;
+            if (this.lineChartLabels[index].value == title) {
+                return this.lineChartLabels[index].key;
             }
         }
 
-        return result;
+        return -1;
     }
 
     excludeVariable(event) {
@@ -265,82 +319,38 @@ export class ForecastGraphicalComponent implements OnInit {
 
             if (skipVariable) continue;
 
-            for (var timeSegmentIndex = 0; timeSegmentIndex < variable.timeSegment.length; timeSegmentIndex++) {
-                let element = variable.timeSegment[timeSegmentIndex];
-                if (variable.variableType == 'breakdown') {
-                    if (timeSegmentIndex > 0 && !this.breakdownLines) {
-                        continue;
-                    }
-                }
-    
-                if (element.timeSegmentResponse != undefined || element.timeSegmentResponse != null) {
-    
-                    // get all the labels
-                    for (var resultMapIndex = 0; resultMapIndex < element.timeSegmentResponse.resultMap.length; resultMapIndex++) {
-                        let resultMap = element.timeSegmentResponse.resultMap[resultMapIndex];
-    
-                        for (var dataIndex = 0; dataIndex < resultMap.data.length; dataIndex++) {
-                            let dataPair = resultMap.data[dataIndex];
-                            if (!this.isLabelAdded(dataPair.title)) {                            
-                                this.lineChartLabels.push(dataPair.title);
-                            }
-                        }
-                    }
-    
-                    var color = '';
-                    var shade = 0.1;
-
-                    // collect all the values
-                    for (var resultMapIndex = 0; resultMapIndex < element.timeSegmentResponse.resultMap.length; resultMapIndex++) {
-                        let resultMap = element.timeSegmentResponse.resultMap[resultMapIndex];
-                        if (resultMapIndex == 0) {
-                            color = Utils.getRandomColor(variableIndex);
-                            shade = 0;
-                        }
-    
-                        let borderColor = resultMapIndex == 0 ? color : Utils.getShadeOfColor(color, shade)
-                        this.lineChartColors.push({ borderColor: borderColor });
-                        console.log("borderColor: " + resultMapIndex + ", " + resultMap.title, borderColor);
-                        shade += 0.1;
-                        var labelTitle = `${variable.title} - Segment: ${timeSegmentIndex + 1} - ${resultMap.title}`;
-                        var dataValues = [];
-    
-                        let labelPosition = 0;
-                        let lastValue:Number = 0;
-                        
-                        for (var dataIndex = 0; dataIndex < resultMap.data.length; dataIndex++) {
-                            let dataPair = resultMap.data[dataIndex];
-    
-                            for (var index = labelPosition; index < this.lineChartLabels.length; index++) {
-                                let label = this.lineChartLabels[index];
-                                if (label == dataPair.title) {
-                                    dataValues.push(dataPair.value.toFixed(2));
-                                    labelPosition = index + 1;
-                                    if (index == this.lineChartLabels.length - 1) {
-    
-                                        // add the last value from next timesegment
-                                        let tempElement = variable.timeSegment[timeSegmentIndex + 1];
-                                        if (tempElement != undefined) {
-                                            let resultMapTemp = tempElement.timeSegmentResponse.resultMap[0];
-                                            console.log("resultMapTemp", resultMapTemp);
-                                            if (resultMapTemp != undefined) {
-                                                let entry = resultMapTemp.data[0];
-                                                dataValues.push(entry.value.toFixed(2));
-                                            }
-                                        }
-                                    }
-                                    break;
-                                } else {
-                                    dataValues.push(undefined);
+            var keyIndex = 0;
+            if (variable.allTimesegmentsResultList != undefined || variable.allTimesegmentsResultList != null) {
+                for (var index = 0; index < variable.allTimesegmentsResultList.length; index++) {
+                    var dataValues = [];
+                    let item = variable.allTimesegmentsResultList[index];
+                    for (var dataIndex = 0; dataIndex < item.data.length; dataIndex++) {
+                        if (index > 0) {
+                            if ((variable.variableType == 'breakdown') || (variable.compositeType == 'breakdown')) {
+                                if (!this.breakdownLines) {
+                                    continue;
                                 }
                             }
                         }
-    
-                        this.lineChartData.push({
-                            data: dataValues,
-                            label: labelTitle
-                        });
+                        var valueItem = item.data[dataIndex];
+                        var labelIndex = this.isLabelAdded(valueItem.title);
+                        if (labelIndex == -1) {
+                            this.lineChartLabels.push(
+                                {
+                                    key: keyIndex,
+                                    value: valueItem.title.toString()
+                                }
+                            );
+                            labelIndex = keyIndex;
+                            keyIndex += 1;
+                        }
+                        dataValues.push({x:labelIndex, y: valueItem.value});
                     }
+
+                    this.lineChartData.push({
+                        values: dataValues,
+                        key: item.title
+                    });
                 }
             }
         }

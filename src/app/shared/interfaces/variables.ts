@@ -24,6 +24,7 @@ export interface Variable {
     compositeVariables: {id:String}[];
     compositeType: String;
     isSelected: Boolean;
+    allTimesegmentsResultList:{title:String, data:{title:String, value:number}[]}[];
 }
 
 export interface KeyValuePair {
@@ -67,7 +68,7 @@ export interface VariableType {
 export interface Subvariable {
     name: String;
     value: String;
-    percentageTime:String;
+    probability:String;
 }
 
 export interface DiscreteComponent {

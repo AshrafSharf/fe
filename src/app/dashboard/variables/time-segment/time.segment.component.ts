@@ -7,6 +7,8 @@ import { ModalDialogService } from '../../../services/modal-dialog.service';
 import { VariableTableComponent } from '../table/table.variable.component';
 import { Moment, unix } from 'moment';
 import { OnChanges, DoCheck } from '@angular/core/src/metadata/lifecycle_hooks';
+import {IShContextMenuItem, IShContextOptions, BeforeMenuEvent} from 'ng2-right-click-menu';
+import { Utils } from '../../../shared/utils';
 
 @Component({
     selector: 'time-segment',
@@ -15,9 +17,9 @@ import { OnChanges, DoCheck } from '@angular/core/src/metadata/lifecycle_hooks';
 })
 export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
     
-    
     @Input('segment-id') segmentId:String;
     @Input('variable-type') variableType:String;
+    @Input('value-type') valueType:String;
     @Output('delete') deleted = new EventEmitter();
     @Input('is-expanded') isExpanded:Boolean = false;
     @Input('branch-id') branchId: String = '';
@@ -32,6 +34,11 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
 
     endDate: any;
     startDate: any;
+
+    contextMenuItemsDiscrete: IShContextMenuItem[];
+    dataContext(i) {
+        return {index: i};
+    }
 
     selectedInputMethod = 'constant';
     comment = '';
@@ -72,7 +79,7 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
             if (this.compositVariableTypeList != undefined) {
                 this.compositVariableTypeList.forEach(type => {
                     if (!this.isSubvariableAdded(type.name)) {
-                        this.variableTypeList.push({name: type.name, value: type.value, percentageTime: type.percentageTime});
+                        this.variableTypeList.push({name: type.name, value: type.value, probability: type.probability});
                     }
                 });
 
@@ -94,11 +101,32 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
         this.isExpanded = !this.isExpanded;
     }
 
+    addDiscreteVariable() {
+        if (this.variableTypeList == undefined) {
+            this.variableTypeList = new Array<Subvariable>();
+        }
+
+        this.variableTypeList.push({
+            name: Utils.getUniqueId(),
+            value: '',
+            probability: ''
+        });
+    }
+
     ngOnInit() {
+        this.contextMenuItemsDiscrete = [
+            {
+                label: 'delete',
+                onClick: ($event) => {
+                    let data = $event.dataContext;
+                    this.variableTypeList.splice(data.index, 1);
+                }
+            }
+        ];
+
         if (this.timeSegment != null) {
             if (this.timeSegment.startTime != null) { 
                 if (typeof(this.timeSegment.startTime) == "string") {
-                    console.log("yes");
                     let date:Date;
                     if (this.timeSegment.startTime.length == 0) {
                         date = new Date();
@@ -129,7 +157,7 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
             if (this.timeSegment.subVariables != undefined) {
                 this.timeSegment.subVariables.forEach(type => {
                     if (!this.isSubvariableAdded(type.name)) {
-                        this.variableTypeList.push({name: type.name, value: type.value, percentageTime: type.percentageTime});
+                        this.variableTypeList.push({name: type.name, value: type.value, probability: type.probability});
                     }
                 });
             }
@@ -138,26 +166,32 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
 
     getTimeSegmentValues(): ValidationResult {
         var result: ValidationResult = { result:true, reason: '' };
-        if ((this.variableType == 'breakdown') || (this.variableType == 'discrete')) {
+        if ((this.variableType == 'breakdown') || (this.valueType == 'discrete')) {
 
             let finalValue = 0, finalPercentage = 0;
             this.variableTypeList.forEach((variable) => {
                 finalValue += parseFloat(variable.value.toString());
-                if (this.variableType == 'discrete') {
-                    finalPercentage += parseFloat(variable.percentageTime.toString());
+                if (this.valueType == 'discrete') {
+                    finalPercentage += parseFloat(variable.probability.toString());
                 }
             });
 
             if (this.variableType == 'breakdown' && finalValue != 1) {
                 result.result = false;
                 result.reason = "All the subvariable value must add up to 1.0"
-            } else if (this.variableType == 'discrete' && finalPercentage != 100) {
+            } else if (this.valueType == 'discrete' && finalPercentage != 100) {
                 result.result = false;
                 result.reason = "All the subvariable value must add up to 100%"
             } else {
                 let input:any = {};
                 if (typeof(this.startDate) != "string") {
                     this.startDate = this.startDate.format("DD-MM-YYYY hh:mm");
+                }
+
+                if (this.valueType == 'discrete') {
+                    for (var index = 0; index < this.variableTypeList.length; index++) {
+                        this.variableTypeList[index].name = 'index_' + index;
+                    }
                 }
 
                 input['startTime'] = this.startDate;

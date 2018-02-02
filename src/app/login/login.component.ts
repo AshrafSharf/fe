@@ -29,10 +29,14 @@ export class LoginComponent implements OnInit {
             this.ueserService
                 .authenticateUser(this.userName, this.password)
                 .subscribe(result => {
-                    console.log("result", result);
-                    sessionStorage["user_id"] = "1";
-                    sessionStorage["user_auth_status"] = "1";
-                    this.router.navigate(['home']);
+                    this.ueserService
+                        .getUserByName(this.userName)
+                        .subscribe(result => {
+                            sessionStorage["user_id"] = result.data.id;
+                            sessionStorage["user_name"] = result.data.userName;
+                            sessionStorage["user_auth_status"] = "1";
+                            this.router.navigate(['home']);
+                        });
                 }, 
                 error => {
                     this.modal.alert()

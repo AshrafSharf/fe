@@ -24,7 +24,7 @@ import { SidebarComponent } from './shared/sidebar/sidebar.component';
 import { NgDatepickerModule } from 'ng2-datepicker';
 import { DpDatePickerModule } from 'ng2-date-picker';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
-
+import { NvD3Module } from 'ng2-nvd3';
 
 import { ModalModule } from 'ngx-modialog';
 import { BootstrapModalModule } from 'ngx-modialog/plugins/bootstrap';
@@ -37,6 +37,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AngularFontAwesomeModule } from 'angular-font-awesome/angular-font-awesome';
 import { routes } from './shared/routes';
+import {ShContextMenuModule} from 'ng2-right-click-menu';
 
 import { AppComponent } from './app.component';
 import * as $ from 'jquery';
@@ -106,6 +107,8 @@ import { VariableTypeComponent } from './dashboard/variable-type/variable.type.c
     NgDatepickerModule,
     DpDatePickerModule,
     RouterModule.forRoot(routes),
+    NvD3Module,
+    ShContextMenuModule
   ],
   providers: [
     {provide: LocationStrategy, useClass: HashLocationStrategy},

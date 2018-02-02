@@ -38,7 +38,6 @@
                                             <option value="forecast">Forecast</option>
                                             <option value="actual">Actual</option>
                                             <option value="breakdown">Breakdown</option>
-                                            <option value="discrete">Discrete Random</option>
                                         </select>
                                     </div>
                                 </div>
@@ -48,12 +47,13 @@
                                         <select [(ngModel)]="valueType" class="form-control">
                                             <option value="integer">Integer</option>
                                             <option value="real">Real</option>
+                                            <option *ngIf="variableType != 'breakdown'" value="discrete">Discrete Random</option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="row" *ngIf="variableType == 'breakdown' || variableType == 'discrete'">
+                            <div class="row" *ngIf="variableType == 'breakdown'">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="">Subvariable Name</label>
@@ -64,15 +64,7 @@
                                         <label for="">Value</label>
                                         <input type="text" [(ngModel)]="subvariableValue" class="form-control" placeholder="subvariable value">
                                     </div>
-
-                                    <div class="form-group" *ngIf="variableType == 'discrete'">
-                                        <label for="">Percentage</label>
-                                        <div class="input-group">
-                                            <div class="input-group-addon">%</div>
-                                            <input type="text" class="form-control" [(ngModel)]="subvariablePercentage" placeholder="subvariable percentage">
-                                        </div>
-                                    </div>
-
+                                    
                                     <button class="btn btn-success" (click)="addVariable()">Add</button>
                                     <button class="btn btn-danger" (click)="clearVariable()">Cancel</button>
                                 </div>
@@ -84,15 +76,13 @@
                                             <tr>
                                                 <th>Title</th>
                                                 <th>Value</th>
-                                                <th *ngIf="variableType == 'discrete'">Percentage</th>
                                                 <th></th>
                                             </tr>
                                             <tr *ngFor="let s of subvariableList; let i = index">
                                                 <td>{{s.name}}</td>
                                                 <td>{{s.value}}</td>
-                                                <td *ngIf="variableType == 'discrete'">{{s.percentageTime}}%</td>
                                                 <td>
-                                                    <fa name="trash" class="trash" (click)="deleteVariable(s)"></fa>
+                                                    <fa name="trash" class="trash" (click)="deleteVariable(i)"></fa>
                                                     <fa name="pencil" class="edit" (click)="editVariable(i)"></fa>
                                                 </td>
                                             </tr>
@@ -150,6 +140,7 @@
                             class="col-md-12"
                             *ngFor="let segment of timeSegments"
                             [time-segment]="segment"
+                            [value-type]="valueType"
                             [variable-type]="variableType"
                             [composit-variable-type-list]="subvariableList"
                             (delete)="onDeleteSegment()"></time-segment>
@@ -157,15 +148,7 @@
 
                     <div class="row" *ngIf="lineChartData.length > 0">
                         <div style="padding:20px;">
-                            <!-- <svg id="graph" class="col-md-12"></svg> -->
-                            <!-- <ngx-line-chart #linegraph  [dataSets]="myDataSets" *ngIf="myDataSets != null" ></ngx-line-chart> -->
-                            <canvas baseChart
-                                [datasets]="lineChartData"
-                                [labels]="lineChartLabels"
-                                [colors]="lineChartColors"
-                                [legend]="lineChartLegend"
-                                [chartType]="lineChartType"></canvas>
-
+                            <nvd3 [options]="options" [data]="lineChartData"></nvd3>
                         </div>
                     </div>
                 </div>

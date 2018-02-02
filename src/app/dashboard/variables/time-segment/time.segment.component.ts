@@ -240,4 +240,5 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
 
         return result;        
     }
+    
 }

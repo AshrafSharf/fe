@@ -10,6 +10,7 @@ export class Utils {
     static routeVariable:String = "variable";
     static routeUser:String = "user";
     static routeLogin:String = "login";
+    static routeSettings:String = "settings";
     static routeVariableType:String = "variableType";
 
     // create url for route

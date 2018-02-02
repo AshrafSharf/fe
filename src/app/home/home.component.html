@@ -87,6 +87,13 @@
                                         [class.active]="selectedMenu == 'simulation'"
                                         href="#">SIMULATION</a>
                                 </li>
+                                <li>
+                                    <a
+                                        routerLink="settings"
+                                        (click)="selectedMenu = 'settings'"
+                                        [class.active]="selectedMenu == 'settings'"
+                                        href="#">SETTINGS</a>
+                                </li>
                             </ul>
                         </div>
                     </div>

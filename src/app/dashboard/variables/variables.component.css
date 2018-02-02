@@ -24,6 +24,19 @@
     width: 60px;
 }
 
+.table_input,
+.table_input:focus {
+    border: none;
+    outline: none;
+    width: 60px;
+}
+
+.input-group {
+    display: block;
+    white-space: nowrap;
+    overflow-x: scroll;
+}
+
 .list {
     margin-top: 10px;
 }

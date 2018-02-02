@@ -24,6 +24,8 @@ export interface Variable {
     compositeVariables: {id:String}[];
     compositeType: String;
     isSelected: Boolean;
+    hasActual: Boolean;
+    actualTimeSegment?: TimeSegment;
     allTimesegmentsResultList:{title:String, data:{title:String, value:number}[]}[];
 }
 
@@ -40,6 +42,7 @@ export interface TableInputPair {
 export interface TimeSegment {
     userSelectedParametrics: String;
     startTime: String;
+    endTime?: String;
     inputMethod: String;
     tableInput:TableInputPair[];
     growth: Number;
@@ -50,10 +53,11 @@ export interface TimeSegment {
     mean: String;
     stdDeviation: String;
     userSelectedParametricsStdDeviation: String;
-    timeSegmentResponse: { resultMap: { title:String, data: {title:String, value: Number}[] }[] };
+    timeSegmentResponse?: { resultMap: { title:String, data: {title:String, value: Number}[] }[] };
     breakdownInput: Subvariable[];
     completedWordsArray: SelectedWord[];
     subVariables: Subvariable[];
+    query?:String;
 }
 
 export interface VariableType {

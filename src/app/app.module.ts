@@ -56,6 +56,8 @@ import { ChartsModule } from 'ng2-charts';
 import { VariableBreakdownComponent } from './dashboard/variables/breakdown/breakdown.variable.component';
 import { VariableDiscreteRandomComponent } from './dashboard/variables/discrete-random/discrete.random.variable.component';
 import { VariableTypeComponent } from './dashboard/variable-type/variable.type.component';
+import { SettingsComponent } from './dashboard/settings/settings.component';
+import { SettingsService } from './services/settings.service';
 
 
 @NgModule({
@@ -92,7 +94,9 @@ import { VariableTypeComponent } from './dashboard/variable-type/variable.type.c
     HomeComponent,
 
     AutocompleteInputComponent,
-    CompletedWordComponent
+    CompletedWordComponent,
+
+    SettingsComponent
   ],
   imports: [
     ChartsModule,
@@ -118,7 +122,8 @@ import { VariableTypeComponent } from './dashboard/variable-type/variable.type.c
     ModalDialogService,
     AppVariableService,
     AppVariableTypeService,
-    D3Service
+    D3Service,
+    SettingsService
   ],
   bootstrap: [AppComponent]
 })

@@ -35,8 +35,8 @@
                                     <div class="form-group">
                                         <label for="">Variable Type</label>
                                         <select (change)="onVariableTypeChanged()" [(ngModel)]="variableType" class="form-control">
-                                            <option value="forecast">Forecast</option>
-                                            <option value="actual">Actual</option>
+                                            <option value="variable">Variable</option>
+                                            <!-- <option value="actual">Actual</option> -->
                                             <option value="breakdown">Breakdown</option>
                                         </select>
                                     </div>
@@ -92,7 +92,7 @@
                             </div>
 
                             <!-- associate breakdown/discrete variables -->
-                            <div *ngIf="variableType == 'actual' || variableType == 'forecast'">
+                            <div *ngIf="variableType == 'variable'">
                                 <div class="form-group">
                                     <label for="">Associate Breakdown Variables</label>
                                     <select (change)="onCompositTypeChanged($event)" [(ngModel)]="compositType" class="form-control">
@@ -130,6 +130,73 @@
                         </div>
                     </div>
 
+                    <div *ngIf="variableType == 'variable'">
+                        <div class="form-group">
+                            <label><input type="checkbox" (click)="defineActualValues($event)" [(ngModel)]="shouldDefineActualValues"> Define Actual Values</label>
+                        </div>
+
+                        <div *ngIf="shouldDefineActualValues == true">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="">Input Method</label>
+                                        <select id="input-method" [(ngModel)]="selectedInputMethodActual" class="form-control">
+                                            <option value="table">Input Table</option>
+                                            <option value="query">Query</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" *ngIf="selectedInputMethodActual == 'table'">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="">Starting Time</label>
+                                            <div class=' date inputText' id='startDate'>
+                                                <dp-date-picker 
+                                                    [config]="datePickerConfig"
+                                                    [(ngModel)]="startDate" 
+                                                    mode="daytime" 
+                                                    (click)="createTable()"
+                                                    [theme]="'dp-material dp-main'"></dp-date-picker>
+                                            </div>
+                                        </div>
+                                    </div>
+        
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="">End Time</label>
+                                            <div class='date inputText' id='endDate'>
+                                                <dp-date-picker 
+                                                    [config]="datePickerConfig"
+                                                    [(ngModel)]="endDate" 
+                                                    mode="daytime" 
+                                                    (click)="createTable()"
+                                                    [theme]="'dp-material dp-main'"></dp-date-picker>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12 form-group" *ngIf="selectedInputMethodActual == 'query'">
+                                    <textarea class="form-control" rows="3" placeholder="Query" [(ngModel)]="queryText"></textarea>
+                                </div>
+                                <div class="col-md-12" *ngIf="selectedInputMethodActual == 'table'">
+                                    <table class="table table-bordered input-group">
+                                        <tr class="active">
+                                            <td *ngFor="let col of columns">{{col.key}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td *ngFor="let col of columns">
+                                                <input type="text" class="table_input" [(ngModel)]="col.value">
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="row time-segment-button">
                         <button class="btn btn-success pull-right" (click)="addTimeSegment()">Add Time Segment</button>
                     </div>
@@ -148,7 +215,7 @@
 
                     <div class="row" *ngIf="lineChartData.length > 0">
                         <div style="padding:20px;">
-                            <nvd3 [options]="options" [data]="lineChartData"></nvd3>
+                            <nvd3 id="graph" [options]="options" [data]="lineChartData"></nvd3>
                         </div>
                     </div>
                 </div>

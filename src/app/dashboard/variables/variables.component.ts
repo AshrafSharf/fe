@@ -3,18 +3,20 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AppVariableService } from './../../services/variable.services';
 import { UserService } from './../../services/user.service';
 import { Project } from './../../shared/interfaces/project';
-import { Component, OnInit, ViewChildren, ElementRef, NgZone, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChildren, ElementRef, NgZone, ViewChild, SimpleChanges } from '@angular/core';
 import { ProjectService } from '../../services/project.service';
 import { Branch } from './../../shared/interfaces/branch';
 import { BranchService } from '../../services/branch.service';
 import { User } from '../../shared/interfaces/user';
 import { TimeSegmentComponent } from './time-segment/time.segment.component';
 import { ModalDialogService } from '../../services/modal-dialog.service';
-import { Variable, TimeSegment, VariableType, Subvariable } from '../../shared/interfaces/variables';
+import { Variable, TimeSegment, VariableType, Subvariable, TableInputPair } from '../../shared/interfaces/variables';
 import { Moment, unix } from 'moment';
 import 'nvd3';
 import { Utils } from '../../shared/utils';
 import { Modal } from 'ngx-modialog/plugins/bootstrap';
+import * as jsPDF from 'jspdf'
+import * as converter from 'save-svg-as-png';
 
 @Component({
     selector: 'variables',
@@ -29,11 +31,16 @@ export class VariablesComponent implements OnInit {
     branches: Branch[] = Array<Branch>();
     variables: Variable[] = Array<Variable>();
 
+    queryText: String = '';
+
+
     public lineChartData: Array<any> = [];
     public lineChartLabels: Array<{ key: number, value: string }> = [];
 
     compositeVariableList: Variable[] = Array<Variable>();
+    columns: TableInputPair[] = Array<TableInputPair>();
 
+    shouldDefineActualValues: Boolean = false;
     compositType = 'none';
     description = '';
     branchId = '';
@@ -48,9 +55,10 @@ export class VariablesComponent implements OnInit {
 
     users: User[] = Array<User>();
 
+    selectedInputMethodActual = 'table';
     variableName = '';
     valueType = 'integer';
-    variableType = 'forecast';
+    variableType = 'variable';
     ownerId: String = '';
 
     variableTypeList: Subvariable[] = Array<Subvariable>();
@@ -63,6 +71,9 @@ export class VariablesComponent implements OnInit {
     subvariableList: Subvariable[];
     compositVariableIds: { id: String }[] = Array<{ id: String }>();
 
+    @Input() startDate: any;
+    @Input() endDate: any;
+
     data;
     options;
 
@@ -73,6 +84,26 @@ export class VariablesComponent implements OnInit {
     editSubvariableIndex = -1;
     myDataSets = null;
 
+    ngOnChanges(changes: SimpleChanges): void {
+        console.log(changes);
+        this.createTable();
+    }
+
+    createTable() {
+        this.columns.splice(0, this.columns.length);
+        if (this.startDate != undefined && this.endDate != undefined) {
+            let date = this.startDate.clone();
+            let endDate = this.endDate.clone();
+
+            let count = endDate.diff(date, 'M') + 1;
+            for (var index = 0; index < count; index++) {
+                let year = date.year();
+                let month = date.format('MMM');
+                this.columns.push({ key: month + " - " + year, value: '0' });
+                date.add(1, 'M');
+            }
+        }
+    }
 
     clearVariable() {
         this.editSubvariableIndex = -1;
@@ -244,7 +275,7 @@ export class VariablesComponent implements OnInit {
                             let timeSegment = this.timeSegments[d];
                             let datePart = timeSegment.startTime.split(' ')[0];
                             let parts = datePart.split('-');
-                            let day = parts[0]; 
+                            let day = parts[0];
                             let month = parts[1];
                             let year = parts[2];
 
@@ -342,6 +373,47 @@ export class VariablesComponent implements OnInit {
     }
 
     selectVariable(variable: Variable) {
+        this.shouldDefineActualValues = variable.hasActual;
+        if (variable.hasActual) {
+            this.columns = variable.actualTimeSegment.tableInput;
+            this.selectedInputMethodActual = variable.actualTimeSegment.inputMethod.toString();
+            if (this.selectedInputMethodActual == 'table') {
+                this.columns = variable.actualTimeSegment.tableInput;
+
+                var date: Date;
+                if (variable.actualTimeSegment.startTime.length == 0) {
+                    date = new Date();
+                } else {
+                    //let time = Date.parse(this.timeSegment.startTime.toString());
+                    let datePart = variable.actualTimeSegment.startTime.split(' ')[0];
+                    let parts = datePart.split('-');
+                    let day = parts[0];
+                    let month = parts[1];
+                    let year = parts[2];
+
+                    date = new Date(`${month}/${day}/${year}`);
+                }
+                this.startDate = unix(date.getTime() / 1000);
+
+                if (variable.actualTimeSegment.endTime.length == 0) {
+                    date = new Date();
+                } else {
+                    //let time = Date.parse(this.timeSegment.startTime.toString());
+                    let datePart = variable.actualTimeSegment.endTime.split(' ')[0];
+                    let parts = datePart.split('-');
+                    let day = parts[0];
+                    let month = parts[1];
+                    let year = parts[2];
+
+                    date = new Date(`${month}/${day}/${year}`);
+                }
+                this.endDate = unix(date.getTime() / 1000);
+
+            } else {
+                this.queryText = variable.actualTimeSegment.query;
+            }
+        }
+
         this.selectedVariable = variable;
         this.description = variable.description.toString();
         this.variableName = variable.title.toString();
@@ -379,7 +451,7 @@ export class VariablesComponent implements OnInit {
             var keyIndex = 1;
             keys.forEach(key => {
                 var dataValues = [];
-                
+
                 for (var timeSegmentIndex = 0; timeSegmentIndex < variable.timeSegment.length; timeSegmentIndex++) {
                     let element = variable.timeSegment[timeSegmentIndex];
                     var keyFound = false;
@@ -388,13 +460,13 @@ export class VariablesComponent implements OnInit {
                         let item = element.subVariables[index];
                         if (item.name == key) {
                             keyFound = true;
-                            dataValues.push({x:timeSegmentIndex, y:item.probability})
+                            dataValues.push({ x: timeSegmentIndex, y: item.probability })
                             break;
                         }
                     }
 
                     if (!keyFound) {
-                        dataValues.push({x:timeSegmentIndex, y:0})
+                        dataValues.push({ x: timeSegmentIndex, y: 0 })
                     }
                 }
 
@@ -402,7 +474,7 @@ export class VariablesComponent implements OnInit {
                     values: dataValues,
                     key: 'value: ' + keyIndex
                 });
-                keyIndex += 1;                
+                keyIndex += 1;
             });
 
         } else {
@@ -552,6 +624,36 @@ export class VariablesComponent implements OnInit {
                     }
                 });
 
+                if (this.selectedInputMethodActual == 'table') {
+                    if (typeof (this.startDate) != "string") {
+                        this.startDate = this.startDate.format("DD-MM-YYYY hh:mm");
+                    }
+
+                    if (typeof (this.endDate) != "string") {
+                        this.endDate = this.endDate.format("DD-MM-YYYY hh:mm");
+                    }
+                }
+
+                let actualTimeSegment: TimeSegment = {
+                    userSelectedParametrics: '',
+                    startTime: this.startDate,
+                    endTime: this.endDate,
+                    inputMethod: this.selectedInputMethodActual,
+                    tableInput: this.columns,
+                    growth: 0,
+                    growthPeriod: 0,
+                    distributionType: '',
+                    description: '',
+                    constantValue: 0,
+                    mean: '',
+                    stdDeviation: '',
+                    userSelectedParametricsStdDeviation: '',
+                    breakdownInput: [],
+                    completedWordsArray: [],
+                    subVariables: [],
+                    query: this.queryText
+                }
+
                 let body = {
                     description: this.description,
                     branchId: this.branchId,
@@ -562,7 +664,9 @@ export class VariablesComponent implements OnInit {
                     valueType: this.valueType,
                     subVariables: this.subvariableList,
                     compositeVariables: tempCompositeVariables,
-                    compositeType: this.compositType
+                    compositeType: this.compositType,
+                    hasActual: this.shouldDefineActualValues,
+                    actualTimeSegment: actualTimeSegment
                 }
 
                 if (this.selectedVariable == null) {
@@ -666,5 +770,25 @@ export class VariablesComponent implements OnInit {
                     }
                 });
             });
+    }
+
+    binaryblob(){
+        var byteString = atob(document.querySelector("canvas").toDataURL().replace(/^data:image\/(png|jpg);base64,/, ""));
+        var ab = new ArrayBuffer(byteString.length);
+        var ia = new Uint8Array(ab);
+        for (var i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+        }
+        var dataView = new DataView(ab);
+        var blob = new Blob([dataView], {type: "image/png"});
+        var DOMURL = self.URL;
+        var newurl = DOMURL.createObjectURL(blob);
+    
+        var img = '<img src="'+newurl+'">'; 
+        d3.select("#img").html(img);
+    }    
+
+    defineActualValues(event) {
+        this.shouldDefineActualValues = event.target.checked;
     }
 }

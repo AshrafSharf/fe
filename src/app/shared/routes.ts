@@ -19,6 +19,7 @@ import { LoginComponent } from '../login/login.component';
 import { SimulationComponent } from '../dashboard/simulation/simulation.component';
 import { VariableListComponent } from '../dashboard/variables/variable-list.component';
 import { VariableTypeListComponent } from '../dashboard/variable-type/variable.type.list.component';
+import { SettingsComponent } from '../dashboard/settings/settings.component';
 
 export const routes: Routes = [
     { path:'login', component: LoginComponent },
@@ -40,7 +41,8 @@ export const routes: Routes = [
             { path:'login', component: LoginComponent },
             { path:'simulation', component: SimulationComponent, canActivate:[UserService] },
             { path:'variable-type-list', component: VariableTypeListComponent, canActivate: [UserService]},
-            { path:'create-variable-type', component: VariableTypeComponent, canActivate: [UserService]}
+            { path:'create-variable-type', component: VariableTypeComponent, canActivate: [UserService]},
+            { path: 'settings', component: SettingsComponent, canActivate: [UserService]}
         ] 
     },
 

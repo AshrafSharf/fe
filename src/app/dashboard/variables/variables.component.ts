@@ -16,7 +16,7 @@ import 'nvd3';
 import { Utils } from '../../shared/utils';
 import { Modal } from 'ngx-modialog/plugins/bootstrap';
 import * as jsPDF from 'jspdf'
-import * as converter from 'save-svg-as-png';
+
 
 @Component({
     selector: 'variables',
@@ -32,7 +32,6 @@ export class VariablesComponent implements OnInit {
     variables: Variable[] = Array<Variable>();
 
     queryText: String = '';
-
 
     public lineChartData: Array<any> = [];
     public lineChartLabels: Array<{ key: number, value: string }> = [];
@@ -624,7 +623,7 @@ export class VariablesComponent implements OnInit {
                     }
                 });
 
-                if (this.selectedInputMethodActual == 'table') {
+                if (this.shouldDefineActualValues && this.selectedInputMethodActual == 'table') {
                     if (typeof (this.startDate) != "string") {
                         this.startDate = this.startDate.format("DD-MM-YYYY hh:mm");
                     }
@@ -771,6 +770,44 @@ export class VariablesComponent implements OnInit {
                 });
             });
     }
+
+    generatePDF() {
+        /*
+        var svg = document.querySelector('svg');
+        var svgData = new XMLSerializer().serializeToString( svg );
+ 
+        //console.log(html);
+        var imgsrc = 'data:image/svg+xml;base64,' + btoa(svgData);
+        var img = '<img src="' + imgsrc + '">';
+        d3.select("#svgdataurl").html(img);
+
+
+        var canvas = document.createElement('canvas');
+        var context = canvas.getContext("2d");
+
+        var image = new Image;
+        image.src = imgsrc;
+        image.onload = function () {
+            context.drawImage(image, 0, 0);
+
+            //save and serve it as an actual filename
+            //binaryblob();
+
+            var a = document.createElement("a");
+            a.download = "sample.png";
+            a.href = canvas.toDataURL("image/png");
+
+            var doc = new jsPDF();
+            doc.addImage(a.href, "png", 0,0); 
+            doc.save("test.pdf");
+            
+            var pngimg = '<img src="' + a.href + '">';
+            d3.select("#pngdataurl").html(pngimg);
+            a.click();
+        }
+        */
+    }
+
 
     binaryblob(){
         var byteString = atob(document.querySelector("canvas").toDataURL().replace(/^data:image\/(png|jpg);base64,/, ""));

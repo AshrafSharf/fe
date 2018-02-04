@@ -357,7 +357,7 @@ export class ForecastGraphicalComponent implements OnInit {
                 }
             }
 
-            let alreadyExecuted = false;
+
             let finished = false;
 
             if (skipVariable) continue;
@@ -365,6 +365,7 @@ export class ForecastGraphicalComponent implements OnInit {
             var keyIndex = 0;
             if (variable.allTimesegmentsResultList != undefined || variable.allTimesegmentsResultList != null) {
                 for (var index = 0; index < variable.allTimesegmentsResultList.length; index++) {
+                    let alreadyExecuted = false;
                     var dataValues = [];
                     var counter = 0;
 
@@ -543,6 +544,7 @@ export class ForecastGraphicalComponent implements OnInit {
     }
 
     reset() {
+        this.navigationIndex = 0;
         this.currentDate = new Date();
         this.startDate = new Date();
         this.startDate.setMonth((this.startDate.getMonth())-6);
@@ -581,10 +583,11 @@ export class ForecastGraphicalComponent implements OnInit {
             else {
                 this.previousValidDate = this.userSelectedStartDate;
                 this.startDate = userStart;
-                this.endDate = userEnd;
+                //this.endDate = userEnd;
 
-                if (userEnd > this.variablesLatestEnd) {
-                    var monthDifference = this.getMonthDifference(this.variablesLatestEnd, userEnd);
+                if (userEnd > this.endDate) {
+
+                    var monthDifference = this.getMonthDifference(this.endDate, userEnd);
                     monthDifference = monthDifference +1;
 
                     if (monthDifference < 12) {
@@ -596,11 +599,13 @@ export class ForecastGraphicalComponent implements OnInit {
                         this.reloadMonths();
                     }
                     else {
-                        this.navigationIndex = 3;
+                        this.navigationIndex = 4;
                         this.reloadMonths();
                     }
+                    this.endDate = userEnd;
                 }
                 else{
+                    this.endDate = userEnd;
                     this.clearChart();
                     setTimeout(() => {this.renderChart();}, 100);
                 }
@@ -610,10 +615,10 @@ export class ForecastGraphicalComponent implements OnInit {
         else {
             this.previousValidDate = this.userSelectedStartDate;
             this.startDate = userStart;
-            this.endDate = userEnd;
+            //this.endDate = userEnd;
 
-            if (userEnd > this.variablesLatestEnd) {
-                var monthDifference = this.getMonthDifference(this.variablesLatestEnd, userEnd);
+            if (userEnd > this.endDate) {
+                var monthDifference = this.getMonthDifference(this.endDate, userEnd);
                 monthDifference = monthDifference +1;
 
                 if (monthDifference < 12) {
@@ -625,11 +630,13 @@ export class ForecastGraphicalComponent implements OnInit {
                     this.reloadMonths();
                 }
                 else {
-                    this.navigationIndex = 3;
+                    this.navigationIndex = 4;
                     this.reloadMonths();
                 }
+                this.endDate = userEnd;
             }
             else{
+                this.endDate = userEnd;
                 this.clearChart();
                 setTimeout(() => {this.renderChart();}, 100);
             }

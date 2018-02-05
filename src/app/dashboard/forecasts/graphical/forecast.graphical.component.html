@@ -11,7 +11,36 @@
             <select (change)="selectVariables($event)" class="app-select">
                 <option *ngFor="let branch of branches" [value]="branch.id"> {{branch.title}} </option>
             </select>
-        </div>        
+        </div>
+    </div>
+
+    <div class="form-group pull-right" style="margin-right: 20%" *ngIf="lineChartData.length > 0">
+        <div style="display: inline-block">
+            <label for="">Start Time</label>
+            <div class='date inputText' id='startDate'>
+                <dp-date-picker
+                    [config]="datePickerConfig"
+                    [(ngModel)]="userSelectedStartDate"
+                    mode="daytime"
+                    [theme]="'dp-material dp-main'"></dp-date-picker>
+            </div>
+        </div>
+
+        <div style="display: inline-block">
+            <label for="">End Time</label>
+            <div class='date inputText' id='endDate'>
+                <dp-date-picker
+                    [config]="datePickerConfig"
+                    [(ngModel)]="userSelectedEndDate"
+                    mode="daytime"
+                    [theme]="'dp-material dp-main'"></dp-date-picker>
+            </div>
+        </div>
+
+        <div style="display: inline-block">
+            <button class="btn btn-success" (click)="setNewDates(userSelectedStartDate, userSelectedEndDate)">Save and Refresh</button>
+            <button class="btn btn-danger" (click)="reset()">Reset to Default Dates</button>
+        </div>
     </div>
 
     <div class="row" >
@@ -30,7 +59,7 @@
                         <div>
                             <label>
                                 <input type="checkbox" (click)="toggleDiscreteVariables($event)" checked> Discrete
-                            </label>        
+                            </label>
                         </div>
                     </div>
 
@@ -45,7 +74,7 @@
                         <div>
                             <label>
                                 <input type="checkbox" (click)="toggleDiscreteLines($event)" checked> Discrete
-                            </label>        
+                            </label>
                         </div>
                     </div>
                 </div>
@@ -57,7 +86,7 @@
                 <input type="text" [(ngModel)]="searchType" (keyup)="filterResult($event, 'type')" class="col-md-4" placeholder="type">
                 <input type="text" [(ngModel)]="searchOwner" (keyup)="filterResult($event, 'owner')" class="col-md-4" placeholder="owner">
             </div>
-            
+
             <div style="margin-top:5px">
                 <!--<button class="btn btn-danger" (click)="reloadBranches()">Clear</button>-->
             </div>
@@ -70,13 +99,6 @@
 
         <div class="col-md-9" *ngIf="lineChartData.length > 0">
             <nvd3 [options]="options" [data]="lineChartData"></nvd3>
-
-            <div class="row">
-                <div class="col-md-12">
-                    <button class="btn btn-success" (click)="loadPreviousMonths()">Previous</button>
-                    <button class="btn btn-success pull-right" (click)="loadNextMonths()">Next</button>
-                </div>
-            </div>
         </div>
     </div>
 </div>

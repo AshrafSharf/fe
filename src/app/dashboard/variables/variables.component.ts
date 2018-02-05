@@ -432,7 +432,7 @@ export class VariablesComponent implements OnInit {
                 var keyIndex = 0;
                 let keys = new Set();
                 for (var index = 0; index < variable.actualTimeSegment.tableInput.length; index++) {
-                    keys.add(variable.actualTimeSegment.tableInput[index].name);
+                    keys.add(variable.actualTimeSegment.tableInput[index].key);
                 }
 
                 var dataValues = [];

@@ -26,9 +26,9 @@ export class ForecastGraphicalComponent implements OnInit {
     searchOwner:String = '';
 
     breakdownVariables:Boolean = true;
-    discreteVariables:Boolean = true;
+    discreteVariables:Boolean = false;
     breakdownLines:Boolean = true;
-    discreteLines:Boolean = true;
+    discreteLines:Boolean = false;
 
     public lineChartData:Array<any> = [];
     public lineChartLabels:Array<{key: number, value:string}> = [];
@@ -107,7 +107,7 @@ export class ForecastGraphicalComponent implements OnInit {
             return true;
         }
         
-        if ((variable.variableType == 'discrete') && (!this.discreteVariables) ){
+        if ((variable.valueType == 'discrete') && (!this.discreteVariables) ){
             return true;
         }
 
@@ -256,8 +256,10 @@ export class ForecastGraphicalComponent implements OnInit {
 
                         this.exludedVariables = [];
                         this.variables.forEach(variable => {
-                            this.exludedVariables.push(variable.id);
-                            this.filteredVariables.push(variable);
+                            if (!this.shouldSkipVariable(variable)) {
+                                this.exludedVariables.push(variable.id);
+                                this.filteredVariables.push(variable);
+                            }
                         })
 
                         console.log("rendering chart");

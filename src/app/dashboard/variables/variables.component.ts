@@ -515,19 +515,19 @@ export class VariablesComponent implements OnInit {
                     var dataValues = [];
                     let item = variable.allTimesegmentsResultList[index];
                     for (var dataIndex = 0; dataIndex < item.data.length; dataIndex++) {
-                        var valueItem = item.data[dataIndex];
-                        var labelIndex = this.isLabelAdded(valueItem.title);
+                        var valueItem2 = item.data[dataIndex];
+                        var labelIndex = this.isLabelAdded(valueItem2.title);
                         if (labelIndex == -1) {
                             this.lineChartLabels.push(
                                 {
                                     key: keyIndex,
-                                    value: valueItem.title.toString()
+                                    value: valueItem2.title.toString()
                                 }
                             );
                             labelIndex = keyIndex;
                             keyIndex += 1;
                         }
-                        dataValues.push({ x: labelIndex, y: valueItem.value });
+                        dataValues.push({ x: labelIndex, y: valueItem2.value });
                     }
 
                     this.lineChartData.push({

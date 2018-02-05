@@ -772,7 +772,6 @@ export class VariablesComponent implements OnInit {
     }
 
     generatePDF() {
-        /*
         var svg = document.querySelector('svg');
         var svgData = new XMLSerializer().serializeToString( svg );
  
@@ -805,7 +804,6 @@ export class VariablesComponent implements OnInit {
             d3.select("#pngdataurl").html(pngimg);
             a.click();
         }
-        */
     }
 
 

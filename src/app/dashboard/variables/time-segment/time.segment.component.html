@@ -121,7 +121,13 @@
                                     <tr>
                                         <th class="active">Probability (%)</th>
                                         <td *ngFor="let subVar of variableTypeList">
-                                            <input [sh-context]="contextMenuItemsDiscrete" class="table_input" type="text" placeholder="%" [(ngModel)]="subVar.probability">
+                                            <input 
+                                                [sh-context]="contextMenuItemsDiscrete" 
+                                                [sh-data-context]="dataContext(i)"
+                                                class="table_input" 
+                                                type="text"
+                                                placeholder="%" 
+                                                [(ngModel)]="subVar.probability">
                                         </td>
                                     </tr>
                                 </table>

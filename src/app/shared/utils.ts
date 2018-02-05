@@ -1,3 +1,4 @@
+import { TableInputPair } from './interfaces/variables';
 import { RequestOptions, Headers } from "@angular/http";
 
 
@@ -13,6 +14,8 @@ export class Utils {
     static routeSettings:String = "settings";
     static routeVariableType:String = "variableType";
 
+    static buffer:Array<TableInputPair>;
+
     // create url for route
     public static createUrl(route:String) {
         return `${this.baseUrl}\\${route}`;
@@ -21,6 +24,22 @@ export class Utils {
     // get the token
     public static getToken() {
         return sessionStorage["authorization_token"];
+    }
+
+    public static setBuffer(obj) {
+        let inputs = obj as Array<TableInputPair>;
+        this.buffer = new Array<TableInputPair>();
+        for(var index = 0; index < inputs.length; index++) {
+            let item = inputs[index];
+            this.buffer.push({
+                key: item.key,
+                value: item.value
+            });
+        }
+    }
+
+    public static getBuffer() {
+        return this.buffer;
     }
 
     public static getShadeOfColor(color, percent) {   

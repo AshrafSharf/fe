@@ -2,6 +2,8 @@ import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/cor
 import { TableViewColumn } from '../../../shared/interfaces/tableview-column';
 import { Moment } from 'moment';
 import { VariableComponentBehavior, ValidationResult, TableInputPair, TimeSegment } from '../../../shared/interfaces/variables';
+import {IShContextMenuItem, IShContextOptions, BeforeMenuEvent} from 'ng2-right-click-menu';
+import { Utils } from '../../../shared/utils';
 
 @Component({
     selector: 'variable-table',
@@ -17,6 +19,11 @@ export class VariableTableComponent implements OnInit, OnChanges, VariableCompon
     @Input('time-segment') timeSegment:TimeSegment;
 
     columns:TableInputPair[] = Array<TableInputPair>();
+    
+    contextMenuItems: IShContextMenuItem[];
+    dataContext(i) {
+        return {index: i};
+    }
 
     constructor() { 
         this.createTable();
@@ -44,7 +51,50 @@ export class VariableTableComponent implements OnInit, OnChanges, VariableCompon
         }
     }
 
-    ngOnInit() { }
+    ngOnInit() { 
+        this.contextMenuItems = [
+            {
+                label: 'cut',
+                onClick: ($event) => {
+                    let data = $event.dataContext;
+                    Utils.setBuffer(this.columns);
+                    for (var index = 0; index < this.columns.length; index++) {
+                        this.columns[index].value = '0';
+                    }
+                }
+            },
+            {
+                label: 'copy',
+                onClick: ($event) => {
+                    let data = $event.dataContext;
+                    Utils.setBuffer(this.columns);
+                }
+            },
+            {
+                divider: true
+            },
+            {
+                label: 'paste',
+                disabled: () => {
+                    console.log(Utils.getBuffer());
+                    return Utils.getBuffer() == undefined;
+                },
+                onClick: ($event) => {
+                    if (Utils.getBuffer() != undefined && Utils.getBuffer().length != 0) {
+                        this.columns.splice(0, this.columns.length);
+                        let tempColumns = Utils.getBuffer();
+                        this.columns = new Array<TableInputPair>();
+                        for (var index = 0; index < tempColumns.length; index++) {
+                            this.columns.push({
+                                key: tempColumns[index].key,
+                                value: tempColumns[index].value
+                            });
+                        }
+                    }
+                }
+            }
+        ];
+    }
 
     ngOnChanges(changes: SimpleChanges): void {
         this.createTable();

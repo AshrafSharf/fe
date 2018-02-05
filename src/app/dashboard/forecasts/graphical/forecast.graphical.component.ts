@@ -575,6 +575,8 @@ export class ForecastGraphicalComponent implements OnInit {
         var userStart = new Date((formattedStartDate[3] + formattedStartDate[4] + "/" + formattedStartDate[0] + formattedStartDate[1] + "/" + formattedStartDate[6]+formattedStartDate[7]+formattedStartDate[8]+formattedStartDate[9]).toString());
         var userEnd = new Date((formattedEndDate[3] + formattedEndDate[4] + "/" + formattedEndDate[0] + formattedEndDate[1] + "/" + formattedEndDate[6]+formattedEndDate[7]+formattedEndDate[8]+formattedEndDate[9]).toString());
 
+        console.log(this.variablesLatestEnd);
+
         if (userStart < this.startDate) {
             if (userStart < this.variablesEarliestStart) {
                 this.modal.showError("Cannot have a start time earlier than earliest start time of a variable i.e. earliest variable start time is "+this.variablesEarliestStart);
@@ -590,12 +592,16 @@ export class ForecastGraphicalComponent implements OnInit {
                     var monthDifference = this.getMonthDifference(this.endDate, userEnd);
                     monthDifference = monthDifference +1;
 
-                    if (monthDifference < 12) {
+                    if (monthDifference < 6) {
                         this.navigationIndex = 1;
                         this.reloadMonths();
                     }
-                    else if (monthDifference > 12 && monthDifference < 24) {
+                    else if (monthDifference > 6 && monthDifference < 12) {
                         this.navigationIndex = 2;
+                        this.reloadMonths();
+                    }
+                    else if (monthDifference > 12 && monthDifference < 18) {
+                        this.navigationIndex = 3;
                         this.reloadMonths();
                     }
                     else {
@@ -621,12 +627,16 @@ export class ForecastGraphicalComponent implements OnInit {
                 var monthDifference = this.getMonthDifference(this.endDate, userEnd);
                 monthDifference = monthDifference +1;
 
-                if (monthDifference < 12) {
+                if (monthDifference < 6) {
                     this.navigationIndex = 1;
                     this.reloadMonths();
                 }
-                else if (monthDifference > 12 && monthDifference < 24) {
+                else if (monthDifference > 6 && monthDifference < 12) {
                     this.navigationIndex = 2;
+                    this.reloadMonths();
+                }
+                else if (monthDifference > 12 && monthDifference < 18) {
+                    this.navigationIndex = 3;
                     this.reloadMonths();
                 }
                 else {

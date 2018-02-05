@@ -142,12 +142,20 @@ export class ForecastTabularComponent implements OnInit {
                     var monthDifference = this.getMonthDifference(this.variableLatestEnd, this.latestEnd);
                     monthDifference = monthDifference +1;
 
-                    if (monthDifference < 12) {
+                    if (monthDifference < 6) {
                         this.navigationIndex = 1;
                         this.reloadMonths();
                     }
-                    else if (monthDifference > 12 && monthDifference < 24) {
+                    else if (monthDifference > 6 && monthDifference < 12) {
                         this.navigationIndex = 2;
+                        this.reloadMonths();
+                    }
+                    else if (monthDifference > 12 && monthDifference < 18) {
+                        this.navigationIndex = 3;
+                        this.reloadMonths();
+                    }
+                    else {
+                        this.navigationIndex = 4;
                         this.reloadMonths();
                     }
                 }
@@ -162,12 +170,20 @@ export class ForecastTabularComponent implements OnInit {
                 var monthDifference = this.getMonthDifference(this.variableLatestEnd, this.latestEnd);
                 monthDifference = monthDifference +1;
 
-                if (monthDifference < 12) {
+                if (monthDifference < 6) {
                     this.navigationIndex = 1;
                     this.reloadMonths();
                 }
-                else if (monthDifference > 12 && monthDifference < 24) {
+                else if (monthDifference > 6 && monthDifference < 12) {
                     this.navigationIndex = 2;
+                    this.reloadMonths();
+                }
+                else if (monthDifference > 12 && monthDifference < 18) {
+                    this.navigationIndex = 3;
+                    this.reloadMonths();
+                }
+                else {
+                    this.navigationIndex = 4;
                     this.reloadMonths();
                 }
             }

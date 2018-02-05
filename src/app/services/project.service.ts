@@ -36,6 +36,13 @@ export class ProjectService {
             .map(result => result.json());
     }
 
+    getProjectByName(title:String){
+        let url = Utils.createUrl(Utils.routeProject) + "/search/" + title;
+        return this.http
+            .get(url, Utils.getRequestOptions())
+            .map(result => result.json());
+    }
+
     // update project
     updateProject(id:String, title:String, description:String, owner: String) {
         let url = Utils.createUrl(Utils.routeProject) + "/" + id;

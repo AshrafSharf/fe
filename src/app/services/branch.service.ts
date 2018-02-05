@@ -22,6 +22,13 @@ export class BranchService {
                 .map(result => result.json());
     }
 
+    getBranchByName(projectId: String, branchName:String){
+        let url = Utils.createUrl(Utils.routeBranch) + "/" + projectId +"/" + branchName;
+        return this.http
+            .get(url, Utils.getRequestOptions())
+            .map(result => result.json());
+    }
+
     // delete branch by id
     deleteBranch(branchId:String) {
         let url = Utils.createUrl(Utils.routeBranch) + "/" + branchId;

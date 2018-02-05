@@ -38,7 +38,7 @@
                             </div>
                         </div>
                 
-                        <div class="form-group">
+                        <div class="form-group"  >
                             <label for="">Comment</label>
                             <textarea name="" [(ngModel)]="comment" id="comment" class="form-control"></textarea>
                         </div>
@@ -83,13 +83,7 @@
                                     *ngIf="selectedInputMethod == 'expression'" 
                                     [branch-id]="branchId"></variable-expression>                                        
     
-                                <variable-table 
-                                    *ngIf="selectedInputMethod == 'table'" 
-                                    [branch-id]="branchId" 
-                                    [variable-type]="variableType" 
-                                    [start-time]="startDate"
-                                    [end-time]="endDate"
-                                    [time-segment]="timeSegment" ></variable-table>
+                               
     
                                 <variable-breakdown 
                                     *ngIf="selectedInputMethod == 'breakdown'" 
@@ -100,6 +94,7 @@
                                     *ngIf="selectedInputMethod == 'discrete'" 
                                     [branch-id]="branchId"></variable-discrete-random>
                             </div>
+
 
                             <div *ngIf="valueType == 'discrete'">
                                 <table class="table input-group table-bordered">
@@ -136,6 +131,17 @@
                         </div>
 
                     </div>
+                </div>
+                <div id="row">
+                       
+                         <variable-table id="inputTable"
+                                *ngIf="selectedInputMethod == 'table' && variableType == 'variable'" 
+                                [branch-id]="branchId" 
+                                [variable-type]="variableType" 
+                                [start-time]="startDate"
+                                [end-time]="endDate"
+                                [time-segment]="timeSegment" ></variable-table>
+
                 </div>
             </div>
         </div>

@@ -28,9 +28,9 @@ export class ForecastGraphicalComponent implements OnInit {
     searchOwner:String = '';
 
     breakdownVariables:Boolean = true;
-    discreteVariables:Boolean = true;
+    discreteVariables:Boolean = false;
     breakdownLines:Boolean = true;
-    discreteLines:Boolean = true;
+    discreteLines:Boolean = false;
 
     previousValidDate: any;
     currentDate: Date;
@@ -146,8 +146,8 @@ export class ForecastGraphicalComponent implements OnInit {
         if ((variable.variableType == 'breakdown') && (!this.breakdownVariables) ){
             return true;
         }
-
-        if ((variable.variableType == 'discrete') && (!this.discreteVariables) ){
+        
+        if ((variable.valueType == 'discrete') && (!this.discreteVariables) ){
             return true;
         }
 
@@ -296,8 +296,10 @@ export class ForecastGraphicalComponent implements OnInit {
 
                         this.exludedVariables = [];
                         this.variables.forEach(variable => {
-                            this.exludedVariables.push(variable.id);
-                            this.filteredVariables.push(variable);
+                            if (!this.shouldSkipVariable(variable)) {
+                                this.exludedVariables.push(variable.id);
+                                this.filteredVariables.push(variable);
+                            }
                         })
                         this.setEarliestStartAndEndTimes();
                         console.log("rendering chart");

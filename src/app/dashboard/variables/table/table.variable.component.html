@@ -9,7 +9,12 @@
                     </tr>
                     <tr>
                         <td *ngFor="let col of columns">
-                            <input type="text" class="table_input" [(ngModel)]="col.value">
+                            <input 
+                                [sh-context]="contextMenuItems" 
+                                [sh-data-context]="dataContext(i)"
+                                type="text" 
+                                class="table_input" 
+                                [(ngModel)]="col.value">
                         </td>
                     </tr>
                 </table>

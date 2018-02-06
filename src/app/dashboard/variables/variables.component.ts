@@ -407,7 +407,7 @@ export class VariablesComponent implements OnInit {
                     date = new Date(`${month}/${day}/${year}`);
                 }
                 this.endDate = unix(date.getTime() / 1000);
-
+              
             } else {
                 this.queryText = variable.actualTimeSegment.query;
             }
@@ -495,7 +495,7 @@ export class VariablesComponent implements OnInit {
                             labelIndex = keyIndex;
                             keyIndex += 1;
                         }
-                        dataValues.push({ x: labelIndex, y: valueItem.value });
+                        dataValues.push({ x: labelIndex, y: d3.format('0.0f')(valueItem2.value)});
                     }
 
                     this.lineChartData.push({

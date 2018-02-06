@@ -2100,7 +2100,6 @@ export class ForecastTabularComponent implements OnInit {
                                                     //if (this.columns[x].placeHolder == timeSegStartDate) {
                                                     this.started = true;
                                                     for (var index1 = varStartIndex; index1 < monthDifference; index1++) {
-                                                        console.log("typeof index1: "+typeof(index1));
 
                                                         if (variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1] == null) {
                                                             row.addColumn(new TableViewColumn("Column " + index1, "n/a"));

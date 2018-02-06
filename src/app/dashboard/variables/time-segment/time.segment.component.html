@@ -85,14 +85,7 @@
                                         [branch-id]="branchId"
                                         [input-method]="selectedInputMethod"></variable-expression>
 
-                                <variable-table
-                                        *ngIf="selectedInputMethod == 'table'"
-                                        [branch-id]="branchId"
-                                        [variable-type]="variableType"
-                                        [start-time]="startDate"
-                                        [end-time]="endDate"
-                                        [time-segment]="timeSegment"
-                                ></variable-table>
+                               
 
                                 <variable-breakdown
                                         *ngIf="selectedInputMethod == 'breakdown'"

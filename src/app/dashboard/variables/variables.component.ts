@@ -495,7 +495,7 @@ export class VariablesComponent implements OnInit {
                             labelIndex = keyIndex;
                             keyIndex += 1;
                         }
-                        dataValues.push({ x: labelIndex, y: d3.format('0.0f')(valueItem2.value)});
+                        dataValues.push({ x: labelIndex, y: d3.format('0.0f')(valueItem.value)});
                     }
 
                     this.lineChartData.push({

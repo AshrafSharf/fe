@@ -112,11 +112,9 @@ export class ForecastGraphicalComponent implements OnInit {
                     },
                     axisLabelDistance: -10
                 },
-                axisLabelDistance: -10
-              },
-              
-              showLegend: true
-            },
+                axisLabelDistance: -10,
+                showLegend: true   
+            }
         };
 
         this.reloadProjects();
@@ -535,7 +533,8 @@ export class ForecastGraphicalComponent implements OnInit {
                                 keyIndex += 1;
                             }
                           
-                            dataValues.push({x:labelIndex, y: d3.format("0.2f")( valueItem.value)});
+                            dataValues.push({x:labelIndex, y: d3.format("0.2f")( valueItem.value)});     
+                        }
                     }
 
                     this.lineChartData.push({

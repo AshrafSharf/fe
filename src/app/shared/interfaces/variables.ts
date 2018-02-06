@@ -50,7 +50,7 @@ export interface TimeSegment {
     distributionType: String;
     description: String;
     constantValue: Number;
-    mean: String;
+    //mean: String;
     stdDeviation: String;
     userSelectedParametricsStdDeviation: String;
     timeSegmentResponse?: { resultMap: { title:String, data: {title:String, value: Number}[] }[] };

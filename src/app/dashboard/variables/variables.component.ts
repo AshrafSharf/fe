@@ -73,8 +73,8 @@ export class VariablesComponent implements OnInit {
     @Input() startDate: any;
     @Input() endDate: any;
 
-    data:any;
-    options:any;
+    data;
+    options;
 
     private parentNativeElement: any;
 
@@ -294,7 +294,7 @@ export class VariablesComponent implements OnInit {
                     axisLabelDistance: -10
                 },
 
-                showLegend: true,
+                showLegend: false,
             },
         };
     }
@@ -352,7 +352,7 @@ export class VariablesComponent implements OnInit {
             distributionType: 'none',
             growth: 0,
             tableInput: null,
-            mean: '',
+            //mean: '',
             startTime: '',
             stdDeviation: '',
             timeSegmentResponse: {
@@ -372,27 +372,6 @@ export class VariablesComponent implements OnInit {
     }
 
     selectVariable(variable: Variable) {
-        this.selectedVariable = variable;
-        this.description = variable.description.toString();
-        this.variableName = variable.title.toString();
-        this.ownerId = variable.ownerId;
-        this.valueType = variable.valueType.toString();
-        this.variableType = variable.variableType.toString();
-        this.subvariableList = variable.subVariables;
-        this.compositVariableIds = variable.compositeVariables;
-        this.timeSegments.splice(0, this.timeSegments.length);
-        this.compositType = variable.compositeType.toString();
-
-        if (this.compositType.length > 0) {
-            this.loadCompositeVariables(this.compositType);
-        }
-
-        for (var timeSegmentIndex = 0; timeSegmentIndex < variable.timeSegment.length; timeSegmentIndex++) {
-            let element = variable.timeSegment[timeSegmentIndex];
-            this.timeSegments.push(element);
-        }
-
-        // 
         this.shouldDefineActualValues = variable.hasActual;
         if (variable.hasActual) {
             this.columns = variable.actualTimeSegment.tableInput;
@@ -429,40 +408,29 @@ export class VariablesComponent implements OnInit {
                 }
                 this.endDate = unix(date.getTime() / 1000);
 
-                var keyIndex = 0;
-                let keys = new Set();
-                for (var index = 0; index < variable.actualTimeSegment.tableInput.length; index++) {
-                    keys.add(variable.actualTimeSegment.tableInput[index].key);
-                }
-
-                var dataValues = [];
-                let item = variable.actualTimeSegment;
-                for (var dataIndex = 0; dataIndex < item.tableInput.length; dataIndex++) {
-                    var valueItem = item.tableInput[dataIndex];
-                    var labelIndex = this.isLabelAdded(valueItem.key);
-                    if (labelIndex == -1) {
-                        this.lineChartLabels.push(
-                            {
-                                key: keyIndex,
-                                value: valueItem.key.toString()
-                            }
-                        );
-                        labelIndex = keyIndex;
-                        keyIndex += 1;
-                    }
-                    dataValues.push({ x: labelIndex, y: valueItem.value });
-                }
-
-                this.lineChartData.push({
-                    values: dataValues,
-                    key: 'actual'
-                });
-                
-
             } else {
                 this.queryText = variable.actualTimeSegment.query;
             }
+        }
 
+        this.selectedVariable = variable;
+        this.description = variable.description.toString();
+        this.variableName = variable.title.toString();
+        this.ownerId = variable.ownerId;
+        this.valueType = variable.valueType.toString();
+        this.variableType = variable.variableType.toString();
+        this.subvariableList = variable.subVariables;
+        this.compositVariableIds = variable.compositeVariables;
+        this.timeSegments.splice(0, this.timeSegments.length);
+        this.compositType = variable.compositeType.toString();
+
+        if (this.compositType.length > 0) {
+            this.loadCompositeVariables(this.compositType);
+        }
+
+        for (var timeSegmentIndex = 0; timeSegmentIndex < variable.timeSegment.length; timeSegmentIndex++) {
+            let element = variable.timeSegment[timeSegmentIndex];
+            this.timeSegments.push(element);
         }
 
         // change the chart
@@ -515,19 +483,19 @@ export class VariablesComponent implements OnInit {
                     var dataValues = [];
                     let item = variable.allTimesegmentsResultList[index];
                     for (var dataIndex = 0; dataIndex < item.data.length; dataIndex++) {
-                        var valueItem2 = item.data[dataIndex];
-                        var labelIndex = this.isLabelAdded(valueItem2.title);
+                        var valueItem = item.data[dataIndex];
+                        var labelIndex = this.isLabelAdded(valueItem.title);
                         if (labelIndex == -1) {
                             this.lineChartLabels.push(
                                 {
                                     key: keyIndex,
-                                    value: valueItem2.title.toString()
+                                    value: valueItem.title.toString()
                                 }
                             );
                             labelIndex = keyIndex;
                             keyIndex += 1;
                         }
-                        dataValues.push({ x: labelIndex, y: valueItem2.value });
+                        dataValues.push({ x: labelIndex, y: valueItem.value });
                     }
 
                     this.lineChartData.push({
@@ -678,7 +646,7 @@ export class VariablesComponent implements OnInit {
                     distributionType: '',
                     description: '',
                     constantValue: 0,
-                    mean: '',
+                    //mean: '',
                     stdDeviation: '',
                     userSelectedParametricsStdDeviation: '',
                     breakdownInput: [],
@@ -806,38 +774,40 @@ export class VariablesComponent implements OnInit {
     }
 
     generatePDF() {
-        var svg = document.querySelector('svg');
-        var svgData = new XMLSerializer().serializeToString( svg );
- 
-        //console.log(html);
-        var imgsrc = 'data:image/svg+xml;base64,' + btoa(svgData);
-        var img = '<img src="' + imgsrc + '">';
-        d3.select("#svgdataurl").html(img);
+        /*
+         var svg = document.querySelector('svg');
+         var svgData = new XMLSerializer().serializeToString( svg );
+
+         //console.log(html);
+         var imgsrc = 'data:image/svg+xml;base64,' + btoa(svgData);
+         var img = '<img src="' + imgsrc + '">';
+         d3.select("#svgdataurl").html(img);
 
 
-        var canvas = document.createElement('canvas');
-        var context = canvas.getContext("2d");
+         var canvas = document.createElement('canvas');
+         var context = canvas.getContext("2d");
 
-        var image = new Image;
-        image.src = imgsrc;
-        image.onload = function () {
-            context.drawImage(image, 0, 0);
+         var image = new Image;
+         image.src = imgsrc;
+         image.onload = function () {
+         context.drawImage(image, 0, 0);
 
-            //save and serve it as an actual filename
-            //binaryblob();
+         //save and serve it as an actual filename
+         //binaryblob();
 
-            var a = document.createElement("a");
-            a.download = "sample.png";
-            a.href = canvas.toDataURL("image/png");
+         var a = document.createElement("a");
+         a.download = "sample.png";
+         a.href = canvas.toDataURL("image/png");
 
-            var doc = new jsPDF();
-            doc.addImage(a.href, "png", 0,0); 
-            doc.save("test.pdf");
-            
-            var pngimg = '<img src="' + a.href + '">';
-            d3.select("#pngdataurl").html(pngimg);
-            a.click();
-        }
+         var doc = new jsPDF();
+         doc.addImage(a.href, "png", 0,0);
+         doc.save("test.pdf");
+
+         var pngimg = '<img src="' + a.href + '">';
+         d3.select("#pngdataurl").html(pngimg);
+         a.click();
+         }
+         */
     }
 
 
@@ -852,10 +822,10 @@ export class VariablesComponent implements OnInit {
         var blob = new Blob([dataView], {type: "image/png"});
         var DOMURL = self.URL;
         var newurl = DOMURL.createObjectURL(blob);
-    
-        var img = '<img src="'+newurl+'">'; 
+
+        var img = '<img src="'+newurl+'">';
         d3.select("#img").html(img);
-    }    
+    }
 
     defineActualValues(event) {
         this.shouldDefineActualValues = event.target.checked;

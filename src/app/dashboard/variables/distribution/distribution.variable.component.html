@@ -14,15 +14,21 @@
     </div>
     <span class="help-block">Use comma separated values</span>
 </div>
+<!--
 <div class="form-group" *ngIf="distribution == 3">
     <label for="">Mean</label>
     <!-- <input type="text" class="form-control" [(ngModel)]="mean"> -->
+<!--
     <autocomplete-input [completedWords]="timeSegment != undefined ? timeSegment.meanCompletedWordsArray : []" [variables]="variables"></autocomplete-input>
 </div>
+-->
 <div class="form-group" *ngIf="distribution == 3">
     <label for="">Standard Deviation</label>
-    <!-- <input type="text" class="form-control" [(ngModel)]="deviation"> -->
-    <autocomplete-input [completedWords]="timeSegment != undefined ? timeSegment.stdDevCompletedWordsArray : []" [variables]="variables"></autocomplete-input>
+    <input *ngIf="method == 1" type="text" class="form-control" [(ngModel)]="deviation">
+    <!--<input  type="number" [(ngModel)]="deviation">-->
+    <div *ngIf="method == 2">
+        <autocomplete-input [completedWords]="timeSegment != undefined ? timeSegment.stdDevCompletedWordsArray : []" [variables]="variables"></autocomplete-input>
+    </div>
 </div>
 <!--
 <div class="form-group" *ngIf="distribution == 3">

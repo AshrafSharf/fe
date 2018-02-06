@@ -105,7 +105,7 @@ export class ForecastTabularComponent implements OnInit {
 
         this.populateTable(this.currentBranch);
     }
-    
+
     setNewDates(startDate, endDate) {
         this.userSelectedStartDate = unix(startDate / 1000);
         this.userSelectedEndDate= unix(endDate / 1000);
@@ -142,12 +142,20 @@ export class ForecastTabularComponent implements OnInit {
                     var monthDifference = this.getMonthDifference(this.variableLatestEnd, this.latestEnd);
                     monthDifference = monthDifference +1;
 
-                    if (monthDifference < 12) {
+                    if (monthDifference < 6) {
                         this.navigationIndex = 1;
                         this.reloadMonths();
                     }
-                    else if (monthDifference > 12 && monthDifference < 24) {
+                    else if (monthDifference > 6 && monthDifference < 12) {
                         this.navigationIndex = 2;
+                        this.reloadMonths();
+                    }
+                    else if (monthDifference > 12 && monthDifference < 18) {
+                        this.navigationIndex = 3;
+                        this.reloadMonths();
+                    }
+                    else {
+                        this.navigationIndex = 4;
                         this.reloadMonths();
                     }
                 }
@@ -162,12 +170,20 @@ export class ForecastTabularComponent implements OnInit {
                 var monthDifference = this.getMonthDifference(this.variableLatestEnd, this.latestEnd);
                 monthDifference = monthDifference +1;
 
-                if (monthDifference < 12) {
+                if (monthDifference < 6) {
                     this.navigationIndex = 1;
                     this.reloadMonths();
                 }
-                else if (monthDifference > 12 && monthDifference < 24) {
+                else if (monthDifference > 6 && monthDifference < 12) {
                     this.navigationIndex = 2;
+                    this.reloadMonths();
+                }
+                else if (monthDifference > 12 && monthDifference < 18) {
+                    this.navigationIndex = 3;
+                    this.reloadMonths();
+                }
+                else {
+                    this.navigationIndex = 4;
                     this.reloadMonths();
                 }
             }
@@ -373,1294 +389,396 @@ export class ForecastTabularComponent implements OnInit {
             // Add data to rows
             this.rows = new Array<TableViewRow>();
             this.variables.forEach(variable => {
+                if (variable.valueType != "discrete") {
+                    {
 
-                varTitle = variable.title;
-                this.started = false;
+                        varTitle = variable.title;
+                        this.started = false;
 
-                this.varType = variable.valueType;
+                        this.varType = variable.valueType;
 
-                variables[varIndex].forEach(timeSeg => {
-                    if (timeSeg.timeSegmentResponse != null) {
-                        timeSeg.timeSegmentResponse.resultMap.forEach(title => {
-                            this.titles.push(title);
-                        });
-                    }
-                });
-
-                for (var index = 0; index < variables[varIndex].length; index++) {
-                    if (variables[varIndex][index].timeSegmentResponse != null) {
-                        var row = new TableViewRow(variable.id);
-                        row.addColumn(new TableViewColumn("name", variable.title + " " + variables[varIndex][index].timeSegmentResponse.resultMap[0].title));
-                        //row.addColumn(new TableViewColumn("name", variable.title));
-
-                        //this.titles.push(variable.title);
-
-                        // If a variable has more than 1 time segment
-                        if (variables[varIndex].length > 1) {
-
-                            // Determining the start time for a specific time segment
-                            timeSegStart = variable.timeSegment[index].startTime;
-                            var varStart = new Date((timeSegStart[3] + timeSegStart[4] + "/" + timeSegStart[0] + timeSegStart[1] + "/" + timeSegStart[6]+timeSegStart[7]+timeSegStart[8]+timeSegStart[9]).toString());
-                            var monthDifference = this.getMonthDifference(varStart, this.latestEnd);
-                            monthDifference = monthDifference +1;
-
-                            if (varStart > this.latestEnd) {
-                                // Adding the data under the appropriate columns
-                                for (var x = 1; x < this.columns.length; x ++) {
-                                    row.addColumn(new TableViewColumn("Column " + x, "n/a"));
-                                }
-                                this.rows.push(row);
-                                break;
+                        variables[varIndex].forEach(timeSeg => {
+                            if (timeSeg.timeSegmentResponse != null) {
+                                timeSeg.timeSegmentResponse.resultMap.forEach(title => {
+                                    this.titles.push(title);
+                                });
                             }
+                        });
 
-                            else {
-                                for (var index = 0; index < variables[varIndex].length; index++) {
-                                    if (variables[varIndex][index].timeSegmentResponse != null) {
+                        for (var index = 0; index < variables[varIndex].length; index++) {
+                            if (variables[varIndex][index].timeSegmentResponse != null) {
+                                var row = new TableViewRow(variable.id);
+                                row.addColumn(new TableViewColumn("name", variable.title + " " + variables[varIndex][index].timeSegmentResponse.resultMap[0].title));
+                                //row.addColumn(new TableViewColumn("name", variable.title));
 
-                                        // Determining the start time for a specific time segment
-                                        timeSegStart = variable.timeSegment[index].startTime;
-                                        var varStart = new Date((timeSegStart[3] + timeSegStart[4] + "/" + timeSegStart[0] + timeSegStart[1] + "/" + timeSegStart[6]+timeSegStart[7]+timeSegStart[8]+timeSegStart[9]).toString());
-                                        var monthDifference = this.getMonthDifference(varStart, this.latestEnd);
-                                        monthDifference = monthDifference +1;
+                                //this.titles.push(variable.title);
 
-                                        if (varStart < this.earliestStart)
-                                        {
-                                            varStartIndex = this.getMonthDifference(varStart, this.earliestStart);
+                                // If a variable has more than 1 time segment
+                                if (variables[varIndex].length > 1) {
+
+                                    // Determining the start time for a specific time segment
+                                    timeSegStart = variable.timeSegment[index].startTime;
+                                    var varStart = new Date((timeSegStart[3] + timeSegStart[4] + "/" + timeSegStart[0] + timeSegStart[1] + "/" + timeSegStart[6]+timeSegStart[7]+timeSegStart[8]+timeSegStart[9]).toString());
+                                    var monthDifference = this.getMonthDifference(varStart, this.latestEnd);
+                                    monthDifference = monthDifference +1;
+
+                                    if (varStart > this.latestEnd) {
+                                        // Adding the data under the appropriate columns
+                                        for (var x = 1; x < this.columns.length; x ++) {
+                                            row.addColumn(new TableViewColumn("Column " + x, "n/a"));
                                         }
-
-                                        if (varStart > this.latestEnd) {
-                                            // Adding the data under the appropriate columns
-                                            //for (var x = 1; x < this.columns.length; x ++) {
-                                            //row.addColumn(new TableViewColumn("Column " + (index1), "n/a"));
-                                            //}
-                                        }
-
-                                        else {
-                                            if (timeSegStart[3] == 0) {
-                                                timeSegStartMonth = timeSegStart[4];
-                                                timeSegStartMonth = timeSegStartMonth - 1;
-                                            }
-                                            else {
-                                                timeSegStartMonth = timeSegStart[3]+timeSegStart[4];
-                                                timeSegStartMonth = timeSegStartMonth - 1;
-                                            }
-
-                                            timeSegStartYear = timeSegStart[6]+timeSegStart[7]+timeSegStart[8]+timeSegStart[9];
-
-                                            timeSegStartDate = this.months[timeSegStartMonth] + " " + timeSegStartYear;
-
-                                            // Adding the data under the appropriate columns
-                                            for (var x = 1; x < this.columns.length; x ++) {
-
-                                                // If the start time for a variable has been found, output all data values for all time segments
-                                                if (this.started) {
-                                                    if (varStartIndex != 0) {
-                                                        //if (this.columns[x].placeHolder == timeSegStartDate) {
-                                                        if ((variables[varIndex][index].timeSegmentResponse.resultMap[0].data).length > monthDifference) {
-                                                            for (var index1 = varStartIndex; index1 < monthDifference; index1++) {
-
-                                                                if (variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1] == null) {
-                                                                    row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
-                                                                }
-                                                                else {
-                                                                    value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1].value);
-                                                                    if (this.varType == "integer") {
-                                                                        row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
-                                                                    }
-                                                                    else if (this.varType == "real") {
-                                                                        row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                                    }
-                                                                }
-                                                                columnCounter++;
-                                                            }
-                                                            break;
-                                                        }
-                                                        else {
-                                                            for (var index1 = varStartIndex; index1 < (variables[varIndex][index].timeSegmentResponse.resultMap[0].data).length; index1++) {
-
-                                                                if (variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1] == null) {
-                                                                    row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
-                                                                }
-                                                                else {
-                                                                    value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1].value);
-                                                                    if (this.varType == "integer") {
-                                                                        row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
-                                                                    }
-                                                                    else if (this.varType == "real") {
-                                                                        row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                                    }
-                                                                }
-                                                                columnCounter++;
-                                                            }
-                                                            break;
-                                                        }
-                                                        //}
-                                                    }
-                                                    else {
-                                                        if (this.columns[x].placeHolder == timeSegStartDate) {
-                                                            if ((variables[varIndex][index].timeSegmentResponse.resultMap[0].data).length > monthDifference) {
-                                                                for (var index1 = varStartIndex; index1 < monthDifference; index1++) {
-
-                                                                    if (variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1] == null) {
-                                                                        row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
-                                                                    }
-                                                                    else {
-                                                                        value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1].value);
-                                                                        if (this.varType == "integer") {
-                                                                            row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
-                                                                        }
-                                                                        else if (this.varType == "real") {
-                                                                            row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                                        }
-                                                                    }
-                                                                    columnCounter++;
-                                                                }
-                                                                break;
-                                                            }
-                                                            else {
-                                                                for (var index1 = 0; index1 < (variables[varIndex][index].timeSegmentResponse.resultMap[0].data).length; index1++) {
-
-                                                                    if (variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1] == null) {
-                                                                        row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
-                                                                    }
-                                                                    else {
-                                                                        value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1].value);
-                                                                        if (this.varType == "integer") {
-                                                                            row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
-                                                                        }
-                                                                        else if (this.varType == "real") {
-                                                                            row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                                        }
-                                                                    }
-                                                                    columnCounter++;
-                                                                }
-                                                                break;
-                                                            }
-                                                        }
-                                                    }
-
-                                                }
-                                                else {
-                                                    if (varStartIndex != 0) {
-                                                        //if (this.columns[x].placeHolder == timeSegStartDate) {
-                                                        this.started = true;
-
-                                                        if ((variables[varIndex][index].timeSegmentResponse.resultMap[0].data).length > monthDifference) {
-                                                            for (var index1 = varStartIndex; index1 < monthDifference; index1++) {
-
-                                                                if (variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1] == null) {
-                                                                    row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
-                                                                }
-                                                                else {
-                                                                    value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1].value);
-                                                                    if (this.varType == "integer") {
-                                                                        row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
-                                                                    }
-                                                                    else if (this.varType == "real") {
-                                                                        row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                                    }
-                                                                }
-                                                                columnCounter++;
-                                                            }
-                                                            break;
-                                                        }
-
-                                                        else {
-                                                            for (var index1 = varStartIndex; index1 < (variables[varIndex][index].timeSegmentResponse.resultMap[0].data).length; index1++) {
-
-                                                                if (variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1] == null) {
-                                                                    row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
-                                                                }
-                                                                else {
-                                                                    value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1].value);
-                                                                    if (this.varType == "integer") {
-                                                                        row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
-                                                                    }
-                                                                    else if (this.varType == "real") {
-                                                                        row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                                    }
-                                                                }
-                                                                columnCounter++;
-                                                            }
-                                                            break;
-                                                        }
-                                                        //}
-                                                        //else {
-                                                        //    row.addColumn(new TableViewColumn("Column " + x, "n/a"));
-                                                        //    columnCounter++;
-                                                        //}
-                                                    }
-                                                    else {
-                                                        if (this.columns[x].placeHolder == timeSegStartDate) {
-                                                            this.started = true;
-
-                                                            if ((variables[varIndex][index].timeSegmentResponse.resultMap[0].data).length > monthDifference) {
-                                                                for (var index1 = varStartIndex; index1 < monthDifference; index1++) {
-
-                                                                    if (variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1] == null) {
-                                                                        row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
-                                                                    }
-                                                                    else {
-                                                                        value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1].value);
-                                                                        if (this.varType == "integer") {
-                                                                            row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
-                                                                        }
-                                                                        else if (this.varType == "real") {
-                                                                            row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                                        }
-                                                                    }
-                                                                    columnCounter++;
-                                                                }
-                                                                break;
-                                                            }
-
-                                                            else {
-                                                                for (var index1 = varStartIndex; index1 < (variables[varIndex][index].timeSegmentResponse.resultMap[0].data).length; index1++) {
-
-                                                                    if (variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1] == null) {
-                                                                        row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
-                                                                    }
-                                                                    else {
-                                                                        value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1].value);
-                                                                        if (this.varType == "integer") {
-                                                                            row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
-                                                                        }
-                                                                        else if (this.varType == "real") {
-                                                                            row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                                        }
-                                                                    }
-                                                                    columnCounter++;
-                                                                }
-                                                                break;
-                                                            }
-                                                        }
-                                                        else {
-                                                            row.addColumn(new TableViewColumn("Column " + x, "n/a"));
-                                                            columnCounter++;
-                                                        }
-                                                    }
-
-                                                }
-                                            }
-                                            // If a variable's resultMap contains more than 1 instance then set the 'this.distribution'
-                                            // boolean to true and add the index of the time segment to the this.timeSegDistributionIndexes array
-                                            if ((variables[varIndex][index].timeSegmentResponse.resultMap).length > 1) {
-                                                this.distribution = true;
-                                                this.timeSegDistributionIndexes.push(index);
-                                            }
-                                        }
-
+                                        this.rows.push(row);
+                                        break;
                                     }
+
                                     else {
-                                        for (var col = 0; col < (this.columns.length)-1; col++) {
-                                            row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                            columnCounter++;
-                                        }
-                                    }
-                                    varStartIndex = 0;
+                                        for (var index = 0; index < variables[varIndex].length; index++) {
+                                            if (variables[varIndex][index].timeSegmentResponse != null) {
 
-                                }
-                                ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                                // Determining the start time for a specific time segment
+                                                timeSegStart = variable.timeSegment[index].startTime;
+                                                var varStart = new Date((timeSegStart[3] + timeSegStart[4] + "/" + timeSegStart[0] + timeSegStart[1] + "/" + timeSegStart[6]+timeSegStart[7]+timeSegStart[8]+timeSegStart[9]).toString());
+                                                var monthDifference = this.getMonthDifference(varStart, this.latestEnd);
+                                                monthDifference = monthDifference +1;
 
-                                // If there is empty space between the end of the of the result map and the end of the table, add 'n/a' for empty values
-                                if (columnCounter < this.columns.length) {
-                                    for (var col = columnCounter; col < (this.columns.length)-1; col++) {
-                                        row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                        columnCounter++;
-                                    }
-                                }
-
-                                this.rows.push(row);
-                                columnCounter = 0;
-                                this.started = false;
-                                varStartIndex = 0;
-
-
-                                var startedCol = 0;
-
-                                // If a variable has a distribution in any time segments, output the results on a new line under the correct date column header
-                                if (this.distribution == true) {
-
-                                    this.timeSegDistributionIndexes.forEach(dist => {
-                                        for (var index1 = 0; index1 < ((variables[varIndex][dist].timeSegmentResponse.resultMap).length) - 1; index1++) {
-
-                                            if ((variables[varIndex][dist].timeSegmentResponse.resultMap[index1 + 1].title).indexOf('Σ') > -1) {
-                                                if ((variables[varIndex][dist].timeSegmentResponse.resultMap[index1 + 1].title).indexOf('.') > -1) {
-                                                    this.distributionAndSubVariableTitleIndexes.push(index1 + 1);
+                                                if (varStart < this.earliestStart)
+                                                {
+                                                    varStartIndex = this.getMonthDifference(varStart, this.earliestStart);
                                                 }
+
+                                                if (varStart > this.latestEnd) {
+                                                    // Adding the data under the appropriate columns
+                                                    //for (var x = 1; x < this.columns.length; x ++) {
+                                                    //row.addColumn(new TableViewColumn("Column " + (index1), "n/a"));
+                                                    //}
+                                                }
+
                                                 else {
-                                                    this.distributionTitleIndexes.push(index1 + 1);
-                                                }
-                                            }
-                                            else if ((variables[varIndex][dist].timeSegmentResponse.resultMap[index1 + 1].title).indexOf('.') > -1) {
-                                                this.subVarTitleIndexes.push(index1 + 1);
-                                            }
-                                        }
+                                                    if (timeSegStart[3] == 0) {
+                                                        timeSegStartMonth = timeSegStart[4];
+                                                        timeSegStartMonth = timeSegStartMonth - 1;
+                                                    }
+                                                    else {
+                                                        timeSegStartMonth = timeSegStart[3]+timeSegStart[4];
+                                                        timeSegStartMonth = timeSegStartMonth - 1;
+                                                    }
 
-                                        for (var index1 = 0; index1 < ((variables[varIndex][dist].timeSegmentResponse.resultMap).length) - 1; index1++) {
+                                                    timeSegStartYear = timeSegStart[6]+timeSegStart[7]+timeSegStart[8]+timeSegStart[9];
 
-                                            if (this.distributionTitleIndexes[0] != null) {
+                                                    timeSegStartDate = this.months[timeSegStartMonth] + " " + timeSegStartYear;
 
-                                                this.distributionTitleIndexes.forEach(distIndex => {
+                                                    // Adding the data under the appropriate columns
+                                                    for (var x = 1; x < this.columns.length; x ++) {
 
-                                                    row = new TableViewRow(variable.id + "." + (index1 + 1));
-                                                    row.addColumn(new TableViewColumn("name", varTitle + " " + variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].title));
+                                                        // If the start time for a variable has been found, output all data values for all time segments
+                                                        if (this.started) {
+                                                            if (varStartIndex != 0) {
+                                                                //if (this.columns[x].placeHolder == timeSegStartDate) {
+                                                                if ((variables[varIndex][index].timeSegmentResponse.resultMap[0].data).length > monthDifference) {
+                                                                    for (var index1 = varStartIndex; index1 < monthDifference; index1++) {
 
-                                                    column = 0;
-
-                                                    this.titles.forEach(resultMapTitle => {
-                                                        if (variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].title == resultMapTitle.title) {
-                                                            this.titleOccurs = this.titleOccurs+1;
-                                                        }
-                                                    });
-
-                                                    for (var index = 0; index < (this.titleOccurs); index++) {
-                                                        if (index != 0) {
-
-                                                            this.timeSegDistributionIndexes.forEach(prevDists => {
-
-                                                                if (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].title == variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].title) {
-                                                                    if(prevDists != dist) {
-                                                                        if (variables[varIndex][prevDists].timeSegmentResponse != null) {
-
-                                                                            // Determining the start time for a specific time segment
-                                                                            timeSegStart = variable.timeSegment[prevDists].startTime;
-                                                                            var varStart = new Date((timeSegStart[3] + timeSegStart[4] + "/" + timeSegStart[0] + timeSegStart[1] + "/" + timeSegStart[6]+timeSegStart[7]+timeSegStart[8]+timeSegStart[9]).toString());
-                                                                            var monthDifference = this.getMonthDifference(varStart, this.latestEnd);
-                                                                            monthDifference = monthDifference +1;
-
-                                                                            if (varStart < this.earliestStart)
-                                                                            {
-                                                                                varStartIndex = this.getMonthDifference(varStart, this.earliestStart);
+                                                                        if (variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1] == null) {
+                                                                            row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                        }
+                                                                        else {
+                                                                            value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1].value);
+                                                                            if (this.varType == "integer") {
+                                                                                row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
                                                                             }
+                                                                            else if (this.varType == "real") {
+                                                                                row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                                            }
+                                                                        }
+                                                                        columnCounter++;
+                                                                    }
+                                                                    break;
+                                                                }
+                                                                else {
+                                                                    for (var index1 = varStartIndex; index1 < (variables[varIndex][index].timeSegmentResponse.resultMap[0].data).length; index1++) {
 
-                                                                            if (timeSegStart[3] == 0) {
-                                                                                timeSegStartMonth = timeSegStart[4];
-                                                                                timeSegStartMonth = timeSegStartMonth - 1;
+                                                                        if (variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1] == null) {
+                                                                            row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                        }
+                                                                        else {
+                                                                            value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1].value);
+                                                                            if (this.varType == "integer") {
+                                                                                row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
+                                                                            }
+                                                                            else if (this.varType == "real") {
+                                                                                row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                                            }
+                                                                        }
+                                                                        columnCounter++;
+                                                                    }
+                                                                    break;
+                                                                }
+                                                                //}
+                                                            }
+                                                            else {
+                                                                if (this.columns[x].placeHolder == timeSegStartDate) {
+                                                                    if ((variables[varIndex][index].timeSegmentResponse.resultMap[0].data).length > monthDifference) {
+                                                                        for (var index1 = varStartIndex; index1 < monthDifference; index1++) {
+
+                                                                            if (variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1] == null) {
+                                                                                row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
                                                                             }
                                                                             else {
-                                                                                timeSegStartMonth = timeSegStart[3] + timeSegStart[4];
-                                                                                timeSegStartMonth = timeSegStartMonth - 1;
+                                                                                value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1].value);
+                                                                                if (this.varType == "integer") {
+                                                                                    row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
+                                                                                }
+                                                                                else if (this.varType == "real") {
+                                                                                    row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                                                }
                                                                             }
+                                                                            columnCounter++;
+                                                                        }
+                                                                        break;
+                                                                    }
+                                                                    else {
+                                                                        for (var index1 = 0; index1 < (variables[varIndex][index].timeSegmentResponse.resultMap[0].data).length; index1++) {
 
-                                                                            timeSegStartYear = timeSegStart[6] + timeSegStart[7] + timeSegStart[8] + timeSegStart[9];
-
-                                                                            timeSegStartDate = this.months[timeSegStartMonth] + " " + timeSegStartYear;
-
-                                                                            for (var col = 1; col < this.columns.length; col ++) {
-
-                                                                                if (this.started) {
-                                                                                    if (varStartIndex != 0) {
-                                                                                        if (startedCol < this.columns.length) {
-                                                                                            //if (this.columns[startedCol].placeHolder == timeSegStartDate) {
-                                                                                            if ((variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data).length > monthDifference) {
-                                                                                                for (var index1 = varStartIndex; index1 < monthDifference; index1++) {
-
-                                                                                                    if (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data[index1] == null) {
-                                                                                                        row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
-                                                                                                    }
-                                                                                                    else {
-                                                                                                        value = parseFloat(variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data[index1].value);
-                                                                                                        if (this.varType == "integer") {
-                                                                                                            row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
-                                                                                                        }
-                                                                                                        else if (this.varType == "real") {
-                                                                                                            row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                                                                        }
-                                                                                                    }
-                                                                                                    columnCounter++;
-                                                                                                    startedCol++;
-                                                                                                }
-                                                                                                break;
-                                                                                            }
-                                                                                            else {
-                                                                                                for (var index1 = varStartIndex; index1 < (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data).length; index1++) {
-
-                                                                                                    if (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data[index1] == null) {
-                                                                                                        row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
-                                                                                                    }
-                                                                                                    else {
-                                                                                                        value = parseFloat(variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data[index1].value);
-                                                                                                        if (this.varType == "integer") {
-                                                                                                            row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
-                                                                                                        }
-                                                                                                        else if (this.varType == "real") {
-                                                                                                            row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                                                                        }
-                                                                                                    }
-                                                                                                    columnCounter++;
-                                                                                                    startedCol++;
-                                                                                                }
-                                                                                                break;
-                                                                                            }
-
-                                                                                            //}
-                                                                                            //else {
-                                                                                            //    row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                                                                            //    columnCounter++;
-                                                                                            //}
-                                                                                            //startedCol++;
-                                                                                        }
-                                                                                    }
-                                                                                    else {
-                                                                                        if (startedCol < this.columns.length) {
-                                                                                            if (this.columns[startedCol].placeHolder == timeSegStartDate) {
-                                                                                                if ((variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data).length > monthDifference) {
-                                                                                                    for (var index1 = 0; index1 < monthDifference; index1++) {
-
-                                                                                                        if (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data[index1] == null) {
-                                                                                                            row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
-                                                                                                        }
-                                                                                                        else {
-                                                                                                            value = parseFloat(variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data[index1].value);
-                                                                                                            if (this.varType == "integer") {
-                                                                                                                row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
-                                                                                                            }
-                                                                                                            else if (this.varType == "real") {
-                                                                                                                row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                                                                            }
-                                                                                                        }
-                                                                                                        columnCounter++;
-                                                                                                        startedCol++;
-                                                                                                    }
-                                                                                                    break;
-                                                                                                }
-                                                                                                else {
-                                                                                                    for (var index1 = 0; index1 < (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data).length; index1++) {
-
-                                                                                                        if (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data[index1] == null) {
-                                                                                                            row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
-                                                                                                        }
-                                                                                                        else {
-                                                                                                            value = parseFloat(variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data[index1].value);
-                                                                                                            if (this.varType == "integer") {
-                                                                                                                row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
-                                                                                                            }
-                                                                                                            else if (this.varType == "real") {
-                                                                                                                row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                                                                            }
-                                                                                                        }
-                                                                                                        columnCounter++;
-                                                                                                        startedCol++;
-                                                                                                    }
-                                                                                                    break;
-                                                                                                }
-
-                                                                                            }
-                                                                                            else {
-                                                                                                row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                                                                                columnCounter++;
-                                                                                            }
-                                                                                            startedCol++;
-                                                                                        }
-                                                                                    }
-
-
+                                                                            if (variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1] == null) {
+                                                                                row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                            }
+                                                                            else {
+                                                                                value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1].value);
+                                                                                if (this.varType == "integer") {
+                                                                                    row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
                                                                                 }
-
-                                                                                else {
-                                                                                    if (varStartIndex != 0) {
-                                                                                        if (this.columns[col].placeHolder == timeSegStartDate) {
-                                                                                            this.started = true;
-
-                                                                                            if ((variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data).length > monthDifference) {
-                                                                                                for (var index2 = varStartIndex; index2 < monthDifference; index2++) {
-                                                                                                    if (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data[index2] == null) {
-                                                                                                        row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                                                                                    }
-                                                                                                    else {
-                                                                                                        value = parseFloat(variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data[index2].value);
-                                                                                                        if (this.varType == "integer") {
-                                                                                                            row.addColumn(new TableViewColumn("Column " + col, (Math.round(value)).toString()));
-                                                                                                        }
-                                                                                                        else if (this.varType == "real") {
-                                                                                                            row.addColumn(new TableViewColumn("Column " + col, ((Math.round(value * 100)) / 100).toString()));
-                                                                                                        }
-                                                                                                    }
-                                                                                                    columnCounter++;
-                                                                                                }
-                                                                                                startedCol = columnCounter + 1;
-                                                                                                break;
-                                                                                            }
-                                                                                            else {
-                                                                                                for (var index2 = varStartIndex; index2 < (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data).length; index2++) {
-                                                                                                    if (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data[index2] == null) {
-                                                                                                        row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                                                                                    }
-                                                                                                    else {
-                                                                                                        value = parseFloat(variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data[index2].value);
-                                                                                                        if (this.varType == "integer") {
-                                                                                                            row.addColumn(new TableViewColumn("Column " + col, (Math.round(value)).toString()));
-                                                                                                        }
-                                                                                                        else if (this.varType == "real") {
-                                                                                                            row.addColumn(new TableViewColumn("Column " + col, ((Math.round(value * 100)) / 100).toString()));
-                                                                                                        }
-                                                                                                    }
-                                                                                                    columnCounter++;
-                                                                                                }
-                                                                                                startedCol = columnCounter + 1;
-                                                                                                break;
-                                                                                            }
-
-                                                                                        }
-
-                                                                                        else {
-                                                                                            row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                                                                            columnCounter++;
-                                                                                        }
-                                                                                    }
-                                                                                    else {
-                                                                                        if (this.columns[col].placeHolder == timeSegStartDate) {
-                                                                                            this.started = true;
-
-                                                                                            if ((variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data).length > monthDifference) {
-                                                                                                for (var index2 = 0; index2 < monthDifference; index2++) {
-                                                                                                    if (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data[index2] == null) {
-                                                                                                        row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                                                                                    }
-                                                                                                    else {
-                                                                                                        value = parseFloat(variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data[index2].value);
-                                                                                                        if (this.varType == "integer") {
-                                                                                                            row.addColumn(new TableViewColumn("Column " + col, (Math.round(value)).toString()));
-                                                                                                        }
-                                                                                                        else if (this.varType == "real") {
-                                                                                                            row.addColumn(new TableViewColumn("Column " + col, ((Math.round(value * 100)) / 100).toString()));
-                                                                                                        }
-                                                                                                    }
-                                                                                                    columnCounter++;
-                                                                                                }
-                                                                                                startedCol = columnCounter + 1;
-                                                                                                break;
-                                                                                            }
-                                                                                            else {
-                                                                                                for (var index2 = 0; index2 < (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data).length; index2++) {
-                                                                                                    if (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data[index2] == null) {
-                                                                                                        row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                                                                                    }
-                                                                                                    else {
-                                                                                                        value = parseFloat(variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data[index2].value);
-                                                                                                        if (this.varType == "integer") {
-                                                                                                            row.addColumn(new TableViewColumn("Column " + col, (Math.round(value)).toString()));
-                                                                                                        }
-                                                                                                        else if (this.varType == "real") {
-                                                                                                            row.addColumn(new TableViewColumn("Column " + col, ((Math.round(value * 100)) / 100).toString()));
-                                                                                                        }
-                                                                                                    }
-                                                                                                    columnCounter++;
-                                                                                                }
-                                                                                                startedCol = columnCounter + 1;
-                                                                                                break;
-                                                                                            }
-
-                                                                                        }
-
-                                                                                        else {
-                                                                                            row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                                                                            columnCounter++;
-                                                                                        }
-                                                                                    }
-
+                                                                                else if (this.varType == "real") {
+                                                                                    row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
                                                                                 }
+                                                                            }
+                                                                            columnCounter++;
+                                                                        }
+                                                                        break;
+                                                                    }
+                                                                }
+                                                            }
 
+                                                        }
+                                                        else {
+                                                            if (varStartIndex != 0) {
+                                                                //if (this.columns[x].placeHolder == timeSegStartDate) {
+                                                                this.started = true;
+
+                                                                if ((variables[varIndex][index].timeSegmentResponse.resultMap[0].data).length > monthDifference) {
+                                                                    for (var index1 = varStartIndex; index1 < monthDifference; index1++) {
+
+                                                                        if (variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1] == null) {
+                                                                            row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                        }
+                                                                        else {
+                                                                            value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1].value);
+                                                                            if (this.varType == "integer") {
+                                                                                row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
+                                                                            }
+                                                                            else if (this.varType == "real") {
+                                                                                row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
                                                                             }
                                                                         }
+                                                                        columnCounter++;
+                                                                    }
+                                                                    break;
+                                                                }
+
+                                                                else {
+                                                                    for (var index1 = varStartIndex; index1 < (variables[varIndex][index].timeSegmentResponse.resultMap[0].data).length; index1++) {
+
+                                                                        if (variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1] == null) {
+                                                                            row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                        }
+                                                                        else {
+                                                                            value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1].value);
+                                                                            if (this.varType == "integer") {
+                                                                                row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
+                                                                            }
+                                                                            else if (this.varType == "real") {
+                                                                                row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                                            }
+                                                                        }
+                                                                        columnCounter++;
+                                                                    }
+                                                                    break;
+                                                                }
+                                                                //}
+                                                                //else {
+                                                                //    row.addColumn(new TableViewColumn("Column " + x, "n/a"));
+                                                                //    columnCounter++;
+                                                                //}
+                                                            }
+                                                            else {
+                                                                if (this.columns[x].placeHolder == timeSegStartDate) {
+                                                                    this.started = true;
+
+                                                                    if ((variables[varIndex][index].timeSegmentResponse.resultMap[0].data).length > monthDifference) {
+                                                                        for (var index1 = varStartIndex; index1 < monthDifference; index1++) {
+
+                                                                            if (variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1] == null) {
+                                                                                row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                            }
+                                                                            else {
+                                                                                value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1].value);
+                                                                                if (this.varType == "integer") {
+                                                                                    row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
+                                                                                }
+                                                                                else if (this.varType == "real") {
+                                                                                    row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                                                }
+                                                                            }
+                                                                            columnCounter++;
+                                                                        }
+                                                                        break;
                                                                     }
 
+                                                                    else {
+                                                                        for (var index1 = varStartIndex; index1 < (variables[varIndex][index].timeSegmentResponse.resultMap[0].data).length; index1++) {
+
+                                                                            if (variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1] == null) {
+                                                                                row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                            }
+                                                                            else {
+                                                                                value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1].value);
+                                                                                if (this.varType == "integer") {
+                                                                                    row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
+                                                                                }
+                                                                                else if (this.varType == "real") {
+                                                                                    row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                                                }
+                                                                            }
+                                                                            columnCounter++;
+                                                                        }
+                                                                        break;
+                                                                    }
+                                                                }
+                                                                else {
+                                                                    row.addColumn(new TableViewColumn("Column " + x, "n/a"));
+                                                                    columnCounter++;
+                                                                }
+                                                            }
+
+                                                        }
+                                                    }
+                                                    // If a variable's resultMap contains more than 1 instance then set the 'this.distribution'
+                                                    // boolean to true and add the index of the time segment to the this.timeSegDistributionIndexes array
+                                                    if ((variables[varIndex][index].timeSegmentResponse.resultMap).length > 1) {
+                                                        this.distribution = true;
+                                                        this.timeSegDistributionIndexes.push(index);
+                                                    }
+                                                }
+
+                                            }
+                                            else {
+                                                for (var col = 0; col < (this.columns.length)-1; col++) {
+                                                    row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                    columnCounter++;
+                                                }
+                                            }
+                                            varStartIndex = 0;
+
+                                        }
+                                        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                                        // If there is empty space between the end of the of the result map and the end of the table, add 'n/a' for empty values
+                                        if (columnCounter < this.columns.length) {
+                                            for (var col = columnCounter; col < (this.columns.length)-1; col++) {
+                                                row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                columnCounter++;
+                                            }
+                                        }
+
+                                        this.rows.push(row);
+                                        columnCounter = 0;
+                                        this.started = false;
+                                        varStartIndex = 0;
+
+
+                                        var startedCol = 0;
+
+                                        // If a variable has a distribution in any time segments, output the results on a new line under the correct date column header
+                                        if (this.distribution == true) {
+
+                                            this.timeSegDistributionIndexes.forEach(dist => {
+                                                for (var index1 = 0; index1 < ((variables[varIndex][dist].timeSegmentResponse.resultMap).length) - 1; index1++) {
+
+                                                    if ((variables[varIndex][dist].timeSegmentResponse.resultMap[index1 + 1].title).indexOf('Σ') > -1) {
+                                                        if ((variables[varIndex][dist].timeSegmentResponse.resultMap[index1 + 1].title).indexOf('.') > -1) {
+                                                            this.distributionAndSubVariableTitleIndexes.push(index1 + 1);
+                                                        }
+                                                        else {
+                                                            this.distributionTitleIndexes.push(index1 + 1);
+                                                        }
+                                                    }
+                                                    else if ((variables[varIndex][dist].timeSegmentResponse.resultMap[index1 + 1].title).indexOf('.') > -1) {
+                                                        this.subVarTitleIndexes.push(index1 + 1);
+                                                    }
+                                                }
+
+                                                for (var index1 = 0; index1 < ((variables[varIndex][dist].timeSegmentResponse.resultMap).length) - 1; index1++) {
+
+                                                    if (this.distributionTitleIndexes[0] != null) {
+
+                                                        this.distributionTitleIndexes.forEach(distIndex => {
+
+                                                            row = new TableViewRow(variable.id + "." + (index1 + 1));
+                                                            row.addColumn(new TableViewColumn("name", varTitle + " " + variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].title));
+
+                                                            column = 0;
+
+                                                            this.titles.forEach(resultMapTitle => {
+                                                                if (variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].title == resultMapTitle.title) {
+                                                                    this.titleOccurs = this.titleOccurs+1;
                                                                 }
                                                             });
 
-                                                        }
+                                                            for (var index = 0; index < (this.titleOccurs); index++) {
+                                                                if (index != 0) {
 
-                                                        else {
-                                                            if (variables[varIndex][dist].timeSegmentResponse != null) {
+                                                                    this.timeSegDistributionIndexes.forEach(prevDists => {
 
-                                                                // Determining the start time for a specific time segment
-                                                                timeSegStart = variable.timeSegment[dist].startTime;
-                                                                var varStart = new Date((timeSegStart[3] + timeSegStart[4] + "/" + timeSegStart[0] + timeSegStart[1] + "/" + timeSegStart[6]+timeSegStart[7]+timeSegStart[8]+timeSegStart[9]).toString());
-                                                                var monthDifference = this.getMonthDifference(varStart, this.latestEnd);
-                                                                monthDifference = monthDifference +1;
+                                                                        if (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].title == variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].title) {
+                                                                            if(prevDists != dist) {
+                                                                                if (variables[varIndex][prevDists].timeSegmentResponse != null) {
 
-                                                                if (varStart < this.earliestStart)
-                                                                {
-                                                                    varStartIndex = this.getMonthDifference(varStart, this.earliestStart);
-                                                                }
+                                                                                    // Determining the start time for a specific time segment
+                                                                                    timeSegStart = variable.timeSegment[prevDists].startTime;
+                                                                                    var varStart = new Date((timeSegStart[3] + timeSegStart[4] + "/" + timeSegStart[0] + timeSegStart[1] + "/" + timeSegStart[6]+timeSegStart[7]+timeSegStart[8]+timeSegStart[9]).toString());
+                                                                                    var monthDifference = this.getMonthDifference(varStart, this.latestEnd);
+                                                                                    monthDifference = monthDifference +1;
 
-                                                                if (timeSegStart[3] == 0) {
-                                                                    timeSegStartMonth = timeSegStart[4];
-                                                                    timeSegStartMonth = timeSegStartMonth - 1;
-                                                                }
-                                                                else {
-                                                                    timeSegStartMonth = timeSegStart[3] + timeSegStart[4];
-                                                                    timeSegStartMonth = timeSegStartMonth - 1;
-                                                                }
+                                                                                    if (varStart < this.earliestStart)
+                                                                                    {
+                                                                                        varStartIndex = this.getMonthDifference(varStart, this.earliestStart);
+                                                                                    }
 
-                                                                timeSegStartYear = timeSegStart[6] + timeSegStart[7] + timeSegStart[8] + timeSegStart[9];
-
-                                                                timeSegStartDate = this.months[timeSegStartMonth] + " " + timeSegStartYear;
-
-                                                                for (var col = 1; col < this.columns.length; col ++) {
-
-                                                                    if (this.started) {
-                                                                        if (varStartIndex != 0) {
-                                                                            //if (this.columns[col].placeHolder == timeSegStartDate) {
-                                                                            if ((variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data).length > monthDifference) {
-                                                                                for (var index1 = varStartIndex; index1 < monthDifference; index1++) {
-
-                                                                                    if (variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data[index1] == null) {
-                                                                                        row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                                    if (timeSegStart[3] == 0) {
+                                                                                        timeSegStartMonth = timeSegStart[4];
+                                                                                        timeSegStartMonth = timeSegStartMonth - 1;
                                                                                     }
                                                                                     else {
-                                                                                        value = parseFloat(variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data[index1].value);
-                                                                                        if (this.varType == "integer") {
-                                                                                            row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
-                                                                                        }
-                                                                                        else if (this.varType == "real") {
-                                                                                            row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                                                        }
+                                                                                        timeSegStartMonth = timeSegStart[3] + timeSegStart[4];
+                                                                                        timeSegStartMonth = timeSegStartMonth - 1;
                                                                                     }
-                                                                                    columnCounter++;
-                                                                                }
-                                                                                startedCol = columnCounter + 1;
-                                                                                break;
-                                                                            }
-                                                                            else {
-                                                                                for (var index1 = varStartIndex; index1 < (variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data).length; index1++) {
 
-                                                                                    if (variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data[index1] == null) {
-                                                                                        row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
-                                                                                    }
-                                                                                    else {
-                                                                                        value = parseFloat(variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data[index1].value);
-                                                                                        if (this.varType == "integer") {
-                                                                                            row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
-                                                                                        }
-                                                                                        else if (this.varType == "real") {
-                                                                                            row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                                                        }
-                                                                                    }
-                                                                                    columnCounter++;
-                                                                                }
-                                                                                startedCol = columnCounter + 1;
-                                                                                break;
-                                                                            }
-                                                                            //}
-                                                                        }
-                                                                        else {
-                                                                            if (this.columns[col].placeHolder == timeSegStartDate) {
-                                                                                if ((variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data).length > monthDifference) {
-                                                                                    for (var index1 = 0; index1 < monthDifference; index1++) {
+                                                                                    timeSegStartYear = timeSegStart[6] + timeSegStart[7] + timeSegStart[8] + timeSegStart[9];
 
-                                                                                        if (variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data[index1] == null) {
-                                                                                            row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
-                                                                                        }
-                                                                                        else {
-                                                                                            value = parseFloat(variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data[index1].value);
-                                                                                            if (this.varType == "integer") {
-                                                                                                row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
-                                                                                            }
-                                                                                            else if (this.varType == "real") {
-                                                                                                row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                                                            }
-                                                                                        }
-                                                                                        columnCounter++;
-                                                                                    }
-                                                                                    startedCol = columnCounter + 1;
-                                                                                    break;
-                                                                                }
-                                                                                else {
-                                                                                    for (var index1 = 0; index1 < (variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data).length; index1++) {
+                                                                                    timeSegStartDate = this.months[timeSegStartMonth] + " " + timeSegStartYear;
 
-                                                                                        if (variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data[index1] == null) {
-                                                                                            row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
-                                                                                        }
-                                                                                        else {
-                                                                                            value = parseFloat(variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data[index1].value);
-                                                                                            if (this.varType == "integer") {
-                                                                                                row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
-                                                                                            }
-                                                                                            else if (this.varType == "real") {
-                                                                                                row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                                                            }
-                                                                                        }
-                                                                                        columnCounter++;
-                                                                                    }
-                                                                                    startedCol = columnCounter + 1;
-                                                                                    break;
-                                                                                }
-                                                                            }
-                                                                        }
+                                                                                    for (var col = 1; col < this.columns.length; col ++) {
 
-                                                                    }
-
-                                                                    else {
-                                                                        if (varStartIndex != 0) {
-                                                                            //if (this.columns[col].placeHolder == timeSegStartDate) {
-                                                                            this.started = true;
-                                                                            if ((variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data).length > monthDifference) {
-                                                                                for (var index1 = varStartIndex; index1 < monthDifference; index1++) {
-
-                                                                                    if (variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data[index1] == null) {
-                                                                                        row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
-                                                                                    }
-                                                                                    else {
-                                                                                        value = parseFloat(variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data[index1].value);
-                                                                                        if (this.varType == "integer") {
-                                                                                            row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
-                                                                                        }
-                                                                                        else if (this.varType == "real") {
-                                                                                            row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                                                        }
-                                                                                    }
-                                                                                    columnCounter++;
-                                                                                }
-                                                                                startedCol = columnCounter + 1;
-                                                                                varStartIndex = 0;
-                                                                                break;
-                                                                            }
-                                                                            else {
-                                                                                for (var index1 = varStartIndex; index1 < (variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data).length; index1++) {
-
-                                                                                    if (variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data[index1] == null) {
-                                                                                        row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
-                                                                                    }
-                                                                                    else {
-                                                                                        value = parseFloat(variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data[index1].value);
-                                                                                        if (this.varType == "integer") {
-                                                                                            row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
-                                                                                        }
-                                                                                        else if (this.varType == "real") {
-                                                                                            row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                                                        }
-                                                                                    }
-                                                                                    columnCounter++;
-                                                                                }
-                                                                                startedCol = columnCounter + 1;
-                                                                                varStartIndex = 0;
-                                                                                break;
-                                                                            }
-                                                                            //}
-
-                                                                            //else {
-                                                                            //    row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                                                            //    columnCounter++;
-                                                                            //}
-                                                                        }
-                                                                        else {
-                                                                            if (this.columns[col].placeHolder == timeSegStartDate) {
-                                                                                this.started = true;
-                                                                                if ((variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data).length > monthDifference) {
-                                                                                    for (var index1 = 0; index1 < monthDifference; index1++) {
-
-                                                                                        if (variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data[index1] == null) {
-                                                                                            row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
-                                                                                        }
-                                                                                        else {
-                                                                                            value = parseFloat(variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data[index1].value);
-                                                                                            if (this.varType == "integer") {
-                                                                                                row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
-                                                                                            }
-                                                                                            else if (this.varType == "real") {
-                                                                                                row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                                                            }
-                                                                                        }
-                                                                                        columnCounter++;
-                                                                                    }
-                                                                                    startedCol = columnCounter + 1;
-                                                                                    break;
-                                                                                }
-                                                                                else {
-                                                                                    for (var index1 = 0; index1 < (variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data).length; index1++) {
-
-                                                                                        if (variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data[index1] == null) {
-                                                                                            row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
-                                                                                        }
-                                                                                        else {
-                                                                                            value = parseFloat(variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data[index1].value);
-                                                                                            if (this.varType == "integer") {
-                                                                                                row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
-                                                                                            }
-                                                                                            else if (this.varType == "real") {
-                                                                                                row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                                                            }
-                                                                                        }
-                                                                                        columnCounter++;
-                                                                                    }
-                                                                                    startedCol = columnCounter + 1;
-                                                                                    break;
-                                                                                }
-                                                                            }
-
-                                                                            else {
-                                                                                row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                                                                columnCounter++;
-                                                                            }
-                                                                        }
-
-                                                                    }
-
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-
-                                                    if (columnCounter < this.columns.length) {
-                                                        for (var col = columnCounter; col < (this.columns.length)-1; col++) {
-                                                            row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                                            columnCounter++;
-                                                        }
-                                                    }
-
-                                                    columnCounter = 0;
-                                                    this.rows.push(row);
-                                                    this.started = false;
-                                                    this.titleOccurs = 0;
-                                                    varStartIndex = 0;
-                                                });
-                                            }
-
-                                            if (this.subVarTitleIndexes[0] != null) {
-
-                                                this.subVarTitleIndexes.forEach(subVarIndex => {
-
-                                                    row = new TableViewRow(variable.id + "." + (index1 + 1));
-                                                    row.addColumn(new TableViewColumn("name", varTitle + " " + variables[varIndex][dist].timeSegmentResponse.resultMap[subVarIndex].title));
-
-                                                    this.titles.forEach(resultMapTitle => {
-                                                        if (variables[varIndex][dist].timeSegmentResponse.resultMap[subVarIndex].title == resultMapTitle.title) {
-                                                            this.titleOccurs = this.titleOccurs+1;
-                                                        }
-                                                    });
-
-                                                    column = 0;
-
-                                                    for (var index = 0; index < variables[varIndex].length; index++) {
-                                                        if (variables[varIndex][index].timeSegmentResponse != null) {
-
-                                                            // Determining the start time for a specific time segment
-                                                            timeSegStart = variable.timeSegment[index].startTime;
-                                                            var varStart = new Date((timeSegStart[3] + timeSegStart[4] + "/" + timeSegStart[0] + timeSegStart[1] + "/" + timeSegStart[6]+timeSegStart[7]+timeSegStart[8]+timeSegStart[9]).toString());
-                                                            var monthDifference = this.getMonthDifference(varStart, this.latestEnd);
-                                                            monthDifference = monthDifference +1;
-
-                                                            if (varStart < this.earliestStart)
-                                                            {
-                                                                varStartIndex = this.getMonthDifference(varStart, this.earliestStart);
-                                                            }
-
-                                                            if (timeSegStart[3] == 0) {
-                                                                timeSegStartMonth = timeSegStart[4];
-                                                                timeSegStartMonth = timeSegStartMonth - 1;
-                                                            }
-                                                            else {
-                                                                timeSegStartMonth = timeSegStart[3] + timeSegStart[4];
-                                                                timeSegStartMonth = timeSegStartMonth - 1;
-                                                            }
-
-                                                            timeSegStartYear = timeSegStart[6] + timeSegStart[7] + timeSegStart[8] + timeSegStart[9];
-
-                                                            timeSegStartDate = this.months[timeSegStartMonth] + " " + timeSegStartYear;
-
-                                                            for (var col = 1; col < this.columns.length; col ++) {
-
-                                                                if (this.started) {
-                                                                    if (varStartIndex != 0) {
-                                                                        //if (this.columns[col].placeHolder == timeSegStartDate) {
-                                                                        if ((variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data).length > monthDifference) {
-                                                                            for (var index1 = varStartIndex; index1 < monthDifference; index1++) {
-
-                                                                                if (variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data[index1] == null) {
-                                                                                    row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
-                                                                                }
-                                                                                else {
-                                                                                    value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data[index1].value);
-                                                                                    if (this.varType == "integer") {
-                                                                                        row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
-                                                                                    }
-                                                                                    else if (this.varType == "real") {
-                                                                                        row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                                                    }
-                                                                                }
-                                                                                columnCounter++;
-                                                                            }
-                                                                            varStartIndex = 0;
-                                                                            break;
-                                                                        }
-                                                                        else {
-                                                                            for (var index1 = varStartIndex; index1 < (variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data).length; index1++) {
-
-                                                                                if (variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data[index1] == null) {
-                                                                                    row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
-                                                                                }
-                                                                                else {
-                                                                                    value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data[index1].value);
-                                                                                    if (this.varType == "integer") {
-                                                                                        row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
-                                                                                    }
-                                                                                    else if (this.varType == "real") {
-                                                                                        row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                                                    }
-                                                                                }
-                                                                                columnCounter++;
-                                                                            }
-                                                                            varStartIndex = 0;
-                                                                            break;
-                                                                        }
-
-                                                                        //}
-                                                                    }
-                                                                    else {
-                                                                        if (this.columns[col].placeHolder == timeSegStartDate) {
-                                                                            if ((variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data).length > monthDifference) {
-                                                                                for (var index1 = 0; index1 < monthDifference; index1++) {
-
-                                                                                    if (variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data[index1] == null) {
-                                                                                        row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
-                                                                                    }
-                                                                                    else {
-                                                                                        value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data[index1].value);
-                                                                                        if (this.varType == "integer") {
-                                                                                            row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
-                                                                                        }
-                                                                                        else if (this.varType == "real") {
-                                                                                            row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                                                        }
-                                                                                    }
-                                                                                    columnCounter++;
-                                                                                }
-                                                                                varStartIndex = 0;
-                                                                                break;
-                                                                            }
-                                                                            else {
-                                                                                for (var index1 = 0; index1 < (variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data).length; index1++) {
-
-                                                                                    if (variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data[index1] == null) {
-                                                                                        row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
-                                                                                    }
-                                                                                    else {
-                                                                                        value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data[index1].value);
-                                                                                        if (this.varType == "integer") {
-                                                                                            row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
-                                                                                        }
-                                                                                        else if (this.varType == "real") {
-                                                                                            row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                                                        }
-                                                                                    }
-                                                                                    columnCounter++;
-                                                                                }
-                                                                                varStartIndex = 0;
-                                                                                break;
-                                                                            }
-
-                                                                        }
-                                                                    }
-
-                                                                }
-
-                                                                else
-                                                                {
-                                                                    if (varStartIndex != 0) {
-                                                                        //if (this.columns[col].placeHolder == timeSegStartDate) {
-                                                                        this.started = true;
-                                                                        if ((variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data).length > monthDifference) {
-                                                                            for (var index1 = varStartIndex; index1 < monthDifference; index1++) {
-
-                                                                                if (variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data[index1] == null) {
-                                                                                    row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
-                                                                                }
-                                                                                else {
-                                                                                    value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data[index1].value);
-                                                                                    if (this.varType == "integer") {
-                                                                                        row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
-                                                                                    }
-                                                                                    else if (this.varType == "real") {
-                                                                                        row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                                                    }
-                                                                                }
-                                                                                columnCounter++;
-                                                                            }
-                                                                            varStartIndex = 0;
-                                                                            break;
-                                                                        }
-                                                                        else {
-                                                                            for (var index1 = varStartIndex; index1 < (variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data).length; index1++) {
-
-                                                                                if (variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data[index1] == null) {
-                                                                                    row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
-                                                                                }
-                                                                                else {
-                                                                                    value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data[index1].value);
-                                                                                    if (this.varType == "integer") {
-                                                                                        row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
-                                                                                    }
-                                                                                    else if (this.varType == "real") {
-                                                                                        row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                                                    }
-                                                                                }
-                                                                                columnCounter++;
-                                                                            }
-                                                                            varStartIndex = 0;
-                                                                            break;
-                                                                        }
-                                                                        //}
-                                                                        //else {
-                                                                        //    row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                                                        //    columnCounter++;
-                                                                        //}
-                                                                    }
-                                                                    else {
-                                                                        if (this.columns[col].placeHolder == timeSegStartDate) {
-                                                                            this.started = true;
-                                                                            if ((variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data).length > monthDifference) {
-                                                                                for (var index1 = 0; index1 < monthDifference; index1++) {
-
-                                                                                    if (variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data[index1] == null) {
-                                                                                        row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
-                                                                                    }
-                                                                                    else {
-                                                                                        value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data[index1].value);
-                                                                                        if (this.varType == "integer") {
-                                                                                            row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
-                                                                                        }
-                                                                                        else if (this.varType == "real") {
-                                                                                            row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                                                        }
-                                                                                    }
-                                                                                    columnCounter++;
-                                                                                }
-                                                                                varStartIndex = 0;
-                                                                                break;
-                                                                            }
-                                                                            else {
-                                                                                for (var index1 = 0; index1 < (variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data).length; index1++) {
-
-                                                                                    if (variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data[index1] == null) {
-                                                                                        row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
-                                                                                    }
-                                                                                    else {
-                                                                                        value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data[index1].value);
-                                                                                        if (this.varType == "integer") {
-                                                                                            row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
-                                                                                        }
-                                                                                        else if (this.varType == "real") {
-                                                                                            row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                                                        }
-                                                                                    }
-                                                                                    columnCounter++;
-                                                                                }
-                                                                                varStartIndex = 0;
-                                                                                break;
-                                                                            }
-                                                                        }
-                                                                        else {
-                                                                            row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                                                            columnCounter++;
-                                                                        }
-                                                                    }
-
-                                                                }
-
-                                                            }
-
-                                                        }
-                                                    }
-
-                                                    if (columnCounter < this.columns.length) {
-                                                        for (var col = columnCounter; col < (this.columns.length)-1; col++) {
-                                                            row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                                            columnCounter++;
-                                                        }
-                                                    }
-
-                                                    columnCounter = 0;
-
-                                                    this.started = false;
-                                                    this.titleOccurs = 0;
-                                                    this.rows.push(row);
-                                                    varStartIndex = 0;
-
-                                                    if (this.distributionAndSubVariableTitleIndexes[0] != null) {
-
-                                                        var match = false;
-
-                                                        this.distributionAndSubVariableTitleIndexes.forEach(distSubVarIndex => {
-                                                            this.titleOccurs = 0;
-
-                                                            var title = variables[varIndex][dist].timeSegmentResponse.resultMap[subVarIndex].title;
-                                                            title = title.replace(' ', '');
-
-                                                            if ((variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].title).indexOf(title) > -1) {
-                                                                match = true;
-                                                            }
-
-                                                            if (match) {
-
-                                                                row = new TableViewRow(variable.id + "." + (index1 + 1));
-                                                                row.addColumn(new TableViewColumn("name", varTitle + " " + variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].title));
-
-                                                                column = 0;
-
-                                                                this.titles.forEach(resultMapTitle => {
-                                                                    if (variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].title == resultMapTitle.title) {
-                                                                        this.titleOccurs = this.titleOccurs+1;
-                                                                    }
-                                                                });
-
-                                                                for (var index = 0; index < (this.titleOccurs); index++) {
-                                                                    if (index != 0) {
-
-                                                                        this.timeSegDistributionIndexes.forEach(prevDists => {
-
-
-                                                                            if (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].title == variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].title) {
-                                                                                if(prevDists != dist) {
-                                                                                    if (variables[varIndex][prevDists].timeSegmentResponse != null) {
-
-                                                                                        // Determining the start time for a specific time segment
-                                                                                        timeSegStart = variable.timeSegment[prevDists].startTime;
-                                                                                        var varStart = new Date((timeSegStart[3] + timeSegStart[4] + "/" + timeSegStart[0] + timeSegStart[1] + "/" + timeSegStart[6]+timeSegStart[7]+timeSegStart[8]+timeSegStart[9]).toString());
-                                                                                        var monthDifference = this.getMonthDifference(varStart, this.latestEnd);
-                                                                                        monthDifference = monthDifference +1;
-
-                                                                                        if (varStart < this.earliestStart)
-                                                                                        {
-                                                                                            varStartIndex = this.getMonthDifference(varStart, this.earliestStart);
-                                                                                        }
-
-                                                                                        if (timeSegStart[3] == 0) {
-                                                                                            timeSegStartMonth = timeSegStart[4];
-                                                                                            timeSegStartMonth = timeSegStartMonth - 1;
-                                                                                        }
-                                                                                        else {
-                                                                                            timeSegStartMonth = timeSegStart[3] + timeSegStart[4];
-                                                                                            timeSegStartMonth = timeSegStartMonth - 1;
-                                                                                        }
-
-                                                                                        timeSegStartYear = timeSegStart[6] + timeSegStart[7] + timeSegStart[8] + timeSegStart[9];
-
-                                                                                        timeSegStartDate = this.months[timeSegStartMonth] + " " + timeSegStartYear;
-
-                                                                                        for (var col = 1; col < this.columns.length; col ++) {
-
-                                                                                            if (this.started) {
-                                                                                                if (varStartIndex != 0) {
-                                                                                                    if (startedCol < this.columns.length) {
-                                                                                                        //if (this.columns[startedCol].placeHolder == timeSegStartDate) {
-                                                                                                        if ((variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data).length > monthDifference) {
-                                                                                                            for (var index1 = varStartIndex; index1 < monthDifference; index1++) {
-
-                                                                                                                if (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data[index1] == null) {
-                                                                                                                    row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
-                                                                                                                }
-                                                                                                                else {
-                                                                                                                    value = parseFloat(variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data[index1].value);
-                                                                                                                    if (this.varType == "integer") {
-                                                                                                                        row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
-                                                                                                                    }
-                                                                                                                    else if (this.varType == "real") {
-                                                                                                                        row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                                                                                    }
-                                                                                                                }
-                                                                                                                columnCounter++;
-                                                                                                                startedCol++;
-                                                                                                            }
-                                                                                                            break;
-                                                                                                        }
-                                                                                                        else {
-                                                                                                            for (var index1 = varStartIndex; index1 < (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data).length; index1++) {
-
-                                                                                                                if (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data[index1] == null) {
-                                                                                                                    row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
-                                                                                                                }
-                                                                                                                else {
-                                                                                                                    value = parseFloat(variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data[index1].value);
-                                                                                                                    if (this.varType == "integer") {
-                                                                                                                        row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
-                                                                                                                    }
-                                                                                                                    else if (this.varType == "real") {
-                                                                                                                        row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                                                                                    }
-                                                                                                                }
-                                                                                                                columnCounter++;
-                                                                                                                startedCol++;
-                                                                                                            }
-                                                                                                            break;
-                                                                                                        }
-
-                                                                                                        //}
-                                                                                                        //else {
-                                                                                                        //    row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                                                                                        //    columnCounter++;
-                                                                                                        //}
-                                                                                                        //startedCol++;
-                                                                                                    }
-                                                                                                }
-                                                                                                else {
-                                                                                                    if (startedCol < this.columns.length) {
-                                                                                                        if (this.columns[startedCol].placeHolder == timeSegStartDate) {
-                                                                                                            if ((variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data).length > monthDifference) {
-                                                                                                                for (var index1 = 0; index1 < monthDifference; index1++) {
-
-                                                                                                                    if (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data[index1] == null) {
-                                                                                                                        row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
-                                                                                                                    }
-                                                                                                                    else {
-                                                                                                                        value = parseFloat(variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data[index1].value);
-                                                                                                                        if (this.varType == "integer") {
-                                                                                                                            row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
-                                                                                                                        }
-                                                                                                                        else if (this.varType == "real") {
-                                                                                                                            row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                                                                                        }
-                                                                                                                    }
-                                                                                                                    columnCounter++;
-                                                                                                                    startedCol++;
-                                                                                                                }
-                                                                                                                break;
-                                                                                                            }
-                                                                                                            else {
-                                                                                                                for (var index1 = 0; index1 < (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data).length; index1++) {
-
-                                                                                                                    if (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data[index1] == null) {
-                                                                                                                        row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
-                                                                                                                    }
-                                                                                                                    else {
-                                                                                                                        value = parseFloat(variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data[index1].value);
-                                                                                                                        if (this.varType == "integer") {
-                                                                                                                            row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
-                                                                                                                        }
-                                                                                                                        else if (this.varType == "real") {
-                                                                                                                            row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                                                                                        }
-                                                                                                                    }
-                                                                                                                    columnCounter++;
-                                                                                                                    startedCol++;
-                                                                                                                }
-                                                                                                                break;
-                                                                                                            }
-
-                                                                                                        }
-                                                                                                        else {
-                                                                                                            row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                                                                                            columnCounter++;
-                                                                                                        }
-                                                                                                        startedCol++;
-                                                                                                    }
-                                                                                                }
-
-
-                                                                                            }
-
-                                                                                            else {
-                                                                                                if (varStartIndex != 0) {
-                                                                                                    //if (this.columns[col].placeHolder == timeSegStartDate) {
-                                                                                                    if ((variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data).length > monthDifference) {
+                                                                                        if (this.started) {
+                                                                                            if (varStartIndex != 0) {
+                                                                                                if (startedCol < this.columns.length) {
+                                                                                                    //if (this.columns[startedCol].placeHolder == timeSegStartDate) {
+                                                                                                    if ((variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data).length > monthDifference) {
                                                                                                         for (var index1 = varStartIndex; index1 < monthDifference; index1++) {
 
-                                                                                                            if (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data[index1] == null) {
+                                                                                                            if (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data[index1] == null) {
                                                                                                                 row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
                                                                                                             }
                                                                                                             else {
-                                                                                                                value = parseFloat(variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data[index1].value);
+                                                                                                                value = parseFloat(variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data[index1].value);
                                                                                                                 if (this.varType == "integer") {
                                                                                                                     row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
                                                                                                                 }
@@ -1674,13 +792,13 @@ export class ForecastTabularComponent implements OnInit {
                                                                                                         break;
                                                                                                     }
                                                                                                     else {
-                                                                                                        for (var index1 = varStartIndex; index1 < (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data).length; index1++) {
+                                                                                                        for (var index1 = varStartIndex; index1 < (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data).length; index1++) {
 
-                                                                                                            if (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data[index1] == null) {
+                                                                                                            if (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data[index1] == null) {
                                                                                                                 row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
                                                                                                             }
                                                                                                             else {
-                                                                                                                value = parseFloat(variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data[index1].value);
+                                                                                                                value = parseFloat(variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data[index1].value);
                                                                                                                 if (this.varType == "integer") {
                                                                                                                     row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
                                                                                                                 }
@@ -1693,23 +811,26 @@ export class ForecastTabularComponent implements OnInit {
                                                                                                         }
                                                                                                         break;
                                                                                                     }
-                                                                                                    //}
 
+                                                                                                    //}
                                                                                                     //else {
                                                                                                     //    row.addColumn(new TableViewColumn("Column " + col, "n/a"));
                                                                                                     //    columnCounter++;
                                                                                                     //}
+                                                                                                    //startedCol++;
                                                                                                 }
-                                                                                                else {
-                                                                                                    if (this.columns[col].placeHolder == timeSegStartDate) {
-                                                                                                        if ((variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data).length > monthDifference) {
+                                                                                            }
+                                                                                            else {
+                                                                                                if (startedCol < this.columns.length) {
+                                                                                                    if (this.columns[startedCol].placeHolder == timeSegStartDate) {
+                                                                                                        if ((variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data).length > monthDifference) {
                                                                                                             for (var index1 = 0; index1 < monthDifference; index1++) {
 
-                                                                                                                if (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data[index1] == null) {
+                                                                                                                if (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data[index1] == null) {
                                                                                                                     row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
                                                                                                                 }
                                                                                                                 else {
-                                                                                                                    value = parseFloat(variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data[index1].value);
+                                                                                                                    value = parseFloat(variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data[index1].value);
                                                                                                                     if (this.varType == "integer") {
                                                                                                                         row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
                                                                                                                     }
@@ -1723,13 +844,13 @@ export class ForecastTabularComponent implements OnInit {
                                                                                                             break;
                                                                                                         }
                                                                                                         else {
-                                                                                                            for (var index1 = 0; index1 < (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data).length; index1++) {
+                                                                                                            for (var index1 = 0; index1 < (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data).length; index1++) {
 
-                                                                                                                if (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data[index1] == null) {
+                                                                                                                if (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data[index1] == null) {
                                                                                                                     row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
                                                                                                                 }
                                                                                                                 else {
-                                                                                                                    value = parseFloat(variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data[index1].value);
+                                                                                                                    value = parseFloat(variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data[index1].value);
                                                                                                                     if (this.varType == "integer") {
                                                                                                                         row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
                                                                                                                     }
@@ -1742,263 +863,1327 @@ export class ForecastTabularComponent implements OnInit {
                                                                                                             }
                                                                                                             break;
                                                                                                         }
-                                                                                                    }
 
+                                                                                                    }
                                                                                                     else {
                                                                                                         row.addColumn(new TableViewColumn("Column " + col, "n/a"));
                                                                                                         columnCounter++;
                                                                                                     }
+                                                                                                    startedCol++;
                                                                                                 }
-
                                                                                             }
 
+
                                                                                         }
-                                                                                    }
-                                                                                }
 
-                                                                            }
-                                                                        });
-
-                                                                    }
-
-                                                                    else {
-                                                                        if (variables[varIndex][dist].timeSegmentResponse != null) {
-
-                                                                            // Determining the start time for a specific time segment
-                                                                            timeSegStart = variable.timeSegment[dist].startTime;
-                                                                            var varStart = new Date((timeSegStart[3] + timeSegStart[4] + "/" + timeSegStart[0] + timeSegStart[1] + "/" + timeSegStart[6]+timeSegStart[7]+timeSegStart[8]+timeSegStart[9]).toString());
-                                                                            var monthDifference = this.getMonthDifference(varStart, this.latestEnd);
-                                                                            monthDifference = monthDifference +1;
-
-                                                                            if (varStart < this.earliestStart)
-                                                                            {
-                                                                                varStartIndex = this.getMonthDifference(varStart, this.earliestStart);
-                                                                            }
-
-                                                                            if (timeSegStart[3] == 0) {
-                                                                                timeSegStartMonth = timeSegStart[4];
-                                                                                timeSegStartMonth = timeSegStartMonth - 1;
-                                                                            }
-                                                                            else {
-                                                                                timeSegStartMonth = timeSegStart[3] + timeSegStart[4];
-                                                                                timeSegStartMonth = timeSegStartMonth - 1;
-                                                                            }
-
-                                                                            timeSegStartYear = timeSegStart[6] + timeSegStart[7] + timeSegStart[8] + timeSegStart[9];
-
-                                                                            timeSegStartDate = this.months[timeSegStartMonth] + " " + timeSegStartYear;
-
-                                                                            for (var col = 1; col < this.columns.length; col ++) {
-
-                                                                                if (this.started) {
-                                                                                    if (varStartIndex != 0) {
-                                                                                        //if (this.columns[col].placeHolder == timeSegStartDate) {
-                                                                                        if ((variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data).length > monthDifference) {
-                                                                                            for (var index1 = varStartIndex; index1 < monthDifference; index1++) {
-
-                                                                                                if (variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data[index1] == null) {
-                                                                                                    row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
-                                                                                                }
-                                                                                                else {
-                                                                                                    value = parseFloat(variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data[index1].value);
-                                                                                                    if (this.varType == "integer") {
-                                                                                                        row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
-                                                                                                    }
-                                                                                                    else if (this.varType == "real") {
-                                                                                                        row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                                                                    }
-                                                                                                }
-                                                                                                columnCounter++;
-                                                                                            }
-                                                                                            startedCol = columnCounter + 1;
-                                                                                            varStartIndex = 0;
-                                                                                            break;
-                                                                                        }
                                                                                         else {
-                                                                                            for (var index1 = varStartIndex; index1 < (variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data).length; index1++) {
+                                                                                            if (varStartIndex != 0) {
+                                                                                                if (this.columns[col].placeHolder == timeSegStartDate) {
+                                                                                                    this.started = true;
 
-                                                                                                if (variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data[index1] == null) {
-                                                                                                    row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
-                                                                                                }
-                                                                                                else {
-                                                                                                    value = parseFloat(variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data[index1].value);
-                                                                                                    if (this.varType == "integer") {
-                                                                                                        row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
-                                                                                                    }
-                                                                                                    else if (this.varType == "real") {
-                                                                                                        row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                                                                    }
-                                                                                                }
-                                                                                                columnCounter++;
-                                                                                            }
-                                                                                            startedCol = columnCounter + 1;
-                                                                                            varStartIndex = 0;
-                                                                                            break;
-                                                                                        }
-                                                                                        //}
-                                                                                    }
-                                                                                    else {
-                                                                                        if (this.columns[col].placeHolder == timeSegStartDate) {
-                                                                                            if ((variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data).length > monthDifference) {
-                                                                                                for (var index1 = 0; index1 < monthDifference; index1++) {
-
-                                                                                                    if (variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data[index1] == null) {
-                                                                                                        row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                                                    if ((variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data).length > monthDifference) {
+                                                                                                        for (var index2 = varStartIndex; index2 < monthDifference; index2++) {
+                                                                                                            if (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data[index2] == null) {
+                                                                                                                row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                                                                            }
+                                                                                                            else {
+                                                                                                                value = parseFloat(variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data[index2].value);
+                                                                                                                if (this.varType == "integer") {
+                                                                                                                    row.addColumn(new TableViewColumn("Column " + col, (Math.round(value)).toString()));
+                                                                                                                }
+                                                                                                                else if (this.varType == "real") {
+                                                                                                                    row.addColumn(new TableViewColumn("Column " + col, ((Math.round(value * 100)) / 100).toString()));
+                                                                                                                }
+                                                                                                            }
+                                                                                                            columnCounter++;
+                                                                                                        }
+                                                                                                        startedCol = columnCounter + 1;
+                                                                                                        break;
                                                                                                     }
                                                                                                     else {
-                                                                                                        value = parseFloat(variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data[index1].value);
-                                                                                                        if (this.varType == "integer") {
-                                                                                                            row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
+                                                                                                        for (var index2 = varStartIndex; index2 < (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data).length; index2++) {
+                                                                                                            if (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data[index2] == null) {
+                                                                                                                row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                                                                            }
+                                                                                                            else {
+                                                                                                                value = parseFloat(variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data[index2].value);
+                                                                                                                if (this.varType == "integer") {
+                                                                                                                    row.addColumn(new TableViewColumn("Column " + col, (Math.round(value)).toString()));
+                                                                                                                }
+                                                                                                                else if (this.varType == "real") {
+                                                                                                                    row.addColumn(new TableViewColumn("Column " + col, ((Math.round(value * 100)) / 100).toString()));
+                                                                                                                }
+                                                                                                            }
+                                                                                                            columnCounter++;
                                                                                                         }
-                                                                                                        else if (this.varType == "real") {
-                                                                                                            row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                                                                        }
+                                                                                                        startedCol = columnCounter + 1;
+                                                                                                        break;
                                                                                                     }
+
+                                                                                                }
+
+                                                                                                else {
+                                                                                                    row.addColumn(new TableViewColumn("Column " + col, "n/a"));
                                                                                                     columnCounter++;
                                                                                                 }
-                                                                                                startedCol = columnCounter + 1;
-                                                                                                varStartIndex = 0;
-                                                                                                break;
                                                                                             }
                                                                                             else {
-                                                                                                for (var index1 = 0; index1 < (variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data).length; index1++) {
+                                                                                                if (this.columns[col].placeHolder == timeSegStartDate) {
+                                                                                                    this.started = true;
 
-                                                                                                    if (variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data[index1] == null) {
-                                                                                                        row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                                                    if ((variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data).length > monthDifference) {
+                                                                                                        for (var index2 = 0; index2 < monthDifference; index2++) {
+                                                                                                            if (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data[index2] == null) {
+                                                                                                                row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                                                                            }
+                                                                                                            else {
+                                                                                                                value = parseFloat(variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data[index2].value);
+                                                                                                                if (this.varType == "integer") {
+                                                                                                                    row.addColumn(new TableViewColumn("Column " + col, (Math.round(value)).toString()));
+                                                                                                                }
+                                                                                                                else if (this.varType == "real") {
+                                                                                                                    row.addColumn(new TableViewColumn("Column " + col, ((Math.round(value * 100)) / 100).toString()));
+                                                                                                                }
+                                                                                                            }
+                                                                                                            columnCounter++;
+                                                                                                        }
+                                                                                                        startedCol = columnCounter + 1;
+                                                                                                        break;
                                                                                                     }
                                                                                                     else {
-                                                                                                        value = parseFloat(variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data[index1].value);
-                                                                                                        if (this.varType == "integer") {
-                                                                                                            row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
+                                                                                                        for (var index2 = 0; index2 < (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data).length; index2++) {
+                                                                                                            if (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data[index2] == null) {
+                                                                                                                row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                                                                            }
+                                                                                                            else {
+                                                                                                                value = parseFloat(variables[varIndex][prevDists].timeSegmentResponse.resultMap[distIndex].data[index2].value);
+                                                                                                                if (this.varType == "integer") {
+                                                                                                                    row.addColumn(new TableViewColumn("Column " + col, (Math.round(value)).toString()));
+                                                                                                                }
+                                                                                                                else if (this.varType == "real") {
+                                                                                                                    row.addColumn(new TableViewColumn("Column " + col, ((Math.round(value * 100)) / 100).toString()));
+                                                                                                                }
+                                                                                                            }
+                                                                                                            columnCounter++;
                                                                                                         }
-                                                                                                        else if (this.varType == "real") {
-                                                                                                            row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                                                                        }
+                                                                                                        startedCol = columnCounter + 1;
+                                                                                                        break;
                                                                                                     }
-                                                                                                    columnCounter++;
+
                                                                                                 }
-                                                                                                startedCol = columnCounter + 1;
-                                                                                                varStartIndex = 0;
-                                                                                                break;
-                                                                                            }
-                                                                                        }
-                                                                                    }
 
-                                                                                }
-
-                                                                                else {
-                                                                                    if (varStartIndex != 0) {
-                                                                                        //if (this.columns[col].placeHolder == timeSegStartDate) {
-                                                                                        this.started = true;
-                                                                                        if ((variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data).length > monthDifference) {
-                                                                                            for (var index1 = varStartIndex; index1 < monthDifference; index1++) {
-
-                                                                                                if (variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data[index1] == null) {
-                                                                                                    row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
-                                                                                                }
                                                                                                 else {
-                                                                                                    value = parseFloat(variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data[index1].value);
-                                                                                                    if (this.varType == "integer") {
-                                                                                                        row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
-                                                                                                    }
-                                                                                                    else if (this.varType == "real") {
-                                                                                                        row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                                                                    }
-                                                                                                }
-                                                                                                columnCounter++;
-                                                                                            }
-                                                                                            startedCol = columnCounter + 1;
-                                                                                            varStartIndex = 0;
-                                                                                            break;
-                                                                                        }
-                                                                                        else {
-                                                                                            for (var index1 = varStartIndex; index1 < (variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data).length; index1++) {
-
-                                                                                                if (variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data[index1] == null) {
-                                                                                                    row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
-                                                                                                }
-                                                                                                else {
-                                                                                                    value = parseFloat(variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data[index1].value);
-                                                                                                    if (this.varType == "integer") {
-                                                                                                        row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
-                                                                                                    }
-                                                                                                    else if (this.varType == "real") {
-                                                                                                        row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                                                                    }
-                                                                                                }
-                                                                                                columnCounter++;
-                                                                                            }
-                                                                                            startedCol = columnCounter + 1;
-                                                                                            varStartIndex = 0;
-                                                                                            break;
-                                                                                        }
-                                                                                        //}
-
-                                                                                        //else {
-                                                                                        //    row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                                                                        //    columnCounter++;
-                                                                                        //}
-                                                                                    }
-                                                                                    else {
-                                                                                        if (this.columns[col].placeHolder == timeSegStartDate) {
-                                                                                            this.started = true;
-                                                                                            if ((variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data).length > monthDifference) {
-                                                                                                for (var index1 = 0; index1 < monthDifference; index1++) {
-
-                                                                                                    if (variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data[index1] == null) {
-                                                                                                        row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
-                                                                                                    }
-                                                                                                    else {
-                                                                                                        value = parseFloat(variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data[index1].value);
-                                                                                                        if (this.varType == "integer") {
-                                                                                                            row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
-                                                                                                        }
-                                                                                                        else if (this.varType == "real") {
-                                                                                                            row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                                                                        }
-                                                                                                    }
+                                                                                                    row.addColumn(new TableViewColumn("Column " + col, "n/a"));
                                                                                                     columnCounter++;
                                                                                                 }
-                                                                                                startedCol = columnCounter + 1;
-                                                                                                varStartIndex = 0;
-                                                                                                break;
                                                                                             }
-                                                                                            else {
-                                                                                                for (var index1 = 0; index1 < (variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data).length; index1++) {
 
-                                                                                                    if (variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data[index1] == null) {
-                                                                                                        row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
-                                                                                                    }
-                                                                                                    else {
-                                                                                                        value = parseFloat(variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data[index1].value);
-                                                                                                        if (this.varType == "integer") {
-                                                                                                            row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
-                                                                                                        }
-                                                                                                        else if (this.varType == "real") {
-                                                                                                            row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                                                                        }
-                                                                                                    }
-                                                                                                    columnCounter++;
-                                                                                                }
-                                                                                                startedCol = columnCounter + 1;
-                                                                                                varStartIndex = 0;
-                                                                                                break;
-                                                                                            }
                                                                                         }
 
-                                                                                        else {
-                                                                                            row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                                                                            columnCounter++;
-                                                                                        }
                                                                                     }
                                                                                 }
-
                                                                             }
+
                                                                         }
-                                                                    }
+                                                                    });
 
                                                                 }
 
+                                                                else {
+                                                                    if (variables[varIndex][dist].timeSegmentResponse != null) {
+
+                                                                        // Determining the start time for a specific time segment
+                                                                        timeSegStart = variable.timeSegment[dist].startTime;
+                                                                        var varStart = new Date((timeSegStart[3] + timeSegStart[4] + "/" + timeSegStart[0] + timeSegStart[1] + "/" + timeSegStart[6]+timeSegStart[7]+timeSegStart[8]+timeSegStart[9]).toString());
+                                                                        var monthDifference = this.getMonthDifference(varStart, this.latestEnd);
+                                                                        monthDifference = monthDifference +1;
+
+                                                                        if (varStart < this.earliestStart)
+                                                                        {
+                                                                            varStartIndex = this.getMonthDifference(varStart, this.earliestStart);
+                                                                        }
+
+                                                                        if (timeSegStart[3] == 0) {
+                                                                            timeSegStartMonth = timeSegStart[4];
+                                                                            timeSegStartMonth = timeSegStartMonth - 1;
+                                                                        }
+                                                                        else {
+                                                                            timeSegStartMonth = timeSegStart[3] + timeSegStart[4];
+                                                                            timeSegStartMonth = timeSegStartMonth - 1;
+                                                                        }
+
+                                                                        timeSegStartYear = timeSegStart[6] + timeSegStart[7] + timeSegStart[8] + timeSegStart[9];
+
+                                                                        timeSegStartDate = this.months[timeSegStartMonth] + " " + timeSegStartYear;
+
+                                                                        for (var col = 1; col < this.columns.length; col ++) {
+
+                                                                            if (this.started) {
+                                                                                if (varStartIndex != 0) {
+                                                                                    //if (this.columns[col].placeHolder == timeSegStartDate) {
+                                                                                    if ((variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data).length > monthDifference) {
+                                                                                        for (var index1 = varStartIndex; index1 < monthDifference; index1++) {
+
+                                                                                            if (variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data[index1] == null) {
+                                                                                                row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                                            }
+                                                                                            else {
+                                                                                                value = parseFloat(variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data[index1].value);
+                                                                                                if (this.varType == "integer") {
+                                                                                                    row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
+                                                                                                }
+                                                                                                else if (this.varType == "real") {
+                                                                                                    row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                                                                }
+                                                                                            }
+                                                                                            columnCounter++;
+                                                                                        }
+                                                                                        startedCol = columnCounter + 1;
+                                                                                        break;
+                                                                                    }
+                                                                                    else {
+                                                                                        for (var index1 = varStartIndex; index1 < (variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data).length; index1++) {
+
+                                                                                            if (variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data[index1] == null) {
+                                                                                                row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                                            }
+                                                                                            else {
+                                                                                                value = parseFloat(variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data[index1].value);
+                                                                                                if (this.varType == "integer") {
+                                                                                                    row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
+                                                                                                }
+                                                                                                else if (this.varType == "real") {
+                                                                                                    row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                                                                }
+                                                                                            }
+                                                                                            columnCounter++;
+                                                                                        }
+                                                                                        startedCol = columnCounter + 1;
+                                                                                        break;
+                                                                                    }
+                                                                                    //}
+                                                                                }
+                                                                                else {
+                                                                                    if (this.columns[col].placeHolder == timeSegStartDate) {
+                                                                                        if ((variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data).length > monthDifference) {
+                                                                                            for (var index1 = 0; index1 < monthDifference; index1++) {
+
+                                                                                                if (variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data[index1] == null) {
+                                                                                                    row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                                                }
+                                                                                                else {
+                                                                                                    value = parseFloat(variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data[index1].value);
+                                                                                                    if (this.varType == "integer") {
+                                                                                                        row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
+                                                                                                    }
+                                                                                                    else if (this.varType == "real") {
+                                                                                                        row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                                                                    }
+                                                                                                }
+                                                                                                columnCounter++;
+                                                                                            }
+                                                                                            startedCol = columnCounter + 1;
+                                                                                            break;
+                                                                                        }
+                                                                                        else {
+                                                                                            for (var index1 = 0; index1 < (variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data).length; index1++) {
+
+                                                                                                if (variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data[index1] == null) {
+                                                                                                    row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                                                }
+                                                                                                else {
+                                                                                                    value = parseFloat(variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data[index1].value);
+                                                                                                    if (this.varType == "integer") {
+                                                                                                        row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
+                                                                                                    }
+                                                                                                    else if (this.varType == "real") {
+                                                                                                        row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                                                                    }
+                                                                                                }
+                                                                                                columnCounter++;
+                                                                                            }
+                                                                                            startedCol = columnCounter + 1;
+                                                                                            break;
+                                                                                        }
+                                                                                    }
+                                                                                }
+
+                                                                            }
+
+                                                                            else {
+                                                                                if (varStartIndex != 0) {
+                                                                                    //if (this.columns[col].placeHolder == timeSegStartDate) {
+                                                                                    this.started = true;
+                                                                                    if ((variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data).length > monthDifference) {
+                                                                                        for (var index1 = varStartIndex; index1 < monthDifference; index1++) {
+
+                                                                                            if (variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data[index1] == null) {
+                                                                                                row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                                            }
+                                                                                            else {
+                                                                                                value = parseFloat(variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data[index1].value);
+                                                                                                if (this.varType == "integer") {
+                                                                                                    row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
+                                                                                                }
+                                                                                                else if (this.varType == "real") {
+                                                                                                    row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                                                                }
+                                                                                            }
+                                                                                            columnCounter++;
+                                                                                        }
+                                                                                        startedCol = columnCounter + 1;
+                                                                                        varStartIndex = 0;
+                                                                                        break;
+                                                                                    }
+                                                                                    else {
+                                                                                        for (var index1 = varStartIndex; index1 < (variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data).length; index1++) {
+
+                                                                                            if (variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data[index1] == null) {
+                                                                                                row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                                            }
+                                                                                            else {
+                                                                                                value = parseFloat(variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data[index1].value);
+                                                                                                if (this.varType == "integer") {
+                                                                                                    row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
+                                                                                                }
+                                                                                                else if (this.varType == "real") {
+                                                                                                    row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                                                                }
+                                                                                            }
+                                                                                            columnCounter++;
+                                                                                        }
+                                                                                        startedCol = columnCounter + 1;
+                                                                                        varStartIndex = 0;
+                                                                                        break;
+                                                                                    }
+                                                                                    //}
+
+                                                                                    //else {
+                                                                                    //    row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                                                    //    columnCounter++;
+                                                                                    //}
+                                                                                }
+                                                                                else {
+                                                                                    if (this.columns[col].placeHolder == timeSegStartDate) {
+                                                                                        this.started = true;
+                                                                                        if ((variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data).length > monthDifference) {
+                                                                                            for (var index1 = 0; index1 < monthDifference; index1++) {
+
+                                                                                                if (variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data[index1] == null) {
+                                                                                                    row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                                                }
+                                                                                                else {
+                                                                                                    value = parseFloat(variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data[index1].value);
+                                                                                                    if (this.varType == "integer") {
+                                                                                                        row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
+                                                                                                    }
+                                                                                                    else if (this.varType == "real") {
+                                                                                                        row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                                                                    }
+                                                                                                }
+                                                                                                columnCounter++;
+                                                                                            }
+                                                                                            startedCol = columnCounter + 1;
+                                                                                            break;
+                                                                                        }
+                                                                                        else {
+                                                                                            for (var index1 = 0; index1 < (variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data).length; index1++) {
+
+                                                                                                if (variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data[index1] == null) {
+                                                                                                    row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                                                }
+                                                                                                else {
+                                                                                                    value = parseFloat(variables[varIndex][dist].timeSegmentResponse.resultMap[distIndex].data[index1].value);
+                                                                                                    if (this.varType == "integer") {
+                                                                                                        row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
+                                                                                                    }
+                                                                                                    else if (this.varType == "real") {
+                                                                                                        row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                                                                    }
+                                                                                                }
+                                                                                                columnCounter++;
+                                                                                            }
+                                                                                            startedCol = columnCounter + 1;
+                                                                                            break;
+                                                                                        }
+                                                                                    }
+
+                                                                                    else {
+                                                                                        row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                                                        columnCounter++;
+                                                                                    }
+                                                                                }
+
+                                                                            }
+
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+
+                                                            if (columnCounter < this.columns.length) {
+                                                                for (var col = columnCounter; col < (this.columns.length)-1; col++) {
+                                                                    row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                                    columnCounter++;
+                                                                }
+                                                            }
+
+                                                            columnCounter = 0;
+                                                            this.rows.push(row);
+                                                            this.started = false;
+                                                            this.titleOccurs = 0;
+                                                            varStartIndex = 0;
+                                                        });
+                                                    }
+
+                                                    if (this.subVarTitleIndexes[0] != null) {
+
+                                                        this.subVarTitleIndexes.forEach(subVarIndex => {
+
+                                                            row = new TableViewRow(variable.id + "." + (index1 + 1));
+                                                            row.addColumn(new TableViewColumn("name", varTitle + " " + variables[varIndex][dist].timeSegmentResponse.resultMap[subVarIndex].title));
+
+                                                            this.titles.forEach(resultMapTitle => {
+                                                                if (variables[varIndex][dist].timeSegmentResponse.resultMap[subVarIndex].title == resultMapTitle.title) {
+                                                                    this.titleOccurs = this.titleOccurs+1;
+                                                                }
+                                                            });
+
+                                                            column = 0;
+
+                                                            for (var index = 0; index < variables[varIndex].length; index++) {
+                                                                if (variables[varIndex][index].timeSegmentResponse != null) {
+
+                                                                    // Determining the start time for a specific time segment
+                                                                    timeSegStart = variable.timeSegment[index].startTime;
+                                                                    var varStart = new Date((timeSegStart[3] + timeSegStart[4] + "/" + timeSegStart[0] + timeSegStart[1] + "/" + timeSegStart[6]+timeSegStart[7]+timeSegStart[8]+timeSegStart[9]).toString());
+                                                                    var monthDifference = this.getMonthDifference(varStart, this.latestEnd);
+                                                                    monthDifference = monthDifference +1;
+
+                                                                    if (varStart < this.earliestStart)
+                                                                    {
+                                                                        varStartIndex = this.getMonthDifference(varStart, this.earliestStart);
+                                                                    }
+
+                                                                    if (timeSegStart[3] == 0) {
+                                                                        timeSegStartMonth = timeSegStart[4];
+                                                                        timeSegStartMonth = timeSegStartMonth - 1;
+                                                                    }
+                                                                    else {
+                                                                        timeSegStartMonth = timeSegStart[3] + timeSegStart[4];
+                                                                        timeSegStartMonth = timeSegStartMonth - 1;
+                                                                    }
+
+                                                                    timeSegStartYear = timeSegStart[6] + timeSegStart[7] + timeSegStart[8] + timeSegStart[9];
+
+                                                                    timeSegStartDate = this.months[timeSegStartMonth] + " " + timeSegStartYear;
+
+                                                                    for (var col = 1; col < this.columns.length; col ++) {
+
+                                                                        if (this.started) {
+                                                                            if (varStartIndex != 0) {
+                                                                                //if (this.columns[col].placeHolder == timeSegStartDate) {
+                                                                                if ((variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data).length > monthDifference) {
+                                                                                    for (var index1 = varStartIndex; index1 < monthDifference; index1++) {
+
+                                                                                        if (variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data[index1] == null) {
+                                                                                            row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                                        }
+                                                                                        else {
+                                                                                            value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data[index1].value);
+                                                                                            if (this.varType == "integer") {
+                                                                                                row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
+                                                                                            }
+                                                                                            else if (this.varType == "real") {
+                                                                                                row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                                                            }
+                                                                                        }
+                                                                                        columnCounter++;
+                                                                                    }
+                                                                                    varStartIndex = 0;
+                                                                                    break;
+                                                                                }
+                                                                                else {
+                                                                                    for (var index1 = varStartIndex; index1 < (variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data).length; index1++) {
+
+                                                                                        if (variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data[index1] == null) {
+                                                                                            row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                                        }
+                                                                                        else {
+                                                                                            value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data[index1].value);
+                                                                                            if (this.varType == "integer") {
+                                                                                                row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
+                                                                                            }
+                                                                                            else if (this.varType == "real") {
+                                                                                                row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                                                            }
+                                                                                        }
+                                                                                        columnCounter++;
+                                                                                    }
+                                                                                    varStartIndex = 0;
+                                                                                    break;
+                                                                                }
+
+                                                                                //}
+                                                                            }
+                                                                            else {
+                                                                                if (this.columns[col].placeHolder == timeSegStartDate) {
+                                                                                    if ((variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data).length > monthDifference) {
+                                                                                        for (var index1 = 0; index1 < monthDifference; index1++) {
+
+                                                                                            if (variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data[index1] == null) {
+                                                                                                row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                                            }
+                                                                                            else {
+                                                                                                value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data[index1].value);
+                                                                                                if (this.varType == "integer") {
+                                                                                                    row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
+                                                                                                }
+                                                                                                else if (this.varType == "real") {
+                                                                                                    row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                                                                }
+                                                                                            }
+                                                                                            columnCounter++;
+                                                                                        }
+                                                                                        varStartIndex = 0;
+                                                                                        break;
+                                                                                    }
+                                                                                    else {
+                                                                                        for (var index1 = 0; index1 < (variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data).length; index1++) {
+
+                                                                                            if (variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data[index1] == null) {
+                                                                                                row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                                            }
+                                                                                            else {
+                                                                                                value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data[index1].value);
+                                                                                                if (this.varType == "integer") {
+                                                                                                    row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
+                                                                                                }
+                                                                                                else if (this.varType == "real") {
+                                                                                                    row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                                                                }
+                                                                                            }
+                                                                                            columnCounter++;
+                                                                                        }
+                                                                                        varStartIndex = 0;
+                                                                                        break;
+                                                                                    }
+
+                                                                                }
+                                                                            }
+
+                                                                        }
+
+                                                                        else
+                                                                        {
+                                                                            if (varStartIndex != 0) {
+                                                                                //if (this.columns[col].placeHolder == timeSegStartDate) {
+                                                                                this.started = true;
+                                                                                if ((variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data).length > monthDifference) {
+                                                                                    for (var index1 = varStartIndex; index1 < monthDifference; index1++) {
+
+                                                                                        if (variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data[index1] == null) {
+                                                                                            row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                                        }
+                                                                                        else {
+                                                                                            value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data[index1].value);
+                                                                                            if (this.varType == "integer") {
+                                                                                                row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
+                                                                                            }
+                                                                                            else if (this.varType == "real") {
+                                                                                                row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                                                            }
+                                                                                        }
+                                                                                        columnCounter++;
+                                                                                    }
+                                                                                    varStartIndex = 0;
+                                                                                    break;
+                                                                                }
+                                                                                else {
+                                                                                    for (var index1 = varStartIndex; index1 < (variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data).length; index1++) {
+
+                                                                                        if (variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data[index1] == null) {
+                                                                                            row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                                        }
+                                                                                        else {
+                                                                                            value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data[index1].value);
+                                                                                            if (this.varType == "integer") {
+                                                                                                row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
+                                                                                            }
+                                                                                            else if (this.varType == "real") {
+                                                                                                row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                                                            }
+                                                                                        }
+                                                                                        columnCounter++;
+                                                                                    }
+                                                                                    varStartIndex = 0;
+                                                                                    break;
+                                                                                }
+                                                                                //}
+                                                                                //else {
+                                                                                //    row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                                                //    columnCounter++;
+                                                                                //}
+                                                                            }
+                                                                            else {
+                                                                                if (this.columns[col].placeHolder == timeSegStartDate) {
+                                                                                    this.started = true;
+                                                                                    if ((variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data).length > monthDifference) {
+                                                                                        for (var index1 = 0; index1 < monthDifference; index1++) {
+
+                                                                                            if (variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data[index1] == null) {
+                                                                                                row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                                            }
+                                                                                            else {
+                                                                                                value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data[index1].value);
+                                                                                                if (this.varType == "integer") {
+                                                                                                    row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
+                                                                                                }
+                                                                                                else if (this.varType == "real") {
+                                                                                                    row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                                                                }
+                                                                                            }
+                                                                                            columnCounter++;
+                                                                                        }
+                                                                                        varStartIndex = 0;
+                                                                                        break;
+                                                                                    }
+                                                                                    else {
+                                                                                        for (var index1 = 0; index1 < (variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data).length; index1++) {
+
+                                                                                            if (variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data[index1] == null) {
+                                                                                                row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                                            }
+                                                                                            else {
+                                                                                                value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[subVarIndex].data[index1].value);
+                                                                                                if (this.varType == "integer") {
+                                                                                                    row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
+                                                                                                }
+                                                                                                else if (this.varType == "real") {
+                                                                                                    row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                                                                }
+                                                                                            }
+                                                                                            columnCounter++;
+                                                                                        }
+                                                                                        varStartIndex = 0;
+                                                                                        break;
+                                                                                    }
+                                                                                }
+                                                                                else {
+                                                                                    row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                                                    columnCounter++;
+                                                                                }
+                                                                            }
+
+                                                                        }
+
+                                                                    }
+
+                                                                }
+                                                            }
+
+                                                            if (columnCounter < this.columns.length) {
+                                                                for (var col = columnCounter; col < (this.columns.length)-1; col++) {
+                                                                    row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                                    columnCounter++;
+                                                                }
+                                                            }
+
+                                                            columnCounter = 0;
+
+                                                            this.started = false;
+                                                            this.titleOccurs = 0;
+                                                            this.rows.push(row);
+                                                            varStartIndex = 0;
+
+                                                            if (this.distributionAndSubVariableTitleIndexes[0] != null) {
+
+                                                                var match = false;
+
+                                                                this.distributionAndSubVariableTitleIndexes.forEach(distSubVarIndex => {
+                                                                    this.titleOccurs = 0;
+
+                                                                    var title = variables[varIndex][dist].timeSegmentResponse.resultMap[subVarIndex].title;
+                                                                    title = title.replace(' ', '');
+
+                                                                    if ((variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].title).indexOf(title) > -1) {
+                                                                        match = true;
+                                                                    }
+
+                                                                    if (match) {
+
+                                                                        row = new TableViewRow(variable.id + "." + (index1 + 1));
+                                                                        row.addColumn(new TableViewColumn("name", varTitle + " " + variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].title));
+
+                                                                        column = 0;
+
+                                                                        this.titles.forEach(resultMapTitle => {
+                                                                            if (variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].title == resultMapTitle.title) {
+                                                                                this.titleOccurs = this.titleOccurs+1;
+                                                                            }
+                                                                        });
+
+                                                                        for (var index = 0; index < (this.titleOccurs); index++) {
+                                                                            if (index != 0) {
+
+                                                                                this.timeSegDistributionIndexes.forEach(prevDists => {
+
+
+                                                                                    if (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].title == variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].title) {
+                                                                                        if(prevDists != dist) {
+                                                                                            if (variables[varIndex][prevDists].timeSegmentResponse != null) {
+
+                                                                                                // Determining the start time for a specific time segment
+                                                                                                timeSegStart = variable.timeSegment[prevDists].startTime;
+                                                                                                var varStart = new Date((timeSegStart[3] + timeSegStart[4] + "/" + timeSegStart[0] + timeSegStart[1] + "/" + timeSegStart[6]+timeSegStart[7]+timeSegStart[8]+timeSegStart[9]).toString());
+                                                                                                var monthDifference = this.getMonthDifference(varStart, this.latestEnd);
+                                                                                                monthDifference = monthDifference +1;
+
+                                                                                                if (varStart < this.earliestStart)
+                                                                                                {
+                                                                                                    varStartIndex = this.getMonthDifference(varStart, this.earliestStart);
+                                                                                                }
+
+                                                                                                if (timeSegStart[3] == 0) {
+                                                                                                    timeSegStartMonth = timeSegStart[4];
+                                                                                                    timeSegStartMonth = timeSegStartMonth - 1;
+                                                                                                }
+                                                                                                else {
+                                                                                                    timeSegStartMonth = timeSegStart[3] + timeSegStart[4];
+                                                                                                    timeSegStartMonth = timeSegStartMonth - 1;
+                                                                                                }
+
+                                                                                                timeSegStartYear = timeSegStart[6] + timeSegStart[7] + timeSegStart[8] + timeSegStart[9];
+
+                                                                                                timeSegStartDate = this.months[timeSegStartMonth] + " " + timeSegStartYear;
+
+                                                                                                for (var col = 1; col < this.columns.length; col ++) {
+
+                                                                                                    if (this.started) {
+                                                                                                        if (varStartIndex != 0) {
+                                                                                                            if (startedCol < this.columns.length) {
+                                                                                                                //if (this.columns[startedCol].placeHolder == timeSegStartDate) {
+                                                                                                                if ((variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data).length > monthDifference) {
+                                                                                                                    for (var index1 = varStartIndex; index1 < monthDifference; index1++) {
+
+                                                                                                                        if (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data[index1] == null) {
+                                                                                                                            row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                                                                        }
+                                                                                                                        else {
+                                                                                                                            value = parseFloat(variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data[index1].value);
+                                                                                                                            if (this.varType == "integer") {
+                                                                                                                                row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
+                                                                                                                            }
+                                                                                                                            else if (this.varType == "real") {
+                                                                                                                                row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                                                                                            }
+                                                                                                                        }
+                                                                                                                        columnCounter++;
+                                                                                                                        startedCol++;
+                                                                                                                    }
+                                                                                                                    break;
+                                                                                                                }
+                                                                                                                else {
+                                                                                                                    for (var index1 = varStartIndex; index1 < (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data).length; index1++) {
+
+                                                                                                                        if (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data[index1] == null) {
+                                                                                                                            row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                                                                        }
+                                                                                                                        else {
+                                                                                                                            value = parseFloat(variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data[index1].value);
+                                                                                                                            if (this.varType == "integer") {
+                                                                                                                                row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
+                                                                                                                            }
+                                                                                                                            else if (this.varType == "real") {
+                                                                                                                                row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                                                                                            }
+                                                                                                                        }
+                                                                                                                        columnCounter++;
+                                                                                                                        startedCol++;
+                                                                                                                    }
+                                                                                                                    break;
+                                                                                                                }
+
+                                                                                                                //}
+                                                                                                                //else {
+                                                                                                                //    row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                                                                                //    columnCounter++;
+                                                                                                                //}
+                                                                                                                //startedCol++;
+                                                                                                            }
+                                                                                                        }
+                                                                                                        else {
+                                                                                                            if (startedCol < this.columns.length) {
+                                                                                                                if (this.columns[startedCol].placeHolder == timeSegStartDate) {
+                                                                                                                    if ((variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data).length > monthDifference) {
+                                                                                                                        for (var index1 = 0; index1 < monthDifference; index1++) {
+
+                                                                                                                            if (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data[index1] == null) {
+                                                                                                                                row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                                                                            }
+                                                                                                                            else {
+                                                                                                                                value = parseFloat(variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data[index1].value);
+                                                                                                                                if (this.varType == "integer") {
+                                                                                                                                    row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
+                                                                                                                                }
+                                                                                                                                else if (this.varType == "real") {
+                                                                                                                                    row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                                                                                                }
+                                                                                                                            }
+                                                                                                                            columnCounter++;
+                                                                                                                            startedCol++;
+                                                                                                                        }
+                                                                                                                        break;
+                                                                                                                    }
+                                                                                                                    else {
+                                                                                                                        for (var index1 = 0; index1 < (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data).length; index1++) {
+
+                                                                                                                            if (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data[index1] == null) {
+                                                                                                                                row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                                                                            }
+                                                                                                                            else {
+                                                                                                                                value = parseFloat(variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data[index1].value);
+                                                                                                                                if (this.varType == "integer") {
+                                                                                                                                    row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
+                                                                                                                                }
+                                                                                                                                else if (this.varType == "real") {
+                                                                                                                                    row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                                                                                                }
+                                                                                                                            }
+                                                                                                                            columnCounter++;
+                                                                                                                            startedCol++;
+                                                                                                                        }
+                                                                                                                        break;
+                                                                                                                    }
+
+                                                                                                                }
+                                                                                                                else {
+                                                                                                                    row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                                                                                    columnCounter++;
+                                                                                                                }
+                                                                                                                startedCol++;
+                                                                                                            }
+                                                                                                        }
+
+
+                                                                                                    }
+
+                                                                                                    else {
+                                                                                                        if (varStartIndex != 0) {
+                                                                                                            //if (this.columns[col].placeHolder == timeSegStartDate) {
+                                                                                                            if ((variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data).length > monthDifference) {
+                                                                                                                for (var index1 = varStartIndex; index1 < monthDifference; index1++) {
+
+                                                                                                                    if (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data[index1] == null) {
+                                                                                                                        row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                                                                    }
+                                                                                                                    else {
+                                                                                                                        value = parseFloat(variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data[index1].value);
+                                                                                                                        if (this.varType == "integer") {
+                                                                                                                            row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
+                                                                                                                        }
+                                                                                                                        else if (this.varType == "real") {
+                                                                                                                            row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                                                                                        }
+                                                                                                                    }
+                                                                                                                    columnCounter++;
+                                                                                                                    startedCol++;
+                                                                                                                }
+                                                                                                                break;
+                                                                                                            }
+                                                                                                            else {
+                                                                                                                for (var index1 = varStartIndex; index1 < (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data).length; index1++) {
+
+                                                                                                                    if (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data[index1] == null) {
+                                                                                                                        row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                                                                    }
+                                                                                                                    else {
+                                                                                                                        value = parseFloat(variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data[index1].value);
+                                                                                                                        if (this.varType == "integer") {
+                                                                                                                            row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
+                                                                                                                        }
+                                                                                                                        else if (this.varType == "real") {
+                                                                                                                            row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                                                                                        }
+                                                                                                                    }
+                                                                                                                    columnCounter++;
+                                                                                                                    startedCol++;
+                                                                                                                }
+                                                                                                                break;
+                                                                                                            }
+                                                                                                            //}
+
+                                                                                                            //else {
+                                                                                                            //    row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                                                                            //    columnCounter++;
+                                                                                                            //}
+                                                                                                        }
+                                                                                                        else {
+                                                                                                            if (this.columns[col].placeHolder == timeSegStartDate) {
+                                                                                                                if ((variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data).length > monthDifference) {
+                                                                                                                    for (var index1 = 0; index1 < monthDifference; index1++) {
+
+                                                                                                                        if (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data[index1] == null) {
+                                                                                                                            row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                                                                        }
+                                                                                                                        else {
+                                                                                                                            value = parseFloat(variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data[index1].value);
+                                                                                                                            if (this.varType == "integer") {
+                                                                                                                                row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
+                                                                                                                            }
+                                                                                                                            else if (this.varType == "real") {
+                                                                                                                                row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                                                                                            }
+                                                                                                                        }
+                                                                                                                        columnCounter++;
+                                                                                                                        startedCol++;
+                                                                                                                    }
+                                                                                                                    break;
+                                                                                                                }
+                                                                                                                else {
+                                                                                                                    for (var index1 = 0; index1 < (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data).length; index1++) {
+
+                                                                                                                        if (variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data[index1] == null) {
+                                                                                                                            row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                                                                        }
+                                                                                                                        else {
+                                                                                                                            value = parseFloat(variables[varIndex][prevDists].timeSegmentResponse.resultMap[distSubVarIndex].data[index1].value);
+                                                                                                                            if (this.varType == "integer") {
+                                                                                                                                row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
+                                                                                                                            }
+                                                                                                                            else if (this.varType == "real") {
+                                                                                                                                row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                                                                                            }
+                                                                                                                        }
+                                                                                                                        columnCounter++;
+                                                                                                                        startedCol++;
+                                                                                                                    }
+                                                                                                                    break;
+                                                                                                                }
+                                                                                                            }
+
+                                                                                                            else {
+                                                                                                                row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                                                                                columnCounter++;
+                                                                                                            }
+                                                                                                        }
+
+                                                                                                    }
+
+                                                                                                }
+                                                                                            }
+                                                                                        }
+
+                                                                                    }
+                                                                                });
+
+                                                                            }
+
+                                                                            else {
+                                                                                if (variables[varIndex][dist].timeSegmentResponse != null) {
+
+                                                                                    // Determining the start time for a specific time segment
+                                                                                    timeSegStart = variable.timeSegment[dist].startTime;
+                                                                                    var varStart = new Date((timeSegStart[3] + timeSegStart[4] + "/" + timeSegStart[0] + timeSegStart[1] + "/" + timeSegStart[6]+timeSegStart[7]+timeSegStart[8]+timeSegStart[9]).toString());
+                                                                                    var monthDifference = this.getMonthDifference(varStart, this.latestEnd);
+                                                                                    monthDifference = monthDifference +1;
+
+                                                                                    if (varStart < this.earliestStart)
+                                                                                    {
+                                                                                        varStartIndex = this.getMonthDifference(varStart, this.earliestStart);
+                                                                                    }
+
+                                                                                    if (timeSegStart[3] == 0) {
+                                                                                        timeSegStartMonth = timeSegStart[4];
+                                                                                        timeSegStartMonth = timeSegStartMonth - 1;
+                                                                                    }
+                                                                                    else {
+                                                                                        timeSegStartMonth = timeSegStart[3] + timeSegStart[4];
+                                                                                        timeSegStartMonth = timeSegStartMonth - 1;
+                                                                                    }
+
+                                                                                    timeSegStartYear = timeSegStart[6] + timeSegStart[7] + timeSegStart[8] + timeSegStart[9];
+
+                                                                                    timeSegStartDate = this.months[timeSegStartMonth] + " " + timeSegStartYear;
+
+                                                                                    for (var col = 1; col < this.columns.length; col ++) {
+
+                                                                                        if (this.started) {
+                                                                                            if (varStartIndex != 0) {
+                                                                                                //if (this.columns[col].placeHolder == timeSegStartDate) {
+                                                                                                if ((variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data).length > monthDifference) {
+                                                                                                    for (var index1 = varStartIndex; index1 < monthDifference; index1++) {
+
+                                                                                                        if (variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data[index1] == null) {
+                                                                                                            row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                                                        }
+                                                                                                        else {
+                                                                                                            value = parseFloat(variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data[index1].value);
+                                                                                                            if (this.varType == "integer") {
+                                                                                                                row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
+                                                                                                            }
+                                                                                                            else if (this.varType == "real") {
+                                                                                                                row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                                                                            }
+                                                                                                        }
+                                                                                                        columnCounter++;
+                                                                                                    }
+                                                                                                    startedCol = columnCounter + 1;
+                                                                                                    varStartIndex = 0;
+                                                                                                    break;
+                                                                                                }
+                                                                                                else {
+                                                                                                    for (var index1 = varStartIndex; index1 < (variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data).length; index1++) {
+
+                                                                                                        if (variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data[index1] == null) {
+                                                                                                            row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                                                        }
+                                                                                                        else {
+                                                                                                            value = parseFloat(variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data[index1].value);
+                                                                                                            if (this.varType == "integer") {
+                                                                                                                row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
+                                                                                                            }
+                                                                                                            else if (this.varType == "real") {
+                                                                                                                row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                                                                            }
+                                                                                                        }
+                                                                                                        columnCounter++;
+                                                                                                    }
+                                                                                                    startedCol = columnCounter + 1;
+                                                                                                    varStartIndex = 0;
+                                                                                                    break;
+                                                                                                }
+                                                                                                //}
+                                                                                            }
+                                                                                            else {
+                                                                                                if (this.columns[col].placeHolder == timeSegStartDate) {
+                                                                                                    if ((variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data).length > monthDifference) {
+                                                                                                        for (var index1 = 0; index1 < monthDifference; index1++) {
+
+                                                                                                            if (variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data[index1] == null) {
+                                                                                                                row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                                                            }
+                                                                                                            else {
+                                                                                                                value = parseFloat(variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data[index1].value);
+                                                                                                                if (this.varType == "integer") {
+                                                                                                                    row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
+                                                                                                                }
+                                                                                                                else if (this.varType == "real") {
+                                                                                                                    row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                                                                                }
+                                                                                                            }
+                                                                                                            columnCounter++;
+                                                                                                        }
+                                                                                                        startedCol = columnCounter + 1;
+                                                                                                        varStartIndex = 0;
+                                                                                                        break;
+                                                                                                    }
+                                                                                                    else {
+                                                                                                        for (var index1 = 0; index1 < (variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data).length; index1++) {
+
+                                                                                                            if (variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data[index1] == null) {
+                                                                                                                row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                                                            }
+                                                                                                            else {
+                                                                                                                value = parseFloat(variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data[index1].value);
+                                                                                                                if (this.varType == "integer") {
+                                                                                                                    row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
+                                                                                                                }
+                                                                                                                else if (this.varType == "real") {
+                                                                                                                    row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                                                                                }
+                                                                                                            }
+                                                                                                            columnCounter++;
+                                                                                                        }
+                                                                                                        startedCol = columnCounter + 1;
+                                                                                                        varStartIndex = 0;
+                                                                                                        break;
+                                                                                                    }
+                                                                                                }
+                                                                                            }
+
+                                                                                        }
+
+                                                                                        else {
+                                                                                            if (varStartIndex != 0) {
+                                                                                                //if (this.columns[col].placeHolder == timeSegStartDate) {
+                                                                                                this.started = true;
+                                                                                                if ((variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data).length > monthDifference) {
+                                                                                                    for (var index1 = varStartIndex; index1 < monthDifference; index1++) {
+
+                                                                                                        if (variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data[index1] == null) {
+                                                                                                            row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                                                        }
+                                                                                                        else {
+                                                                                                            value = parseFloat(variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data[index1].value);
+                                                                                                            if (this.varType == "integer") {
+                                                                                                                row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
+                                                                                                            }
+                                                                                                            else if (this.varType == "real") {
+                                                                                                                row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                                                                            }
+                                                                                                        }
+                                                                                                        columnCounter++;
+                                                                                                    }
+                                                                                                    startedCol = columnCounter + 1;
+                                                                                                    varStartIndex = 0;
+                                                                                                    break;
+                                                                                                }
+                                                                                                else {
+                                                                                                    for (var index1 = varStartIndex; index1 < (variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data).length; index1++) {
+
+                                                                                                        if (variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data[index1] == null) {
+                                                                                                            row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                                                        }
+                                                                                                        else {
+                                                                                                            value = parseFloat(variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data[index1].value);
+                                                                                                            if (this.varType == "integer") {
+                                                                                                                row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
+                                                                                                            }
+                                                                                                            else if (this.varType == "real") {
+                                                                                                                row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                                                                            }
+                                                                                                        }
+                                                                                                        columnCounter++;
+                                                                                                    }
+                                                                                                    startedCol = columnCounter + 1;
+                                                                                                    varStartIndex = 0;
+                                                                                                    break;
+                                                                                                }
+                                                                                                //}
+
+                                                                                                //else {
+                                                                                                //    row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                                                                //    columnCounter++;
+                                                                                                //}
+                                                                                            }
+                                                                                            else {
+                                                                                                if (this.columns[col].placeHolder == timeSegStartDate) {
+                                                                                                    this.started = true;
+                                                                                                    if ((variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data).length > monthDifference) {
+                                                                                                        for (var index1 = 0; index1 < monthDifference; index1++) {
+
+                                                                                                            if (variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data[index1] == null) {
+                                                                                                                row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                                                            }
+                                                                                                            else {
+                                                                                                                value = parseFloat(variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data[index1].value);
+                                                                                                                if (this.varType == "integer") {
+                                                                                                                    row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
+                                                                                                                }
+                                                                                                                else if (this.varType == "real") {
+                                                                                                                    row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                                                                                }
+                                                                                                            }
+                                                                                                            columnCounter++;
+                                                                                                        }
+                                                                                                        startedCol = columnCounter + 1;
+                                                                                                        varStartIndex = 0;
+                                                                                                        break;
+                                                                                                    }
+                                                                                                    else {
+                                                                                                        for (var index1 = 0; index1 < (variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data).length; index1++) {
+
+                                                                                                            if (variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data[index1] == null) {
+                                                                                                                row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                                                            }
+                                                                                                            else {
+                                                                                                                value = parseFloat(variables[varIndex][dist].timeSegmentResponse.resultMap[distSubVarIndex].data[index1].value);
+                                                                                                                if (this.varType == "integer") {
+                                                                                                                    row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
+                                                                                                                }
+                                                                                                                else if (this.varType == "real") {
+                                                                                                                    row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                                                                                }
+                                                                                                            }
+                                                                                                            columnCounter++;
+                                                                                                        }
+                                                                                                        startedCol = columnCounter + 1;
+                                                                                                        varStartIndex = 0;
+                                                                                                        break;
+                                                                                                    }
+                                                                                                }
+
+                                                                                                else {
+                                                                                                    row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                                                                    columnCounter++;
+                                                                                                }
+                                                                                            }
+                                                                                        }
+
+                                                                                    }
+                                                                                }
+                                                                            }
+
+                                                                        }
+
+
+                                                                        if (columnCounter < this.columns.length) {
+                                                                            for (var col = columnCounter; col < (this.columns.length)-1; col++) {
+                                                                                row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                                                columnCounter++;
+                                                                            }
+                                                                        }
+                                                                        columnCounter = 0;
+
+                                                                        this.started = false;
+                                                                        this.rows.push(row);
+                                                                        match = false;
+                                                                    }
+                                                                    varStartIndex = 0;
+                                                                });
+                                                            }
+
+                                                            varStartIndex = 0;
+                                                        });
+                                                    }
+
+                                                    break;
+                                                }
+
+                                                this.distributionTitleIndexes = [];
+                                                this.subVarTitleIndexes = [];
+                                                this.distributionAndSubVariableTitleIndexes = [];
+                                            });
+                                        }
+                                    }
+
+                                }
+                                // If a variable only has 1 time segment
+                                else {
+
+                                    timeSegStart = variable.timeSegment[0].startTime;
+                                    var varStart = new Date((timeSegStart[3] + timeSegStart[4] + "/" + timeSegStart[0] + timeSegStart[1] + "/" + timeSegStart[6]+timeSegStart[7]+timeSegStart[8]+timeSegStart[9]).toString());
+                                    var monthDifference = this.getMonthDifference(varStart, this.latestEnd);
+                                    monthDifference = monthDifference +1;
+
+                                    if (varStart < this.earliestStart)
+                                    {
+                                        varStartIndex = this.getMonthDifference(varStart, this.earliestStart);
+
+                                        if (variables[varIndex][0].timeSegmentResponse != null) {
+
+                                            for (var x = 1; x < this.columns.length; x ++) {
+
+                                                if (this.started) {
+                                                    //if (this.columns[x].placeHolder == timeSegStartDate) {
+                                                    for (var index1 = varStartIndex; index1 < monthDifference; index1++) {
+
+                                                        if (variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1] == null) {
+                                                            row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                            columnCounter++;
+                                                        }
+                                                        else {
+                                                            value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1].value);
+                                                            if (this.varType == "integer") {
+                                                                row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
+                                                            }
+                                                            else if (this.varType == "real") {
+                                                                row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                            }
+                                                            columnCounter++;
+                                                        }
+                                                    }
+
+                                                    if (columnCounter < this.columns.length) {
+                                                        for (var col = columnCounter; col < (this.columns.length)-1; col++) {
+                                                            row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                            columnCounter++;
+                                                        }
+                                                    }
+                                                    this.rows.push(row);
+                                                    columnCounter = 0;
+                                                    break;
+                                                    //}
+                                                }
+                                                else {
+                                                    //if (this.columns[x].placeHolder == timeSegStartDate) {
+                                                    this.started = true;
+                                                    for (var index1 = varStartIndex; index1 < monthDifference; index1++) {
+
+                                                        if (variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1] == null) {
+                                                            row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                            columnCounter++;
+                                                        }
+                                                        else {
+                                                            value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1].value);
+                                                            if (this.varType == "integer") {
+                                                                row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
+                                                            }
+                                                            else if (this.varType == "real") {
+                                                                row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                            }
+                                                            columnCounter++;
+                                                        }
+                                                    }
+
+                                                    if (columnCounter < this.columns.length) {
+                                                        for (var col = columnCounter; col < (this.columns.length)-1; col++) {
+                                                            row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                            columnCounter++;
+                                                        }
+                                                    }
+                                                    this.rows.push(row);
+                                                    columnCounter = 0;
+                                                    break;
+                                                    //}
+                                                    //else {
+                                                    //    row.addColumn(new TableViewColumn("Column " + x, "n/a"));
+                                                    //    columnCounter++;
+                                                    //}
+                                                }
+
+                                            }
+                                            this.started = false;
+
+                                            // If a variable's resultMap contains more than 1 instance then add the appropriate data to the associated columns
+                                            if ((variables[varIndex][0].timeSegmentResponse.resultMap).length > 1) {
+
+                                                for (var index1 = 0; index1 < ((variables[varIndex][0].timeSegmentResponse.resultMap).length) - 1; index1++) {
+                                                    if ((variables[varIndex][0].timeSegmentResponse.resultMap[index1 + 1].title).indexOf('Σ') > -1) {
+                                                        if ((variables[varIndex][0].timeSegmentResponse.resultMap[index1 + 1].title).indexOf('.') > -1) {
+                                                            this.distributionAndSubVariableTitleIndexes.push(index1 + 1);
+                                                        }
+                                                        else {
+                                                            this.distributionTitleIndexes.push(index1 + 1);
+                                                        }
+                                                    }
+                                                    else if ((variables[varIndex][0].timeSegmentResponse.resultMap[index1 + 1].title).indexOf('.') > -1) {
+                                                        this.subVarTitleIndexes.push(index1 + 1);
+                                                    }
+                                                }
+
+                                                for (var index1 = 0; index1 < ((variables[varIndex][0].timeSegmentResponse.resultMap).length) - 1; index1++) {
+
+                                                    if (this.distributionTitleIndexes[0] != null) {
+
+                                                        this.distributionTitleIndexes.forEach(distIndex => {
+
+                                                            row = new TableViewRow(variable.id + "." + (index1 + 1));
+                                                            row.addColumn(new TableViewColumn("name", varTitle + " " + variables[varIndex][0].timeSegmentResponse.resultMap[distIndex].title));
+
+                                                            column = 0;
+
+                                                            for (var col = 1; col < this.columns.length; col ++) {
+
+                                                                //if (this.columns[col].placeHolder == timeSegStartDate) {
+                                                                this.started = true;
+                                                                for (var index2 = varStartIndex; index2 < monthDifference; index2++) {
+                                                                    if (variables[varIndex][0].timeSegmentResponse.resultMap[0].data[index2] == null) {
+                                                                        row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                                        columnCounter++;
+                                                                    }
+                                                                    else {
+                                                                        value = parseFloat(variables[varIndex][0].timeSegmentResponse.resultMap[distIndex].data[index2].value);
+                                                                        if (this.varType == "integer") {
+                                                                            row.addColumn(new TableViewColumn("Column " + col, (Math.round(value)).toString()));
+                                                                        }
+                                                                        else if (this.varType == "real") {
+                                                                            row.addColumn(new TableViewColumn("Column " + col, ((Math.round(value * 100)) / 100).toString()));
+                                                                        }
+                                                                        columnCounter++;
+                                                                    }
+                                                                }
 
                                                                 if (columnCounter < this.columns.length) {
                                                                     for (var col = columnCounter; col < (this.columns.length)-1; col++) {
@@ -2007,620 +2192,455 @@ export class ForecastTabularComponent implements OnInit {
                                                                     }
                                                                 }
                                                                 columnCounter = 0;
-
-                                                                this.started = false;
-                                                                this.rows.push(row);
-                                                                match = false;
+                                                                break;
+                                                                // }
+                                                                //else {
+                                                                //    row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                                //    columnCounter++;
+                                                                //}
                                                             }
-                                                            varStartIndex = 0;
+                                                            this.rows.push(row);
                                                         });
                                                     }
 
-                                                    varStartIndex = 0;
-                                                });
-                                            }
+                                                    if (this.subVarTitleIndexes[0] != null) {
 
-                                            break;
-                                        }
+                                                        this.subVarTitleIndexes.forEach(subVarIndex => {
 
-                                        this.distributionTitleIndexes = [];
-                                        this.subVarTitleIndexes = [];
-                                        this.distributionAndSubVariableTitleIndexes = [];
-                                    });
-                                }
-                            }
+                                                            row = new TableViewRow(variable.id + "." + (index1 + 1));
+                                                            row.addColumn(new TableViewColumn("name", varTitle + " " + variables[varIndex][0].timeSegmentResponse.resultMap[subVarIndex].title));
 
-                        }
-                        // If a variable only has 1 time segment
-                        else {
+                                                            column = 0;
 
-                            timeSegStart = variable.timeSegment[0].startTime;
-                            var varStart = new Date((timeSegStart[3] + timeSegStart[4] + "/" + timeSegStart[0] + timeSegStart[1] + "/" + timeSegStart[6]+timeSegStart[7]+timeSegStart[8]+timeSegStart[9]).toString());
-                            var monthDifference = this.getMonthDifference(varStart, this.latestEnd);
-                            monthDifference = monthDifference +1;
+                                                            for (var col = 1; col < this.columns.length; col ++) {
 
-                            if (varStart < this.earliestStart)
-                            {
-                                varStartIndex = this.getMonthDifference(varStart, this.earliestStart);
-
-                                if (variables[varIndex][0].timeSegmentResponse != null) {
-
-                                    for (var x = 1; x < this.columns.length; x ++) {
-
-                                        if (this.started) {
-                                            //if (this.columns[x].placeHolder == timeSegStartDate) {
-                                                for (var index1 = varStartIndex; index1 < monthDifference; index1++) {
-
-                                                    if (variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1] == null) {
-                                                        row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
-                                                        columnCounter++;
-                                                    }
-                                                    else {
-                                                        value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1].value);
-                                                        if (this.varType == "integer") {
-                                                            row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
-                                                        }
-                                                        else if (this.varType == "real") {
-                                                            row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                        }
-                                                        columnCounter++;
-                                                    }
-                                                }
-
-                                                if (columnCounter < this.columns.length) {
-                                                    for (var col = columnCounter; col < (this.columns.length)-1; col++) {
-                                                        row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                                        columnCounter++;
-                                                    }
-                                                }
-                                                this.rows.push(row);
-                                                columnCounter = 0;
-                                                break;
-                                            //}
-                                        }
-                                        else {
-                                            //if (this.columns[x].placeHolder == timeSegStartDate) {
-                                                this.started = true;
-                                                for (var index1 = varStartIndex; index1 < monthDifference; index1++) {
-                                                    console.log("typeof index1: "+typeof(index1));
-
-                                                    if (variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1] == null) {
-                                                        row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
-                                                        columnCounter++;
-                                                    }
-                                                    else {
-                                                        value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1].value);
-                                                        if (this.varType == "integer") {
-                                                            row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
-                                                        }
-                                                        else if (this.varType == "real") {
-                                                            row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                        }
-                                                        columnCounter++;
-                                                    }
-                                                }
-
-                                                if (columnCounter < this.columns.length) {
-                                                    for (var col = columnCounter; col < (this.columns.length)-1; col++) {
-                                                        row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                                        columnCounter++;
-                                                    }
-                                                }
-                                                this.rows.push(row);
-                                                columnCounter = 0;
-                                                break;
-                                            //}
-                                            //else {
-                                            //    row.addColumn(new TableViewColumn("Column " + x, "n/a"));
-                                            //    columnCounter++;
-                                            //}
-                                        }
-
-                                    }
-                                    this.started = false;
-
-                                    // If a variable's resultMap contains more than 1 instance then add the appropriate data to the associated columns
-                                    if ((variables[varIndex][0].timeSegmentResponse.resultMap).length > 1) {
-
-                                        for (var index1 = 0; index1 < ((variables[varIndex][0].timeSegmentResponse.resultMap).length) - 1; index1++) {
-                                            if ((variables[varIndex][0].timeSegmentResponse.resultMap[index1 + 1].title).indexOf('Σ') > -1) {
-                                                if ((variables[varIndex][0].timeSegmentResponse.resultMap[index1 + 1].title).indexOf('.') > -1) {
-                                                    this.distributionAndSubVariableTitleIndexes.push(index1 + 1);
-                                                }
-                                                else {
-                                                    this.distributionTitleIndexes.push(index1 + 1);
-                                                }
-                                            }
-                                            else if ((variables[varIndex][0].timeSegmentResponse.resultMap[index1 + 1].title).indexOf('.') > -1) {
-                                                this.subVarTitleIndexes.push(index1 + 1);
-                                            }
-                                        }
-
-                                        for (var index1 = 0; index1 < ((variables[varIndex][0].timeSegmentResponse.resultMap).length) - 1; index1++) {
-
-                                            if (this.distributionTitleIndexes[0] != null) {
-
-                                                this.distributionTitleIndexes.forEach(distIndex => {
-
-                                                    row = new TableViewRow(variable.id + "." + (index1 + 1));
-                                                    row.addColumn(new TableViewColumn("name", varTitle + " " + variables[varIndex][0].timeSegmentResponse.resultMap[distIndex].title));
-
-                                                    column = 0;
-
-                                                    for (var col = 1; col < this.columns.length; col ++) {
-
-                                                        //if (this.columns[col].placeHolder == timeSegStartDate) {
-                                                            this.started = true;
-                                                            for (var index2 = varStartIndex; index2 < monthDifference; index2++) {
-                                                                if (variables[varIndex][0].timeSegmentResponse.resultMap[0].data[index2] == null) {
-                                                                    row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                                                    columnCounter++;
-                                                                }
-                                                                else {
-                                                                    value = parseFloat(variables[varIndex][0].timeSegmentResponse.resultMap[distIndex].data[index2].value);
-                                                                    if (this.varType == "integer") {
-                                                                        row.addColumn(new TableViewColumn("Column " + col, (Math.round(value)).toString()));
-                                                                    }
-                                                                    else if (this.varType == "real") {
-                                                                        row.addColumn(new TableViewColumn("Column " + col, ((Math.round(value * 100)) / 100).toString()));
-                                                                    }
-                                                                    columnCounter++;
-                                                                }
-                                                            }
-
-                                                            if (columnCounter < this.columns.length) {
-                                                                for (var col = columnCounter; col < (this.columns.length)-1; col++) {
-                                                                    row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                                                    columnCounter++;
-                                                                }
-                                                            }
-                                                            columnCounter = 0;
-                                                            break;
-                                                       // }
-                                                        //else {
-                                                        //    row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                                        //    columnCounter++;
-                                                        //}
-                                                    }
-                                                    this.rows.push(row);
-                                                });
-                                            }
-
-                                            if (this.subVarTitleIndexes[0] != null) {
-
-                                                this.subVarTitleIndexes.forEach(subVarIndex => {
-
-                                                    row = new TableViewRow(variable.id + "." + (index1 + 1));
-                                                    row.addColumn(new TableViewColumn("name", varTitle + " " + variables[varIndex][0].timeSegmentResponse.resultMap[subVarIndex].title));
-
-                                                    column = 0;
-
-                                                    for (var col = 1; col < this.columns.length; col ++) {
-
-                                                        //if (this.columns[col].placeHolder == timeSegStartDate) {
-                                                            this.started = true;
-                                                            for (var index2 = varStartIndex; index2 < monthDifference; index2++) {
-                                                                if (variables[varIndex][0].timeSegmentResponse.resultMap[subVarIndex].data[index2] == null) {
-                                                                    row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                                                    columnCounter++;
-                                                                }
-                                                                else {
-                                                                    value = parseFloat(variables[varIndex][0].timeSegmentResponse.resultMap[subVarIndex].data[index2].value);
-                                                                    if (this.varType == "integer") {
-                                                                        row.addColumn(new TableViewColumn("Column " + col, (Math.round(value)).toString()));
-                                                                    }
-                                                                    else if (this.varType == "real") {
-                                                                        row.addColumn(new TableViewColumn("Column " + col, ((Math.round(value * 100)) / 100).toString()));
-                                                                    }
-                                                                    columnCounter++;
-                                                                }
-                                                            }
-
-                                                            if (columnCounter < this.columns.length) {
-                                                                for (var col = columnCounter; col < (this.columns.length)-1; col++) {
-                                                                    row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                                                    columnCounter++;
-                                                                }
-                                                            }
-
-                                                            columnCounter = 0;
-                                                            break;
-                                                        //}
-                                                        //else {
-                                                        //    row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                                        //    columnCounter++;
-                                                        //}
-                                                    }
-                                                    this.rows.push(row);
-
-                                                    if (this.distributionAndSubVariableTitleIndexes[0] != null) {
-
-                                                        var match = false;
-
-                                                        this.distributionAndSubVariableTitleIndexes.forEach(distSubVarIndex => {
-
-                                                            var title = variables[varIndex][0].timeSegmentResponse.resultMap[subVarIndex].title;
-                                                            title = title.replace(' ', '');
-
-                                                            if ((variables[varIndex][0].timeSegmentResponse.resultMap[distSubVarIndex].title).indexOf(title) > -1) {
-                                                                match = true;
-                                                            }
-
-                                                            if (match) {
-
-                                                                row = new TableViewRow(variable.id + "." + (index1 + 1));
-                                                                row.addColumn(new TableViewColumn("name", varTitle + " " + variables[varIndex][0].timeSegmentResponse.resultMap[distSubVarIndex].title));
-
-                                                                column = 0;
-
-                                                                for (var col = 1; col < this.columns.length; col ++) {
-
-                                                                    //if (this.columns[col].placeHolder == timeSegStartDate) {
-                                                                        this.started = true;
-                                                                        for (var index2 = varStartIndex; index2 < monthDifference; index2++) {
-                                                                            if (variables[varIndex][0].timeSegmentResponse.resultMap[0].data[index2] == null) {
-                                                                                row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                                                                columnCounter++;
-                                                                            }
-                                                                            else {
-                                                                                value = parseFloat(variables[varIndex][0].timeSegmentResponse.resultMap[distSubVarIndex].data[index2].value);
-                                                                                if (this.varType == "integer") {
-                                                                                    row.addColumn(new TableViewColumn("Column " + col, (Math.round(value)).toString()));
-                                                                                }
-                                                                                else if (this.varType == "real") {
-                                                                                    row.addColumn(new TableViewColumn("Column " + col, ((Math.round(value * 100)) / 100).toString()));
-                                                                                }
-                                                                                columnCounter++;
-                                                                            }
-                                                                        }
-
-                                                                        if (columnCounter < this.columns.length) {
-                                                                            for (var col = columnCounter; col < (this.columns.length)-1; col++) {
-                                                                                row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                                                                columnCounter++;
-                                                                            }
-                                                                        }
-                                                                        columnCounter = 0;
-                                                                        break;
-                                                                    //}
-                                                                    //else {
-                                                                    //    row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                                                    //    columnCounter++;
-                                                                    //}
-                                                                }
-                                                                this.rows.push(row);
-                                                                match = false;
-                                                            }
-                                                        });
-                                                    }
-
-                                                });
-                                            }
-                                            break;
-                                        }
-
-                                        this.distributionTitleIndexes = [];
-                                        this.subVarTitleIndexes = [];
-                                        this.distributionAndSubVariableTitleIndexes = [];
-                                    }
-                                }
-                                else {
-                                    for (var column = 0; column < (this.columns.length)-1; column++) {
-                                        row.addColumn(new TableViewColumn("Column " + column, "n/a"));
-                                        columnCounter++;
-                                    }
-
-                                    if (columnCounter < this.columns.length) {
-                                        for (var col = columnCounter; col < (this.columns.length)-1; col++) {
-                                            row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                            columnCounter++;
-                                        }
-                                    }
-                                    this.rows.push(row);
-                                    columnCounter = 0;
-                                }
-
-                            }
-                            else {
-                                if (timeSegStart[3] == 0) {
-                                    timeSegStartMonth = timeSegStart[4];
-                                    timeSegStartMonth = timeSegStartMonth - 1;
-                                }
-                                else {
-                                    timeSegStartMonth = timeSegStart[3]+timeSegStart[4];
-                                    timeSegStartMonth = timeSegStartMonth - 1;
-                                }
-
-                                timeSegStartYear = timeSegStart[6]+timeSegStart[7]+timeSegStart[8]+timeSegStart[9];
-
-                                timeSegStartDate = this.months[timeSegStartMonth] + " " + timeSegStartYear;
-
-
-                                if (variables[varIndex][0].timeSegmentResponse != null) {
-
-                                    for (var x = 1; x < this.columns.length; x ++) {
-
-                                        if (this.started) {
-                                            if (this.columns[x].placeHolder == timeSegStartDate) {
-                                                for (var index1 = 0; index1 < monthDifference; index1++) {
-
-                                                    if (variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1] == null) {
-                                                        row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
-                                                        columnCounter++;
-                                                    }
-                                                    else {
-                                                        value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1].value);
-                                                        if (this.varType == "integer") {
-                                                            row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
-                                                        }
-                                                        else if (this.varType == "real") {
-                                                            row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                        }
-                                                        columnCounter++;
-                                                    }
-                                                }
-
-                                                if (columnCounter < this.columns.length) {
-                                                    for (var col = columnCounter; col < (this.columns.length)-1; col++) {
-                                                        row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                                        columnCounter++;
-                                                    }
-                                                }
-                                                //this.rows.push(row);
-                                                columnCounter = 0;
-                                                break;
-                                            }
-                                        }
-                                        else {
-                                            if (this.columns[x].placeHolder == timeSegStartDate) {
-                                                this.started = true;
-                                                for (var index1 = 0; index1 < monthDifference; index1++) {
-
-                                                    if (variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1] == null) {
-                                                        row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
-                                                        columnCounter++;
-                                                    }
-                                                    else {
-                                                        value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1].value);
-                                                        if (this.varType == "integer") {
-                                                            row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
-                                                        }
-                                                        else if (this.varType == "real") {
-                                                            row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
-                                                        }
-                                                        columnCounter++;
-                                                    }
-                                                }
-
-                                                if (columnCounter < this.columns.length) {
-                                                    for (var col = columnCounter; col < (this.columns.length)-1; col++) {
-                                                        row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                                        columnCounter++;
-                                                    }
-                                                }
-
-                                                columnCounter = 0;
-                                                break;
-                                            }
-                                            else {
-                                                row.addColumn(new TableViewColumn("Column " + x, "n/a"));
-                                                columnCounter++;
-                                            }
-                                        }
-                                    }
-                                    this.started = false;
-                                    this.rows.push(row);
-
-                                    // If a variable's resultMap contains more than 1 instance then add the appropriate data to the associated columns
-                                    if ((variables[varIndex][0].timeSegmentResponse.resultMap).length > 1) {
-
-                                        for (var index1 = 0; index1 < ((variables[varIndex][0].timeSegmentResponse.resultMap).length) - 1; index1++) {
-                                            if ((variables[varIndex][0].timeSegmentResponse.resultMap[index1 + 1].title).indexOf('Σ') > -1) {
-                                                if ((variables[varIndex][0].timeSegmentResponse.resultMap[index1 + 1].title).indexOf('.') > -1) {
-                                                    this.distributionAndSubVariableTitleIndexes.push(index1 + 1);
-                                                }
-                                                else {
-                                                    this.distributionTitleIndexes.push(index1 + 1);
-                                                }
-                                            }
-                                            else if ((variables[varIndex][0].timeSegmentResponse.resultMap[index1 + 1].title).indexOf('.') > -1) {
-                                                this.subVarTitleIndexes.push(index1 + 1);
-                                            }
-                                        }
-
-                                        for (var index1 = 0; index1 < ((variables[varIndex][0].timeSegmentResponse.resultMap).length) - 1; index1++) {
-
-                                            if (this.distributionTitleIndexes[0] != null) {
-
-                                                this.distributionTitleIndexes.forEach(distIndex => {
-
-                                                    row = new TableViewRow(variable.id + "." + (index1 + 1));
-                                                    row.addColumn(new TableViewColumn("name", varTitle + " " + variables[varIndex][0].timeSegmentResponse.resultMap[distIndex].title));
-
-                                                    column = 0;
-
-                                                    for (var col = 1; col < this.columns.length; col ++) {
-
-                                                        if (this.columns[col].placeHolder == timeSegStartDate) {
-                                                            this.started = true;
-                                                            for (var index2 = 0; index2 < monthDifference; index2++) {
-                                                                if (variables[varIndex][0].timeSegmentResponse.resultMap[0].data[index2] == null) {
-                                                                    row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                                                    columnCounter++;
-                                                                }
-                                                                else {
-                                                                    value = parseFloat(variables[varIndex][0].timeSegmentResponse.resultMap[distIndex].data[index2].value);
-                                                                    if (this.varType == "integer") {
-                                                                        row.addColumn(new TableViewColumn("Column " + col, (Math.round(value)).toString()));
-                                                                    }
-                                                                    else if (this.varType == "real") {
-                                                                        row.addColumn(new TableViewColumn("Column " + col, ((Math.round(value * 100)) / 100).toString()));
-                                                                    }
-                                                                    columnCounter++;
-                                                                }
-                                                            }
-
-                                                            if (columnCounter < this.columns.length) {
-                                                                for (var col = columnCounter; col < (this.columns.length)-1; col++) {
-                                                                    row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                                                    columnCounter++;
-                                                                }
-                                                            }
-                                                            columnCounter = 0;
-                                                            break;
-                                                        }
-                                                        else {
-                                                            row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                                            columnCounter++;
-                                                        }
-                                                    }
-                                                    this.rows.push(row);
-                                                });
-                                            }
-
-                                            if (this.subVarTitleIndexes[0] != null) {
-
-                                                this.subVarTitleIndexes.forEach(subVarIndex => {
-
-                                                    row = new TableViewRow(variable.id + "." + (index1 + 1));
-                                                    row.addColumn(new TableViewColumn("name", varTitle + " " + variables[varIndex][0].timeSegmentResponse.resultMap[subVarIndex].title));
-
-                                                    column = 0;
-
-                                                    for (var col = 1; col < this.columns.length; col ++) {
-
-                                                        if (this.columns[col].placeHolder == timeSegStartDate) {
-                                                            this.started = true;
-                                                            for (var index2 = 0; index2 < monthDifference; index2++) {
-                                                                if (variables[varIndex][0].timeSegmentResponse.resultMap[subVarIndex].data[index2] == null) {
-                                                                    row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                                                    columnCounter++;
-                                                                }
-                                                                else {
-                                                                    value = parseFloat(variables[varIndex][0].timeSegmentResponse.resultMap[subVarIndex].data[index2].value);
-                                                                    if (this.varType == "integer") {
-                                                                        row.addColumn(new TableViewColumn("Column " + col, (Math.round(value)).toString()));
-                                                                    }
-                                                                    else if (this.varType == "real") {
-                                                                        row.addColumn(new TableViewColumn("Column " + col, ((Math.round(value * 100)) / 100).toString()));
-                                                                    }
-                                                                    columnCounter++;
-                                                                }
-                                                            }
-
-                                                            if (columnCounter < this.columns.length) {
-                                                                for (var col = columnCounter; col < (this.columns.length)-1; col++) {
-                                                                    row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                                                    columnCounter++;
-                                                                }
-                                                            }
-
-                                                            columnCounter = 0;
-                                                            break;
-                                                        }
-                                                        else {
-                                                            row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                                            columnCounter++;
-                                                        }
-                                                    }
-                                                    this.rows.push(row);
-
-                                                    if (this.distributionAndSubVariableTitleIndexes[0] != null) {
-
-                                                        var match = false;
-
-                                                        this.distributionAndSubVariableTitleIndexes.forEach(distSubVarIndex => {
-
-                                                            var title = variables[varIndex][0].timeSegmentResponse.resultMap[subVarIndex].title;
-                                                            title = title.replace(' ', '');
-
-                                                            if ((variables[varIndex][0].timeSegmentResponse.resultMap[distSubVarIndex].title).indexOf(title) > -1) {
-                                                                match = true;
-                                                            }
-
-                                                            if (match) {
-
-                                                                row = new TableViewRow(variable.id + "." + (index1 + 1));
-                                                                row.addColumn(new TableViewColumn("name", varTitle + " " + variables[varIndex][0].timeSegmentResponse.resultMap[distSubVarIndex].title));
-
-                                                                column = 0;
-
-                                                                for (var col = 1; col < this.columns.length; col ++) {
-
-                                                                    if (this.columns[col].placeHolder == timeSegStartDate) {
-                                                                        this.started = true;
-                                                                        for (var index2 = 0; index2 < monthDifference; index2++) {
-                                                                            if (variables[varIndex][0].timeSegmentResponse.resultMap[0].data[index2] == null) {
-                                                                                row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                                                                columnCounter++;
-                                                                            }
-                                                                            else {
-                                                                                value = parseFloat(variables[varIndex][0].timeSegmentResponse.resultMap[distSubVarIndex].data[index2].value);
-                                                                                if (this.varType == "integer") {
-                                                                                    row.addColumn(new TableViewColumn("Column " + col, (Math.round(value)).toString()));
-                                                                                }
-                                                                                else if (this.varType == "real") {
-                                                                                    row.addColumn(new TableViewColumn("Column " + col, ((Math.round(value * 100)) / 100).toString()));
-                                                                                }
-                                                                                columnCounter++;
-                                                                            }
-                                                                        }
-
-                                                                        if (columnCounter < this.columns.length) {
-                                                                            for (var col = columnCounter; col < (this.columns.length)-1; col++) {
-                                                                                row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                                                                columnCounter++;
-                                                                            }
-                                                                        }
-                                                                        columnCounter = 0;
-                                                                        break;
+                                                                //if (this.columns[col].placeHolder == timeSegStartDate) {
+                                                                this.started = true;
+                                                                for (var index2 = varStartIndex; index2 < monthDifference; index2++) {
+                                                                    if (variables[varIndex][0].timeSegmentResponse.resultMap[subVarIndex].data[index2] == null) {
+                                                                        row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                                        columnCounter++;
                                                                     }
                                                                     else {
+                                                                        value = parseFloat(variables[varIndex][0].timeSegmentResponse.resultMap[subVarIndex].data[index2].value);
+                                                                        if (this.varType == "integer") {
+                                                                            row.addColumn(new TableViewColumn("Column " + col, (Math.round(value)).toString()));
+                                                                        }
+                                                                        else if (this.varType == "real") {
+                                                                            row.addColumn(new TableViewColumn("Column " + col, ((Math.round(value * 100)) / 100).toString()));
+                                                                        }
+                                                                        columnCounter++;
+                                                                    }
+                                                                }
+
+                                                                if (columnCounter < this.columns.length) {
+                                                                    for (var col = columnCounter; col < (this.columns.length)-1; col++) {
                                                                         row.addColumn(new TableViewColumn("Column " + col, "n/a"));
                                                                         columnCounter++;
                                                                     }
                                                                 }
-                                                                this.rows.push(row);
-                                                                match = false;
+
+                                                                columnCounter = 0;
+                                                                break;
+                                                                //}
+                                                                //else {
+                                                                //    row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                                //    columnCounter++;
+                                                                //}
                                                             }
+                                                            this.rows.push(row);
+
+                                                            if (this.distributionAndSubVariableTitleIndexes[0] != null) {
+
+                                                                var match = false;
+
+                                                                this.distributionAndSubVariableTitleIndexes.forEach(distSubVarIndex => {
+
+                                                                    var title = variables[varIndex][0].timeSegmentResponse.resultMap[subVarIndex].title;
+                                                                    title = title.replace(' ', '');
+
+                                                                    if ((variables[varIndex][0].timeSegmentResponse.resultMap[distSubVarIndex].title).indexOf(title) > -1) {
+                                                                        match = true;
+                                                                    }
+
+                                                                    if (match) {
+
+                                                                        row = new TableViewRow(variable.id + "." + (index1 + 1));
+                                                                        row.addColumn(new TableViewColumn("name", varTitle + " " + variables[varIndex][0].timeSegmentResponse.resultMap[distSubVarIndex].title));
+
+                                                                        column = 0;
+
+                                                                        for (var col = 1; col < this.columns.length; col ++) {
+
+                                                                            //if (this.columns[col].placeHolder == timeSegStartDate) {
+                                                                            this.started = true;
+                                                                            for (var index2 = varStartIndex; index2 < monthDifference; index2++) {
+                                                                                if (variables[varIndex][0].timeSegmentResponse.resultMap[0].data[index2] == null) {
+                                                                                    row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                                                    columnCounter++;
+                                                                                }
+                                                                                else {
+                                                                                    value = parseFloat(variables[varIndex][0].timeSegmentResponse.resultMap[distSubVarIndex].data[index2].value);
+                                                                                    if (this.varType == "integer") {
+                                                                                        row.addColumn(new TableViewColumn("Column " + col, (Math.round(value)).toString()));
+                                                                                    }
+                                                                                    else if (this.varType == "real") {
+                                                                                        row.addColumn(new TableViewColumn("Column " + col, ((Math.round(value * 100)) / 100).toString()));
+                                                                                    }
+                                                                                    columnCounter++;
+                                                                                }
+                                                                            }
+
+                                                                            if (columnCounter < this.columns.length) {
+                                                                                for (var col = columnCounter; col < (this.columns.length)-1; col++) {
+                                                                                    row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                                                    columnCounter++;
+                                                                                }
+                                                                            }
+                                                                            columnCounter = 0;
+                                                                            break;
+                                                                            //}
+                                                                            //else {
+                                                                            //    row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                                            //    columnCounter++;
+                                                                            //}
+                                                                        }
+                                                                        this.rows.push(row);
+                                                                        match = false;
+                                                                    }
+                                                                });
+                                                            }
+
+                                                        });
+                                                    }
+                                                    break;
+                                                }
+
+                                                this.distributionTitleIndexes = [];
+                                                this.subVarTitleIndexes = [];
+                                                this.distributionAndSubVariableTitleIndexes = [];
+                                            }
+                                        }
+                                        else {
+                                            for (var column = 0; column < (this.columns.length)-1; column++) {
+                                                row.addColumn(new TableViewColumn("Column " + column, "n/a"));
+                                                columnCounter++;
+                                            }
+
+                                            if (columnCounter < this.columns.length) {
+                                                for (var col = columnCounter; col < (this.columns.length)-1; col++) {
+                                                    row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                    columnCounter++;
+                                                }
+                                            }
+                                            this.rows.push(row);
+                                            columnCounter = 0;
+                                        }
+
+                                    }
+                                    else {
+                                        if (timeSegStart[3] == 0) {
+                                            timeSegStartMonth = timeSegStart[4];
+                                            timeSegStartMonth = timeSegStartMonth - 1;
+                                        }
+                                        else {
+                                            timeSegStartMonth = timeSegStart[3]+timeSegStart[4];
+                                            timeSegStartMonth = timeSegStartMonth - 1;
+                                        }
+
+                                        timeSegStartYear = timeSegStart[6]+timeSegStart[7]+timeSegStart[8]+timeSegStart[9];
+
+                                        timeSegStartDate = this.months[timeSegStartMonth] + " " + timeSegStartYear;
+
+
+                                        if (variables[varIndex][0].timeSegmentResponse != null) {
+
+                                            for (var x = 1; x < this.columns.length; x ++) {
+
+                                                if (this.started) {
+                                                    if (this.columns[x].placeHolder == timeSegStartDate) {
+                                                        for (var index1 = 0; index1 < monthDifference; index1++) {
+
+                                                            if (variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1] == null) {
+                                                                row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                columnCounter++;
+                                                            }
+                                                            else {
+                                                                value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1].value);
+                                                                if (this.varType == "integer") {
+                                                                    row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
+                                                                }
+                                                                else if (this.varType == "real") {
+                                                                    row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                                }
+                                                                columnCounter++;
+                                                            }
+                                                        }
+
+                                                        if (columnCounter < this.columns.length) {
+                                                            for (var col = columnCounter; col < (this.columns.length)-1; col++) {
+                                                                row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                                columnCounter++;
+                                                            }
+                                                        }
+                                                        //this.rows.push(row);
+                                                        columnCounter = 0;
+                                                        break;
+                                                    }
+                                                }
+                                                else {
+                                                    if (this.columns[x].placeHolder == timeSegStartDate) {
+                                                        this.started = true;
+                                                        for (var index1 = 0; index1 < monthDifference; index1++) {
+
+                                                            if (variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1] == null) {
+                                                                row.addColumn(new TableViewColumn("Column " + index1, "n/a"));
+                                                                columnCounter++;
+                                                            }
+                                                            else {
+                                                                value = parseFloat(variables[varIndex][index].timeSegmentResponse.resultMap[0].data[index1].value);
+                                                                if (this.varType == "integer") {
+                                                                    row.addColumn(new TableViewColumn("Column " + index1, (Math.round(value)).toString()));
+                                                                }
+                                                                else if (this.varType == "real") {
+                                                                    row.addColumn(new TableViewColumn("Column " + index1, ((Math.round(value * 100)) / 100).toString()));
+                                                                }
+                                                                columnCounter++;
+                                                            }
+                                                        }
+
+                                                        if (columnCounter < this.columns.length) {
+                                                            for (var col = columnCounter; col < (this.columns.length)-1; col++) {
+                                                                row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                                columnCounter++;
+                                                            }
+                                                        }
+
+                                                        columnCounter = 0;
+                                                        break;
+                                                    }
+                                                    else {
+                                                        row.addColumn(new TableViewColumn("Column " + x, "n/a"));
+                                                        columnCounter++;
+                                                    }
+                                                }
+                                            }
+                                            this.started = false;
+                                            this.rows.push(row);
+
+                                            // If a variable's resultMap contains more than 1 instance then add the appropriate data to the associated columns
+                                            if ((variables[varIndex][0].timeSegmentResponse.resultMap).length > 1) {
+
+                                                for (var index1 = 0; index1 < ((variables[varIndex][0].timeSegmentResponse.resultMap).length) - 1; index1++) {
+                                                    if ((variables[varIndex][0].timeSegmentResponse.resultMap[index1 + 1].title).indexOf('Σ') > -1) {
+                                                        if ((variables[varIndex][0].timeSegmentResponse.resultMap[index1 + 1].title).indexOf('.') > -1) {
+                                                            this.distributionAndSubVariableTitleIndexes.push(index1 + 1);
+                                                        }
+                                                        else {
+                                                            this.distributionTitleIndexes.push(index1 + 1);
+                                                        }
+                                                    }
+                                                    else if ((variables[varIndex][0].timeSegmentResponse.resultMap[index1 + 1].title).indexOf('.') > -1) {
+                                                        this.subVarTitleIndexes.push(index1 + 1);
+                                                    }
+                                                }
+
+                                                for (var index1 = 0; index1 < ((variables[varIndex][0].timeSegmentResponse.resultMap).length) - 1; index1++) {
+
+                                                    if (this.distributionTitleIndexes[0] != null) {
+
+                                                        this.distributionTitleIndexes.forEach(distIndex => {
+
+                                                            row = new TableViewRow(variable.id + "." + (index1 + 1));
+                                                            row.addColumn(new TableViewColumn("name", varTitle + " " + variables[varIndex][0].timeSegmentResponse.resultMap[distIndex].title));
+
+                                                            column = 0;
+
+                                                            for (var col = 1; col < this.columns.length; col ++) {
+
+                                                                if (this.columns[col].placeHolder == timeSegStartDate) {
+                                                                    this.started = true;
+                                                                    for (var index2 = 0; index2 < monthDifference; index2++) {
+                                                                        if (variables[varIndex][0].timeSegmentResponse.resultMap[0].data[index2] == null) {
+                                                                            row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                                            columnCounter++;
+                                                                        }
+                                                                        else {
+                                                                            value = parseFloat(variables[varIndex][0].timeSegmentResponse.resultMap[distIndex].data[index2].value);
+                                                                            if (this.varType == "integer") {
+                                                                                row.addColumn(new TableViewColumn("Column " + col, (Math.round(value)).toString()));
+                                                                            }
+                                                                            else if (this.varType == "real") {
+                                                                                row.addColumn(new TableViewColumn("Column " + col, ((Math.round(value * 100)) / 100).toString()));
+                                                                            }
+                                                                            columnCounter++;
+                                                                        }
+                                                                    }
+
+                                                                    if (columnCounter < this.columns.length) {
+                                                                        for (var col = columnCounter; col < (this.columns.length)-1; col++) {
+                                                                            row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                                            columnCounter++;
+                                                                        }
+                                                                    }
+                                                                    columnCounter = 0;
+                                                                    break;
+                                                                }
+                                                                else {
+                                                                    row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                                    columnCounter++;
+                                                                }
+                                                            }
+                                                            this.rows.push(row);
                                                         });
                                                     }
 
-                                                });
+                                                    if (this.subVarTitleIndexes[0] != null) {
+
+                                                        this.subVarTitleIndexes.forEach(subVarIndex => {
+
+                                                            row = new TableViewRow(variable.id + "." + (index1 + 1));
+                                                            row.addColumn(new TableViewColumn("name", varTitle + " " + variables[varIndex][0].timeSegmentResponse.resultMap[subVarIndex].title));
+
+                                                            column = 0;
+
+                                                            for (var col = 1; col < this.columns.length; col ++) {
+
+                                                                if (this.columns[col].placeHolder == timeSegStartDate) {
+                                                                    this.started = true;
+                                                                    for (var index2 = 0; index2 < monthDifference; index2++) {
+                                                                        if (variables[varIndex][0].timeSegmentResponse.resultMap[subVarIndex].data[index2] == null) {
+                                                                            row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                                            columnCounter++;
+                                                                        }
+                                                                        else {
+                                                                            value = parseFloat(variables[varIndex][0].timeSegmentResponse.resultMap[subVarIndex].data[index2].value);
+                                                                            if (this.varType == "integer") {
+                                                                                row.addColumn(new TableViewColumn("Column " + col, (Math.round(value)).toString()));
+                                                                            }
+                                                                            else if (this.varType == "real") {
+                                                                                row.addColumn(new TableViewColumn("Column " + col, ((Math.round(value * 100)) / 100).toString()));
+                                                                            }
+                                                                            columnCounter++;
+                                                                        }
+                                                                    }
+
+                                                                    if (columnCounter < this.columns.length) {
+                                                                        for (var col = columnCounter; col < (this.columns.length)-1; col++) {
+                                                                            row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                                            columnCounter++;
+                                                                        }
+                                                                    }
+
+                                                                    columnCounter = 0;
+                                                                    break;
+                                                                }
+                                                                else {
+                                                                    row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                                    columnCounter++;
+                                                                }
+                                                            }
+                                                            this.rows.push(row);
+
+                                                            if (this.distributionAndSubVariableTitleIndexes[0] != null) {
+
+                                                                var match = false;
+
+                                                                this.distributionAndSubVariableTitleIndexes.forEach(distSubVarIndex => {
+
+                                                                    var title = variables[varIndex][0].timeSegmentResponse.resultMap[subVarIndex].title;
+                                                                    title = title.replace(' ', '');
+
+                                                                    if ((variables[varIndex][0].timeSegmentResponse.resultMap[distSubVarIndex].title).indexOf(title) > -1) {
+                                                                        match = true;
+                                                                    }
+
+                                                                    if (match) {
+
+                                                                        row = new TableViewRow(variable.id + "." + (index1 + 1));
+                                                                        row.addColumn(new TableViewColumn("name", varTitle + " " + variables[varIndex][0].timeSegmentResponse.resultMap[distSubVarIndex].title));
+
+                                                                        column = 0;
+
+                                                                        for (var col = 1; col < this.columns.length; col ++) {
+
+                                                                            if (this.columns[col].placeHolder == timeSegStartDate) {
+                                                                                this.started = true;
+                                                                                for (var index2 = 0; index2 < monthDifference; index2++) {
+                                                                                    if (variables[varIndex][0].timeSegmentResponse.resultMap[0].data[index2] == null) {
+                                                                                        row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                                                        columnCounter++;
+                                                                                    }
+                                                                                    else {
+                                                                                        value = parseFloat(variables[varIndex][0].timeSegmentResponse.resultMap[distSubVarIndex].data[index2].value);
+                                                                                        if (this.varType == "integer") {
+                                                                                            row.addColumn(new TableViewColumn("Column " + col, (Math.round(value)).toString()));
+                                                                                        }
+                                                                                        else if (this.varType == "real") {
+                                                                                            row.addColumn(new TableViewColumn("Column " + col, ((Math.round(value * 100)) / 100).toString()));
+                                                                                        }
+                                                                                        columnCounter++;
+                                                                                    }
+                                                                                }
+
+                                                                                if (columnCounter < this.columns.length) {
+                                                                                    for (var col = columnCounter; col < (this.columns.length)-1; col++) {
+                                                                                        row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                                                        columnCounter++;
+                                                                                    }
+                                                                                }
+                                                                                columnCounter = 0;
+                                                                                break;
+                                                                            }
+                                                                            else {
+                                                                                row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                                                columnCounter++;
+                                                                            }
+                                                                        }
+                                                                        this.rows.push(row);
+                                                                        match = false;
+                                                                    }
+                                                                });
+                                                            }
+
+                                                        });
+                                                    }
+                                                    break;
+                                                }
+
+                                                this.distributionTitleIndexes = [];
+                                                this.subVarTitleIndexes = [];
+                                                this.distributionAndSubVariableTitleIndexes = [];
                                             }
-                                            break;
                                         }
+                                        else {
+                                            for (var column = 0; column < (this.columns.length)-1; column++) {
+                                                row.addColumn(new TableViewColumn("Column " + column, "n/a"));
+                                                columnCounter++;
+                                            }
 
-                                        this.distributionTitleIndexes = [];
-                                        this.subVarTitleIndexes = [];
-                                        this.distributionAndSubVariableTitleIndexes = [];
-                                    }
-                                }
-                                else {
-                                    for (var column = 0; column < (this.columns.length)-1; column++) {
-                                        row.addColumn(new TableViewColumn("Column " + column, "n/a"));
-                                        columnCounter++;
-                                    }
-
-                                    if (columnCounter < this.columns.length) {
-                                        for (var col = columnCounter; col < (this.columns.length)-1; col++) {
-                                            row.addColumn(new TableViewColumn("Column " + col, "n/a"));
-                                            columnCounter++;
+                                            if (columnCounter < this.columns.length) {
+                                                for (var col = columnCounter; col < (this.columns.length)-1; col++) {
+                                                    row.addColumn(new TableViewColumn("Column " + col, "n/a"));
+                                                    columnCounter++;
+                                                }
+                                            }
+                                            this.rows.push(row);
+                                            columnCounter = 0;
                                         }
                                     }
-                                    this.rows.push(row);
-                                    columnCounter = 0;
+
                                 }
                             }
-
                         }
+
+                        this.timeSegDistributionIndexes.length = 0;
+                        this.distribution = false;
+
+                        varStartIndex = 0;
                     }
                 }
-
-                this.timeSegDistributionIndexes.length = 0;
-                this.distribution = false;
                 varIndex++;
-                varStartIndex = 0;
             });
             this.titles = [];
             this.titleOccurs = 0;
@@ -2664,4 +2684,3 @@ export class ForecastTabularComponent implements OnInit {
     }
 
 }
-

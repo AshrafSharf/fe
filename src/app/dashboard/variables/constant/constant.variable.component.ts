@@ -14,11 +14,12 @@ export class VariableConstantComponent implements OnInit, VariableComponentBehav
     @Input('const-value') constValue: String = '';
     @Input('growth') growth: String = '';
     @Input('time-segment') timeSegment: TimeSegment;
+    @Input('input-method') inputMethod: String = '';
     @ViewChild(VariableDistributionComponent) distributionComponent:VariableDistributionComponent;
-    
+
     constructor() { }
 
-    ngOnInit() { 
+    ngOnInit() {
         if (this.timeSegment != null || this.timeSegment != undefined) {
             this.constValue = '' + this.timeSegment.constantValue;
             this.growth = '' + this.timeSegment.growth;
@@ -43,11 +44,11 @@ export class VariableConstantComponent implements OnInit, VariableComponentBehav
         console.log(words);
         return {
             stdDevCompletedWordsArray: words[1],
-            meanCompletedWordsArray: words[0],
+            //meanCompletedWordsArray: words[0],
             constantValue: this.constValue,
             growth: this.growth,
             distributionType: this.distributionComponent.distributionType,
-            mean: this.distributionComponent.mean,
+            //mean: this.distributionComponent.mean,
             stdDeviation: this.distributionComponent.deviation,
             userSelectedParametrics: this.distributionComponent.parametric,
             userSelectedParametricsStdDeviation: this.distributionComponent.sigma

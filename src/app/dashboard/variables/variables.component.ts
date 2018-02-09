@@ -294,7 +294,7 @@ export class VariablesComponent implements OnInit {
                     axisLabelDistance: -10
                 },
 
-                showLegend: false,
+                showLegend: true,
             },
         };
     }

@@ -40,7 +40,7 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
         return {index: i};
     }
 
-    selectedInputMethod = 'constant';
+    selectedInputMethod = "constant";
     comment = '';
     
     datePickerConfig = { format : 'DD-MM-YYYY hh:mm' };
@@ -50,7 +50,7 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
     ) { }
 
     ngOnChanges(changes: SimpleChanges): void {
-        console.log(changes);
+        //console.log(changes);
     }
 
     isSubvariableAdded(name) {
@@ -140,7 +140,16 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
 
                         date = new Date(`${month}/${day}/${year}`);
                     }
-
+                    if (this.selectedInputMethod == "table"){
+                        console.log("hello");
+                        this.startDate = unix(date.getTime() / 1000);
+                        console.log(this.startDate);
+                    }
+                    else{
+                        this.startDate = unix(date.getTime() / 1000);
+                        console.log("start",this.startDate);
+                        this.endDate = this.startDate;
+                    }
                     this.startDate = unix(date.getTime() / 1000);
                     this.endDate = this.startDate;
                 
@@ -239,6 +248,23 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
         }
 
         return result;        
+    }
+
+    changeDates(){
+        console.log(this.selectedInputMethod);
+        if (this.selectedInputMethod == 'table'&& this.timeSegment.startTime == "") {
+            let tableStartDate = new Date();
+            tableStartDate.setMonth(tableStartDate.getMonth()-6);
+            this.startDate = unix(tableStartDate.getTime()/1000);
+            let tableEndDate = new Date();
+            tableEndDate.setMonth(tableEndDate.getMonth()+12);
+            console.log("table end date", tableEndDate);
+            this.endDate = unix(tableEndDate.getTime()/1000);
+        }
+        else{
+            this.startDate = unix(new Date().getTime() /1000);
+        } 
+        
     }
     
 }

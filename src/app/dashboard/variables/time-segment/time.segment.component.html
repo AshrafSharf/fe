@@ -64,7 +64,7 @@
                             <div *ngIf="valueType != 'discrete'">
                                 <div class="form-group">
                                     <label for="">Input Method</label>
-                                    <select id="input-method" [(ngModel)]="selectedInputMethod" class="form-control">
+                                    <select id="input-method" (change)="changeDates()" [(ngModel)]="selectedInputMethod" class="form-control">
                                         <option value="constant">Constant</option>
                                         <option value="expression">Expression</option>
                                         <option value="table">Input Table</option>

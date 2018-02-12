@@ -28,7 +28,7 @@ export class ForecastGraphicalComponent implements OnInit {
     breakdownVariables:Boolean = true;
     discreteVariables:Boolean = false;
     breakdownLines:Boolean = true;
-    discreteLines:Boolean = false;
+    distributionLines:Boolean = true;
 
     public lineChartData:Array<any> = [];
     public lineChartLabels:Array<{key: number, value:string}> = [];
@@ -41,7 +41,6 @@ export class ForecastGraphicalComponent implements OnInit {
     data;
     options;
 
-
     constructor(
         private router: Router,
         private branchService:BranchService,
@@ -50,33 +49,6 @@ export class ForecastGraphicalComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.options = {
-            chart: {
-              type: 'lineChart',
-              height: 450,
-              x: (d) => { return d.x; },
-              y: function(d){ return d.y; },
-              useInteractiveGuideline: true,
-              xAxis: {
-                axisLabel: '',
-                tickFormat: (d) => {
-                    let pair = this.lineChartLabels[d];
-                    if (pair == undefined) return '';
-                    return pair.value;
-                }
-              },
-              yAxis: {
-                axisLabel: '',
-                tickFormat: function(d){
-                  return d;
-                },
-                axisLabelDistance: -10
-              },
-              
-              showLegend: true,
-            },
-        };
-
         this.reloadProjects();
     }
     
@@ -129,8 +101,8 @@ export class ForecastGraphicalComponent implements OnInit {
         setTimeout(() => {this.renderChart();}, 100);
     }
 
-    toggleDiscreteLines(event) {
-        this.discreteLines = event.target.checked;
+    toggleDistributionLines(event) {
+        this.distributionLines = event.target.checked;
         this.clearChart();
         setTimeout(() => {this.renderChart();}, 100);
     }
@@ -308,6 +280,49 @@ export class ForecastGraphicalComponent implements OnInit {
         this.lineChartData.splice(0, this.lineChartData.length);
 
         var totalSegments = 0;
+        var minValue = 0;
+        var maxValue = 0;
+
+        // collect all keys
+        var keyIndex = 0;
+        for (var variableIndex = 0; variableIndex < this.variables.length; variableIndex ++) {
+            let variable = this.variables[variableIndex];
+
+            let skipVariable = false;
+            for (var index = 0; index < this.exludedVariables.length; index++) {
+                if (this.exludedVariables[index] == variable.id) {
+                    skipVariable = true;
+                    break;
+                }
+            }
+
+            if (skipVariable) continue;
+            if (variable.allTimesegmentsResultList != undefined || variable.allTimesegmentsResultList != null) {
+                for (var index = 0; index < variable.allTimesegmentsResultList.length; index++) {
+                    var dataValues = [];
+                    let item = variable.allTimesegmentsResultList[index];
+
+                    for (var dataIndex = 0; dataIndex < item.data.length; dataIndex++) {
+                        var valueItem = item.data[dataIndex];
+                        var labelIndex = this.isLabelAdded(valueItem.title);
+                        if (labelIndex == -1) {
+                            this.lineChartLabels.push(
+                                {
+                                    key: keyIndex,
+                                    value: valueItem.title.toString()
+                                }
+                            );
+
+                            keyIndex += 1;
+                        }
+                    }
+                }
+            }
+        }
+
+        console.log(this.lineChartLabels);
+
+        var colorIndex = 0;
         for (var variableIndex = 0; variableIndex < this.variables.length; variableIndex ++) {
             let variable = this.variables[variableIndex];
 
@@ -321,41 +336,89 @@ export class ForecastGraphicalComponent implements OnInit {
 
             if (skipVariable) continue;
 
-            var keyIndex = 0;
             if (variable.allTimesegmentsResultList != undefined || variable.allTimesegmentsResultList != null) {
-                for (var index = 0; index < variable.allTimesegmentsResultList.length; index++) {
-                    var dataValues = [];
-                    let item = variable.allTimesegmentsResultList[index];
-                    for (var dataIndex = 0; dataIndex < item.data.length; dataIndex++) {
-                        if (index > 0) {
-                            if ((variable.variableType == 'breakdown') || (variable.compositeType == 'breakdown')) {
-                                if (!this.breakdownLines) {
-                                    continue;
+                if (variable.allTimesegmentsResultList != undefined || variable.allTimesegmentsResultList != null) {
+                    var color = Utils.getRandomColor(colorIndex);
+                    colorIndex += 1;
+    
+                    for (var index = 0; index < variable.allTimesegmentsResultList.length; index++) {
+                        var dataValues = [];
+                        let item = variable.allTimesegmentsResultList[index];
+    
+                        for (var dataIndex = 0; dataIndex < item.data.length; dataIndex++) {
+                            var valueItem = item.data[dataIndex];
+                            var labelIndex = this.isLabelAdded(valueItem.title);
+                            var num = parseInt(valueItem.value.toString());
+                            if (num < minValue) minValue = num;
+                            if (num > maxValue) maxValue = num;
+    
+                            dataValues.push({ x: labelIndex, y: d3.format('0.0f')(num)});
+                        }
+    
+                        if (index == 0) {
+                            this.lineChartData.push({
+                                values: dataValues,
+                                key: item.title,
+                                color: color
+                            });
+                        } else {
+                            if (variable.variableType != 'breakdown') {
+                                if (this.distributionLines == false) continue;
+
+                                if (index % 2 == 0) {
+                                    // odd
+                                    color = Utils.getShadeOfColor(color, 0.5);
                                 }
+    
+                                this.lineChartData.push({
+                                    values: dataValues,
+                                    key: item.title,
+                                    classed: 'dashed',
+                                    color: color
+                                });
+    
+                            } else {
+                                if (this.breakdownLines == false) continue;
+
+                                color = Utils.getShadeOfColor(color, 0.5);                                
+                                this.lineChartData.push({
+                                    values: dataValues,
+                                    key: item.title,
+                                    color: color
+                                });
                             }
                         }
-                        var valueItem = item.data[dataIndex];
-                        var labelIndex = this.isLabelAdded(valueItem.title);
-                        if (labelIndex == -1) {
-                            this.lineChartLabels.push(
-                                {
-                                    key: keyIndex,
-                                    value: valueItem.title.toString()
-                                }
-                            );
-                            labelIndex = keyIndex;
-                            keyIndex += 1;
-                        }
-                        dataValues.push({x:labelIndex, y: d3.format("0.2f")( valueItem.value)});
                     }
-
-                    this.lineChartData.push({
-                        values: dataValues,
-                        key: item.title
-                    });
                 }
             }
         }
+
+        this.options = {
+            chart: {
+              type: 'lineChart',
+              height: 450,
+              x: (d) => { return d.x; },
+              y: function(d){ return d.y; },
+              useInteractiveGuideline: true,
+              xAxis: {
+                axisLabel: '',
+                tickFormat: (d) => {
+                    let pair = this.lineChartLabels[d];
+                    if (pair == undefined) return '';
+                    return pair.value;
+                }
+              },
+              yAxis: {
+                axisLabel: '',
+                tickFormat: function(d){
+                  return d;
+                },
+                axisLabelDistance: -10
+              },
+              yDomain: [minValue, maxValue],
+              showLegend: true,
+            },
+        };
     }
 
 }

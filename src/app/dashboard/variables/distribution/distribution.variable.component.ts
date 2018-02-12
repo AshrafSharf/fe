@@ -13,14 +13,16 @@ import { QueryList } from '@angular/core/src/linker/query_list';
 export class VariableDistributionComponent implements OnInit {
     @Input('distribution') distribution = 1;
     @Input('parametric') parametric: String;
-    @Input('mean') mean: String;
+    //@Input('mean') mean: String;
     @Input('deviation') deviation: String;
     @Input('sigma') sigma: String;
     @Input('time-segment') timeSegment: TimeSegment;
     @Input('branch-id') branchId: String = '';
+    @Input('input-method') inputMethod: String = '';
     @ViewChildren(AutocompleteInputComponent) autoCompleteInputs: AutocompleteInputComponent[];
 
-    variables: KeyValuePair[] = Array<KeyValuePair>(); 
+    variables: KeyValuePair[] = Array<KeyValuePair>();
+    public method;
 
     constructor(
         private variableService: AppVariableService) { }
@@ -28,19 +30,31 @@ export class VariableDistributionComponent implements OnInit {
     ngOnInit() {
         if (this.timeSegment != null || this.timeSegment != undefined) {
             this.setDistributionType(this.timeSegment.distributionType);
-            if (this.timeSegment.mean != undefined) { this.mean = this.timeSegment.mean; }
-            if (this.timeSegment.stdDeviation != undefined) { this.deviation = this.timeSegment.stdDeviation; } 
+            this.setInputMethodType(this.inputMethod);
+            //if (this.timeSegment.mean != undefined) { this.mean = this.timeSegment.mean; }
+            if (this.timeSegment.stdDeviation != undefined) { this.deviation = this.timeSegment.stdDeviation; }
             if (this.timeSegment.userSelectedParametricsStdDeviation != undefined) { this.sigma = this.timeSegment.userSelectedParametricsStdDeviation.toString(); }
             if (this.timeSegment.userSelectedParametrics != undefined) { this.parametric = this.timeSegment.userSelectedParametrics; }
         }
 
         console.log(this.branchId);
+        this.setInputMethodType(this.inputMethod);
         this.variableService
             .getVariablesForSuggestions(this.branchId)
             .subscribe(response => {
                 console.log(response);
                 this.variables = response.data as Array<KeyValuePair>;
             });
+    }
+
+    setInputMethodType(type:String) {
+        if (type == "constant") {
+            this.method = 1;
+        } else if (type == "expression") {
+            this.method = 2;
+        } else if (type == "table") {
+            this.method = 3;
+        }
     }
 
     setDistributionType(type:String) {
@@ -59,32 +73,64 @@ export class VariableDistributionComponent implements OnInit {
             words.push(control.completedWords);
         });
 
-        return words;
+        var expression = "";
+        if (this.method == 2) {
+            words[0].forEach(word => {
+                if (word.type == 'variable') {
+                    expression += `EXP_${word.id} `;
+                } else {
+                    expression += `${word.title} `;
+                }
+            });
+        }
+
+        return expression;
     }
+
 
     public isValid(): ValidationResult {
         var values = [];
-        this.autoCompleteInputs.forEach(control => {
-            values.push(control.getInput());
-        });
-        this.mean = values[0]
-        this.deviation = values[1];
-        
-
         var result: ValidationResult = { result: true, reason: '' };
-        if (this.distribution == 2) {
-            if (this.parametric.length == 0) {
-                result.result = false;
-                result.reason = 'User parametric value is missing';
+        if (this.method == 1) {
+            if (this.distribution == 2) {
+                if (this.parametric.length == 0) {
+                    result.result = false;
+                    result.reason = 'User parametric value is missing';
+                }
+            } else if (this.distribution == 3) {
+                //if (this.mean.length == 0) {
+                //    result.result = false;
+                //    result.reason = 'Mean value is missing';
+                //} else
+                if (this.deviation.length == 0) {
+                    result.result = false;
+                    result.reason = 'Standard Deviation value is missing';
+                }
             }
-        } else if (this.distribution == 3) {
-            if (this.mean.length == 0) {
-                result.result = false;
-                result.reason = 'Mean value is missing';
-            } else if (this.deviation.length == 0) {
-                result.result = false;
-                result.reason = 'Standard Deviation value is missing';
+        }
+        else if (this.method == 2) {
+            this.autoCompleteInputs.forEach(control => {
+                values.push(control.getInput());
+            });
+            //this.mean = values[0]
+            this.deviation = values[0];
+
+            if (this.distribution == 2) {
+                if (this.parametric.length == 0) {
+                    result.result = false;
+                    result.reason = 'User parametric value is missing';
+                }
+            } else if (this.distribution == 3) {
+                //if (this.mean.length == 0) {
+                //    result.result = false;
+                //    result.reason = 'Mean value is missing';
+                //} else
+                if (this.deviation.length == 0) {
+                    result.result = false;
+                    result.reason = 'Standard Deviation value is missing';
+                }
             }
+
         }
 
         return result;
@@ -102,4 +148,5 @@ export class VariableDistributionComponent implements OnInit {
 
         return type;
     }
+    
 }

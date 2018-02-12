@@ -104,7 +104,11 @@ export class BranchListComponent implements OnInit {
                     this.rows = new Array<TableViewRow>();
                     this.branches.forEach(branch => {
                         var row = new TableViewRow(branch.id);
-                        row.addColumn(new TableViewColumn("name", branch.title));
+                        if (branch.isMaster == true){
+                             row.addColumn(new TableViewColumn("name", branch.title + " (master)"));
+                        }else{
+                             row.addColumn(new TableViewColumn("name", branch.title));
+                        }
                         row.addColumn(new TableViewColumn("owner", branch.ownerName));
                         row.addColumn(new TableViewColumn("description", branch.description));
                         this.rows.push(row);

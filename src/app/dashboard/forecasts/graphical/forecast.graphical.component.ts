@@ -6,9 +6,11 @@ import { BranchService } from '../../../services/branch.service';
 import { ProjectService } from '../../../services/project.service';
 import { AppVariableService } from '../../../services/variable.services';
 import { Variable } from '../../../shared/interfaces/variables';
+import { ModalDialogService } from '../../../services/modal-dialog.service';
 import 'nvd3';
 import { Utils } from '../../../shared/utils';
-  
+import { Moment, unix } from 'moment';
+
 
 @Component({
     selector: 'forecast-graphical',
@@ -30,6 +32,20 @@ export class ForecastGraphicalComponent implements OnInit {
     breakdownLines:Boolean = true;
     distributionLines:Boolean = true;
 
+    previousValidDate: any;
+    currentDate: Date;
+    startDate: Date;
+    endDate: Date;
+    currentDateLabel:String;
+
+    datePickerConfig = { format : 'DD-MM-YYYY hh:mm' };
+    userSelectedStartDate: any;
+    userSelectedEndDate: any;
+
+    variablesEarliestStart:any;
+    variablesLatestEnd:any;
+    dateLabel:string;
+
     public lineChartData:Array<any> = [];
     public lineChartLabels:Array<{key: number, value:string}> = [];
 
@@ -45,13 +61,14 @@ export class ForecastGraphicalComponent implements OnInit {
         private router: Router,
         private branchService:BranchService,
         private projectService: ProjectService,
-        private variableService: AppVariableService) {
+        private variableService: AppVariableService,
+        private modal: ModalDialogService) {
     }
 
     ngOnInit() {
         this.reloadProjects();
     }
-    
+
 
     toggleBreakdownVariables(event) {
         this.breakdownVariables = event.target.checked;
@@ -123,13 +140,13 @@ export class ForecastGraphicalComponent implements OnInit {
         for (var index = 0; index < this.variables.length; index++) {
             var variable = this.variables[index];
             if ((variable.title.toLowerCase().indexOf(this.searchName.toLowerCase()) >= 0) &&
-            (variable.variableType.toLowerCase().indexOf(this.searchType.toLowerCase()) >= 0) &&
-            (variable.ownerName.toLowerCase().indexOf(this.searchOwner.toLowerCase()) >= 0)) {
+                (variable.variableType.toLowerCase().indexOf(this.searchType.toLowerCase()) >= 0) &&
+                (variable.ownerName.toLowerCase().indexOf(this.searchOwner.toLowerCase()) >= 0)) {
 
                 if (this.shouldSkipVariable(variable) == true) {
                     continue;
                 }
-                
+
                 this.filteredVariables.push(variable);
             }
         }
@@ -140,7 +157,7 @@ export class ForecastGraphicalComponent implements OnInit {
             .extendValuesForMonths(this.currentBranch, this.navigationIndex)
             .subscribe(result => {
                 console.log(result);
-                this.variables = result.data as Array<Variable>;  
+                this.variables = result.data as Array<Variable>;
                 this.clearChart();
                 setTimeout(() => {this.renderChart();}, 100);
             })
@@ -223,7 +240,7 @@ export class ForecastGraphicalComponent implements OnInit {
                 .getVariables(id)
                 .subscribe(result => {
                     if (result.status == "OK") {
-                        this.variables = result.data as Array<Variable>;  
+                        this.variables = result.data as Array<Variable>;
                         this.filteredVariables.splice(0, this.filteredVariables.length);
 
                         this.exludedVariables = [];
@@ -233,7 +250,7 @@ export class ForecastGraphicalComponent implements OnInit {
                                 this.filteredVariables.push(variable);
                             }
                         })
-
+                        this.setEarliestStartAndEndTimes();
                         console.log("rendering chart");
                         this.clearChart();
                         setTimeout(() => {this.renderChart();}, 100);
@@ -267,7 +284,7 @@ export class ForecastGraphicalComponent implements OnInit {
         this.clearChart();
         setTimeout(() => {this.renderChart();}, 100);
     }
-    
+
     clearChart() {
         this.lineChartLabels.splice(0, this.lineChartLabels.length);
         this.lineChartColors.splice(0, this.lineChartColors.length);
@@ -296,12 +313,18 @@ export class ForecastGraphicalComponent implements OnInit {
                 }
             }
 
+
+            let finished = false;
+
             if (skipVariable) continue;
             if (variable.allTimesegmentsResultList != undefined || variable.allTimesegmentsResultList != null) {
                 for (var index = 0; index < variable.allTimesegmentsResultList.length; index++) {
+                    let alreadyExecuted = false;
                     var dataValues = [];
-                    let item = variable.allTimesegmentsResultList[index];
+                    var counter = 0;
 
+                    let item = variable.allTimesegmentsResultList[index];
+                  
                     for (var dataIndex = 0; dataIndex < item.data.length; dataIndex++) {
                         var valueItem = item.data[dataIndex];
                         var labelIndex = this.isLabelAdded(valueItem.title);
@@ -421,4 +444,158 @@ export class ForecastGraphicalComponent implements OnInit {
         };
     }
 
+    reset() {
+        this.navigationIndex = 0;
+        this.currentDate = new Date();
+        this.startDate = new Date();
+        this.startDate.setMonth((this.startDate.getMonth())-6);
+        this.endDate = new Date();
+        this.endDate.setMonth((this.endDate.getMonth())+12);
+
+        let date:Date;
+        date = new Date();
+
+        this.userSelectedStartDate = unix(date.setMonth((this.currentDate.getMonth())-6) / 1000);
+        date = new Date();
+        this.userSelectedEndDate= unix(date.setFullYear((this.currentDate.getFullYear())+1) / 1000);
+
+        this.previousValidDate = this.userSelectedStartDate;
+
+        var momentStartDate = this.userSelectedStartDate.format("DD-MM-YYYY hh:mm");
+        var momentEndDate = this.userSelectedEndDate.format("DD-MM-YYYY hh:mm");
+
+        this.clearChart();
+        setTimeout(() => {this.renderChart();}, 100);
+    }
+
+    setNewDates(startDate, endDate) {
+        this.userSelectedStartDate = unix(startDate / 1000);
+        this.userSelectedEndDate= unix(endDate / 1000);
+        var formattedStartDate = this.userSelectedStartDate.format("DD-MM-YYYY hh:mm");
+        var formattedEndDate = this.userSelectedEndDate.format("DD-MM-YYYY hh:mm");
+        var userStart = new Date((formattedStartDate[3] + formattedStartDate[4] + "/" + formattedStartDate[0] + formattedStartDate[1] + "/" + formattedStartDate[6]+formattedStartDate[7]+formattedStartDate[8]+formattedStartDate[9]).toString());
+        var userEnd = new Date((formattedEndDate[3] + formattedEndDate[4] + "/" + formattedEndDate[0] + formattedEndDate[1] + "/" + formattedEndDate[6]+formattedEndDate[7]+formattedEndDate[8]+formattedEndDate[9]).toString());
+
+        console.log(this.variablesLatestEnd);
+
+        if (userStart < this.startDate) {
+            if (userStart < this.variablesEarliestStart) {
+                this.modal.showError("Cannot have a start time earlier than earliest start time of a variable i.e. earliest variable start time is "+this.variablesEarliestStart);
+                this.userSelectedStartDate = this.previousValidDate;
+            }
+            else {
+                this.previousValidDate = this.userSelectedStartDate;
+                this.startDate = userStart;
+                //this.endDate = userEnd;
+
+                if (userEnd > this.endDate) {
+
+                    var monthDifference = this.getMonthDifference(this.endDate, userEnd);
+                    monthDifference = monthDifference +1;
+
+                    if (monthDifference < 6) {
+                        this.navigationIndex = 1;
+                        this.reloadMonths();
+                    }
+                    else if (monthDifference > 6 && monthDifference < 12) {
+                        this.navigationIndex = 2;
+                        this.reloadMonths();
+                    }
+                    else if (monthDifference > 12 && monthDifference < 18) {
+                        this.navigationIndex = 3;
+                        this.reloadMonths();
+                    }
+                    else {
+                        this.navigationIndex = 4;
+                        this.reloadMonths();
+                    }
+                    this.endDate = userEnd;
+                }
+                else{
+                    this.endDate = userEnd;
+                    this.clearChart();
+                    setTimeout(() => {this.renderChart();}, 100);
+                }
+            }
+        }
+
+        else {
+            this.previousValidDate = this.userSelectedStartDate;
+            this.startDate = userStart;
+            //this.endDate = userEnd;
+
+            if (userEnd > this.endDate) {
+                var monthDifference = this.getMonthDifference(this.endDate, userEnd);
+                monthDifference = monthDifference +1;
+
+                if (monthDifference < 6) {
+                    this.navigationIndex = 1;
+                    this.reloadMonths();
+                }
+                else if (monthDifference > 6 && monthDifference < 12) {
+                    this.navigationIndex = 2;
+                    this.reloadMonths();
+                }
+                else if (monthDifference > 12 && monthDifference < 18) {
+                    this.navigationIndex = 3;
+                    this.reloadMonths();
+                }
+                else {
+                    this.navigationIndex = 4;
+                    this.reloadMonths();
+                }
+                this.endDate = userEnd;
+            }
+            else{
+                this.endDate = userEnd;
+                this.clearChart();
+                setTimeout(() => {this.renderChart();}, 100);
+            }
+        }
+
+    }
+
+    getMonthDifference(date1, date2) {
+        var months;
+
+        months = (date2.getFullYear() - date1.getFullYear()) * 12;
+        months -= date1.getMonth() + 1;
+        months += date2.getMonth() + 1;
+        return months <= 0 ? 0 : months;
+    }
+
+    setEarliestStartAndEndTimes() {
+        this.variables.forEach(variable => {
+
+            for (var index = 0; index < variable.timeSegment.length; index++) {
+
+                var startDate = new Date((variable.timeSegment[index].startTime[3] + variable.timeSegment[index].startTime[4] + "/" + variable.timeSegment[index].startTime[0] + variable.timeSegment[index].startTime[1] + "/" + variable.timeSegment[index].startTime[6]+variable.timeSegment[index].startTime[7]+variable.timeSegment[index].startTime[8]+variable.timeSegment[index].startTime[9]).toString());
+
+                if (variable.timeSegment[index].startTime == null) {
+                    var endDate = new Date(null);
+                }
+                else {
+                    var endDate = new Date((variable.timeSegment[index].endTime[3] + variable.timeSegment[index].endTime[4] + "/" + variable.timeSegment[index].endTime[0] + variable.timeSegment[index].endTime[1] + "/" + variable.timeSegment[index].endTime[6]+variable.timeSegment[index].endTime[7]+variable.timeSegment[index].endTime[8]+variable.timeSegment[index].endTime[9]).toString());
+                }
+
+                if (this.variablesEarliestStart == null) {
+                    this.variablesEarliestStart = startDate;
+                }
+                else {
+                    if (startDate < this.variablesEarliestStart) {
+                        this.variablesEarliestStart = startDate;
+                    }
+                }
+
+                if (this.variablesLatestEnd == null) {
+                    this.variablesLatestEnd = endDate;
+                }
+                else {
+                    if (endDate > this.variablesLatestEnd) {
+                        this.variablesLatestEnd = endDate;
+                    }
+                }
+            }
+        });
+    }
 }

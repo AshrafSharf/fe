@@ -7,6 +7,7 @@ import { ProjectService } from '../../../services/project.service';
 import { AppVariableService } from '../../../services/variable.services';
 import { Variable } from '../../../shared/interfaces/variables';
 import { ModalDialogService } from '../../../services/modal-dialog.service';
+import {SettingsService} from '../../../services/settings.service';
 import 'nvd3';
 import { Utils } from '../../../shared/utils';
 import { Moment, unix } from 'moment';
@@ -45,6 +46,7 @@ export class ForecastGraphicalComponent implements OnInit {
     variablesEarliestStart:any;
     variablesLatestEnd:any;
     dateLabel:string;
+    decimal = "";
 
     public lineChartData:Array<any> = [];
     public lineChartLabels:Array<{key: number, value:string}> = [];
@@ -62,6 +64,7 @@ export class ForecastGraphicalComponent implements OnInit {
         private branchService:BranchService,
         private projectService: ProjectService,
         private variableService: AppVariableService,
+        private settingsService: SettingsService,
         private modal: ModalDialogService) {
     }
 
@@ -415,33 +418,51 @@ export class ForecastGraphicalComponent implements OnInit {
                 }
             }
         }
-
-        this.options = {
-            chart: {
-              type: 'lineChart',
-              height: 450,
-              x: (d) => { return d.x; },
-              y: function(d){ return d.y; },
-              useInteractiveGuideline: true,
-              xAxis: {
-                axisLabel: '',
-                tickFormat: (d) => {
-                    let pair = this.lineChartLabels[d];
-                    if (pair == undefined) return '';
-                    return pair.value;
+        var dec = this.decimal;
+        this.settingsService
+        .getSettings()
+        .subscribe(settings => {
+            let data = settings.data as {id:String, key:String, value:String}[];
+            data.forEach(setting => {
+                if (setting.key == "VARIABLE_DECIMAL"){
+                    this.decimal = setting.value.toString();
+                    dec = setting.value.toString();
                 }
-              },
-              yAxis: {
-                axisLabel: '',
-                tickFormat: function(d){
-                  return d;
+            });
+            this.options = {
+                chart: {
+                type: 'lineChart',
+                height: 450,
+                x: (d) => { return d.x; },
+                y: function(d){ return d.y; },
+                useInteractiveGuideline: true,
+                interactiveLayer: {
+                    tooltip: {
+                        valueFormatter:(d, i) => {
+                            return d3.format(",.0"+dec+"f")(d);
+                    }
+                }
                 },
-                axisLabelDistance: -10
-              },
-              yDomain: [minValue, maxValue],
-              showLegend: true,
-            },
-        };
+                xAxis: {
+                    axisLabel: '',
+                    tickFormat: (d) => {
+                        let pair = this.lineChartLabels[d];
+                        if (pair == undefined) return '';
+                        return pair.value;
+                    }
+                },
+                yAxis: {
+                    axisLabel: '',
+                    tickFormat: function(d){
+                        return d3.format(",.0"+dec+"f")(d);
+                    },
+                    axisLabelDistance: -10
+                },
+                yDomain: [minValue, maxValue],
+                showLegend: true,
+                },
+            };
+        });
     }
 
     reset() {

@@ -7,6 +7,7 @@ import { TableViewColumn } from '../../../shared/interfaces/tableview-column';
 import { ModalDialogService } from '../../../services/modal-dialog.service';
 import { Router } from '@angular/router';
 import { BranchService } from '../../../services/branch.service';
+import {SettingsService} from '../../../services/settings.service';
 import { Branch } from '../../../shared/interfaces/branch';
 import { AppVariableService } from '../../../services/variable.services';
 import { Variable, KeyValuePair, TableInputPair } from '../../../shared/interfaces/variables';
@@ -57,6 +58,9 @@ export class ForecastTabularComponent implements OnInit {
     variableEarliestStart:Date;
     variableLatestEnd:Date;
 
+    varDecimal="";
+    breakdownDecimal= "";
+
     datePickerConfig = { format : 'DD-MM-YYYY hh:mm' };
 
     private navigationIndex = 0;
@@ -74,6 +78,7 @@ export class ForecastTabularComponent implements OnInit {
                 private branchService:BranchService,
                 private modal: ModalDialogService,
                 private projectService:ProjectService,
+                private settingsService:SettingsService,
                 private variableService:AppVariableService) {
     }
 
@@ -196,39 +201,59 @@ export class ForecastTabularComponent implements OnInit {
         this.keys.sort();
         console.log(this.keys);
 
-        // process the values
-        for(var index = 0; index < this.variables.length; index++) {
-            let variable = this.variables[index];
-            for(var resultIndex = 0; resultIndex < variable.allTimesegmentsResultList.length; resultIndex++) {
-                let result = variable.allTimesegmentsResultList[resultIndex];
+        //get the decimal setting
+        var dec = this.varDecimal;
+        this.settingsService
+        .getSettings()
+        .subscribe(settings => {
+            let settingData = settings.data as {id:String, key:String, value:String}[];
+            settingData.forEach(setting => {
+                if (setting.key == "VARIABLE_DECIMAL"){
+                    this.varDecimal = setting.value.toString();
+                    dec = setting.value.toString(); 
+                }
+                else if(setting.key == "BREAKDOWN_DECIMAL"){
+                    this.breakdownDecimal = setting.value.toString();
+                }
+            });
+            console.log("number of dec", dec);
 
-                var data:{title:String, value:number|string}[] = Array<{title:String, value:number|string}>();
-                this.keys.forEach(key => {
-                    var found = false;
-                    for (var pairIndex = 0; pairIndex < result.data.length; pairIndex++) {
-                        let pair = result.data[pairIndex];
-                        if (key == pair.title) {
-                            let value = pair.value as number;
-                            data.push({
-                                title: pair.title,
-                                value: value.toFixed(2)
-                            });
-                            found = true;
-                            break;
+             // process the values
+            for(var index = 0; index < this.variables.length; index++) {
+                let variable = this.variables[index];
+                for(var resultIndex = 0; resultIndex < variable.allTimesegmentsResultList.length; resultIndex++) {
+                    let result = variable.allTimesegmentsResultList[resultIndex];
+                    let currentVarType = variable.variableType;
+                    let currentValType = variable.valueType;
+                    let decimalsToKeep = this.getDecimalSetting(currentVarType, currentValType);
+                    var data:{title:String, value:number|string}[] = Array<{title:String, value:number|string}>();
+                    this.keys.forEach(key => {
+                        var found = false;
+                        for (var pairIndex = 0; pairIndex < result.data.length; pairIndex++) {
+                            let pair = result.data[pairIndex];
+                            if (key == pair.title) {
+                                let value = pair.value as number;
+                                data.push({
+                                    title: pair.title,
+                                    value: value.toFixed(decimalsToKeep)
+                                });
+                                found = true;
+                                break;
+                            }
                         }
-                    }
 
-                    if (!found) {
-                        data.push({
-                            title: key,
-                            value: '- na -'
-                        });
-                    }
-                });
+                        if (!found) {
+                            data.push({
+                                title: key,
+                                value: '- na -'
+                            });
+                        }
+                    });
 
-                result.data = data;
+                    result.data = data;
+                }
             }
-        }
+        });
     }
 
     toggleOpen(index) {
@@ -252,6 +277,18 @@ export class ForecastTabularComponent implements OnInit {
         }
 
         this.processVarables();
+    }
+
+    getDecimalSetting(varType, valType){
+        if (varType == 'breakdown' && valType == 'real'){
+            return parseInt(this.breakdownDecimal);
+        }
+        else if (valType == 'real'){
+            return parseInt(this.varDecimal);
+        }
+        else{
+            return 0;
+        }
     }
 }
 

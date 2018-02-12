@@ -27,4 +27,13 @@ export class SettingsService {
                 .map(result => result.json());
     }
 
+    updateSettings(settings){
+        let url = Utils.createUrl(Utils.routeSettings);
+        let body = settings;
+
+        return this.http
+            .put(url, body, Utils.getRequestOptions())
+            .map(result => result.json());
+    }
+
 }

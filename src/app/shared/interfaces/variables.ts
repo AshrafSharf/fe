@@ -26,7 +26,7 @@ export interface Variable {
     isSelected: Boolean;
     hasActual: Boolean;
     actualTimeSegment?: TimeSegment;
-    allTimesegmentsResultList:{title:String, data:{title:String, value:number}[]}[];
+    allTimesegmentsResultList:{title:String, data:{title:String, value:number|string}[]}[];
 }
 
 export interface KeyValuePair {

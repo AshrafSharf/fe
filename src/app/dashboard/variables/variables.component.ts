@@ -259,44 +259,6 @@ export class VariablesComponent implements OnInit {
                     }
                 })
         });
-
-        this.options = {
-            chart: {
-                type: 'lineChart',
-                height: 450,
-                x: (d) => { return d.x; },
-                y: function (d) { return d.y; },
-                useInteractiveGuideline: true,
-                xAxis: {
-                    axisLabel: '',
-                    tickFormat: (d) => {
-                        if (this.valueType == 'discrete') {
-                            let timeSegment = this.timeSegments[d];
-                            let datePart = timeSegment.startTime.split(' ')[0];
-                            let parts = datePart.split('-');
-                            let day = parts[0];
-                            let month = parts[1];
-                            let year = parts[2];
-
-                            return `${month}-${year}`;
-                        } else {
-                            let pair = this.lineChartLabels[d];
-                            if (pair == undefined) return '';
-                            return pair.value;
-                        }
-                    }
-                },
-                yAxis: {
-                    axisLabel: '',
-                    tickFormat: function (d) {
-                        return d;
-                    },
-                    axisLabelDistance: -10
-                },
-
-                showLegend: true,
-            },
-        };
     }
 
     getXTitle(titleIndex) {
@@ -407,7 +369,6 @@ export class VariablesComponent implements OnInit {
                     date = new Date(`${month}/${day}/${year}`);
                 }
                 this.endDate = unix(date.getTime() / 1000);
-              
             } else {
                 this.queryText = variable.actualTimeSegment.query;
             }
@@ -433,10 +394,17 @@ export class VariablesComponent implements OnInit {
             this.timeSegments.push(element);
         }
 
+        var chartType = 'lineChart';
+        var isStackChart = false;
+        var minValue = 0;
+        var maxValue = 0;
+
         // change the chart
+        var tempLineChartData: Array<any> = new Array<any>();
         if (this.valueType == 'discrete') {
-            this.options.chart.type = 'multiBarChart';
-            this.options.chart.stacked = true;
+            chartType = 'multiBarChart';
+            isStackChart = true;
+
             // this.options.chart.showControls = false;
 
             let keys = new Set();
@@ -455,21 +423,28 @@ export class VariablesComponent implements OnInit {
                     let element = variable.timeSegment[timeSegmentIndex];
                     var keyFound = false;
 
+                    var value:String = '';
                     for (var index = 0; index < element.subVariables.length; index++) {
                         let item = element.subVariables[index];
                         if (item.name == key) {
                             keyFound = true;
-                            dataValues.push({ x: timeSegmentIndex, y: item.probability })
+                            value = item.probability;
                             break;
                         }
                     }
 
                     if (!keyFound) {
-                        dataValues.push({ x: timeSegmentIndex, y: 0 })
+                        value = '0';
                     }
+
+                    var num = parseInt(value.toString());
+                    if (num < minValue) minValue = num;
+                    if (num > maxValue) maxValue = num;
+
+                    dataValues.push({ x: timeSegmentIndex, y: value })
                 }
 
-                this.lineChartData.push({
+                tempLineChartData.push({
                     values: dataValues,
                     key: 'value: ' + keyIndex
                 });
@@ -479,9 +454,12 @@ export class VariablesComponent implements OnInit {
         } else {
             var keyIndex = 0;
             if (variable.allTimesegmentsResultList != undefined || variable.allTimesegmentsResultList != null) {
+                var color = Utils.getRandomColor(0);
+
                 for (var index = 0; index < variable.allTimesegmentsResultList.length; index++) {
                     var dataValues = [];
                     let item = variable.allTimesegmentsResultList[index];
+
                     for (var dataIndex = 0; dataIndex < item.data.length; dataIndex++) {
                         var valueItem = item.data[dataIndex];
                         var labelIndex = this.isLabelAdded(valueItem.title);
@@ -495,16 +473,86 @@ export class VariablesComponent implements OnInit {
                             labelIndex = keyIndex;
                             keyIndex += 1;
                         }
-                        dataValues.push({ x: labelIndex, y: d3.format('0.0f')(valueItem.value)});
+                        var num = parseInt(valueItem.value.toString());
+                        if (num < minValue) minValue = num;
+                        if (num > maxValue) maxValue = num;
+
+                        dataValues.push({ x: labelIndex, y: d3.format('0.0f')(num)});
                     }
 
-                    this.lineChartData.push({
-                        values: dataValues,
-                        key: item.title
-                    });
+                    if (index == 0) {
+                        tempLineChartData.push({
+                            values: dataValues,
+                            key: item.title,
+                            color: color
+                        });
+                    } else {
+                        if (variable.variableType != 'breakdown') {
+
+                            if (index % 2 == 0) {
+                                // odd
+                                color = Utils.getShadeOfColor(color, 0.5);
+                            }
+
+                            tempLineChartData.push({
+                                values: dataValues,
+                                key: item.title,
+                                classed: 'dashed',
+                                color: color
+                            });
+
+                        } else {
+                            tempLineChartData.push({
+                                values: dataValues,
+                                key: item.title,
+                                color: color
+                            });
+                        }
+                    }
                 }
             }
         }
+
+        this.options = {
+            chart: {
+                type: chartType,
+                stacked: isStackChart,
+                height: 600,
+                x: (d) => { return d.x; },
+                y: function (d) { return d.y; },
+                useInteractiveGuideline: true,
+                xAxis: {
+                    axisLabel: '',
+                    tickFormat: (d) => {
+                        if (this.valueType == 'discrete') {
+                            let timeSegment = this.timeSegments[d];
+                            let datePart = timeSegment.startTime.split(' ')[0];
+                            let parts = datePart.split('-');
+                            let day = parts[0];
+                            let month = parts[1];
+                            let year = parts[2];
+
+                            return `${month}-${year}`;
+                        } else {
+                            let pair = this.lineChartLabels[d];
+                            if (pair == undefined) return '';
+                            return pair.value;
+                        }
+                    }
+                },
+                yAxis: {
+                    axisLabel: '',
+                    tickFormat: function (d) {
+                        return d;
+                    },
+                    axisLabelDistance: -10
+                },
+                yDomain: [minValue, maxValue],
+
+                showLegend: true,
+            },
+        };
+        this.lineChartData = tempLineChartData;
     }
 
     isLabelAdded(title): number {

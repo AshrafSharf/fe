@@ -2,3 +2,64 @@
     width: 140px;
     margin-right: 10px;
 }
+
+td, th {
+    height: 40px;
+    min-width: 100px;
+}
+  
+div#response {
+    overflow-x: scroll;
+    margin-left: 200px;
+    overflow-y: visible;
+    padding: 0;
+}
+
+.headcol {
+    position: absolute;
+    width: 200px;
+    top: auto;
+    margin-top: -1px;
+    left: 15px;
+    background-color: cornsilk;
+}
+
+.colored-header {
+    background-color: cornsilk;
+}
+
+.parent ~ .child {
+    display: none;
+}
+
+.child {
+    background-color: lightgray;
+}
+
+.open .parent ~ .child {
+    display: table-row;
+}
+.parent {
+    cursor: pointer;
+}
+
+tbody {
+    color: #212121;
+}
+
+
+.parent i {
+    transform: rotate(0deg);
+    transition: transform .3s cubic-bezier(.4,0,.2,1);
+    margin: -.5rem;
+    padding: .5rem;
+}
+
+.open .parent i {
+    transform: rotate(180deg)
+}
+
+.empty-space {
+    display: block;
+    width: 20px;
+}

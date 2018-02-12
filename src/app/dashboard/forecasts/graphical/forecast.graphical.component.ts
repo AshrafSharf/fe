@@ -30,7 +30,7 @@ export class ForecastGraphicalComponent implements OnInit {
     breakdownVariables:Boolean = true;
     discreteVariables:Boolean = false;
     breakdownLines:Boolean = true;
-    discreteLines:Boolean = false;
+    distributionLines:Boolean = true;
 
     previousValidDate: any;
     currentDate: Date;
@@ -66,57 +66,6 @@ export class ForecastGraphicalComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.currentDate = new Date();
-        this.startDate = new Date();
-        this.startDate.setMonth((this.startDate.getMonth())-6);
-        this.endDate = new Date();
-        this.endDate.setMonth((this.endDate.getMonth())+12);
-
-        let date:Date;
-        date = new Date();
-
-        this.userSelectedStartDate = unix(date.setMonth((this.currentDate.getMonth())-6) / 1000);
-        date = new Date();
-        this.userSelectedEndDate= unix(date.setFullYear((this.currentDate.getFullYear())+1) / 1000);
-        var momentStartDate = this.userSelectedStartDate.format("DD-MM-YYYY hh:mm");
-        var momentEndDate = this.userSelectedEndDate.format("DD-MM-YYYY hh:mm");
-
-        this.previousValidDate = this.userSelectedStartDate;
-
-        if ((this.currentDate.getMonth()).toString().length > 1) {
-            this.currentDateLabel = this.currentDate.getFullYear() + "-" + this.currentDate.getMonth();
-        }
-        else {
-            this.currentDateLabel = this.currentDate.getFullYear() + "-0" + this.currentDate.getMonth();
-        }
-
-        this.options = {
-            chart: {
-                type: 'lineChart',
-                height: 450,
-                x: (d) => { return d.x; },
-                y: function(d){ return d.y; },
-                useInteractiveGuideline: true,
-                xAxis: {
-                    axisLabel: '',
-                    tickFormat: (d) => {
-                        let pair = this.lineChartLabels[d];
-                        if (pair == undefined) return '';
-                        return pair.value;
-                    }
-                },
-                yAxis: {
-                    axisLabel: '',
-                    tickFormat: function(d){
-                        return d;
-                    },
-                    axisLabelDistance: -10
-                },
-                axisLabelDistance: -10,
-                showLegend: true   
-            }
-        };
-
         this.reloadProjects();
     }
 
@@ -169,8 +118,8 @@ export class ForecastGraphicalComponent implements OnInit {
         setTimeout(() => {this.renderChart();}, 100);
     }
 
-    toggleDiscreteLines(event) {
-        this.discreteLines = event.target.checked;
+    toggleDistributionLines(event) {
+        this.distributionLines = event.target.checked;
         this.clearChart();
         setTimeout(() => {this.renderChart();}, 100);
     }
@@ -348,6 +297,11 @@ export class ForecastGraphicalComponent implements OnInit {
         this.lineChartData.splice(0, this.lineChartData.length);
 
         var totalSegments = 0;
+        var minValue = 0;
+        var maxValue = 0;
+
+        // collect all keys
+        var keyIndex = 0;
         for (var variableIndex = 0; variableIndex < this.variables.length; variableIndex ++) {
             let variable = this.variables[variableIndex];
 
@@ -363,8 +317,6 @@ export class ForecastGraphicalComponent implements OnInit {
             let finished = false;
 
             if (skipVariable) continue;
-
-            var keyIndex = 0;
             if (variable.allTimesegmentsResultList != undefined || variable.allTimesegmentsResultList != null) {
                 for (var index = 0; index < variable.allTimesegmentsResultList.length; index++) {
                     let alreadyExecuted = false;
@@ -372,178 +324,124 @@ export class ForecastGraphicalComponent implements OnInit {
                     var counter = 0;
 
                     let item = variable.allTimesegmentsResultList[index];
-
-                    let timeFrameMonthDifference = this.getMonthDifference(this.startDate, this.endDate);
-                    var dataIndex = 0;
-
-                    for (var monthIndex = 0; monthIndex < timeFrameMonthDifference; monthIndex++) {
-                        if (index > 0) {
-                            if ((variable.variableType == 'breakdown') || (variable.compositeType == 'breakdown')) {
-                                if (!this.breakdownLines) {
-                                    continue;
+                  
+                    for (var dataIndex = 0; dataIndex < item.data.length; dataIndex++) {
+                        var valueItem = item.data[dataIndex];
+                        var labelIndex = this.isLabelAdded(valueItem.title);
+                        if (labelIndex == -1) {
+                            this.lineChartLabels.push(
+                                {
+                                    key: keyIndex,
+                                    value: valueItem.title.toString()
                                 }
-                            }
-                        }
+                            );
 
-                        var valueItem;
-                        var variableFirstTimeSegStart = new Date((variable.timeSegment[0].startTime[3] + variable.timeSegment[0].startTime[4] + "/" + variable.timeSegment[0].startTime[0] + variable.timeSegment[0].startTime[1] + "/" + variable.timeSegment[0].startTime[6]+variable.timeSegment[0].startTime[7]+variable.timeSegment[0].startTime[8]+variable.timeSegment[0].startTime[9]).toString());
-                        var monthDifference = 0;
-                        var year;
-                        var month;
-
-                        if (variableFirstTimeSegStart < this.startDate) {
-                            monthDifference = this.getMonthDifference(variableFirstTimeSegStart, this.startDate);
-
-                            dataIndex = counter + monthDifference;
-                            counter++;
-                        }
-                        else {
-                            if (!alreadyExecuted) {
-                                if (variableFirstTimeSegStart > this.startDate) {
-                                    if (variableFirstTimeSegStart > this.endDate) {
-                                        month = (this.startDate.getMonth())+1;
-                                        year = this.startDate.getFullYear();
-                                        for (var monthIndex = 0; monthIndex < timeFrameMonthDifference; monthIndex++) {
-                                            if (month > 12) {
-                                                month = 1;
-                                                year = year + 1;
-                                            }
-
-                                            if ((month).toString().length > 1) {
-                                                this.dateLabel = year + "-" + month;
-                                            }
-                                            else {
-                                                this.dateLabel = year + "-0" + month;
-                                            }
-
-                                            valueItem = {title: this.dateLabel, value: null};
-
-                                            var labelIndex = this.isLabelAdded(valueItem.title);
-                                            if (labelIndex == -1) {
-                                                this.lineChartLabels.push(
-                                                    {
-                                                        key: keyIndex,
-                                                        value: valueItem.title.toString()
-                                                    }
-                                                );
-                                                labelIndex = keyIndex;
-                                                keyIndex += 1;
-                                            }
-                                            dataValues.push({x:labelIndex, y: valueItem.value});
-                                            month++;
-                                        }
-                                        break;
-                                    }
-                                    else {
-                                        monthDifference = this.getMonthDifference(this.startDate, variableFirstTimeSegStart);
-
-                                        month = (this.startDate.getMonth())+1;
-                                        year = this.startDate.getFullYear();
-                                        for (var monthCounter = 1; monthCounter <= monthDifference; monthCounter++) {
-                                            if (month > 12) {
-
-                                                month = 0;
-
-                                                month = month + 1;
-                                                year = year + 1;
-                                            }
-
-                                            if ((month).toString().length > 1) {
-                                                this.dateLabel = year + "-" + month;
-                                            }
-                                            else {
-                                                this.dateLabel = year + "-0" + month;
-                                            }
-
-                                            valueItem = {title: this.dateLabel, value: null};
-
-                                            var labelIndex = this.isLabelAdded(valueItem.title);
-                                            if (labelIndex == -1) {
-                                                this.lineChartLabels.push(
-                                                    {
-                                                        key: keyIndex,
-                                                        value: valueItem.title.toString()
-                                                    }
-                                                );
-                                                labelIndex = keyIndex;
-                                                keyIndex += 1;
-                                            }
-                                            dataValues.push({x:labelIndex, y: valueItem.value});
-                                            month++;
-                                            monthIndex++;
-                                        }
-                                        alreadyExecuted = true;
-                                    }
-                                }
-                            }
-                        }
-
-                        if (item.data[dataIndex] != null) {
-                            valueItem = item.data[dataIndex];
-                            var labelIndex = this.isLabelAdded(valueItem.title);
-                            this.dateLabel = valueItem.title;
-                            if (labelIndex == -1) {
-                                this.lineChartLabels.push(
-                                    {
-                                        key: keyIndex,
-                                        value: valueItem.title.toString()
-                                    }
-                                );
-                                labelIndex = keyIndex;
-                                keyIndex += 1;
-                            }
-                            dataValues.push({x:labelIndex, y: valueItem.value});
-                            dataIndex++;
-                        }
-
-                        else {
-                            var year:any;
-                            var month:any;
-                            year = parseInt(this.dateLabel[0] + this.dateLabel[1] + this.dateLabel[2] + this.dateLabel[3]);
-                            if (this.dateLabel[5] != "0") {
-                                month = parseInt(this.dateLabel[5] + this.dateLabel[6]);
-                            }
-                            else {
-                                month = parseInt(this.dateLabel[6]);
-                            }
-
-                            month = month + 1;
-                            if (month > 12) {
-                                month = 1;
-                                year = year + 1;
-                            }
-
-                            if ((month).toString().length > 1) {
-                                this.dateLabel = year + "-" + month;
-                            }
-                            else {
-                                this.dateLabel = year + "-0" + month;
-                            }
-
-                            valueItem = {title: this.dateLabel, value: null};
-                            var labelIndex = this.isLabelAdded(valueItem.title);
-                            if (labelIndex == -1) {
-                                this.lineChartLabels.push(
-                                    {
-                                        key: keyIndex,
-                                        value: valueItem.title.toString()
-                                    }
-                                );
-                                labelIndex = keyIndex;
-                                keyIndex += 1;
-                            }
-                          
-                            dataValues.push({x:labelIndex, y: d3.format("0.2f")( valueItem.value)});     
+                            keyIndex += 1;
                         }
                     }
-
-                    this.lineChartData.push({
-                        values: dataValues,
-                        key: item.title
-                    });
                 }
             }
         }
+
+        console.log(this.lineChartLabels);
+
+        var colorIndex = 0;
+        for (var variableIndex = 0; variableIndex < this.variables.length; variableIndex ++) {
+            let variable = this.variables[variableIndex];
+
+            let skipVariable = false;
+            for (var index = 0; index < this.exludedVariables.length; index++) {
+                if (this.exludedVariables[index] == variable.id) {
+                    skipVariable = true;
+                    break;
+                }
+            }
+
+            if (skipVariable) continue;
+
+            if (variable.allTimesegmentsResultList != undefined || variable.allTimesegmentsResultList != null) {
+                if (variable.allTimesegmentsResultList != undefined || variable.allTimesegmentsResultList != null) {
+                    var color = Utils.getRandomColor(colorIndex);
+                    colorIndex += 1;
+    
+                    for (var index = 0; index < variable.allTimesegmentsResultList.length; index++) {
+                        var dataValues = [];
+                        let item = variable.allTimesegmentsResultList[index];
+    
+                        for (var dataIndex = 0; dataIndex < item.data.length; dataIndex++) {
+                            var valueItem = item.data[dataIndex];
+                            var labelIndex = this.isLabelAdded(valueItem.title);
+                            var num = parseInt(valueItem.value.toString());
+                            if (num < minValue) minValue = num;
+                            if (num > maxValue) maxValue = num;
+    
+                            dataValues.push({ x: labelIndex, y: d3.format('0.0f')(num)});
+                        }
+    
+                        if (index == 0) {
+                            this.lineChartData.push({
+                                values: dataValues,
+                                key: item.title,
+                                color: color
+                            });
+                        } else {
+                            if (variable.variableType != 'breakdown') {
+                                if (this.distributionLines == false) continue;
+
+                                if (index % 2 == 0) {
+                                    // odd
+                                    color = Utils.getShadeOfColor(color, 0.5);
+                                }
+    
+                                this.lineChartData.push({
+                                    values: dataValues,
+                                    key: item.title,
+                                    classed: 'dashed',
+                                    color: color
+                                });
+    
+                            } else {
+                                if (this.breakdownLines == false) continue;
+
+                                color = Utils.getShadeOfColor(color, 0.5);                                
+                                this.lineChartData.push({
+                                    values: dataValues,
+                                    key: item.title,
+                                    color: color
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        this.options = {
+            chart: {
+              type: 'lineChart',
+              height: 450,
+              x: (d) => { return d.x; },
+              y: function(d){ return d.y; },
+              useInteractiveGuideline: true,
+              xAxis: {
+                axisLabel: '',
+                tickFormat: (d) => {
+                    let pair = this.lineChartLabels[d];
+                    if (pair == undefined) return '';
+                    return pair.value;
+                }
+              },
+              yAxis: {
+                axisLabel: '',
+                tickFormat: function(d){
+                  return d;
+                },
+                axisLabelDistance: -10
+              },
+              yDomain: [minValue, maxValue],
+              showLegend: true,
+            },
+        };
     }
 
     reset() {

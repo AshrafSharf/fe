@@ -45,8 +45,13 @@ export class VariablesComponent implements OnInit {
     description = '';
     branchId = '';
     projectId = '';
+
     otherVarDecimal = "";
     breakdownVarDecimal= "";
+    projectTitle: String = "";
+    branchTitle: String = "";
+    title: String = "";
+
 
     @ViewChild('graph') svg;
     @ViewChild('linegraph') graph;
@@ -249,6 +254,22 @@ export class VariablesComponent implements OnInit {
             this.branchId = params['branchId'];
             var varId = params['variableId'];
 
+            this.projectService
+                .getDetails(this.projectId)
+                .subscribe(result => {
+                    //this.selectedProject = result.data as Project;
+
+                    this.projectTitle = result.data.title;
+                });
+
+            this.branchService
+                .getDetails(this.branchId)
+                .subscribe(result => {
+                    //this.selectedProject = result.data as Project;
+
+                    this.branchTitle = result.data.title;
+                });
+
             this.variableService
                 .getVariables(this.branchId)
                 .subscribe(response => {
@@ -338,6 +359,7 @@ export class VariablesComponent implements OnInit {
     }
 
     selectVariable(variable: Variable) {
+        this.title = variable.title;
         this.shouldDefineActualValues = variable.hasActual;
         if (variable.hasActual) {
             this.columns = variable.actualTimeSegment.tableInput;
@@ -352,11 +374,11 @@ export class VariablesComponent implements OnInit {
                     //let time = Date.parse(this.timeSegment.startTime.toString());
                     let datePart = variable.actualTimeSegment.startTime.split(' ')[0];
                     let parts = datePart.split('-');
-                    let day = parts[0];
-                    let month = parts[1];
-                    let year = parts[2];
+                    //let day = parts[0];
+                    let month = parts[0];
+                    let year = parts[1];
 
-                    date = new Date(`${month}/${day}/${year}`);
+                    date = new Date(`${month}/01/${year}`);
                 }
                 this.startDate = unix(date.getTime() / 1000);
 
@@ -366,11 +388,11 @@ export class VariablesComponent implements OnInit {
                     //let time = Date.parse(this.timeSegment.startTime.toString());
                     let datePart = variable.actualTimeSegment.endTime.split(' ')[0];
                     let parts = datePart.split('-');
-                    let day = parts[0];
-                    let month = parts[1];
-                    let year = parts[2];
+                    // let day = parts[0];
+                    let month = parts[0];
+                    let year = parts[1];
 
-                    date = new Date(`${month}/${day}/${year}`);
+                    date = new Date(`${month}/01/${year}`);
                 }
                 this.endDate = unix(date.getTime() / 1000);
             } else {
@@ -674,7 +696,7 @@ export class VariablesComponent implements OnInit {
         if (this.variableName.length == 0) {
             this.modal.showError('Variable name is mandatory');
 
-        } else if (this.variableName.match(/[^a-zA-Z_-]/)) {
+        } else if (this.variableName.match(/[^0-9a-zA-Z_-]/)) {
             this.modal.showError('Names can only include Alphabetical characters,underscores and 			hyphens');
         } else if (this.variableType.length == 0) {
 
@@ -714,11 +736,11 @@ export class VariablesComponent implements OnInit {
 
                 if (this.shouldDefineActualValues && this.selectedInputMethodActual == 'table') {
                     if (typeof (this.startDate) != "string") {
-                        this.startDate = this.startDate.format("DD-MM-YYYY hh:mm");
+                        this.startDate = this.startDate.format("MM-YYYY");
                     }
 
                     if (typeof (this.endDate) != "string") {
-                        this.endDate = this.endDate.format("DD-MM-YYYY hh:mm");
+                        this.endDate = this.endDate.format("MM-YYYY");
                     }
                 }
 
@@ -730,7 +752,7 @@ export class VariablesComponent implements OnInit {
                     tableInput: this.columns,
                     growth: 0,
                     growthPeriod: 0,
-                    distributionType: '',
+                    distributionType: 'none',
                     description: '',
                     constantValue: 0,
                     //mean: '',

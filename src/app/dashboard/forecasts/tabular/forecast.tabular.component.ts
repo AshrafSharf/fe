@@ -60,8 +60,8 @@ export class ForecastTabularComponent implements OnInit {
 
     varDecimal="";
     breakdownDecimal= "";
+    datePickerConfig = { format : 'MM-YYYY' };
 
-    datePickerConfig = { format : 'DD-MM-YYYY hh:mm' };
 
     private navigationIndex = 0;
     private currentBranch: String;
@@ -93,8 +93,8 @@ export class ForecastTabularComponent implements OnInit {
         date = new Date();
         this.userSelectedEndDate= unix(date.setFullYear(currentYear+1) / 1000);
 
-        this.formattedUserStartDate = this.userSelectedStartDate.format("DD-MM-YYYY hh:mm");
-        this.formattedUserEndDate = this.userSelectedEndDate.format("DD-MM-YYYY hh:mm");
+        this.formattedUserStartDate = this.userSelectedStartDate.format("MM-YYYY");
+        this.formattedUserEndDate = this.userSelectedEndDate.format("MM-YYYY");
 
         this.previousValidDate = this.userSelectedStartDate;
 

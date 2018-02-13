@@ -34,13 +34,16 @@ export class BranchesComponent implements OnInit {
     actualsWeek: String = '';
 
     //dd-MM-yyyy hh:mm
-    datePickerConfig = { format : 'DD-MM-YYYY hh:mm' };
+    datePickerConfig = { format : 'MM-YYYY' };
+
+    selectedProject:Project = null;
 
     selectedBranch:Branch = null;
     createdBranch:Branch = null;
 
     datePickerMode: String = 'month';
 
+    projectTitle: String = "";
     title: String = "";
     description: String = "";
     timeUnit: String = 'Month';
@@ -62,6 +65,14 @@ export class BranchesComponent implements OnInit {
             this.selectedProjectTitle = params['title'];
             var branchId = params['id'];
             if (branchId == undefined) return;
+
+            this.projectService
+                .getDetails(this.selectedProjectId)
+                .subscribe(result => {
+                    this.selectedProject = result.data as Project;
+
+                    this.projectTitle = this.selectedProject.title;
+                });
 
             this.branchService
                 .getDetails(branchId)

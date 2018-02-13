@@ -7,7 +7,7 @@
         <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h4>{{selectedVariable == null ? 'Add Variable' : 'Update Variable'}}</h4>
+                    <h4>{{selectedVariable == null ? 'Add Variable' : 'Update Variable: ' + this.projectTitle + ' > ' + this.branchTitle + ' > ' + this.title}}</h4>
                 </div>
                 <div class="panel-body">
                     <div class="row">
@@ -154,7 +154,7 @@
                                                 <dp-date-picker 
                                                     [config]="datePickerConfig"
                                                     [(ngModel)]="startDate" 
-                                                    mode="daytime" 
+                                                    mode="month" 
                                                     (click)="createTable()"
                                                     [theme]="'dp-material dp-main'"></dp-date-picker>
                                             </div>
@@ -168,7 +168,7 @@
                                                 <dp-date-picker 
                                                     [config]="datePickerConfig"
                                                     [(ngModel)]="endDate" 
-                                                    mode="daytime" 
+                                                    mode="month" 
                                                     (click)="createTable()"
                                                     [theme]="'dp-material dp-main'"></dp-date-picker>
                                             </div>

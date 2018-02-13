@@ -4,21 +4,23 @@
     </div>
 
     <div class="row">
-        <div class="form-group">
-            <select (change)="selectBranch($event)" class="app-select" #projectList>
-                <option *ngFor="let project of projects" [value]="project.id"> {{project.title}} </option>
-            </select>
-            <select (change)="selectVariables($event)" class="app-select" #branchList>
-                <option *ngFor="let branch of branches" [value]="branch.id"> {{branch.title}} </option>
-            </select>
-        </div>
+        <div class="row">
+            <div style="width: 400px" class="pull-left">
+                <div class="form-group">
+                    <select (change)="selectBranch($event)" class="app-select" #projectList>
+                        <option *ngFor="let project of projects" [value]="project.id"> {{project.title}} </option>
+                    </select>
+                    <select (change)="selectVariables($event)" class="app-select" #branchList>
+                        <option *ngFor="let branch of branches" [value]="branch.id"> {{branch.title}} </option>
+                    </select>
+                </div>
+            </div>
 
-        <div class="row" style="margin-top: 10px">
             <div class="col-md-5">
                 <input type="text" [(ngModel)]="searchName" (keyup)="filterResult($event, 'name')" class="col-md-4" placeholder="variable name">
                 <input type="text" [(ngModel)]="searchType" (keyup)="filterResult($event, 'type')" class="col-md-4" placeholder="type">
                 <input type="text" [(ngModel)]="searchOwner" (keyup)="filterResult($event, 'owner')" class="col-md-4" placeholder="owner">
-            </div>
+            </div>    
         </div>
 
         <div id="response" style="margin-top: 20px;">
@@ -26,6 +28,7 @@
                 <thead>
                     <tr>
                         <th class="headcol" style="background-color:transparent; border:none;"></th>
+                        <th class="headcol-1" style="background-color:transparent; border:none;"></th>
                         <th class="colored-header" *ngFor="let key of keys">{{key}}</th>
                     </tr>
                 </thead>
@@ -35,9 +38,11 @@
                             <fa class="empty-space" [name]="openStatuses[j] == true ? 'minus': 'plus'" [style.display]="(variable.allTimesegmentsResultList.length > 1 && (i == 0)) ? 'inline-block' : 'none'"></fa>
                             <span class="empty-space" [style.display]="(variable.allTimesegmentsResultList.length > 1 && (i == 0)) ? 'none' : 'inline-block'"></span>
                             <span class="empty-space" [style.display]="(variable.allTimesegmentsResultList.length > 1 && (i > 0)) ? 'inline-block' : 'none'"></span>
-                            <span [style.display]="(variable.allTimesegmentsResultList.length > 1 && (i == 0)) ? 'none' : 'inline-block'">{{result.title}}</span>
-                            <span [style.display]="(variable.allTimesegmentsResultList.length > 1 && (i == 0)) ? 'inline-block' : 'none'">{{variable.title}}</span>
-                            <span [style.display]="(i == 0) ? 'inline-block' : 'none'">({{variable.hasActual ? "Actual" : variable.variableType}})</span>
+                            <span style="word-wrap: break-word;" [style.display]="(variable.allTimesegmentsResultList.length > 1 && (i == 0)) ? 'none' : 'inline-block'">{{result.title}}</span>
+                            <span style="word-wrap: break-word;" [style.display]="(variable.allTimesegmentsResultList.length > 1 && (i == 0)) ? 'inline-block' : 'none'">{{variable.title}}</span>    
+                        </td>
+                        <td class="headcol-1">
+                            <span style="word-wrap: break-word;">{{variable.hasActual ? "Actual" : variable.variableType}}</span>
                         </td>
                         <td *ngFor="let pair of result.data" [style.background-color]="pair.value == '- na -'? '#eaeaee' : ''">{{pair.value}}</td>
                     </tr>

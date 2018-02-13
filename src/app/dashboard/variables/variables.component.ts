@@ -44,6 +44,9 @@ export class VariablesComponent implements OnInit {
     description = '';
     branchId = '';
     projectId = '';
+    projectTitle: String = "";
+    branchTitle: String = "";
+    title: String = "";
 
     @ViewChild('graph') svg;
     @ViewChild('linegraph') graph;
@@ -245,6 +248,22 @@ export class VariablesComponent implements OnInit {
             this.branchId = params['branchId'];
             var varId = params['variableId'];
 
+            this.projectService
+                .getDetails(this.projectId)
+                .subscribe(result => {
+                    //this.selectedProject = result.data as Project;
+
+                    this.projectTitle = result.data.title;
+                });
+
+            this.branchService
+                .getDetails(this.branchId)
+                .subscribe(result => {
+                    //this.selectedProject = result.data as Project;
+
+                    this.branchTitle = result.data.title;
+                });
+
             this.variableService
                 .getVariables(this.branchId)
                 .subscribe(response => {
@@ -334,6 +353,7 @@ export class VariablesComponent implements OnInit {
     }
 
     selectVariable(variable: Variable) {
+        this.title = variable.title;
         this.shouldDefineActualValues = variable.hasActual;
         if (variable.hasActual) {
             this.columns = variable.actualTimeSegment.tableInput;

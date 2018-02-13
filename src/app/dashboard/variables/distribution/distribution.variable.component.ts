@@ -74,7 +74,7 @@ export class VariableDistributionComponent implements OnInit {
         });
 
         var expression = "";
-        if (this.method == 2) {
+        if (this.method == 2 && this.distribution ==3) {
             words[0].forEach(word => {
                 if (word.type == 'variable') {
                     expression += `EXP_${word.id} `;

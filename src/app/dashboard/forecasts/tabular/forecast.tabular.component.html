@@ -37,7 +37,7 @@
                             <span class="empty-space" [style.display]="(variable.allTimesegmentsResultList.length > 1 && (i > 0)) ? 'inline-block' : 'none'"></span>
                             <span [style.display]="(variable.allTimesegmentsResultList.length > 1 && (i == 0)) ? 'none' : 'inline-block'">{{result.title}}</span>
                             <span [style.display]="(variable.allTimesegmentsResultList.length > 1 && (i == 0)) ? 'inline-block' : 'none'">{{variable.title}}</span>
-                            <span [style.display]="(i == 0) ? 'inline-block' : 'none'">({{variable.variableType}})</span>
+                            <span [style.display]="(i == 0) ? 'inline-block' : 'none'">({{variable.hasActual ? "Actual" : variable.variableType}})</span>
                         </td>
                         <td *ngFor="let pair of result.data" [style.background-color]="pair.value == '- na -'? '#eaeaee' : ''">{{pair.value}}</td>
                     </tr>

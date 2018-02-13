@@ -43,7 +43,7 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
     selectedInputMethod = "constant";
     comment = '';
     
-    datePickerConfig = { format : 'DD-MM-YYYY hh:mm' };
+    datePickerConfig = { format : 'MM-YYYY' };
     
     constructor(
         private modal: ModalDialogService
@@ -132,13 +132,12 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
                         date = new Date();
                     } else {
                         //let time = Date.parse(this.timeSegment.startTime.toString());
-                        let datePart = this.timeSegment.startTime.split(' ')[0];
-                        let parts = datePart.split('-');
-                        let day = parts[0]; 
-                        let month = parts[1];
-                        let year = parts[2];
+                        let parts = this.timeSegment.startTime.split('-');
+                        // let day = parts[0]; 
+                        let month = parts[0];
+                        let year = parts[1];
 
-                        date = new Date(`${month}/${day}/${year}`);
+                        date = new Date(`${month}/01/${year}`);
                     }
                     if (this.selectedInputMethod == "table"){
                         console.log("hello");
@@ -194,7 +193,7 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
             } else {
                 let input:any = {};
                 if (typeof(this.startDate) != "string") {
-                    this.startDate = this.startDate.format("DD-MM-YYYY hh:mm");
+                    this.startDate = this.startDate.format("MM-YYYY");
                 }
 
                 if (this.valueType == 'discrete') {
@@ -236,7 +235,7 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
                 var input = method.getInput();
 
                 if (typeof(this.startDate) != "string") {
-                    this.startDate = this.startDate.format("DD-MM-YYYY hh:mm");
+                    this.startDate = this.startDate.format("MM-YYYY");
                 }
 
                 input['startTime'] = this.startDate;

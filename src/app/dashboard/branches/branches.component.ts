@@ -37,6 +37,7 @@ export class BranchesComponent implements OnInit {
     datePickerConfig = { format : 'MM-YYYY' };
 
     selectedBranch:Branch = null;
+    createdBranch:Branch = null;
 
     datePickerMode: String = 'month';
 
@@ -110,9 +111,16 @@ export class BranchesComponent implements OnInit {
         this.datePickerMode = 'month';
         this.timeUnit = 'month';
 
-        this.router.navigate(['/home/branches-list'], { queryParams: {
-            projectId: this.selectedProjectId
-        }});
+         if (this.createdBranch != null){
+            this.router.navigate(['/home/variable-list'], { queryParams: {
+                projectId: this.createdBranch.projectId,
+                branchId: this.createdBranch.id
+            }});
+        } else{
+            this.router.navigate(['/home/branches-list'], { queryParams: {
+                projectId: this.selectedProjectId
+            }});
+        }
     }
 
     // create branch
@@ -123,10 +131,10 @@ export class BranchesComponent implements OnInit {
                 .body('Please enter branch name')
                 .open();
         }
-  	else if (this.title.match(/[^a-zA-Z_-]/)){
+  	else if (this.title.match(/[^0-9a-zA-Z_-]/)){
               this.modal.alert()
               .title('Warning')
-              .body('Names can only include Alphabetical characters,underscores and hyphens')
+              .body('Names can only include Alphanumerical characters,underscores and hyphens')
               .open();
 
         } else {
@@ -145,7 +153,7 @@ export class BranchesComponent implements OnInit {
                             this.modal.alert()
                               .title("Warning")
                               .body("Failed to update branch called \"" + this.title +
-                                    "\" This name is already associated with another branch in this project")
+                                    "\". This name is already associated with another branch in this project")
                               .open();
                         } else {
                             this.clearInputs();
@@ -166,7 +174,12 @@ export class BranchesComponent implements OnInit {
                                       "This name is already associated with another branch in this project")
                                 .open();
                           } else{
-                            this.clearInputs();
+                            this.branchService.getBranchByName(this.selectedProjectId, this.title)
+                                .subscribe(result => {
+                                    console.log('result', result);
+                                    this.createdBranch = result.data as Branch;
+                                    this.clearInputs();
+                                });
                           }
                     });
             }

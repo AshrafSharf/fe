@@ -37,8 +37,8 @@
                                 </div>
                             </div>
                         </div>
-                
-                        <div class="form-group">
+
+                        <div class="form-group"   *ngIf="selectedInputMethod != 'table'" >
                             <label for="">Comment</label>
                             <textarea name="" [(ngModel)]="comment" id="comment" class="form-control"></textarea>
                         </div>
@@ -64,7 +64,7 @@
                             <div *ngIf="valueType != 'discrete'">
                                 <div class="form-group">
                                     <label for="">Input Method</label>
-                                    <select id="input-method" [(ngModel)]="selectedInputMethod" class="form-control">
+                                    <select id="input-method" (change)="changeDates()" [(ngModel)]="selectedInputMethod" class="form-control">
                                         <option value="constant">Constant</option>
                                         <option value="expression">Expression</option>
                                         <option value="table">Input Table</option>
@@ -72,47 +72,44 @@
                                         <option value="discrete">Discrete Random</option> -->
                                     </select>
                                 </div>
-                        
-                                <variable-constant 
-                                    [time-segment]="timeSegment"
-                                    *ngIf="selectedInputMethod == 'constant'" 
-                                    [branch-id]="branchId"></variable-constant>
-    
+
+                                <variable-constant
+                                        [time-segment]="timeSegment"
+                                        *ngIf="selectedInputMethod == 'constant'"
+                                        [branch-id]="branchId"
+                                        [input-method]="selectedInputMethod"></variable-constant>
+
                                 <variable-expression
-                                    [time-segment]="timeSegment" 
-                                    *ngIf="selectedInputMethod == 'expression'" 
-                                    [branch-id]="branchId"></variable-expression>                                        
-    
-                                <variable-table 
-                                    *ngIf="selectedInputMethod == 'table'" 
-                                    [branch-id]="branchId" 
-                                    [variable-type]="variableType" 
-                                    [start-time]="startDate"
-                                    [end-time]="endDate"
-                                    [time-segment]="timeSegment" ></variable-table>
-    
-                                <variable-breakdown 
-                                    *ngIf="selectedInputMethod == 'breakdown'" 
-                                    [branch-id]="branchId" 
-                                    [time-segment]="timeSegment"></variable-breakdown>
-    
-                                <variable-discrete-random 
-                                    *ngIf="selectedInputMethod == 'discrete'" 
-                                    [branch-id]="branchId"></variable-discrete-random>
+                                        [time-segment]="timeSegment"
+                                        *ngIf="selectedInputMethod == 'expression'"
+                                        [branch-id]="branchId"
+                                        [input-method]="selectedInputMethod"></variable-expression>
+
+                               
+
+                                <variable-breakdown
+                                        *ngIf="selectedInputMethod == 'breakdown'"
+                                        [branch-id]="branchId"
+                                        [time-segment]="timeSegment"></variable-breakdown>
+
+                                <variable-discrete-random
+                                        *ngIf="selectedInputMethod == 'discrete'"
+                                        [branch-id]="branchId"></variable-discrete-random>
                             </div>
+
 
                             <div *ngIf="valueType == 'discrete'">
                                 <table class="table input-group table-bordered">
                                     <tr>
                                         <th class="active">Value</th>
                                         <td *ngFor="let subVar of variableTypeList; let i = index">
-                                            <input 
-                                                [sh-context]="contextMenuItemsDiscrete" 
-                                                [sh-data-context]="dataContext(i)"
-                                                class="table_input" 
-                                                type="text" 
-                                                placeholder="" 
-                                                [(ngModel)]="subVar.value">
+                                            <input
+                                                    [sh-context]="contextMenuItemsDiscrete"
+                                                    [sh-data-context]="dataContext(i)"
+                                                    class="table_input"
+                                                    type="text"
+                                                    placeholder=""
+                                                    [(ngModel)]="subVar.value">
                                         </td>
                                         <th rowspan="2" style="vertical-align: middle">
                                             <fa name="plus" class="button_add" (click)="addDiscreteVariable()"></fa>
@@ -121,13 +118,7 @@
                                     <tr>
                                         <th class="active">Probability (%)</th>
                                         <td *ngFor="let subVar of variableTypeList">
-                                            <input 
-                                                [sh-context]="contextMenuItemsDiscrete" 
-                                                [sh-data-context]="dataContext(i)"
-                                                class="table_input" 
-                                                type="text"
-                                                placeholder="%" 
-                                                [(ngModel)]="subVar.probability">
+                                            <input [sh-context]="contextMenuItemsDiscrete" class="table_input" type="text" placeholder="%" [(ngModel)]="subVar.probability">
                                         </td>
                                     </tr>
                                 </table>
@@ -136,6 +127,20 @@
                         </div>
 
                     </div>
+                </div>
+                <div id="row">
+                    <div class="form-group"  *ngIf="selectedInputMethod == 'table'" >
+                        <label for="">Comment</label>
+                        <textarea name="" [(ngModel)]="comment" id="comment" class="form-control"></textarea>
+                    </div>
+                    <variable-table id="inputTable"
+                                    *ngIf="selectedInputMethod == 'table'"
+                                    [branch-id]="branchId"
+                                    [variable-type]="variableType"
+                                    [start-time]="startDate"
+                                    [end-time]="endDate"
+                                    [time-segment]="timeSegment" ></variable-table>
+
                 </div>
             </div>
         </div>

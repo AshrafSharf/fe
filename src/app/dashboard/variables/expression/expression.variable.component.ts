@@ -13,10 +13,11 @@ import { VariableDistributionComponent } from '../distribution/distribution.vari
 export class VariableExpressionComponent implements OnInit, VariableComponentBehavior {
     @Input('branch-id') branchId: String = '';
     @Input('time-segment') timeSegment:TimeSegment;
+    @Input('input-method') inputMethod: String = '';
     @ViewChild(AutocompleteInputComponent) autoCompleteInput: AutocompleteInputComponent;
-    variables: KeyValuePair[] = Array<KeyValuePair>(); 
+    variables: KeyValuePair[] = Array<KeyValuePair>();
     @ViewChild(VariableDistributionComponent) distributionComponent:VariableDistributionComponent;
-    
+
     constructor(
         private variableService: AppVariableService) { }
 
@@ -39,8 +40,8 @@ export class VariableExpressionComponent implements OnInit, VariableComponentBeh
             expression: this.autoCompleteInput.getInput(),
             completedWordsArray: this.autoCompleteInput.completedWords,
             distributionType: this.distributionComponent.distributionType,
-            mean: this.distributionComponent.mean,
-            stdDeviation: this.distributionComponent.deviation,
+            //mean: this.distributionComponent.mean,
+            stdDeviation: this.distributionComponent.getCompletedWords(),
             userSelectedParametrics: this.distributionComponent.parametric,
             userSelectedParametricsStdDeviation: this.distributionComponent.sigma
         };

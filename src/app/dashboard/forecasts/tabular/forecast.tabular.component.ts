@@ -255,3 +255,4 @@ export class ForecastTabularComponent implements OnInit {
     }
 }
 
+

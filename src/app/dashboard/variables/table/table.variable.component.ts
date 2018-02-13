@@ -52,48 +52,29 @@ export class VariableTableComponent implements OnInit, OnChanges, VariableCompon
     }
 
     ngOnInit() { 
-        this.contextMenuItems = [
-            {
-                label: 'cut',
-                onClick: ($event) => {
-                    let data = $event.dataContext;
-                    Utils.setBuffer(this.columns);
-                    for (var index = 0; index < this.columns.length; index++) {
-                        this.columns[index].value = '0';
-                    }
-                }
-            },
-            {
-                label: 'copy',
-                onClick: ($event) => {
-                    let data = $event.dataContext;
-                    Utils.setBuffer(this.columns);
-                }
-            },
-            {
-                divider: true
-            },
-            {
-                label: 'paste',
-                disabled: () => {
-                    console.log(Utils.getBuffer());
-                    return Utils.getBuffer() == undefined;
-                },
-                onClick: ($event) => {
-                    if (Utils.getBuffer() != undefined && Utils.getBuffer().length != 0) {
-                        this.columns.splice(0, this.columns.length);
-                        let tempColumns = Utils.getBuffer();
-                        this.columns = new Array<TableInputPair>();
-                        for (var index = 0; index < tempColumns.length; index++) {
-                            this.columns.push({
-                                key: tempColumns[index].key,
-                                value: tempColumns[index].value
-                            });
-                        }
-                    }
-                }
+
+        document.addEventListener('paste', (event) => {
+            let tempEvent = event as any;
+            let data = tempEvent.clipboardData.getData('text/plain') as String;
+            let parts = data.split('\t');
+
+            // to skip other than excel values
+            if (parts.length == 1) {
+                return;
             }
-        ];
+
+            this.columns.splice(0, this.columns.length);
+            let startDate = this.startTime.clone();
+            startDate = startDate.subtract(1, 'months');
+            for (var index = 0; index < parts.length; index++) {
+                startDate = startDate.add(1, 'months');
+                let year = startDate.year();
+                let month = startDate.format('MMM');
+                this.columns.push({key:month + " - " + year, value: parts[index]});
+            }
+
+            this.endTime = startDate.clone();
+        });
     }
 
     ngOnChanges(changes: SimpleChanges): void {

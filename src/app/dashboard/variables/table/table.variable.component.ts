@@ -122,7 +122,10 @@ export class VariableTableComponent implements OnInit, OnChanges, VariableCompon
             values.push({key: column.key, value: column.value});
         }
 
-        return { tableInput:values };
+        return { 
+            tableInput:values,
+            distributionType: 'none'
+        };
     }
 
 }

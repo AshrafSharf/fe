@@ -34,7 +34,7 @@ export class BranchesComponent implements OnInit {
     actualsWeek: String = '';
 
     //dd-MM-yyyy hh:mm
-    datePickerConfig = { format : 'DD-MM-YYYY hh:mm' };
+    datePickerConfig = { format : 'MM-YYYY' };
 
     selectedBranch:Branch = null;
 

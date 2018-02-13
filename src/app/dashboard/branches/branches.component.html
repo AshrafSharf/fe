@@ -9,33 +9,24 @@
                 <h4>{{selectedBranch == null ? 'Add Branch' : 'Update Branch: ' + this.projectTitle + ' > ' +this.title}}</h4>
             </div>
             <div class="panel-body">
-                <div class="form-group">
-                    <label for="">Branch Name</label>
-                    <input
-                        [(ngModel)]="title"
-                        type="text"
-                        class="form-control"
-                        placeholder="branch name">
-                </div>
 
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="">Owner</label>
-                            <select [(ngModel)]="ownerId" class="form-control">
-                                <option *ngFor="let user of users" [value]="user.id">{{user.userName}}</option>
-                            </select>
+                            <label for="">Branch Name</label>
+                            <input
+                                [(ngModel)]="title"
+                                type="text"
+                                class="form-control"
+                                placeholder="branch name">
                         </div>
                     </div>
                     
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="">Time Unit</label>
-                            <select (change)="onChangeTimeUnit()" class="form-control" [(ngModel)]="timeUnit">
-                                <option value="Month">Month</option>
-                                <option value="Week">Week</option>
-                                <option value="Hour">Hour</option>
-                                <option value="Time">Time</option>
+                            <label for="">Owner</label>
+                            <select [(ngModel)]="ownerId" class="form-control">
+                                <option *ngFor="let user of users" [value]="user.id">{{user.userName}}</option>
                             </select>
                         </div>
                     </div>

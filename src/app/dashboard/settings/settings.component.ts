@@ -18,6 +18,11 @@ import { Branch } from './../../shared/interfaces/branch';
 
 export class SettingsComponent implements OnInit {
     sigma = "";
+    breakdownDec ="";
+    otherDec="";
+    sigmaId = "";
+    otherDecId = "";
+    breakdownDecId = "";
 
     constructor(
         private settingsService:SettingsService,
@@ -37,6 +42,15 @@ export class SettingsComponent implements OnInit {
                 data.forEach(setting => {
                     if (setting.key == "SIGMA") {
                         this.sigma = setting.value.toString();
+                        this.sigmaId = setting.id.toString();
+                    }
+                    else if (setting.key == "VARIABLE_DECIMAL"){
+                        this.otherDec = setting.value.toString();
+                        this.otherDecId = setting.id.toString();
+                    }
+                    else if (setting.key == "BREAKDOWN_DECIMAL"){
+                        this.breakdownDec = setting.value.toString();
+                        this.breakdownDecId = setting.id.toString();
                     }
                 });
             });
@@ -44,12 +58,15 @@ export class SettingsComponent implements OnInit {
 
     onSave() {
         this.settingsService
-            .saveSettings([{key: 'SIGMA', value:this.sigma}])
-            .subscribe(result => {
-                console.log("settings saved")
-                this.recalculateEveryBranch();
-                this.router.navigate(['/home/variable-list']);
-            });
+        .updateSettings([{id:this.otherDecId, key: "VARIABLE_DECIMAL", value:this.otherDec},
+                        {id:this.sigmaId, key: "SIGMA", value:this.sigma},
+                        {id:this.breakdownDecId, key:"BREAKDOWN_DECIMAL", value:this.breakdownDec}])
+        .subscribe(result => {
+            console.log("settings updated");
+            this.recalculateEveryBranch();
+            this.router.navigate(['/home/variable-list']);
+        });
+
     }
 
     onCancel(){
@@ -62,13 +79,11 @@ export class SettingsComponent implements OnInit {
         .subscribe( result => {
             var projects = result.data as Array<Project>;
             for (var i=0; i< projects.length; i++){
-                console.log(projects[i].title);
                 var projectId = projects[i].id;
                 this.branchService.getBranches(projectId)
                 .subscribe(result => {
                     var branches = result.data as Array<Branch>;
                     for (var i = 0; i < branches.length; i++){
-                        console.log(branches[i].title);
                         var branchId = branches[i].id;
                         this.variableService.calculateVariableValues(branchId)
                         .subscribe( result =>{

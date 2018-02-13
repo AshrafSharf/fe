@@ -7,6 +7,7 @@ import { Component, Input, OnInit, ViewChildren, ElementRef, NgZone, ViewChild, 
 import { ProjectService } from '../../services/project.service';
 import { Branch } from './../../shared/interfaces/branch';
 import { BranchService } from '../../services/branch.service';
+import {SettingsService} from '../../services/settings.service';
 import { User } from '../../shared/interfaces/user';
 import { TimeSegmentComponent } from './time-segment/time.segment.component';
 import { ModalDialogService } from '../../services/modal-dialog.service';
@@ -44,9 +45,13 @@ export class VariablesComponent implements OnInit {
     description = '';
     branchId = '';
     projectId = '';
+
+    otherVarDecimal = "";
+    breakdownVarDecimal= "";
     projectTitle: String = "";
     branchTitle: String = "";
     title: String = "";
+
 
     @ViewChild('graph') svg;
     @ViewChild('linegraph') graph;
@@ -207,6 +212,7 @@ export class VariablesComponent implements OnInit {
         private userService: UserService,
         private projectService: ProjectService,
         private branchService: BranchService,
+        private settingsService: SettingsService,
         element: ElementRef,
         private ngZone: NgZone) {
 
@@ -533,45 +539,80 @@ export class VariablesComponent implements OnInit {
             }
         }
 
-        this.options = {
-            chart: {
-                type: chartType,
-                stacked: isStackChart,
-                height: 600,
-                x: (d) => { return d.x; },
-                y: function (d) { return d.y; },
-                useInteractiveGuideline: true,
-                xAxis: {
-                    axisLabel: '',
-                    tickFormat: (d) => {
-                        if (this.valueType == 'discrete') {
-                            let timeSegment = this.timeSegments[d];
-                            let datePart = timeSegment.startTime.split(' ')[0];
-                            let parts = datePart.split('-');
-                            let day = parts[0];
-                            let month = parts[1];
-                            let year = parts[2];
+        var varDec = this.otherVarDecimal;
+        var breakdownDec = this.breakdownVarDecimal;
+        this.settingsService
+        .getSettings()
+        .subscribe(settings => {
+            let data = settings.data as {id:String, key:String, value:String}[];
+            data.forEach(setting => {
+                if (setting.key == "VARIABLE_DECIMAL"){
+                    this.otherVarDecimal = setting.value.toString();
+                    varDec = setting.value.toString();
+                }
+                else if (setting.key == "BREAKDOWN_DECIMAL"){
+                    this.breakdownVarDecimal = setting.value.toString();
+                    breakdownDec = setting.value.toString();
+                }
+            });
 
-                            return `${month}-${year}`;
-                        } else {
-                            let pair = this.lineChartLabels[d];
-                            if (pair == undefined) return '';
-                            return pair.value;
+            this.options = {
+                chart: {
+                    type: chartType,
+                    stacked: isStackChart,
+                    height: 600,
+                    x: (d) => { return d.x; },
+                    y: function (d) { return d.y; },
+                    useInteractiveGuideline: true,
+                    interactiveLayer: {
+                        tooltip: {
+                            valueFormatter:(d, i) => {
+                                if (this.variableType == 'breakdown' && this.valueType == 'real'){
+                                    return d3.format(",.0"+breakdownDec+"f")(d);
+                                }else if (this.valueType == "real"){
+                                    return d3.format(",.0"+varDec+"f")(d);
+                                }
+                                return d3.format(",")(d);
+                            }
                         }
-                    }
-                },
-                yAxis: {
-                    axisLabel: '',
-                    tickFormat: function (d) {
-                        return d;
                     },
-                    axisLabelDistance: -10
-                },
-                yDomain: [minValue, maxValue],
+                    xAxis: {
+                        axisLabel: '',
+                        tickFormat: (d) => {
+                            if (this.valueType == 'discrete') {
+                                let timeSegment = this.timeSegments[d];
+                                let datePart = timeSegment.startTime.split(' ')[0];
+                                let parts = datePart.split('-');
+                                let day = parts[0];
+                                let month = parts[1];
+                                let year = parts[2];
 
-                showLegend: true,
-            },
-        };
+                                return `${month}-${year}`;
+                            } else {
+                                let pair = this.lineChartLabels[d];
+                                if (pair == undefined) return '';
+                                return pair.value;
+                            }
+                        }
+                    },
+                    yAxis: {
+                        axisLabel: '',
+                        tickFormat: (d) => {
+                            if (this.variableType == 'breakdown' && this.valueType == 'real'){
+                                return d3.format(",.0"+breakdownDec+"f")(d);
+                            }else if (this.valueType == "real"){
+                                return d3.format(",.0"+varDec+"f")(d);
+                            }
+                            return d3.format(",")(d);
+                        },
+                        axisLabelDistance: -10
+                    },
+                    yDomain: [minValue, maxValue],
+
+                    showLegend: true,
+                },
+            };
+        });
         this.lineChartData = tempLineChartData;
     }
 

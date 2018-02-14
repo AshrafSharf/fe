@@ -51,30 +51,28 @@ export class VariableTableComponent implements OnInit, OnChanges, VariableCompon
         }
     }
 
-    ngOnInit() { 
+    valuePasted(event) {
+        let tempEvent = event as any;
+        let data = tempEvent.clipboardData.getData('text/plain') as String;
 
-        document.addEventListener('paste', (event) => {
-            let tempEvent = event as any;
-            let data = tempEvent.clipboardData.getData('text/plain') as String;
-            let parts = data.split('\t');
+        let parts = data.split('\t');
+        var partIndex = 0;
 
-            // to skip other than excel values
-            if (parts.length == 1) {
-                return;
-            }
+        let id = parseInt(tempEvent.target.id)
 
-            this.columns.splice(0, this.columns.length);
-            let startDate = this.startTime.clone();
-            startDate = startDate.subtract(1, 'months');
-            for (var index = 0; index < parts.length; index++) {
-                startDate = startDate.add(1, 'months');
-                let year = startDate.year();
-                let month = startDate.format('MMM');
-                this.columns.push({key:month + " - " + year, value: parts[index]});
-            }
+        // lenght
+        let count = this.columns.length - id;
+        if (count > parts.length) {
+            count = parts.length;
+        }
 
-            this.endTime = startDate.clone();
-        });
+        count += id;
+        for (var index = id; index < count; index++) {
+            let pair = this.columns[index];
+            pair['value'] = parts[partIndex];
+            partIndex += 1;
+        }
+        return false;
     }
 
     ngOnChanges(changes: SimpleChanges): void {

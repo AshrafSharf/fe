@@ -187,8 +187,8 @@
                                             <td *ngFor="let col of columns">{{col.key}}</td>
                                         </tr>
                                         <tr>
-                                            <td *ngFor="let col of columns">
-                                                <input type="text" class="table_input" [(ngModel)]="col.value">
+                                            <td *ngFor="let col of columns; let i = index">
+                                                <input type="text" class="table_input" [id]="i" (paste)="valuePasted($event)" [(ngModel)]="col.value">
                                             </td>
                                         </tr>
                                     </table>

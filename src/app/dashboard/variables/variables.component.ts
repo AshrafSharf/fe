@@ -877,4 +877,28 @@ export class VariablesComponent implements OnInit {
     defineActualValues(event) {
         this.shouldDefineActualValues = event.target.checked;
     }
+
+    valuePasted(event) {
+        let tempEvent = event as any;
+        let data = tempEvent.clipboardData.getData('text/plain') as String;
+
+        let parts = data.split('\t');
+        var partIndex = 0;
+
+        let id = parseInt(tempEvent.target.id)
+
+        // lenght
+        let count = this.columns.length - id;
+        if (count > parts.length) {
+            count = parts.length;
+        }
+
+        count += id;
+        for (var index = id; index < count; index++) {
+            let pair = this.columns[index];
+            pair['value'] = parts[partIndex];
+            partIndex += 1;
+        }
+        return false;
+    }
 }

@@ -10,7 +10,7 @@ import { Utils } from '../../../shared/utils';
     templateUrl: 'table.variable.component.html',
     styleUrls: ['./table.variable.component.css']
 })
-export class VariableTableComponent implements OnInit, OnChanges, VariableComponentBehavior {
+export class VariableTableComponent implements OnChanges, VariableComponentBehavior {
     
     @Input('branch-id') branchId: String = '';
     @Input('start-time') startTime: Moment;

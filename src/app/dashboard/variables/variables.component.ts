@@ -492,7 +492,7 @@ export class VariablesComponent implements OnInit {
                     } else {
                         if (variable.variableType != 'breakdown') {
 
-                            if (index % 2 == 0) {
+                            if (index % 2 != 0) {
                                 // odd
                                 color = Utils.getShadeOfColor(color, 0.5);
                             }

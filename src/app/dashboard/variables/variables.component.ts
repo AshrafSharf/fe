@@ -48,6 +48,7 @@ export class VariablesComponent implements OnInit {
 
     otherVarDecimal = "";
     breakdownVarDecimal= "";
+    comma ="";
     projectTitle: String = "";
     branchTitle: String = "";
     title: String = "";
@@ -541,6 +542,7 @@ export class VariablesComponent implements OnInit {
 
         var varDec = this.otherVarDecimal;
         var breakdownDec = this.breakdownVarDecimal;
+        var com = this.comma;
         this.settingsService
         .getSettings()
         .subscribe(settings => {
@@ -553,6 +555,12 @@ export class VariablesComponent implements OnInit {
                 else if (setting.key == "BREAKDOWN_DECIMAL"){
                     this.breakdownVarDecimal = setting.value.toString();
                     breakdownDec = setting.value.toString();
+                }
+                  //add comma separator if it was ticked in settings
+                 else if (setting.key == "COMMA_CHECK"){
+                    var commaCheck = setting.value.toString();
+                    this.comma = (commaCheck == "true" ? "," : "");
+                    com = (commaCheck == "true" ? "," : "");
                 }
             });
 
@@ -568,11 +576,11 @@ export class VariablesComponent implements OnInit {
                         tooltip: {
                             valueFormatter:(d, i) => {
                                 if (this.variableType == 'breakdown' && this.valueType == 'real'){
-                                    return d3.format(",.0"+breakdownDec+"f")(d);
+                                    return d3.format(com +".0"+breakdownDec+"f")(d);
                                 }else if (this.valueType == "real"){
-                                    return d3.format(",.0"+varDec+"f")(d);
+                                    return d3.format(com +".0"+varDec+"f")(d);
                                 }
-                                return d3.format(",")(d);
+                                return d3.format(com)(d);
                             }
                         }
                     },
@@ -599,11 +607,11 @@ export class VariablesComponent implements OnInit {
                         axisLabel: '',
                         tickFormat: (d) => {
                             if (this.variableType == 'breakdown' && this.valueType == 'real'){
-                                return d3.format(",.0"+breakdownDec+"f")(d);
+                                return d3.format(com+".0"+breakdownDec+"f")(d);
                             }else if (this.valueType == "real"){
-                                return d3.format(",.0"+varDec+"f")(d);
+                                return d3.format(com+".0"+varDec+"f")(d);
                             }
-                            return d3.format(",")(d);
+                            return d3.format(com)(d);
                         },
                         axisLabelDistance: -10
                     },

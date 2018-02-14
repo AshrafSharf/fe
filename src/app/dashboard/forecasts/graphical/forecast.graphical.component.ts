@@ -47,6 +47,7 @@ export class ForecastGraphicalComponent implements OnInit {
     variablesLatestEnd:any;
     dateLabel:string;
     decimal = "";
+    comma ="";
 
     public lineChartData:Array<any> = [];
     public lineChartLabels:Array<{key: number, value:string}> = [];
@@ -419,6 +420,7 @@ export class ForecastGraphicalComponent implements OnInit {
             }
         }
         var dec = this.decimal;
+        var com = this.comma;
         this.settingsService
         .getSettings()
         .subscribe(settings => {
@@ -427,6 +429,11 @@ export class ForecastGraphicalComponent implements OnInit {
                 if (setting.key == "VARIABLE_DECIMAL"){
                     this.decimal = setting.value.toString();
                     dec = setting.value.toString();
+                }
+                //add comma separator if it was ticked in settings
+                if (setting.key == "COMMA_CHECK"){
+                    var commaCheck = setting.value.toString();
+                    this.comma = (commaCheck == "true" ? "," : "");
                 }
             });
             this.options = {
@@ -439,7 +446,7 @@ export class ForecastGraphicalComponent implements OnInit {
                 interactiveLayer: {
                     tooltip: {
                         valueFormatter:(d, i) => {
-                            return d3.format(",.0"+dec+"f")(d);
+                            return d3.format(com+".0"+dec+"f")(d);
                     }
                 }
                 },
@@ -454,7 +461,7 @@ export class ForecastGraphicalComponent implements OnInit {
                 yAxis: {
                     axisLabel: '',
                     tickFormat: function(d){
-                        return d3.format(",.0"+dec+"f")(d);
+                        return d3.format(com+".0"+dec+"f")(d);
                     },
                     axisLabelDistance: -10
                 },

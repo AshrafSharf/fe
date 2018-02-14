@@ -391,7 +391,7 @@ export class ForecastGraphicalComponent implements OnInit {
                             if (variable.variableType != 'breakdown') {
                                 if (this.distributionLines == false) continue;
 
-                                if (index % 2 == 0) {
+                                if (index % 2 != 0) {
                                     // odd
                                     color = Utils.getShadeOfColor(color, 0.5);
                                 }

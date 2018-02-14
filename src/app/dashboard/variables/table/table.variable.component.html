@@ -8,11 +8,13 @@
                         <td *ngFor="let col of columns">{{col.key}}</td>
                     </tr>
                     <tr>
-                        <td *ngFor="let col of columns">
+                        <td *ngFor="let col of columns; let i = index;">
                             <input 
+                                (paste)="valuePasted($event)"
                                 [sh-context]="contextMenuItems" 
                                 [sh-data-context]="dataContext(i)"
                                 type="text" 
+                                [id]="i"
                                 class="table_input" 
                                 [(ngModel)]="col.value">
                         </td>

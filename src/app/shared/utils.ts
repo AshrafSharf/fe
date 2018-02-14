@@ -1,11 +1,11 @@
 import { TableInputPair } from './interfaces/variables';
 import { RequestOptions, Headers } from "@angular/http";
-
+import { environment } from '../../environments/environment';
 
 export class Utils {
 
     // base url
-    static baseUrl:String = "http://ec2-34-243-45-92.eu-west-1.compute.amazonaws.com:8443";
+    static baseUrl:String = environment.apiUrl;
     static routeProject:String = "project";
     static routeBranch:String = "branch";
     static routeVariable:String = "variable";

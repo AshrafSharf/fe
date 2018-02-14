@@ -3,6 +3,8 @@
 # compiled output
 /dist
 /dist.zip
+/staging.zip
+/prod.zip
 /tmp
 /out-tsc
 

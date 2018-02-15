@@ -23,6 +23,8 @@ export class SettingsComponent implements OnInit {
     sigmaId = "";
     otherDecId = "";
     breakdownDecId = "";
+    commaCheck:boolean;
+    commaCheckId ="";
 
     constructor(
         private settingsService:SettingsService,
@@ -52,6 +54,11 @@ export class SettingsComponent implements OnInit {
                         this.breakdownDec = setting.value.toString();
                         this.breakdownDecId = setting.id.toString();
                     }
+                    else if (setting.key == "COMMA_CHECK"){
+                        var value = setting.value;
+                        this.commaCheckId = setting.id.toString();
+                        this.commaCheck = (value == "true" ? true : false);
+                    }
                 });
             });
     }
@@ -60,7 +67,8 @@ export class SettingsComponent implements OnInit {
         this.settingsService
         .updateSettings([{id:this.otherDecId, key: "VARIABLE_DECIMAL", value:this.otherDec},
                         {id:this.sigmaId, key: "SIGMA", value:this.sigma},
-                        {id:this.breakdownDecId, key:"BREAKDOWN_DECIMAL", value:this.breakdownDec}])
+                        {id:this.breakdownDecId, key:"BREAKDOWN_DECIMAL", value:this.breakdownDec},
+                    {id:this.commaCheckId,key:"COMMA_CHECK", value:this.commaCheck}])
         .subscribe(result => {
             console.log("settings updated");
             this.recalculateEveryBranch();

@@ -33,6 +33,18 @@
         </div>
     </div>
     <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" [(ngModel)]="commaCheck" id="commaCheck"> 
+                    <label class="form-check-label" for="commaCheck">
+                        Enable Comma separator
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-md-12">
             <button class="btn btn-success" (click)="onSave()">Save and Exit</button>
             <button class="btn btn-danger" (click)="onCancel()">Cancel</button>

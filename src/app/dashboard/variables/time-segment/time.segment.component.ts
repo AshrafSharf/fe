@@ -34,6 +34,7 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
 
     endDate: any;
     startDate: any;
+    segmentHeading:any;
 
     contextMenuItemsDiscrete: IShContextMenuItem[];
     dataContext(i) {
@@ -169,6 +170,7 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
                     }
                 });
             }
+            this.segmentHeading = this.startDate.format("MMM-YYYY");
         }
     }
 

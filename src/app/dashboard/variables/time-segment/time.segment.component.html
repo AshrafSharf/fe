@@ -2,7 +2,7 @@
 <div class="panel-group">
     <div class="panel panel-default">
         <div class="panel-heading" (click)="toggleCollapse()">
-            <span class="panel-title">{{startDate == undefined ? 'Time Segment' : startDate}}</span>
+            <span class="panel-title">{{startDate == undefined ? 'Time Segment' : segmentHeading}}</span>
             <fa name="times" (click)="onDelete()" class="link pull-right"></fa>
             <fa [name]="isExpanded == true ? 'chevron-up' : 'chevron-down'" (click)="toggleCollapse()" class="link pull-right chevron"></fa>
         </div>

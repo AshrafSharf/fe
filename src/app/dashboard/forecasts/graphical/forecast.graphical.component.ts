@@ -375,11 +375,14 @@ export class ForecastGraphicalComponent implements OnInit {
                         for (var dataIndex = 0; dataIndex < item.data.length; dataIndex++) {
                             var valueItem = item.data[dataIndex];
                             var labelIndex = this.isLabelAdded(valueItem.title);
-                            var num = parseInt(valueItem.value.toString());
+                            //var num = parseInt(valueItem.value.toString());
+                            var num = parseFloat(valueItem.value.toString());
+
                             if (num < minValue) minValue = num;
                             if (num > maxValue) maxValue = num;
     
-                            dataValues.push({ x: labelIndex, y: d3.format('0.0f')(num)});
+                            //dataValues.push({ x: labelIndex, y: d3.format('0.0f')(num)});
+                            dataValues.push({ x: labelIndex, y:num});
                         }
     
                         if (index == 0) {

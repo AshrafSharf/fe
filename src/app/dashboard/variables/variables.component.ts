@@ -526,11 +526,13 @@ export class VariablesComponent implements OnInit {
                             labelIndex = keyIndex;
                             keyIndex += 1;
                         }
-                        var num = parseInt(valueItem.value.toString());
+                        //var num = parseInt(valueItem.value.toString());
+                        var num = parseFloat(valueItem.value.toString());
                         if (num < minValue) minValue = num;
                         if (num > maxValue) maxValue = num;
 
-                        dataValues.push({ x: labelIndex, y: d3.format('0.0f')(num)});
+                        //dataValues.push({ x: labelIndex, y: d3.format('0.0f')(num)});
+                        dataValues.push({ x: labelIndex, y:num});
                     }
 
                     if (index == 0) {
@@ -565,7 +567,7 @@ export class VariablesComponent implements OnInit {
                 }
             }
         }
-
+       
         var varDec = this.otherVarDecimal;
         var breakdownDec = this.breakdownVarDecimal;
         var com = this.comma;
@@ -606,7 +608,8 @@ export class VariablesComponent implements OnInit {
                                 }else if (this.valueType == "real"){
                                     return d3.format(com +".0"+varDec+"f")(d);
                                 }
-                                return d3.format(com)(d);
+
+                                return d3.format(com+".0f")(d);
                             }
                         }
                     },
@@ -637,7 +640,8 @@ export class VariablesComponent implements OnInit {
                             }else if (this.valueType == "real"){
                                 return d3.format(com+".0"+varDec+"f")(d);
                             }
-                            return d3.format(com)(d);
+
+                            return d3.format(com+".0f")(d);
                         },
                         axisLabelDistance: -10
                     },

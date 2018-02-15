@@ -48,6 +48,7 @@ export class VariablesComponent implements OnInit {
 
     otherVarDecimal = "";
     breakdownVarDecimal= "";
+    comma ="";
     projectTitle: String = "";
     branchTitle: String = "";
     title: String = "";
@@ -144,11 +145,25 @@ export class VariablesComponent implements OnInit {
             //     }
             // }
 
-            this.subvariableList[this.editSubvariableIndex].name = this.subvariableName;
-            this.subvariableList[this.editSubvariableIndex].value = this.subvariableValue;
+          //  this.subvariableList[this.editSubvariableIndex].name = this.subvariableName;
+          //  this.subvariableList[this.editSubvariableIndex].value = this.subvariableValue;
             if (this.valueType == 'discrete') {
                 this.subvariableList[this.editSubvariableIndex].probability = this.subvariablePercentage;
             }
+            if (this.subvariableName.length == 0){
+                this.modal.showError('Subvariable name is mandatory');
+                return;
+            }
+            else if (this.subvariableValue.length == 0 ){
+                this.modal.showError('Subvariable value is mandatory');
+                return;
+            }
+            else if (isNaN(parseFloat(this.subvariableValue))){
+                this.modal.showError('Subvariable value must be a number');
+                return;
+            }  
+            this.subvariableList[this.editSubvariableIndex].name = this.subvariableName;
+            this.subvariableList[this.editSubvariableIndex].value = this.subvariableValue;
         } else {
             console.log('adding');
 
@@ -156,11 +171,23 @@ export class VariablesComponent implements OnInit {
                 // add new
                 for (var index = 0; index < this.subvariableList.length; index++) {
                     if (this.subvariableList[index].name == this.subvariableName) {
+                        this.modal.showError('A subvariable already exists with this name');
                         return;
                     }
                 }
             }
-
+            if (this.subvariableName.length == 0){
+                this.modal.showError('Subvariable name is mandatory');
+                return;
+            }
+            else if (this.subvariableValue.length == 0 ){
+                this.modal.showError('Subvariable value is mandatory');
+                return;
+            } 
+            else if (isNaN(parseFloat(this.subvariableValue))){
+                this.modal.showError('Subvariable value must be a number');
+                return;
+            } 
             this.subvariableList.push({
                 name: this.subvariableName,
                 value: this.subvariableValue,
@@ -543,6 +570,7 @@ export class VariablesComponent implements OnInit {
        
         var varDec = this.otherVarDecimal;
         var breakdownDec = this.breakdownVarDecimal;
+        var com = this.comma;
         this.settingsService
         .getSettings()
         .subscribe(settings => {
@@ -555,6 +583,12 @@ export class VariablesComponent implements OnInit {
                 else if (setting.key == "BREAKDOWN_DECIMAL"){
                     this.breakdownVarDecimal = setting.value.toString();
                     breakdownDec = setting.value.toString();
+                }
+                  //add comma separator if it was ticked in settings
+                 else if (setting.key == "COMMA_CHECK"){
+                    var commaCheck = setting.value.toString();
+                    this.comma = (commaCheck == "true" ? "," : "");
+                    com = (commaCheck == "true" ? "," : "");
                 }
             });
 
@@ -570,11 +604,12 @@ export class VariablesComponent implements OnInit {
                         tooltip: {
                             valueFormatter:(d, i) => {
                                 if (this.variableType == 'breakdown' && this.valueType == 'real'){
-                                    return d3.format(",.0"+breakdownDec+"f")(d);
+                                    return d3.format(com +".0"+breakdownDec+"f")(d);
                                 }else if (this.valueType == "real"){
-                                    return d3.format(",.0"+varDec+"f")(d);
+                                    return d3.format(com +".0"+varDec+"f")(d);
                                 }
-                                return d3.format(",.0f")(d);
+
+                                return d3.format(com+".0f")(d);
                             }
                         }
                     },
@@ -601,11 +636,12 @@ export class VariablesComponent implements OnInit {
                         axisLabel: '',
                         tickFormat: (d) => {
                             if (this.variableType == 'breakdown' && this.valueType == 'real'){
-                                return d3.format(",.0"+breakdownDec+"f")(d);
+                                return d3.format(com+".0"+breakdownDec+"f")(d);
                             }else if (this.valueType == "real"){
-                                return d3.format(",.0"+varDec+"f")(d);
+                                return d3.format(com+".0"+varDec+"f")(d);
                             }
-                            return d3.format(",.0f")(d);
+
+                            return d3.format(com+".0f")(d);
                         },
                         axisLabelDistance: -10
                     },

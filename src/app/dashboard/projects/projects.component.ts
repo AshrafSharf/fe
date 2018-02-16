@@ -123,7 +123,6 @@ export class ProjectsComponent implements OnInit {
 
     // clear inputs
     clearInputs() {
-        console.log("Navigate");
         this.title = '';
         this.description = '';
         this.owner = '';

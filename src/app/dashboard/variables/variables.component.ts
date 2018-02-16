@@ -17,6 +17,7 @@ import 'nvd3';
 import { Utils } from '../../shared/utils';
 import { Modal } from 'ngx-modialog/plugins/bootstrap';
 import * as jsPDF from 'jspdf'
+import { Config } from '../../shared/config';
 
 
 @Component({
@@ -48,11 +49,10 @@ export class VariablesComponent implements OnInit {
 
     otherVarDecimal = "";
     breakdownVarDecimal= "";
-    comma ="";
     projectTitle: String = "";
     branchTitle: String = "";
     title: String = "";
-
+    comma = '';
 
     @ViewChild('graph') svg;
     @ViewChild('linegraph') graph;
@@ -84,6 +84,8 @@ export class VariablesComponent implements OnInit {
 
     data;
     options;
+
+    keys = new Array();
 
     private parentNativeElement: any;
 
@@ -137,33 +139,11 @@ export class VariablesComponent implements OnInit {
         }
 
         if (this.editSubvariableIndex != -1) {
-            console.log('editing');
-            // // edit variable
-            // for (var index = 0; index < this.subvariableList.length; index++) {
-            //     if (this.subvariableList[index].name == this.subvariableName) {
-            //         return;
-            //     }
-            // }
-
-          //  this.subvariableList[this.editSubvariableIndex].name = this.subvariableName;
-          //  this.subvariableList[this.editSubvariableIndex].value = this.subvariableValue;
+            this.subvariableList[this.editSubvariableIndex].name = this.subvariableName;
+            this.subvariableList[this.editSubvariableIndex].value = this.subvariableValue;
             if (this.valueType == 'discrete') {
                 this.subvariableList[this.editSubvariableIndex].probability = this.subvariablePercentage;
             }
-            if (this.subvariableName.length == 0){
-                this.modal.showError('Subvariable name is mandatory');
-                return;
-            }
-            else if (this.subvariableValue.length == 0 ){
-                this.modal.showError('Subvariable value is mandatory');
-                return;
-            }
-            else if (isNaN(parseFloat(this.subvariableValue))){
-                this.modal.showError('Subvariable value must be a number');
-                return;
-            }  
-            this.subvariableList[this.editSubvariableIndex].name = this.subvariableName;
-            this.subvariableList[this.editSubvariableIndex].value = this.subvariableValue;
         } else {
             console.log('adding');
 
@@ -171,23 +151,11 @@ export class VariablesComponent implements OnInit {
                 // add new
                 for (var index = 0; index < this.subvariableList.length; index++) {
                     if (this.subvariableList[index].name == this.subvariableName) {
-                        this.modal.showError('A subvariable already exists with this name');
                         return;
                     }
                 }
             }
-            if (this.subvariableName.length == 0){
-                this.modal.showError('Subvariable name is mandatory');
-                return;
-            }
-            else if (this.subvariableValue.length == 0 ){
-                this.modal.showError('Subvariable value is mandatory');
-                return;
-            } 
-            else if (isNaN(parseFloat(this.subvariableValue))){
-                this.modal.showError('Subvariable value must be a number');
-                return;
-            } 
+
             this.subvariableList.push({
                 name: this.subvariableName,
                 value: this.subvariableValue,
@@ -385,6 +353,45 @@ export class VariablesComponent implements OnInit {
         this.reloadBranches(event.target.value);
     }
 
+    fillMissingDates(keys) {
+        let missing = false;
+        // fill the gap 
+        for (var index = 0; index < keys.length; index++) {
+            //console.log(this.keys[index]);
+            if (index + 1 < keys.length) {
+                // get the difference
+                let currentKey = keys[index];
+                let currentParts = currentKey.split('-');
+                let currentDate = new Date(`${currentParts[0]}/01/${currentParts[1]}`);
+                let momentCurrentDate = unix(currentDate.getTime()/1000);
+
+                let nextKey = keys[index + 1];
+                let nextParts = nextKey.split('-');
+                let nextDate = new Date(`${nextParts[0]}/01/${nextParts[1]}`);
+                let momentNextDate = unix(nextDate.getTime()/1000);
+
+                let monthDifference = momentNextDate.diff(momentCurrentDate, 'month');
+                if (monthDifference > 1) {
+                    // add the missing months
+                    let startIndex = index + 1;
+                    for (var monthIndex = 0; monthIndex < monthDifference - 1; monthIndex++) {
+                        let newDate = momentCurrentDate.add(1, 'month');
+                        keys.splice(startIndex + monthIndex, 0, newDate.format(Config.getDateFormat()));
+                    }
+
+                    missing = true;
+                    break;
+                }
+            }
+        }
+
+        if (missing) {
+            this.fillMissingDates(keys);
+        }
+
+        return keys;
+    }
+
     selectVariable(variable: Variable) {
         this.title = variable.title;
         this.shouldDefineActualValues = variable.hasActual;
@@ -460,49 +467,100 @@ export class VariablesComponent implements OnInit {
 
             // this.options.chart.showControls = false;
 
-            let keys = new Set();
+            let keySet = new Set();
+            let titleSet = new Set();
             for (var timeSegmentIndex = 0; timeSegmentIndex < variable.timeSegment.length; timeSegmentIndex++) {
                 let element = variable.timeSegment[timeSegmentIndex];
+                keySet.add(element.startTime);
+
                 for (var index = 0; index < element.subVariables.length; index++) {
-                    keys.add(element.subVariables[index].name);
+                    titleSet.add(element.subVariables[index].name);
                 }
             }
 
+            // needed for sorting
+            keySet.forEach(key => {
+                this.keys.push(key);
+            });
+
+            // sort the keys (sort the months and years)
+            this.keys.sort();
+
+            let currentKey = this.keys[0];
+            let currentParts = currentKey.split('-');
+            let currentDate = new Date(`${currentParts[1]}/01/${currentParts[0]}`);
+            let momentCurrentDate = unix(currentDate.getTime()/1000);
+
+            let nextKey = this.keys[this.keys.length - 1];
+            let nextParts = nextKey.split('-');
+            let nextDate = new Date(`${nextParts[1]}/01/${nextParts[0]}`);
+            let momentNextDate = unix(nextDate.getTime()/1000);
+
+            if (momentNextDate.diff(momentCurrentDate, 'months') < 18) {
+                // add last date
+                let finalDate = momentCurrentDate.add(18, 'months');
+                this.keys.push(finalDate.format(Config.getDateFormat()));
+            }
+
+            // fill the missing dates
+            this.fillMissingDates(this.keys);
+
+            console.log(this.keys);
+
             var keyIndex = 1;
-            keys.forEach(key => {
+            titleSet.forEach(key => {
                 var dataValues = [];
 
-                for (var timeSegmentIndex = 0; timeSegmentIndex < variable.timeSegment.length; timeSegmentIndex++) {
-                    let element = variable.timeSegment[timeSegmentIndex];
-                    var keyFound = false;
+                var lastValues:any;
+                var dateIndex = 0;
+                this.keys.forEach(date => {
 
-                    var value:String = '';
-                    for (var index = 0; index < element.subVariables.length; index++) {
-                        let item = element.subVariables[index];
-                        if (item.name == key) {
-                            keyFound = true;
-                            value = item.probability;
+                    var dateFound = false;
+                    for (var timeSegmentIndex = 0; timeSegmentIndex < variable.timeSegment.length; timeSegmentIndex++) {
+                        let element = variable.timeSegment[timeSegmentIndex];
+                        if (element.startTime == date) {
+                            var keyFound = false;
+    
+                            var value:String = '';
+                            for (var index = 0; index < element.subVariables.length; index++) {
+                                let item = element.subVariables[index];
+                                if (item.name == key) {
+                                    keyFound = true;
+                                    value = item.probability;
+                                    break;
+                                }
+                            }
+        
+                            if (!keyFound) {
+                                value = '0';
+                            }
+        
+                           
+                            dataValues.push({ x: dateIndex, y: value })
+
+                            dateFound = true;
+                            lastValues = value;
                             break;
                         }
                     }
 
-                    if (!keyFound) {
-                        value = '0';
+                    if (!dateFound) {
+                        dataValues.push({ x: dateIndex, y: lastValues })
                     }
-
-                    var num = parseInt(value.toString());
-                    if (num < minValue) minValue = num;
-                    if (num > maxValue) maxValue = num;
-
-                    dataValues.push({ x: timeSegmentIndex, y: value })
-                }
+                    dateIndex += 1;
+                    
+                });
 
                 tempLineChartData.push({
                     values: dataValues,
                     key: 'value: ' + keyIndex
                 });
                 keyIndex += 1;
+
+
             });
+            minValue = 0;
+            maxValue = 100;
 
         } else {
             var keyIndex = 0;
@@ -526,13 +584,11 @@ export class VariablesComponent implements OnInit {
                             labelIndex = keyIndex;
                             keyIndex += 1;
                         }
-                        //var num = parseInt(valueItem.value.toString());
-                        var num = parseFloat(valueItem.value.toString());
+                        var num = parseInt(valueItem.value.toString());
                         if (num < minValue) minValue = num;
                         if (num > maxValue) maxValue = num;
 
-                        //dataValues.push({ x: labelIndex, y: d3.format('0.0f')(num)});
-                        dataValues.push({ x: labelIndex, y:num});
+                        dataValues.push({ x: labelIndex, y: d3.format('0.0f')(num)});
                     }
 
                     if (index == 0) {
@@ -567,7 +623,7 @@ export class VariablesComponent implements OnInit {
                 }
             }
         }
-       
+
         var varDec = this.otherVarDecimal;
         var breakdownDec = this.breakdownVarDecimal;
         var com = this.comma;
@@ -595,6 +651,7 @@ export class VariablesComponent implements OnInit {
             this.options = {
                 chart: {
                     type: chartType,
+                    reduceXTicks: false,
                     stacked: isStackChart,
                     height: 600,
                     x: (d) => { return d.x; },
@@ -617,14 +674,7 @@ export class VariablesComponent implements OnInit {
                         axisLabel: '',
                         tickFormat: (d) => {
                             if (this.valueType == 'discrete') {
-                                let timeSegment = this.timeSegments[d];
-                                let datePart = timeSegment.startTime.split(' ')[0];
-                                let parts = datePart.split('-');
-                                let day = parts[0];
-                                let month = parts[1];
-                                let year = parts[2];
-
-                                return `${month}-${year}`;
+                                return this.keys[d];
                             } else {
                                 let pair = this.lineChartLabels[d];
                                 if (pair == undefined) return '';
@@ -774,11 +824,11 @@ export class VariablesComponent implements OnInit {
 
                 if (this.shouldDefineActualValues && this.selectedInputMethodActual == 'table') {
                     if (typeof (this.startDate) != "string") {
-                        this.startDate = this.startDate.format("MM-YYYY");
+                        this.startDate = this.startDate.format(Config.getDateFormat());
                     }
 
                     if (typeof (this.endDate) != "string") {
-                        this.endDate = this.endDate.format("MM-YYYY");
+                        this.endDate = this.endDate.format(Config.getDateFormat());
                     }
                 }
 

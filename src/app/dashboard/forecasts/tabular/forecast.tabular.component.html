@@ -5,21 +5,49 @@
 
     <div class="row">
         <div class="row">
-            <div style="width: 400px" class="pull-left">
+            <div class="col-md-3 pull-left">
                 <div class="form-group">
-                    <select (change)="selectBranch($event)" class="app-select" #projectList>
+                    <select (change)="selectBranch($event)" class="app-select col-md-6" #projectList>
                         <option *ngFor="let project of projects" [value]="project.id"> {{project.title}} </option>
                     </select>
-                    <select (change)="selectVariables($event)" class="app-select" #branchList>
+                    <select (change)="selectVariables($event)" class="app-select col-md-6" #branchList>
                         <option *ngFor="let branch of branches" [value]="branch.id"> {{branch.title}} </option>
                     </select>
                 </div>
             </div>
 
-            <div class="col-md-5">
-                <input type="text" [(ngModel)]="searchName" (keyup)="filterResult($event, 'name')" class="col-md-4" placeholder="variable name">
-                <input type="text" [(ngModel)]="searchType" (keyup)="filterResult($event, 'type')" class="col-md-4" placeholder="type">
-                <input type="text" [(ngModel)]="searchOwner" (keyup)="filterResult($event, 'owner')" class="col-md-4" placeholder="owner">
+            <div class="col-md-9">
+                <div class="col-md-3">
+                    <input type="text" [(ngModel)]="searchName" (keyup)="filterResult($event, 'name')" class="col-md-4" placeholder="variable name">
+                    <input type="text" [(ngModel)]="searchType" (keyup)="filterResult($event, 'type')" class="col-md-4" placeholder="type">
+                    <input type="text" [(ngModel)]="searchOwner" (keyup)="filterResult($event, 'owner')" class="col-md-4" placeholder="owner">
+                </div>
+                <div class="col-md-4">
+                    <div class="col-md-4">
+                        <!-- <span>Start Time</span> -->
+                        <dp-date-picker
+                            placeholder="Start Time"
+                            style="display:inline"
+                            [config]="datePickerConfig"
+                            [(ngModel)]="startDate"
+                            mode="month"
+                            [theme]="'dp-material dp-main'"></dp-date-picker>
+                    </div>
+
+                    <div class="col-md-4">
+                        <!-- <span>End Time</span> -->
+                        <dp-date-picker
+                            placeholder="End Time"
+                            [config]="datePickerConfig"
+                            [(ngModel)]="endDate"
+                            mode="month"
+                            [theme]="'dp-material dp-main'"></dp-date-picker>
+                    </div>
+
+                    <div class="col-md-4">
+                        <button class="btn btn-success" >Reload</button>
+                    </div>
+                </div>
             </div>    
         </div>
 

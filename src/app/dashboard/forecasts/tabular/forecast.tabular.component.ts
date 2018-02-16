@@ -12,6 +12,8 @@ import { Branch } from '../../../shared/interfaces/branch';
 import { AppVariableService } from '../../../services/variable.services';
 import { Variable, KeyValuePair, TableInputPair } from '../../../shared/interfaces/variables';
 import { Moment, unix } from 'moment';
+import { Utils } from '../../../shared/utils';
+import { Config } from '../../../shared/config';
 
 @Component({
     selector: 'forecast-tabular',
@@ -28,12 +30,6 @@ export class ForecastTabularComponent implements OnInit {
     variables:Variable[] = new Array<Variable>();
     originalVariables:Variable[] = new Array<Variable>();
 
-    timeUnit:String;
-    startTime:String;
-    endTime:String;
-
-    earliestStart:Date;
-    latestEnd:Date;
     distribution:Boolean = false;
     timeSegDistributionIndexes = [];
     started:Boolean = false;
@@ -49,19 +45,9 @@ export class ForecastTabularComponent implements OnInit {
     titles = [];
     titleOccurs = 0;
 
-    userSelectedStartDate: any;
-    userSelectedEndDate: any;
-    formattedUserStartDate:any;
-    formattedUserEndDate:any;
-    previousValidDate:any;
-
-    variableEarliestStart:Date;
-    variableLatestEnd:Date;
-
     varDecimal="";
     breakdownDecimal= "";
-    commaCheck = "";
-    datePickerConfig = { format : 'MM-YYYY' };
+    datePickerConfig = { format : Config.getDateFormat() };
 
 
     private navigationIndex = 0;
@@ -75,6 +61,9 @@ export class ForecastTabularComponent implements OnInit {
     searchType:String = '';
     searchOwner:String = '';
 
+    startDate: Moment;
+    endDate: Moment;
+
     constructor(private router:Router,
                 private branchService:BranchService,
                 private modal: ModalDialogService,
@@ -84,20 +73,10 @@ export class ForecastTabularComponent implements OnInit {
     }
 
     ngOnInit() {
-        let date:Date;
-        date = new Date();
+        let currentDate = new Date();
 
-        var currentYear = date.getFullYear();
-        var currentMonth = date.getMonth();
-
-        this.userSelectedStartDate = unix(date.setMonth(currentMonth-6) / 1000);
-        date = new Date();
-        this.userSelectedEndDate= unix(date.setFullYear(currentYear+1) / 1000);
-
-        this.formattedUserStartDate = this.userSelectedStartDate.format("MM-YYYY");
-        this.formattedUserEndDate = this.userSelectedEndDate.format("MM-YYYY");
-
-        this.previousValidDate = this.userSelectedStartDate;
+        this.startDate = unix(currentDate.getTime() / 1000).subtract(6, 'months');
+        this.endDate = unix(currentDate.getTime() / 1000).add(12, 'months');
 
         this.reloadProjects();
     }
@@ -193,13 +172,19 @@ export class ForecastTabularComponent implements OnInit {
             }
 
             this.openStatuses.push(false);
-        }
+        }        
         
+        // needed for sorting
         keySet.forEach(key => {
             this.keys.push(key);
         });
         
+        // sort the keys (sort the months and years)
         this.keys.sort();
+
+        // fill the missing dates
+        Utils.fillMissingDates(this.keys);
+
         console.log(this.keys);
 
         //get the decimal setting
@@ -215,9 +200,6 @@ export class ForecastTabularComponent implements OnInit {
                 }
                 else if(setting.key == "BREAKDOWN_DECIMAL"){
                     this.breakdownDecimal = setting.value.toString();
-                }
-                else if(setting.key == "COMMA_CHECK"){
-                    this.commaCheck = setting.value.toString();
                 }
             });
             console.log("number of dec", dec);
@@ -239,7 +221,7 @@ export class ForecastTabularComponent implements OnInit {
                                 let value = pair.value as number;
                                 data.push({
                                     title: pair.title,
-                                    value: this.formatNumber(value,decimalsToKeep)
+                                    value: value.toFixed(decimalsToKeep)
                                 });
                                 found = true;
                                 break;
@@ -292,15 +274,6 @@ export class ForecastTabularComponent implements OnInit {
         }
         else{
             return 0;
-        }
-    }
-
-    formatNumber(num, decimals){
-        if (this.commaCheck == "true"){
-            return num.toFixed(decimals).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
-        }
-        else{
-            return num.toFixed(decimals);
         }
     }
 }

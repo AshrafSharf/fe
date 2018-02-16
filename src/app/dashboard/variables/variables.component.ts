@@ -508,11 +508,9 @@ export class VariablesComponent implements OnInit {
             var keyIndex = 0;
             if (variable.allTimesegmentsResultList != undefined || variable.allTimesegmentsResultList != null) {
                 var color = Utils.getRandomColor(0);
-
                 for (var index = 0; index < variable.allTimesegmentsResultList.length; index++) {
                     var dataValues = [];
                     let item = variable.allTimesegmentsResultList[index];
-
                     for (var dataIndex = 0; dataIndex < item.data.length; dataIndex++) {
                         var valueItem = item.data[dataIndex];
                         var labelIndex = this.isLabelAdded(valueItem.title);
@@ -536,9 +534,11 @@ export class VariablesComponent implements OnInit {
                     }
 
                     if (index == 0) {
+                        //add variable name to the base line
+                        var itemKey = (item.title == "-total") ? this.selectedVariable.title +"" + item.title : item.title;
                         tempLineChartData.push({
                             values: dataValues,
-                            key: item.title,
+                            key: itemKey,
                             color: color
                         });
                     } else {
@@ -548,14 +548,19 @@ export class VariablesComponent implements OnInit {
                                 // odd
                                 color = Utils.getShadeOfColor(color, 0.5);
                             }
-
+                            
+                            var itemKey =item.title;
+                             //add total title to the sigma of the base line
+                            if (item.calculationType == "GAUSSIAN_CALCULATION" && variable.compositeType == "breakdown"){
+                                itemKey = item.title + "."+ "total";
+                            }
+     
                             tempLineChartData.push({
                                 values: dataValues,
-                                key: item.title,
+                                key: itemKey,
                                 classed: 'dashed',
                                 color: color
                             });
-
                         } else {
                             tempLineChartData.push({
                                 values: dataValues,
@@ -567,7 +572,6 @@ export class VariablesComponent implements OnInit {
                 }
             }
         }
-       
         var varDec = this.otherVarDecimal;
         var breakdownDec = this.breakdownVarDecimal;
         var com = this.comma;

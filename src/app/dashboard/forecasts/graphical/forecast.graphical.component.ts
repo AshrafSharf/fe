@@ -367,11 +367,9 @@ export class ForecastGraphicalComponent implements OnInit {
                 if (variable.allTimesegmentsResultList != undefined || variable.allTimesegmentsResultList != null) {
                     var color = Utils.getRandomColor(colorIndex);
                     colorIndex += 1;
-    
                     for (var index = 0; index < variable.allTimesegmentsResultList.length; index++) {
                         var dataValues = [];
                         let item = variable.allTimesegmentsResultList[index];
-    
                         for (var dataIndex = 0; dataIndex < item.data.length; dataIndex++) {
                             var valueItem = item.data[dataIndex];
                             var labelIndex = this.isLabelAdded(valueItem.title);
@@ -386,23 +384,31 @@ export class ForecastGraphicalComponent implements OnInit {
                         }
     
                         if (index == 0) {
+                            var itemKey = (item.title == "-total") ? variable.title +"" + item.title : item.title;    
+                            console.log(itemKey);                                                    
                             this.lineChartData.push({
                                 values: dataValues,
-                                key: item.title,
+                                key: itemKey,
                                 color: color
                             });
                         } else {
                             if (variable.variableType != 'breakdown') {
+                                var itemKey =item.title;
                                 if (this.distributionLines == false) continue;
 
                                 if (index % 2 != 0) {
                                     // odd
                                     color = Utils.getShadeOfColor(color, 0.5);
                                 }
+                        
+                                 //add title total to the sigma of the base line if it has subvariables
+                                if (item.calculationType == "GAUSSIAN_CALCULATION" && variable.compositeType == "breakdown"){
+                                    itemKey = item.title + "."+ "total";    
+                                }
     
                                 this.lineChartData.push({
                                     values: dataValues,
-                                    key: item.title,
+                                    key: itemKey,
                                     classed: 'dashed',
                                     color: color
                                 });
@@ -413,7 +419,7 @@ export class ForecastGraphicalComponent implements OnInit {
                                 color = Utils.getShadeOfColor(color, 0.5);                                
                                 this.lineChartData.push({
                                     values: dataValues,
-                                    key: item.title,
+                                    key:  variable.title +""+item.title,
                                     color: color
                                 });
                             }
@@ -422,6 +428,7 @@ export class ForecastGraphicalComponent implements OnInit {
                 }
             }
         }
+        console.log(this.lineChartData);
         var dec = this.decimal;
         var com = this.comma;
         this.settingsService

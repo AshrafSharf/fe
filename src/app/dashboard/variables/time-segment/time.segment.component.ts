@@ -9,6 +9,7 @@ import { Moment, unix } from 'moment';
 import { OnChanges, DoCheck } from '@angular/core/src/metadata/lifecycle_hooks';
 import {IShContextMenuItem, IShContextOptions, BeforeMenuEvent} from 'ng2-right-click-menu';
 import { Utils } from '../../../shared/utils';
+import { Config } from '../../../shared/config';
 
 @Component({
     selector: 'time-segment',
@@ -34,7 +35,6 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
 
     endDate: any;
     startDate: any;
-    segmentHeading:any;
 
     contextMenuItemsDiscrete: IShContextMenuItem[];
     dataContext(i) {
@@ -44,7 +44,7 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
     selectedInputMethod = "constant";
     comment = '';
     
-    datePickerConfig = { format : 'MM-YYYY' };
+    datePickerConfig = { format : Config.getDateFormat() };
     
     constructor(
         private modal: ModalDialogService
@@ -132,26 +132,25 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
                     if (this.timeSegment.startTime.length == 0) {
                         date = new Date();
                     } else {
-                        //let time = Date.parse(this.timeSegment.startTime.toString());
                         let parts = this.timeSegment.startTime.split('-');
-                        // let day = parts[0]; 
                         let month = parts[0];
                         let year = parts[1];
 
                         date = new Date(`${month}/01/${year}`);
                     }
-                    if (this.selectedInputMethod == "table"){
-                        console.log("hello");
-                        this.startDate = unix(date.getTime() / 1000);
-                        console.log(this.startDate);
-                    }
-                    else{
-                        this.startDate = unix(date.getTime() / 1000);
-                        console.log("start",this.startDate);
+                    this.startDate = unix(date.getTime() / 1000);
+                    
+                    if (this.timeSegment.inputMethod == "table") {
+                        let parts = this.timeSegment.endTime.split('-');
+                        let month = parts[0];
+                        let year = parts[1];
+
+                        date = new Date(`${month}/01/${year}`);
+                        this.endDate = unix(date.getTime() / 1000);
+                    } else {
                         this.endDate = this.startDate;
                     }
-                    this.startDate = unix(date.getTime() / 1000);
-                    this.endDate = this.startDate;
+
                 
                 } else {
                     console.log("no");
@@ -170,7 +169,6 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
                     }
                 });
             }
-            this.segmentHeading = this.startDate.format("MMM-YYYY");
         }
     }
 
@@ -180,7 +178,9 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
 
             let finalValue = 0, finalPercentage = 0;
             this.variableTypeList.forEach((variable) => {
-                finalValue += parseFloat(variable.value.toString());
+                if (this.variableType == 'breakdown') {
+                    finalValue += parseFloat(variable.value.toString());
+                }
                 if (this.valueType == 'discrete') {
                     finalPercentage += parseFloat(variable.probability.toString());
                 }
@@ -195,13 +195,7 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
             } else {
                 let input:any = {};
                 if (typeof(this.startDate) != "string") {
-                    this.startDate = this.startDate.format("MM-YYYY");
-                }
-
-                if (this.valueType == 'discrete') {
-                    for (var index = 0; index < this.variableTypeList.length; index++) {
-                        this.variableTypeList[index].name = 'index_' + index;
-                    }
+                    this.startDate = this.startDate.format(Config.getDateFormat());
                 }
 
                 input['startTime'] = this.startDate;
@@ -237,10 +231,13 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
                 var input = method.getInput();
 
                 if (typeof(this.startDate) != "string") {
-                    this.startDate = this.startDate.format("MM-YYYY");
+                    input['startTime'] = this.startDate.format('MM-YYYY');
                 }
 
-                input['startTime'] = this.startDate;
+                if (typeof(this.endDate) != "string") {
+                    input['endTime'] = this.endDate.format('MM-YYYY');
+                }
+
                 input['description'] = this.comment;
                 input['inputMethod'] = this.selectedInputMethod;
                 

@@ -9,6 +9,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { User } from '../../shared/interfaces/user';
 import { UserService } from '../../services/user.service';
 import { Utils } from '../../shared/utils';
+import { Config } from '../../shared/config';
 
 @Component({
     selector: 'branches',
@@ -34,7 +35,7 @@ export class BranchesComponent implements OnInit {
     actualsWeek: String = '';
 
     //dd-MM-yyyy hh:mm
-    datePickerConfig = { format : 'MM-YYYY' };
+    datePickerConfig = { format : Config.getDateFormat() };
 
     selectedProject:Project = null;
 

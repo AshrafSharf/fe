@@ -88,7 +88,6 @@ export class BranchListComponent implements OnInit {
     }
 
     reloadBranches(projectId:String = null) {
-
         var id = projectId;
         if (projectId == null){ 
             if (this.selectedProjectId != null) {
@@ -97,6 +96,8 @@ export class BranchListComponent implements OnInit {
                 id = this.projects[0].id;
             }
         }
+
+        Utils.selectProject(id);
 
         console.log(id);
         if (id != null) {
@@ -111,9 +112,10 @@ export class BranchListComponent implements OnInit {
                         var row = new TableViewRow(branch.id);
                         if (branch.isMaster == true){
                              row.addColumn(new TableViewColumn("name", branch.title + " (master)"));
-                        }else{
+                        } else {
                              row.addColumn(new TableViewColumn("name", branch.title));
                         }
+
                         row.addColumn(new TableViewColumn("owner", branch.ownerName));
                         row.addColumn(new TableViewColumn("description", branch.description));
                         this.rows.push(row);

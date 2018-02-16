@@ -8,6 +8,7 @@ import { Modal } from 'ngx-modialog/plugins/bootstrap';
 import { Router, ActivatedRoute } from '@angular/router';
 import { BranchService } from '../../services/branch.service';
 import { Branch } from '../../shared/interfaces/branch';
+import { Utils } from '../../shared/utils';
 
 @Component({
     selector: 'branch-list',
@@ -42,6 +43,10 @@ export class BranchListComponent implements OnInit {
     ngOnInit() {
         this.route.queryParams.subscribe(params => {
             this.selectedProjectId = params['projectId'];
+
+            if (this.selectedProjectId == undefined) {
+                this.selectedProjectId = Utils.getLastSelectedProject();
+            }
         });
         this.reloadProjects();
     }

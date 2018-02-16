@@ -11,6 +11,7 @@ import { TableViewRow } from '../../shared/interfaces/tableview-row';
 import { TableViewColumn } from '../../shared/interfaces/tableview-column';
 import { Variable, KeyValuePair } from '../../shared/interfaces/variables';
 import { Modal } from 'ngx-modialog/plugins/bootstrap';
+import { Utils } from '../../shared/utils';
 
 @Component({
     selector: 'variable-list',
@@ -45,6 +46,14 @@ export class VariableListComponent implements OnInit {
             this.selectedProjectId = params['projectId'];
             this.selectedBranchId = params['branchId'];
 
+            if (this.selectedProjectId == undefined) {
+                this.selectedProjectId = Utils.getLastSelectedProject();
+            }
+
+            if (this.selectedBranchId == undefined) {
+                this.selectedBranchId = Utils.getLastSelectedBranch();
+            }
+
             this.reloadProjects(false);
         });
 
@@ -72,6 +81,7 @@ export class VariableListComponent implements OnInit {
     }
 
     selectBranch(event) {
+        Utils.selectProject(this.selectedProject);        
         this.reloadBranches(this.selectedProject, true);
     }
 
@@ -85,6 +95,7 @@ export class VariableListComponent implements OnInit {
     }
 
     reloadVariables() {
+        Utils.selectBranch(this.selectedBranch);        
         this.variableService
             .getVariables(this.selectedBranch)
             .subscribe(response => {
@@ -166,6 +177,9 @@ export class VariableListComponent implements OnInit {
     }
 
     onRowEdit(id) {
+        Utils.selectBranch(this.selectedBranch);
+        Utils.selectProject(this.selectedProject);
+        
         this.router.navigate(['/home/create-variable'], {
             queryParams: {
                 projectId: this.selectedProject,

@@ -136,4 +136,20 @@ export class Utils {
 
         return keys;
     }
+
+    public static selectProject(id) {
+        sessionStorage['last_project_id'] = id;
+    }
+
+    public static getLastSelectedProject() {
+        return sessionStorage['last_project_id'];
+    }
+
+    public static selectBranch(id) {
+        sessionStorage['last_branch_id'] = id;
+    }
+
+    public static getLastSelectedBranch() {
+        return sessionStorage['last_branch_id'];
+    }
 }

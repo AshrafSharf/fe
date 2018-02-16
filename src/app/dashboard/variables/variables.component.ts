@@ -158,18 +158,7 @@ export class VariablesComponent implements OnInit {
                     }
                 }
             }
-            if (this.subvariableName.length == 0){
-                this.modal.showError('Subvariable name is mandatory');
-                    return;
-            }
-            else if (this.subvariableValue.length == 0 ){
-                    this.modal.showError('Subvariable value is mandatory');
-                    return;
-            }
-            else if (isNaN(parseFloat(this.subvariableValue))){
-                    this.modal.showError('Subvariable value must be a number');
-                    return;
-            }  
+            
 
             this.subvariableList.push({
                 name: this.subvariableName,

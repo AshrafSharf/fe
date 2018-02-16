@@ -13,9 +13,10 @@ export class Config {
     public static getServerConfigurations() {
 
     }
-    
+
     public static getDateFormat() {
-        return localStorage[this.KEY_DATE_FORMAT];
+        return 'MM-YYYY';
+        // return localStorage[this.KEY_DATE_FORMAT];
     }
     
 }

@@ -91,8 +91,39 @@
                                 </div>
                             </div>
 
+                            <div class="row" *ngIf="valueType == 'discrete'">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="">Value</label>
+                                        <input type="text" [(ngModel)]="subvariableName" class="form-control" placeholder="subvariable name">
+                                    </div>
+                                    
+                                    <button class="btn btn-success" (click)="addVariable()">Save</button>
+                                    <button class="btn btn-danger" (click)="clearVariable()">Cancel</button>
+                                </div>
+
+                                <div class="list" class="col-md-6">
+                                    <label class="text-bold">Values</label>
+                                    <table class="table" >
+                                        <thead>
+                                            <tr>
+                                                <th>Title</th>
+                                                <th></th>
+                                            </tr>
+                                            <tr *ngFor="let s of subvariableList; let i = index">
+                                                <td>{{s.name}}</td>
+                                                <td>
+                                                    <fa name="trash" class="trash" (click)="deleteVariable(i)"></fa>
+                                                    <fa name="pencil" class="edit" (click)="editVariable(i)"></fa>
+                                                </td>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+
                             <!-- associate breakdown/discrete variables -->
-                            <div *ngIf="variableType == 'variable'">
+                            <div *ngIf="variableType == 'variable' && valueType != 'discrete'">
                                 <div class="form-group">
                                     <label for="">Associate Breakdown Variables</label>
                                     <select (change)="onCompositTypeChanged($event)" [(ngModel)]="compositType" class="form-control">

@@ -1,6 +1,8 @@
 import { TableInputPair } from './interfaces/variables';
 import { RequestOptions, Headers } from "@angular/http";
 import { environment } from '../../environments/environment';
+import { Moment, unix } from 'moment';
+
 
 export class Utils {
 
@@ -94,5 +96,44 @@ export class Utils {
 
     public static getUniqueId() {
         return '_' + Math.random().toString(36).substr(2, 9);
+    }
+
+    public static fillMissingDates(keys) {
+        let missing = false;
+        // fill the gap 
+        for (var index = 0; index < keys.length; index++) {
+            //console.log(this.keys[index]);
+            if (index + 1 < keys.length) {
+                // get the difference
+                let currentKey = keys[index];
+                let currentParts = currentKey.split('-');
+                let currentDate = new Date(`${currentParts[1]}/01/${currentParts[0]}`);
+                let momentCurrentDate = unix(currentDate.getTime()/1000);
+
+                let nextKey = keys[index + 1];
+                let nextParts = nextKey.split('-');
+                let nextDate = new Date(`${nextParts[1]}/01/${nextParts[0]}`);
+                let momentNextDate = unix(nextDate.getTime()/1000);
+
+                let monthDifference = momentNextDate.diff(momentCurrentDate, 'month');
+                if (monthDifference > 1) {
+                    // add the missing months
+                    let startIndex = index + 1;
+                    for (var monthIndex = 0; monthIndex < monthDifference; monthIndex++) {
+                        let newDate = momentCurrentDate.add(1, 'month');
+                        keys.splice(startIndex + monthIndex, 0, newDate.format('YYYY-MM'));
+                    }
+
+                    missing = true;
+                    break;
+                }
+            }
+        }
+
+        if (missing) {
+            this.fillMissingDates(keys);
+        }
+
+        return keys;
     }
 }

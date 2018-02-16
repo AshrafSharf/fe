@@ -4,6 +4,7 @@ import { Moment } from 'moment';
 import { VariableComponentBehavior, ValidationResult, TableInputPair, TimeSegment } from '../../../shared/interfaces/variables';
 import {IShContextMenuItem, IShContextOptions, BeforeMenuEvent} from 'ng2-right-click-menu';
 import { Utils } from '../../../shared/utils';
+import { Config } from '../../../shared/config';
 
 @Component({
     selector: 'variable-table',
@@ -32,8 +33,30 @@ export class VariableTableComponent implements OnChanges, VariableComponentBehav
     createTable() {
         this.columns.splice(0, this.columns.length);
         if (this.timeSegment != undefined && this.timeSegment.tableInput != null) {
-            this.timeSegment.tableInput.forEach(element => {
-                this.columns.push(element);
+            let date = this.startTime.clone();
+            let endDate = this.endTime.clone();
+
+            let count = endDate.diff(date, 'M') + 1;
+            let keys = new Array();
+            let tempDate = date.subtract(1, 'months');
+            for (var index = 0; index < count; index++) {
+                tempDate = date.add(1, 'months');
+                keys.push(tempDate.format('MMM - YYYY'));
+            }
+
+            keys.forEach(month => {
+                let found = false;
+                for (var index = 0; index < this.timeSegment.tableInput.length; index++) {
+                    if (this.timeSegment.tableInput[index].key == month) {
+                        this.columns.push(this.timeSegment.tableInput[index]);
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    this.columns.push({key: month, value: '0'});
+                }
             });
 
         } else if (this.startTime != undefined && this.endTime != undefined) {
@@ -41,7 +64,6 @@ export class VariableTableComponent implements OnChanges, VariableComponentBehav
             let endDate = this.endTime.clone();
 
             let count = endDate.diff(date, 'M') + 1;
-            console.log("count: " + count);
             for (var index = 0; index < count; index++) {
                 let year = date.year();
                 let month = date.format('MMM');

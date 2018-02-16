@@ -13,80 +13,71 @@
             </select>
         </div>
     </div>
-
-    <div class="form-group pull-right" style="margin-right: 20%" *ngIf="lineChartData.length > 0">
-        <div style="display: inline-block">
-            <label for="">Start Time</label>
-            <div class='date inputText' id='startDate'>
-                <dp-date-picker
-                    [config]="datePickerConfig"
-                    [(ngModel)]="userSelectedStartDate"
-                    mode="daytime"
-                    [theme]="'dp-material dp-main'"></dp-date-picker>
-            </div>
-        </div>
-
-        <div style="display: inline-block">
-            <label for="">End Time</label>
-            <div class='date inputText' id='endDate'>
-                <dp-date-picker
-                    [config]="datePickerConfig"
-                    [(ngModel)]="userSelectedEndDate"
-                    mode="daytime"
-                    [theme]="'dp-material dp-main'"></dp-date-picker>
-            </div>
-        </div>
-
-        <div style="display: inline-block">
-            <button class="btn btn-success" (click)="setNewDates(userSelectedStartDate, userSelectedEndDate)">Save and Refresh</button>
-            <button class="btn btn-danger" (click)="reset()">Reset to Default Dates</button>
-        </div>
-    </div>
-
-    <div class="row" >
+    <div class="row">
         <div class="col-md-3">
             <div class="row">
-                <h4>Configuration</h4>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div>Show Variales</div>
-                        <div>
-                            <label>
-                                <input type="checkbox" (click)="toggleBreakdownVariables($event)" checked> Breakdown
-                            </label>
-                        </div>
+                <h4>Visibility</h4>
+                <div class="col-md-6">
+                    <div>Show Variales</div>
+                    <div>
+                        <label>
+                            <input type="checkbox" (click)="toggleBreakdownVariables($event)" checked> Breakdown
+                        </label>
+                    </div>
+                </div>
 
-                        <!--
-                        <div>
-                            <label>
-                                <input type="checkbox" (click)="toggleDiscreteVariables($event)" checked> Discrete
-                            </label>
-                        </div>
-                        -->
+                <div class="col-md-6">
+                    <div>Show Lines for</div>
+                    <div>
+                        <label>
+                            <input type="checkbox" (click)="toggleBreakdownLines($event)" checked> Breakdown
+                        </label>
                     </div>
 
-                    <div class="col-md-6">
-                        <div>Show Lines for</div>
-                        <div>
-                            <label>
-                                <input type="checkbox" (click)="toggleBreakdownLines($event)" checked> Breakdown
-                            </label>
+                    <div>
+                        <label>
+                            <input type="checkbox" (click)="toggleDistributionLines($event)" checked> Distribution
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="row" style="margin-top: 10px">
+                <h4>Duration</h4>
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Start Time</label>
+                            <dp-date-picker
+                                [config]="datePickerConfig"
+                                [(ngModel)]="startDate"
+                                mode="month"
+                                [theme]="'dp-material dp-main'"></dp-date-picker>
                         </div>
-
-                        <div>
-                            <label>
-                                <input type="checkbox" (click)="toggleDistributionLines($event)" checked> Distribution
-                            </label>
+                        <div class="col-md-6">
+                            <label>End Time</label>
+                            <dp-date-picker
+                                [config]="datePickerConfig"
+                                [(ngModel)]="endDate"
+                                mode="month"
+                                [theme]="'dp-material dp-main'"></dp-date-picker>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:10px">
+                        <div class="col-md-12">
+                            <button class="btn btn-success" (click)="renderChart()">Reload</button>
                         </div>
                     </div>
                 </div>
             </div>
-
+            <hr>
             <div class="row" style="margin-top: 10px">
                 <h4>Variables</h4>
-                <input type="text" [(ngModel)]="searchName" (keyup)="filterResult($event, 'name')" class="col-md-4" placeholder="variable name">
-                <input type="text" [(ngModel)]="searchType" (keyup)="filterResult($event, 'type')" class="col-md-4" placeholder="type">
-                <input type="text" [(ngModel)]="searchOwner" (keyup)="filterResult($event, 'owner')" class="col-md-4" placeholder="owner">
+                <div class="col-md-12">
+                    <input type="text" [(ngModel)]="searchName" (keyup)="filterResult($event, 'name')" class="col-md-4" placeholder="variable name">
+                    <input type="text" [(ngModel)]="searchType" (keyup)="filterResult($event, 'type')" class="col-md-4" placeholder="type">
+                    <input type="text" [(ngModel)]="searchOwner" (keyup)="filterResult($event, 'owner')" class="col-md-4" placeholder="owner">
+                </div>
             </div>
 
             <div style="margin-top:5px">

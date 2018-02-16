@@ -2,7 +2,7 @@
 <div class="panel-group">
     <div class="panel panel-default">
         <div class="panel-heading" (click)="toggleCollapse()">
-            <span class="panel-title">{{startDate == undefined ? 'Time Segment' : segmentHeading}}</span>
+            <span class="panel-title">{{startDate == undefined ? 'Time Segment' : startDate.format('MMM-YYYY')}}</span>
             <fa name="times" (click)="onDelete()" class="link pull-right"></fa>
             <fa [name]="isExpanded == true ? 'chevron-up' : 'chevron-down'" (click)="toggleCollapse()" class="link pull-right chevron"></fa>
         </div>
@@ -103,17 +103,11 @@
                                     <tr>
                                         <th class="active">Value</th>
                                         <td *ngFor="let subVar of variableTypeList; let i = index">
-                                            <input
-                                                    [sh-context]="contextMenuItemsDiscrete"
-                                                    [sh-data-context]="dataContext(i)"
-                                                    class="table_input"
-                                                    type="text"
-                                                    placeholder=""
-                                                    [(ngModel)]="subVar.value">
+                                            <div>{{subVar.name}}</div>
                                         </td>
-                                        <th rowspan="2" style="vertical-align: middle">
+                                        <!-- <th rowspan="2" style="vertical-align: middle">
                                             <fa name="plus" class="button_add" (click)="addDiscreteVariable()"></fa>
-                                        </th>
+                                        </th> -->
                                     </tr>
                                     <tr>
                                         <th class="active">Probability (%)</th>
@@ -133,13 +127,14 @@
                         <label for="">Comment</label>
                         <textarea name="" [(ngModel)]="comment" id="comment" class="form-control"></textarea>
                     </div>
-                    <variable-table id="inputTable"
-                                    *ngIf="selectedInputMethod == 'table'"
-                                    [branch-id]="branchId"
-                                    [variable-type]="variableType"
-                                    [start-time]="startDate"
-                                    [end-time]="endDate"
-                                    [time-segment]="timeSegment" ></variable-table>
+                    <variable-table 
+                        id="inputTable"
+                        *ngIf="selectedInputMethod == 'table'"
+                        [branch-id]="branchId"
+                        [variable-type]="variableType"
+                        [start-time]="startDate"
+                        [end-time]="endDate"
+                        [time-segment]="timeSegment" ></variable-table>
 
                 </div>
             </div>

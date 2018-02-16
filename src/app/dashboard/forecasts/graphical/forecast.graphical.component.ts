@@ -40,6 +40,7 @@ export class ForecastGraphicalComponent implements OnInit {
 
     datePickerConfig = { format : Config.getDateFormat() };
     decimal = "";
+    comma="";
 
     public lineChartData:Array<any> = [];
     public lineChartLabels:Array<{key: number, value:string}> = [];
@@ -399,8 +400,7 @@ export class ForecastGraphicalComponent implements OnInit {
                                     if (num < minValue) minValue = num;
                                     if (num > maxValue) maxValue = num;
             
-                                    //dataValues.push({ x: pair.key, y: d3.format('0.0f')(num)});
-                                    dataValues.push({ x: labelIndex, y:num});
+                                    dataValues.push({ x: pair.key, y:num});
                                     break;
                                 }
                             }
@@ -467,6 +467,11 @@ export class ForecastGraphicalComponent implements OnInit {
                         this.decimal = setting.value.toString();
                         dec = setting.value.toString();
                     }
+                    else if (setting.key == "COMMA_CHECK"){
+                        var commaCheck = setting.value.toString();
+                        this.comma = (commaCheck == "true" ? "," : "");
+                        com = (commaCheck == "true" ? "," : "");
+                    }
                 });
                 this.options = {
                     chart: {
@@ -478,7 +483,7 @@ export class ForecastGraphicalComponent implements OnInit {
                     interactiveLayer: {
                         tooltip: {
                             valueFormatter:(d, i) => {
-                                return d3.format(",.0"+dec+"f")(d);
+                                return d3.format(com+".0"+dec+"f")(d);
                         }
                     }
                     },
@@ -493,7 +498,7 @@ export class ForecastGraphicalComponent implements OnInit {
                     yAxis: {
                         axisLabel: '',
                         tickFormat: function(d){
-                            return d3.format(",.0"+dec+"f")(d);
+                            return d3.format(com+".0"+dec+"f")(d);
                         },
                         axisLabelDistance: -10
                     },

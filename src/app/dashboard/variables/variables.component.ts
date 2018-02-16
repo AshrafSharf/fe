@@ -139,11 +139,25 @@ export class VariablesComponent implements OnInit {
         }
 
         if (this.editSubvariableIndex != -1) {
-            this.subvariableList[this.editSubvariableIndex].name = this.subvariableName;
-            this.subvariableList[this.editSubvariableIndex].value = this.subvariableValue;
+           // this.subvariableList[this.editSubvariableIndex].name = this.subvariableName;
+           // this.subvariableList[this.editSubvariableIndex].value = this.subvariableValue;
             if (this.valueType == 'discrete') {
                 this.subvariableList[this.editSubvariableIndex].probability = this.subvariablePercentage;
             }
+            if (this.subvariableName.length == 0){
+                this.modal.showError('Subvariable name is mandatory');
+                    return;
+            }
+            else if (this.subvariableValue.length == 0 ){
+                    this.modal.showError('Subvariable value is mandatory');
+                    return;
+            }
+            else if (isNaN(parseFloat(this.subvariableValue))){
+                    this.modal.showError('Subvariable value must be a number');
+                    return;
+            }  
+            this.subvariableList[this.editSubvariableIndex].name = this.subvariableName;
+            this.subvariableList[this.editSubvariableIndex].value = this.subvariableValue;
         } else {
             console.log('adding');
 
@@ -151,10 +165,23 @@ export class VariablesComponent implements OnInit {
                 // add new
                 for (var index = 0; index < this.subvariableList.length; index++) {
                     if (this.subvariableList[index].name == this.subvariableName) {
+                        this.modal.showError('A subvariable already exists with this name');
                         return;
                     }
                 }
             }
+            if (this.subvariableName.length == 0){
+                this.modal.showError('Subvariable name is mandatory');
+                    return;
+            }
+            else if (this.subvariableValue.length == 0 ){
+                    this.modal.showError('Subvariable value is mandatory');
+                    return;
+            }
+            else if (isNaN(parseFloat(this.subvariableValue))){
+                    this.modal.showError('Subvariable value must be a number');
+                    return;
+            }  
 
             this.subvariableList.push({
                 name: this.subvariableName,

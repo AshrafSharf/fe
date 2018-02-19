@@ -55,7 +55,7 @@ export class VariableTableComponent implements OnChanges, VariableComponentBehav
                 }
 
                 if (!found) {
-                    this.columns.push({key: month, value: '0'});
+                    this.columns.push({key: month, value: '0', stdDeviation: '0' })
                 }
             });
 
@@ -67,7 +67,11 @@ export class VariableTableComponent implements OnChanges, VariableComponentBehav
             for (var index = 0; index < count; index++) {
                 let year = date.year();
                 let month = date.format('MMM');
-                this.columns.push({key:month + " - " + year, value: '0'});
+                this.columns.push({
+                    key:month + " - " + year, 
+                    value: '0',
+                    stdDeviation: '0'
+                });
                 date.add(1, 'M');
             }
         }
@@ -120,7 +124,11 @@ export class VariableTableComponent implements OnChanges, VariableComponentBehav
         let values:TableInputPair[] = [];
         for (var index = 0; index < this.columns.length; index++) {
             let column = this.columns[index];
-            values.push({key: column.key, value: column.value});
+            values.push({
+                key: column.key, 
+                value: column.value,
+                stdDeviation: column.stdDeviation   
+            });
         }
 
         return { 

@@ -71,6 +71,15 @@ export class AppVariableService {
                 });
     }
 
+    public getCalculationsFor(id, startDate, endDate) {
+        let url = Utils.createUrl(Utils.routeVariable) + "/doextendcalc/" + id + "/" + startDate + "/" + endDate;
+        return this.http
+                .get(url, Utils.getRequestOptions())
+                .map(response => {
+                    return response.json()
+                });
+    }
+
     public getVariablesForSuggestions(branchId) {
         let url = Utils.createUrl(Utils.routeVariable) + "/" + branchId + "/name";
 

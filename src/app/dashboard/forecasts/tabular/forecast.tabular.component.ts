@@ -23,7 +23,6 @@ import { Config } from '../../../shared/config';
 
 export class ForecastTabularComponent implements OnInit {
     @ViewChild('projectList') selectedProject:ElementRef;
-    columns:TableViewHeader[];
     rows:TableViewRow[] = new Array<TableViewRow>();
     projects:Project[] = new Array<Project>();
     branches:Branch[] = new Array<Branch>();
@@ -104,8 +103,6 @@ export class ForecastTabularComponent implements OnInit {
 
     reloadBranches(projectId:String = null) {
         this.rows.splice(0, this.rows.length);
-        this.columns = new Array<TableViewHeader>();
-        this.columns.push(new TableViewHeader("name", "Variable Name", "col-md-3", "", ""));
 
         var id = projectId;
         if ((projectId == null) && (this.projects.length > 0)) {
@@ -144,9 +141,6 @@ export class ForecastTabularComponent implements OnInit {
                     if (result.status == "OK") {
                         console.log(result);
                         this.variables = result.data as Array<Variable>;
-                        this.variables.forEach(variable => {
-                            this.originalVariables.push(variable);
-                        });
                         this.processVarables();
                     }
                 });
@@ -155,10 +149,15 @@ export class ForecastTabularComponent implements OnInit {
 
     processVarables() {
         // clear
+        this.variables.forEach(variable => {
+            this.originalVariables.push(variable);
+        });
+
         this.processedVariables.splice(0, this.processedVariables.length);
         this.keys.splice(0, this.keys.length);
         this.openStatuses.splice(0, this.openStatuses.length);
 
+        /*
         var keySet = new Set();
         // start collecting the unique keys
         for(var index = 0; index < this.variables.length; index++) {
@@ -178,7 +177,15 @@ export class ForecastTabularComponent implements OnInit {
         keySet.forEach(key => {
             this.keys.push(key);
         });
-        
+        */
+
+       let months = this.endDate.diff(this.startDate, 'months') + 1;
+       let tempDate = this.startDate.clone();
+       for (var index = 0; index < months; index++) {
+           this.keys.push(tempDate.format('YYYY-MM'));
+           tempDate.add(1, 'months');
+       }
+
         // sort the keys (sort the months and years)
         this.keys.sort();
 
@@ -192,6 +199,7 @@ export class ForecastTabularComponent implements OnInit {
         this.settingsService
         .getSettings()
         .subscribe(settings => {
+
             let settingData = settings.data as {id:String, key:String, value:String}[];
             settingData.forEach(setting => {
                 if (setting.key == "VARIABLE_DECIMAL"){
@@ -202,7 +210,6 @@ export class ForecastTabularComponent implements OnInit {
                     this.breakdownDecimal = setting.value.toString();
                 }
             });
-            console.log("number of dec", dec);
 
              // process the values
             for(var index = 0; index < this.variables.length; index++) {
@@ -275,6 +282,19 @@ export class ForecastTabularComponent implements OnInit {
         else{
             return 0;
         }
+    }
+
+    reloadGraph() {
+        this.variableService
+            .getCalculationsFor(
+                this.currentBranch, 
+                this.startDate.format(Config.getDateFormat()),
+                this.endDate.format(Config.getDateFormat()))
+            .subscribe(result => {
+                console.log(result);
+                this.variables = result.data as Array<Variable>;
+                this.processVarables();
+            });
     }
 }
 

@@ -586,11 +586,12 @@ export class VariablesComponent implements OnInit {
                             labelIndex = keyIndex;
                             keyIndex += 1;
                         }
-                        var num = parseInt(valueItem.value.toString());
+                        var num = parseFloat(valueItem.value.toString());
                         if (num < minValue) minValue = num;
                         if (num > maxValue) maxValue = num;
 
-                        dataValues.push({ x: labelIndex, y: d3.format('0.0f')(num)});
+                        //dataValues.push({ x: labelIndex, y: d3.format('0.0f')(num)});
+                        dataValues.push({x: labelIndex, y: num });
                     }
 
                     if (index == 0) {

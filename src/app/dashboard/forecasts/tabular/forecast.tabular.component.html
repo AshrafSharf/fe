@@ -59,33 +59,35 @@
         </div>
 
         <div class="col-md-9">
-            <div id="response" style="margin-top: 20px;">
-                <table class="table table-stripped table-responsive table-bordered">
-                    <thead>
-                        <tr>
-                            <th class="headcol" style="background-color:transparent; border:none;"></th>
-                            <th class="headcol-1" style="background-color:transparent; border:none;"></th>
-                            <th class="colored-header" *ngFor="let key of keys">{{key}}</th>
-                        </tr>
-                    </thead>
-                    <tbody *ngFor="let variable of variables; let j = index" (click)="toggleOpen(j)" [class.open]="openStatuses[j] == true">
-                        <tr *ngFor="let result of variable.allTimesegmentsResultList; let i = index;" [class.parent]="i == 0" [class.child]="i != 0">
-                            <td class="headcol">
-                                <fa class="empty-space" [name]="openStatuses[j] == true ? 'minus': 'plus'" [style.display]="(variable.allTimesegmentsResultList.length > 1 && (i == 0)) ? 'inline-block' : 'none'"></fa>
-                                <span class="empty-space" [style.display]="(variable.allTimesegmentsResultList.length > 1 && (i == 0)) ? 'none' : 'inline-block'"></span>
-                                <span class="empty-space" [style.display]="(variable.allTimesegmentsResultList.length > 1 && (i > 0)) ? 'inline-block' : 'none'"></span>
-                                <span style="word-wrap: break-word;" [style.display]="(variable.allTimesegmentsResultList.length > 1 && (i == 0)) ? 'none' : 'inline-block'">{{result.title}}</span>
-                                <span style="word-wrap: break-word;" [style.display]="(variable.allTimesegmentsResultList.length > 1 && (i == 0)) ? 'inline-block' : 'none'">{{variable.title}}</span>    
-                            </td>
-                            <td class="headcol-1">
-                                <span style="word-wrap: break-word;">{{variable.hasActual ? "Actual" : variable.variableType}}</span>
-                            </td>
-                            <td *ngFor="let pair of result.data" [style.background-color]="pair.value == '- na -'? '#eaeaee' : ''">{{pair.value}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            
+        </div>
+    </div>
+
+    <div class="row">
+        <div id="response" style="margin-top: 20px;">
+            <table class="table table-stripped table-responsive table-bordered">
+                <thead>
+                    <tr>
+                        <th class="headcol" style="background-color:transparent; border:none;"></th>
+                        <th class="headcol-1" style="background-color:transparent; border:none;"></th>
+                        <th class="colored-header" *ngFor="let key of keys">{{key}}</th>
+                    </tr>
+                </thead>
+                <tbody *ngFor="let variable of variables; let j = index" (click)="toggleOpen(j)" [class.open]="openStatuses[j] == true">
+                    <tr *ngFor="let result of variable.allTimesegmentsResultList; let i = index;" [class.parent]="i == 0" [class.child]="i != 0">
+                        <td class="headcol">
+                            <fa class="empty-space" [name]="openStatuses[j] == true ? 'minus': 'plus'" [style.display]="(variable.allTimesegmentsResultList.length > 1 && (i == 0)) ? 'inline-block' : 'none'"></fa>
+                            <span class="empty-space" [style.display]="(variable.allTimesegmentsResultList.length > 1 && (i == 0)) ? 'none' : 'inline-block'"></span>
+                            <span class="empty-space" [style.display]="(variable.allTimesegmentsResultList.length > 1 && (i > 0)) ? 'inline-block' : 'none'"></span>
+                            <span style="word-wrap: break-word;" [style.display]="(variable.allTimesegmentsResultList.length > 1 && (i == 0)) ? 'none' : 'inline-block'">{{result.title}}</span>
+                            <span style="word-wrap: break-word;" [style.display]="(variable.allTimesegmentsResultList.length > 1 && (i == 0)) ? 'inline-block' : 'none'">{{variable.title}}</span>    
+                        </td>
+                        <td class="headcol-1">
+                            <span style="word-wrap: break-word;">{{variable.hasActual ? "Actual" : variable.variableType}}</span>
+                        </td>
+                        <td *ngFor="let pair of result.data" [style.background-color]="pair.value == '- na -'? '#eaeaee' : ''">{{pair.value}}</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

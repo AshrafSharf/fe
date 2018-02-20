@@ -40,6 +40,7 @@ export class ForecastGraphicalComponent implements OnInit {
 
     datePickerConfig = { format : Config.getDateFormat() };
     decimal = "";
+    comma="";
 
     public lineChartData:Array<any> = [];
     public lineChartLabels:Array<{key: number, value:string}> = [];
@@ -395,7 +396,6 @@ export class ForecastGraphicalComponent implements OnInit {
                 if (variable.allTimesegmentsResultList != undefined || variable.allTimesegmentsResultList != null) {
                     var color = Utils.getRandomColor(colorIndex);
                     colorIndex += 1;
-    
                     for (var index = 0; index < variable.allTimesegmentsResultList.length; index++) {
                         var dataValues = [];
                         let item = variable.allTimesegmentsResultList[index];
@@ -406,11 +406,12 @@ export class ForecastGraphicalComponent implements OnInit {
                                 var valueItem = item.data[dataIndex];
                                 if (pair.value == valueItem.title) {
                                     found = true;
-                                    var num = parseInt(valueItem.value.toString());
+                                    //var num = parseInt(valueItem.value.toString());
+                                    var num = parseFloat(valueItem.value.toString());
                                     if (num < minValue) minValue = num;
                                     if (num > maxValue) maxValue = num;
             
-                                    dataValues.push({ x: pair.key, y: d3.format('0.0f')(num)});
+                                    dataValues.push({ x: pair.key, y:num});
                                     break;
                                 }
                             }
@@ -422,23 +423,31 @@ export class ForecastGraphicalComponent implements OnInit {
                         
     
                         if (index == 0) {
+                            var itemKey = (item.title == "-total") ? variable.title +"" + item.title : item.title;    
+                            console.log(itemKey);                                                    
                             this.lineChartData.push({
                                 values: dataValues,
-                                key: item.title,
+                                key: itemKey,
                                 color: color
                             });
                         } else {
                             if (variable.variableType != 'breakdown') {
+                                var itemKey =item.title;
                                 if (this.distributionLines == false) continue;
 
                                 if (index % 2 != 0) {
                                     // odd
                                     color = Utils.getShadeOfColor(color, 0.5);
                                 }
+                        
+                                 //add title total to the sigma of the base line if it has subvariables
+                                if (item.calculationType == "GAUSSIAN_CALCULATION" && variable.compositeType == "breakdown"){
+                                    itemKey = item.title + "."+ "total";    
+                                }
     
                                 this.lineChartData.push({
                                     values: dataValues,
-                                    key: item.title,
+                                    key: itemKey,
                                     classed: 'dashed',
                                     color: color
                                 });
@@ -449,7 +458,7 @@ export class ForecastGraphicalComponent implements OnInit {
                                 color = Utils.getShadeOfColor(color, 0.5);                                
                                 this.lineChartData.push({
                                     values: dataValues,
-                                    key: item.title,
+                                    key:  variable.title +""+item.title,
                                     color: color
                                 });
                             }
@@ -458,8 +467,8 @@ export class ForecastGraphicalComponent implements OnInit {
                 }
             }
         }
-
-        let dec = this.decimal;
+        var dec = this.decimal;
+        var com = this.comma;
         this.settingsService
             .getSettings()
             .subscribe(settings => {
@@ -468,6 +477,11 @@ export class ForecastGraphicalComponent implements OnInit {
                     if (setting.key == "VARIABLE_DECIMAL"){
                         this.decimal = setting.value.toString();
                         dec = setting.value.toString();
+                    }
+                    else if (setting.key == "COMMA_CHECK"){
+                        var commaCheck = setting.value.toString();
+                        this.comma = (commaCheck == "true" ? "," : "");
+                        com = (commaCheck == "true" ? "," : "");
                     }
                 });
                 this.options = {
@@ -480,7 +494,7 @@ export class ForecastGraphicalComponent implements OnInit {
                     interactiveLayer: {
                         tooltip: {
                             valueFormatter:(d, i) => {
-                                return d3.format(",.0"+dec+"f")(d);
+                                return d3.format(com+".0"+dec+"f")(d);
                         }
                     }
                     },
@@ -495,7 +509,7 @@ export class ForecastGraphicalComponent implements OnInit {
                     yAxis: {
                         axisLabel: '',
                         tickFormat: function(d){
-                            return d3.format(",.0"+dec+"f")(d);
+                            return d3.format(com+".0"+dec+"f")(d);
                         },
                         axisLabelDistance: -10
                     },

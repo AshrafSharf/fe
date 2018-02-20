@@ -200,6 +200,7 @@ export class ForecastGraphicalComponent implements OnInit {
         }  
 
         this.currentProject = id.toString();
+        Utils.selectProject(this.currentProject);
 
         if (id != null) {
             this.branchService

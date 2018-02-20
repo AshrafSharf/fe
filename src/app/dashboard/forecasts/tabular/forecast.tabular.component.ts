@@ -83,7 +83,7 @@ export class ForecastTabularComponent implements OnInit {
     }
 
     selectVariables(event) {
-        //this.currentBranch = event.target.value;
+        Utils.selectBranch(this.currentProject, event.target.value);
         this.reloadVariables(event.target.value);
     }
 

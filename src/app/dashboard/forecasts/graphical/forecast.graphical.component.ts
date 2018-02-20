@@ -172,8 +172,7 @@ export class ForecastGraphicalComponent implements OnInit {
     }
 
     selectVariables(event) {
-        //this.currentBranch = event.target.value;
-        console.log(event.target.value);
+        Utils.selectBranch(this.currentProject, event.target.value);
         this.reloadVariables(event.target.value);
     }
 

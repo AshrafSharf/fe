@@ -46,6 +46,7 @@ export class ForecastTabularComponent implements OnInit {
 
     varDecimal="";
     breakdownDecimal= "";
+    commaCheck = "";
     datePickerConfig = { format : Config.getDateFormat() };
 
 
@@ -209,6 +210,9 @@ export class ForecastTabularComponent implements OnInit {
                 else if(setting.key == "BREAKDOWN_DECIMAL"){
                     this.breakdownDecimal = setting.value.toString();
                 }
+                else if(setting.key == "COMMA_CHECK"){
+                    this.commaCheck = setting.value.toString();
+                }
             });
 
              // process the values
@@ -228,7 +232,7 @@ export class ForecastTabularComponent implements OnInit {
                                 let value = pair.value as number;
                                 data.push({
                                     title: pair.title,
-                                    value: value.toFixed(decimalsToKeep)
+                                    value: this.formatNumber(value,decimalsToKeep)
                                 });
                                 found = true;
                                 break;
@@ -284,7 +288,7 @@ export class ForecastTabularComponent implements OnInit {
         }
     }
 
-    reloadGraph() {
+  reloadGraph() {
         this.variableService
             .getCalculationsFor(
                 this.currentBranch, 
@@ -295,6 +299,15 @@ export class ForecastTabularComponent implements OnInit {
                 this.variables = result.data as Array<Variable>;
                 this.processVarables();
             });
+  }
+  
+  formatNumber(num, decimals){
+        if (this.commaCheck == "true"){
+            return num.toFixed(decimals).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+        }
+        else{
+            return num.toFixed(decimals);
+        }
     }
 }
 

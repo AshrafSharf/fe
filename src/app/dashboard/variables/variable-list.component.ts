@@ -52,9 +52,11 @@ export class VariableListComponent implements OnInit {
 
             if (this.selectedBranchId == undefined) {
                 let id = Utils.getLastSelectedBranch();
-                let ids = id.split('-');
-                if (this.selectedProjectId == ids[0]) {
-                    this.selectedBranchId = ids[1];
+                if (id != undefined) {
+                    let ids = id.split('-');
+                    if (this.selectedProjectId == ids[0]) {
+                        this.selectedBranchId = ids[1];
+                    }
                 }
             }
 

@@ -1,13 +1,19 @@
 <div class="form-group">
+    <label><input type="checkbox" [checked]="distributionPresent" (click)="toggleDistributionStatus($event)"> Distribution</label>
+</div>
+
+<div class="form-group">
     <label for="inputTable">Entries</label>
     <div class="row">
         <div class="col-md-12">
             <div class="">
                 <table class="table table-bordered input-group">
-                    <tr class="active">
-                        <td *ngFor="let col of columns">{{col.key}}</td>
+                    <tr>
+                        <td class="active">Time</td>
+                        <td class="active" *ngFor="let col of columns">{{col.key}}</td>
                     </tr>
                     <tr>
+                        <td class="active">Value</td>                        
                         <td *ngFor="let col of columns; let i = index;">
                             <input 
                                 (paste)="valuePasted($event)"
@@ -19,7 +25,8 @@
                                 [(ngModel)]="col.value">
                         </td>
                     </tr>
-                    <tr>
+                    <tr *ngIf="distributionPresent == true">
+                        <td class="active">Std. Deviation</td>
                         <td *ngFor="let col of columns; let i = index;">
                             <input 
                                 (paste)="valuePasted($event)"

@@ -20,6 +20,7 @@ export class VariableTableComponent implements OnChanges, VariableComponentBehav
     @Input('time-segment') timeSegment:TimeSegment;
 
     columns:TableInputPair[] = Array<TableInputPair>();
+    distributionPresent = false;
     
     contextMenuItems: IShContextMenuItem[];
     dataContext(i) {
@@ -33,6 +34,7 @@ export class VariableTableComponent implements OnChanges, VariableComponentBehav
     createTable() {
         this.columns.splice(0, this.columns.length);
         if (this.timeSegment != undefined && this.timeSegment.tableInput != null) {
+            this.distributionPresent = this.timeSegment.distributionType == 'none' ? false : true;
             let date = this.startTime.clone();
             let endDate = this.endTime.clone();
 
@@ -133,8 +135,11 @@ export class VariableTableComponent implements OnChanges, VariableComponentBehav
 
         return { 
             tableInput:values,
-            distributionType: 'none'
+            distributionType: this.distributionPresent ? 'gaussian' : 'none'
         };
     }
 
+    toggleDistributionStatus(event) {
+        this.distributionPresent = event.target.checked;
+    }
 }

@@ -37,6 +37,7 @@ export interface KeyValuePair {
 export interface TableInputPair {
     key: String;
     value: String;
+    stdDeviation?: String;
 }
 
 export interface TimeSegment {

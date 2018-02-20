@@ -8,6 +8,7 @@ import { Modal } from 'ngx-modialog/plugins/bootstrap';
 import { Router, ActivatedRoute } from '@angular/router';
 import { BranchService } from '../../services/branch.service';
 import { Branch } from '../../shared/interfaces/branch';
+import { Utils } from '../../shared/utils';
 
 @Component({
     selector: 'branch-list',
@@ -42,6 +43,10 @@ export class BranchListComponent implements OnInit {
     ngOnInit() {
         this.route.queryParams.subscribe(params => {
             this.selectedProjectId = params['projectId'];
+
+            if (this.selectedProjectId == undefined) {
+                this.selectedProjectId = Utils.getLastSelectedProject();
+            }
         });
         this.reloadProjects();
     }
@@ -83,7 +88,6 @@ export class BranchListComponent implements OnInit {
     }
 
     reloadBranches(projectId:String = null) {
-
         var id = projectId;
         if (projectId == null){ 
             if (this.selectedProjectId != null) {
@@ -92,6 +96,8 @@ export class BranchListComponent implements OnInit {
                 id = this.projects[0].id;
             }
         }
+
+        Utils.selectProject(id);
 
         console.log(id);
         if (id != null) {
@@ -106,9 +112,10 @@ export class BranchListComponent implements OnInit {
                         var row = new TableViewRow(branch.id);
                         if (branch.isMaster == true){
                              row.addColumn(new TableViewColumn("name", branch.title + " (master)"));
-                        }else{
+                        } else {
                              row.addColumn(new TableViewColumn("name", branch.title));
                         }
+
                         row.addColumn(new TableViewColumn("owner", branch.ownerName));
                         row.addColumn(new TableViewColumn("description", branch.description));
                         this.rows.push(row);

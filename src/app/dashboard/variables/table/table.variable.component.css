@@ -10,3 +10,8 @@
     white-space: nowrap;
     overflow-x: scroll;
 }
+
+.fixed-header {
+    background-color: cornflowerblue;
+    color: white;
+}

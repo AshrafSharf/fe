@@ -242,22 +242,25 @@ export class ForecastGraphicalComponent implements OnInit {
                 .getVariables(id)
                 .subscribe(result => {
                     if (result.status == "OK") {
-                        this.variables = result.data as Array<Variable>;
-                        this.filteredVariables.splice(0, this.filteredVariables.length);
-
-                        this.exludedVariables = [];
-                        this.variables.forEach(variable => {
-                            if (!this.shouldSkipVariable(variable)) {
-                                this.exludedVariables.push(variable.id);
-                                this.filteredVariables.push(variable);
-                            }
-                        })
-
-                        this.clearChart();
-                        setTimeout(() => {this.renderChart();}, 100);
+                        this.reloadGraph();
                     }
                 });
         }
+    }
+
+    processVariableData() {
+        this.filteredVariables.splice(0, this.filteredVariables.length);
+
+        this.exludedVariables = [];
+        this.variables.forEach(variable => {
+            if (!this.shouldSkipVariable(variable)) {
+                this.exludedVariables.push(variable.id);
+                this.filteredVariables.push(variable);
+            }
+        })
+
+        this.clearChart();
+        setTimeout(() => {this.renderChart();}, 100);
     }
 
     isLabelAdded(title):number {
@@ -347,7 +350,7 @@ export class ForecastGraphicalComponent implements OnInit {
         */
 
         this.lineChartLabels.splice(0, this.lineChartLabels.length);
-        let months = this.endDate.diff(this.startDate, 'months');
+        let months = this.endDate.diff(this.startDate, 'months') + 1;
         let tempDate = this.startDate.clone();
         for (var index = 0; index < months; index++) {
             this.lineChartLabels.push(
@@ -387,12 +390,6 @@ export class ForecastGraphicalComponent implements OnInit {
                             let found = false;
                             for (var dataIndex = 0; dataIndex < item.data.length; dataIndex++) {
                                 var valueItem = item.data[dataIndex];
-                                // var labelIndex = this.isLabelAdded(valueItem.title);
-                                // if (labelIndex == -1) {
-                                //     // not added yet
-                                //     dataValues.push({ x: labelIndex, y: d3.format('0.0f')(num)});                                
-                                // }
-
                                 if (pair.value == valueItem.title) {
                                     found = true;
                                     //var num = parseInt(valueItem.value.toString());
@@ -506,6 +503,19 @@ export class ForecastGraphicalComponent implements OnInit {
                     showLegend: true,
                     },
                 };
+            });
+    }
+
+    reloadGraph() {
+        this.variableService
+            .getCalculationsFor(
+                this.currentBranch, 
+                this.startDate.format(Config.getDateFormat()),
+                this.endDate.format(Config.getDateFormat()))
+            .subscribe(result => {
+                console.log(result);
+                this.variables = result.data as Array<Variable>;
+                this.processVariableData();
             });
     }
 

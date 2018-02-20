@@ -334,15 +334,15 @@ export class ForecastTabularComponent implements OnInit {
             return num.toFixed(decimals);
         }
     }
-    formatNumber(num, decimals){
-        if (this.commaCheck == "true"){
-            return num.toFixed(decimals).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
-        }
-        else{
-            return num.toFixed(decimals);
-        }
+    //formatNumber(num, decimals){
+    //    if (this.commaCheck == "true"){
+    //        return num.toFixed(decimals).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+    //    }
+    //    else{
+    //        return num.toFixed(decimals);
+    //    }
 
-    }
+    //}
 }
 
 

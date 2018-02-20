@@ -48,6 +48,7 @@ export class ForecastGraphicalComponent implements OnInit {
     public lineChartColors:Array<any> = [];
     private navigationIndex = 0;
 
+    private currentProject: String;
     private currentBranch: String;
 
     data;
@@ -63,14 +64,15 @@ export class ForecastGraphicalComponent implements OnInit {
     }
 
     ngOnInit() {
-        let currentDate = new Date();
-
-        this.startDate = unix(currentDate.getTime() / 1000).subtract(6, 'months');
-        this.endDate = unix(currentDate.getTime() / 1000).add(12, 'months');
-
+        this.resetDates();
         this.reloadProjects();
     }
 
+    resetDates() {
+        let currentDate = new Date();        
+        this.startDate = unix(currentDate.getTime() / 1000).subtract(6, 'months');
+        this.endDate = unix(currentDate.getTime() / 1000).add(12, 'months');
+    }
 
     toggleBreakdownVariables(event) {
         this.breakdownVariables = event.target.checked;
@@ -170,8 +172,8 @@ export class ForecastGraphicalComponent implements OnInit {
     }
 
     selectVariables(event) {
-        //this.currentBranch = event.target.value;
-        console.log(event.target.value);
+        Utils.selectProject(this.currentProject);
+        Utils.selectBranch(this.currentProject, event.target.value);
         this.reloadVariables(event.target.value);
     }
 
@@ -189,11 +191,16 @@ export class ForecastGraphicalComponent implements OnInit {
 
     reloadBranches(projectId:String = null) {
         var id = projectId;
-        if ((projectId == null) && (this.projects.length > 0)) {
-            id = this.projects[0].id;
-        }
+        if (projectId == null) {
+            if (Utils.getLastSelectedProject() != undefined) {
+                id = Utils.getLastSelectedProject();
+            } else if (this.projects.length > 0) {
+                id = this.projects[0].id;
+            }
+        }  
 
-        this.currentBranch = id.toString();
+        this.currentProject = id.toString();
+        Utils.selectProject(this.currentProject);
 
         if (id != null) {
             this.branchService
@@ -230,8 +237,20 @@ export class ForecastGraphicalComponent implements OnInit {
 
     reloadVariables(branchId:String = null) {
         var id = branchId;
-        if ((branchId == null) && (this.branches.length > 0)) {
-            id = this.branches[0].id;
+        if (branchId == null) {
+            if (Utils.getLastSelectedBranch() != undefined) {
+                let bId = Utils.getLastSelectedBranch();
+                let ids = bId.split('-');
+                if (this.currentProject == ids[0]) {
+                    id = ids[1];
+                } else {
+                    if (this.branches.length > 0) {
+                        id = this.branches[0].id;
+                    }
+                }
+            } else if (this.branches.length > 0) {
+                id = this.branches[0].id;
+            }
         }
 
         this.currentBranch = id;

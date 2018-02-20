@@ -51,7 +51,13 @@ export class VariableListComponent implements OnInit {
             }
 
             if (this.selectedBranchId == undefined) {
-                this.selectedBranchId = Utils.getLastSelectedBranch();
+                let id = Utils.getLastSelectedBranch();
+                if (id != undefined) {
+                    let ids = id.split('-');
+                    if (this.selectedProjectId == ids[0]) {
+                        this.selectedBranchId = ids[1];
+                    }
+                }
             }
 
             this.reloadProjects(false);
@@ -95,7 +101,7 @@ export class VariableListComponent implements OnInit {
     }
 
     reloadVariables() {
-        Utils.selectBranch(this.selectedBranch);        
+        Utils.selectBranch(this.selectedProject, this.selectedBranch);
         this.variableService
             .getVariables(this.selectedBranch)
             .subscribe(response => {
@@ -177,7 +183,7 @@ export class VariableListComponent implements OnInit {
     }
 
     onRowEdit(id) {
-        Utils.selectBranch(this.selectedBranch);
+        Utils.selectBranch(this.selectedProject, this.selectedBranch);
         Utils.selectProject(this.selectedProject);
         
         this.router.navigate(['/home/create-variable'], {

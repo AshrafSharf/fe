@@ -51,6 +51,7 @@ export class ForecastTabularComponent implements OnInit {
 
 
     private navigationIndex = 0;
+    private currentProject: String;
     private currentBranch: String;
 
     processedVariables:Variable[] = Array<Variable>();
@@ -73,11 +74,7 @@ export class ForecastTabularComponent implements OnInit {
     }
 
     ngOnInit() {
-        let currentDate = new Date();
-
-        this.startDate = unix(currentDate.getTime() / 1000).subtract(6, 'months');
-        this.endDate = unix(currentDate.getTime() / 1000).add(12, 'months');
-
+        this.resetDates();
         this.reloadProjects();
     }
 
@@ -86,7 +83,8 @@ export class ForecastTabularComponent implements OnInit {
     }
 
     selectVariables(event) {
-        //this.currentBranch = event.target.value;
+        Utils.selectProject(this.currentProject);
+        Utils.selectBranch(this.currentProject, event.target.value);
         this.reloadVariables(event.target.value);
     }
 
@@ -106,12 +104,17 @@ export class ForecastTabularComponent implements OnInit {
         this.rows.splice(0, this.rows.length);
 
         var id = projectId;
-        if ((projectId == null) && (this.projects.length > 0)) {
-            id = this.projects[0].id;
-        }
+        if (projectId == null) {
+            if (Utils.getLastSelectedProject() != undefined) {
+                id = Utils.getLastSelectedProject();
+            } else if (this.projects.length > 0) {
+                id = this.projects[0].id;
+            }
+        }  
 
-        this.currentBranch = id.toString();
-
+        this.currentProject = id.toString();
+        Utils.selectProject(this.currentProject);
+        
         if (id != null) {
             this.branchService
                 .getBranches(id)
@@ -126,10 +129,21 @@ export class ForecastTabularComponent implements OnInit {
     }
 
     reloadVariables(branchId:String = null) {
-
         var id = branchId;
-        if ((branchId == null) && (this.branches.length > 0)) {
-            id = this.branches[0].id;
+        if (branchId == null) {
+            if (Utils.getLastSelectedBranch() != undefined) {
+                let bId = Utils.getLastSelectedBranch();
+                let ids = bId.split('-');
+                if (this.currentProject == ids[0]) {
+                    id = ids[1];
+                } else {
+                    if (this.branches.length > 0) {
+                        id = this.branches[0].id;
+                    }
+                }
+            } else if (this.branches.length > 0) {
+                id = this.branches[0].id;
+            }
         }
 
         this.currentBranch = id;
@@ -142,18 +156,25 @@ export class ForecastTabularComponent implements OnInit {
                     if (result.status == "OK") {
                         console.log(result);
                         this.variables = result.data as Array<Variable>;
+                        this.originalVariables = new Array<Variable>();
+                        this.variables.forEach(variable => {
+                            this.originalVariables.push(variable);
+                        });
+                
                         this.processVarables();
                     }
                 });
         }
     }
 
+    resetDates() {
+        let currentDate = new Date();        
+        this.startDate = unix(currentDate.getTime() / 1000).subtract(6, 'months');
+        this.endDate = unix(currentDate.getTime() / 1000).add(12, 'months');
+    }
+
     processVarables() {
         // clear
-        this.variables.forEach(variable => {
-            this.originalVariables.push(variable);
-        });
-
         this.processedVariables.splice(0, this.processedVariables.length);
         this.keys.splice(0, this.keys.length);
         this.openStatuses.splice(0, this.openStatuses.length);
@@ -297,6 +318,10 @@ export class ForecastTabularComponent implements OnInit {
             .subscribe(result => {
                 console.log(result);
                 this.variables = result.data as Array<Variable>;
+                this.originalVariables = new Array<Variable>();
+                this.variables.forEach(variable => {
+                    this.originalVariables.push(variable);
+                });        
                 this.processVarables();
             });
   }
@@ -308,6 +333,15 @@ export class ForecastTabularComponent implements OnInit {
         else{
             return num.toFixed(decimals);
         }
+    }
+    formatNumber(num, decimals){
+        if (this.commaCheck == "true"){
+            return num.toFixed(decimals).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+        }
+        else{
+            return num.toFixed(decimals);
+        }
+
     }
 }
 

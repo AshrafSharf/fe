@@ -172,6 +172,7 @@ export class ForecastGraphicalComponent implements OnInit {
     }
 
     selectVariables(event) {
+        Utils.selectProject(this.currentProject);
         Utils.selectBranch(this.currentProject, event.target.value);
         this.reloadVariables(event.target.value);
     }
@@ -241,6 +242,10 @@ export class ForecastGraphicalComponent implements OnInit {
                 let ids = bId.split('-');
                 if (this.currentProject == ids[0]) {
                     id = ids[1];
+                } else {
+                    if (this.branches.length > 0) {
+                        id = this.branches[0].id;
+                    }
                 }
             } else if (this.branches.length > 0) {
                 id = this.branches[0].id;

@@ -51,8 +51,8 @@ export class ForecastTabularComponent implements OnInit {
 
 
     private navigationIndex = 0;
-    private currentProject: String;
-    private currentBranch: String;
+    currentProject: String;
+    currentBranch: String;
 
     processedVariables:Variable[] = Array<Variable>();
     keys = new Array<string>();

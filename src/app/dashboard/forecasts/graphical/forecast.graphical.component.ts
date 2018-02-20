@@ -48,8 +48,8 @@ export class ForecastGraphicalComponent implements OnInit {
     public lineChartColors:Array<any> = [];
     private navigationIndex = 0;
 
-    private currentProject: String;
-    private currentBranch: String;
+    currentProject: String;
+    currentBranch: String;
 
     data;
     options;

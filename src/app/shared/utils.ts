@@ -145,8 +145,8 @@ export class Utils {
         return sessionStorage['last_project_id'];
     }
 
-    public static selectBranch(id) {
-        sessionStorage['last_branch_id'] = id;
+    public static selectBranch(projectId, branchId) {
+        sessionStorage['last_branch_id'] = projectId + '-' + branchId;
     }
 
     public static getLastSelectedBranch() {

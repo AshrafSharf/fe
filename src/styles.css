@@ -26,5 +26,9 @@
 
 
 .dashed {
-    stroke-dasharray: 5,5;
+    stroke-dasharray: 10,10;
+}
+
+.dotted {
+    stroke-dasharray: 2,5;
 }

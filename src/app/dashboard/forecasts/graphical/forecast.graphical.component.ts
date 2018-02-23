@@ -438,7 +438,6 @@ export class ForecastGraphicalComponent implements OnInit {
                         } else {
                             if (variable.variableType != 'breakdown') {
                                 var itemKey =item.title;
-                                if (this.distributionLines == false) continue;
 
                                 if (index % 2 != 0) {
                                     // odd
@@ -449,13 +448,28 @@ export class ForecastGraphicalComponent implements OnInit {
                                 if (item.calculationType == "GAUSSIAN_CALCULATION" && variable.compositeType == "breakdown"){
                                     itemKey = item.title + "."+ "total";    
                                 }
-    
-                                this.lineChartData.push({
-                                    values: dataValues,
-                                    key: itemKey,
-                                    classed: 'dashed',
-                                    color: color
-                                });
+
+                                if (item.calculationType == "GAUSSIAN_CALCULATION") {
+                                    if (this.distributionLines != false) {
+                                        this.lineChartData.push({
+                                            values: dataValues,
+                                            key: itemKey,
+                                            classed: 'dashed',
+                                            color: color
+                                        });
+                                    }
+                                }
+                                else if (item.calculationType == "SUBVARIABLE_CALCULATION") {
+                                    if (this.breakdownLines != false) {
+                                        this.lineChartData.push({
+                                            values: dataValues,
+                                            key: itemKey,
+                                            classed: 'dotted',
+                                            color: color
+                                        });
+                                    }
+                                }
+
     
                             } else {
                                 if (this.breakdownLines == false) continue;

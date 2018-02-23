@@ -780,10 +780,18 @@ export class VariablesComponent implements OnInit {
     }
 
     onSave(event) {
-        let finalValue = 0, finalPercentage = 0;
+        let finalValue = 0, finalPercentage = 0, value = 0, decimalSize = 0;
         if (this.subvariableList != undefined) {
             this.subvariableList.forEach((variable) => {
-                finalValue += parseFloat(variable.value.toString());
+                decimalSize = variable.value.length - 2;
+                value += parseFloat(variable.value.toString());
+                if (value > 1) {
+                    finalValue = value;
+                }
+                else {
+                    finalValue = parseFloat(value.toPrecision(decimalSize));
+                }
+                
                 if (this.variableType == 'discrete') {
                     finalPercentage += parseFloat(variable.probability.toString());
                 }

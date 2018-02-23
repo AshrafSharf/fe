@@ -176,10 +176,17 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
         var result: ValidationResult = { result:true, reason: '' };
         if ((this.variableType == 'breakdown') || (this.valueType == 'discrete')) {
 
-            let finalValue = 0, finalPercentage = 0;
+            let finalValue = 0, finalPercentage = 0, value = 0, decimalSize = 0;
             this.variableTypeList.forEach((variable) => {
                 if (this.variableType == 'breakdown') {
-                    finalValue += parseFloat(variable.value.toString());
+                    decimalSize = variable.value.length - 2;
+                    value += parseFloat(variable.value.toString());
+                    if (value > 1) {
+                        finalValue = value;
+                    }
+                    else {
+                        finalValue = parseFloat(value.toPrecision(decimalSize));
+                    }
                 }
                 if (this.valueType == 'discrete') {
                     finalPercentage += parseFloat(variable.probability.toString());

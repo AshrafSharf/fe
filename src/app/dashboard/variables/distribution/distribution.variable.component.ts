@@ -22,6 +22,7 @@ export class VariableDistributionComponent implements OnInit {
     @ViewChildren(AutocompleteInputComponent) autoCompleteInputs: AutocompleteInputComponent[];
 
     variables: KeyValuePair[] = Array<KeyValuePair>();
+    words = [];
     public method;
 
     constructor(
@@ -68,14 +69,20 @@ export class VariableDistributionComponent implements OnInit {
     }
 
     public getCompletedWords() {
-        var words = [];
+        this.words = [];
+        var result;
         this.autoCompleteInputs.forEach(control => {
-            words.push(control.completedWords);
+            this.words.push(control.completedWords);
+            result = control.completedWords;
         });
-
+        
+        return result;
+    }
+    
+    public getExpression() {
         var expression = "";
         if (this.method == 2 && this.distribution ==3) {
-            words[0].forEach(word => {
+            this.words[0].forEach(word => {
                 if (word.type == 'variable') {
                     expression += `EXP_${word.id} `;
                 } else {

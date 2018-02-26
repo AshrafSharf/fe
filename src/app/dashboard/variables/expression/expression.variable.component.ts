@@ -41,7 +41,8 @@ export class VariableExpressionComponent implements OnInit, VariableComponentBeh
             completedWordsArray: this.autoCompleteInput.completedWords,
             distributionType: this.distributionComponent.distributionType,
             //mean: this.distributionComponent.mean,
-            stdDeviation: this.distributionComponent.getCompletedWords(),
+            stdDevCompletedWordsArray: this.distributionComponent.getCompletedWords(),
+            stdDeviation: this.distributionComponent.getExpression(),
             userSelectedParametrics: this.distributionComponent.parametric,
             userSelectedParametricsStdDeviation: this.distributionComponent.sigma
         };

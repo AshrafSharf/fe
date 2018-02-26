@@ -38,6 +38,13 @@ export class AutocompleteInputComponent implements OnInit, VariableComponentBeha
         this.completedWords.splice(this.completedWords.indexOf(title), 1);
     }
 
+    onFocus(event) {
+        console.log(event);
+        if (this.input.nativeElement.value.length > 0) {
+            this.onSpacePressed(false);
+        }
+    }
+
     onKeyup(event) {
         this.suggestions = Array<KeyValuePair>();
         this.mathExpressions.forEach(element => {
@@ -63,19 +70,23 @@ export class AutocompleteInputComponent implements OnInit, VariableComponentBeha
 
         if (event.code == "Space") {
             if (this.input.nativeElement.value.trim().length != 0) {
-                var value = parseInt(this.input.nativeElement.value.trim());
-                if (isNaN(value)) {
-                    this.isError = true;
-                } else {
-                    if (this.completedWords == undefined) this.completedWords = new Array<SelectedWord>();
-                    this.completedWords.push({
-                        title: parseInt(this.input.nativeElement.value.trim()).toString(),
-                        type: 'const',
-                        id: ''
-                    });
-                    this.clearInput();
-                }
+                this.onSpacePressed();
             }
+        }
+    }
+
+    onSpacePressed(shouldFocus = true) {
+        var value = parseInt(this.input.nativeElement.value.trim());
+        if (isNaN(value)) {
+            this.isError = true;
+        } else {
+            if (this.completedWords == undefined) this.completedWords = new Array<SelectedWord>();
+            this.completedWords.push({
+                title: parseInt(this.input.nativeElement.value.trim()).toString(),
+                type: 'const',
+                id: ''
+            });
+            this.clearInput(shouldFocus);
         }
     }
 
@@ -88,10 +99,12 @@ export class AutocompleteInputComponent implements OnInit, VariableComponentBeha
         }
     }
 
-    clearInput() {
+    clearInput(shouldFocus = true) {
         this.input.nativeElement.value = '';
-        this.input.nativeElement.focus();
         this.suggestions.splice(0, this.suggestions.length);
+        if (shouldFocus) {
+            this.input.nativeElement.focus();
+        }
     }
 
     selectWord(word) {

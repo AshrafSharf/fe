@@ -8,6 +8,7 @@
 
     <input 
         #input
+        (focusout)="onFocus($event)"
         (keydown)="onKeydown($event)"
         type="text" 
         (keyup)="onKeyup($event)" 

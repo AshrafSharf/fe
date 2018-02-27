@@ -71,7 +71,7 @@ export class SettingsComponent implements OnInit {
             this.settingsService.setToLocal(this.pointToLocalhost);
         }
 
-        if (this.pointToLocalhost != true) {
+        //if (this.pointToLocalhost != true) {
             this.settingsService
                 .updateSettings([{id:this.otherDecId, key: "VARIABLE_DECIMAL", value:this.otherDec},
                     {id:this.sigmaId, key: "SIGMA", value:this.sigma},
@@ -82,7 +82,8 @@ export class SettingsComponent implements OnInit {
                     this.recalculateEveryBranch();
                     this.router.navigate(['/home/variable-list']);
                 });
-        }
+        //}
+        
     }
 
     onCancel(){

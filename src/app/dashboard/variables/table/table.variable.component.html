@@ -1,7 +1,8 @@
-<div class="form-group">
-    <label><input type="checkbox" [checked]="distributionPresent" (click)="toggleDistributionStatus($event)"> Distribution</label>
+<div class="form-group col-md-3">
+    <!--<label><input type="checkbox" [checked]="distributionPresent" (click)="toggleDistributionStatus($event)"> Distribution</label>-->
+    <variable-distribution [time-segment]="timeSegment" [branch-id]="branchId" [input-method]="inputMethod"></variable-distribution>
 </div>
-
+<div></div>
 <div class="form-group">
     <label for="inputTable">Entries</label>
     <div class="row">

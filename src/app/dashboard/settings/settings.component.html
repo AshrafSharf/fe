@@ -2,6 +2,12 @@
     <div class="row">
         <app-header title="Settings"></app-header>
     </div>
+    <div class="row pull-right" *ngIf="showLocalCheck">
+        <input class="form-check-input" type="checkbox" [(ngModel)]="pointToLocalhost" id="pointToLocalhost">
+        <label class="form-check-label" for="pointToLocalhost">
+            Point to localhost
+        </label>
+    </div>
 
     <div class="row">
         <div class="col-md-6">

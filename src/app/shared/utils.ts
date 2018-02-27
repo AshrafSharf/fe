@@ -17,6 +17,7 @@ export class Utils {
     static routeVariableType:String = "variableType";
 
     static buffer:Array<TableInputPair>;
+    static localDev:boolean = environment.local;
 
     // create url for route
     public static createUrl(route:String) {
@@ -42,6 +43,15 @@ export class Utils {
 
     public static getBuffer() {
         return this.buffer;
+    }
+
+    public static setToLocal(local) {
+        if (local == true) {
+            this.baseUrl = "http://localhost:8443";
+        }
+        else {
+            this.baseUrl= environment.apiUrl;
+        }
     }
 
     public static getShadeOfColor(color, percent) {   

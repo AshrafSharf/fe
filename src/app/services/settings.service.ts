@@ -35,5 +35,12 @@ export class SettingsService {
             .put(url, body, Utils.getRequestOptions())
             .map(result => result.json());
     }
+    
+    getLocal() {
+        return Utils.localDev;        
+    }
 
+    setToLocal(local) {
+        Utils.setToLocal(local);
+    }
 }

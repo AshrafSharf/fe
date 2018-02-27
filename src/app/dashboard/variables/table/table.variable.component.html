@@ -1,9 +1,12 @@
-<div class="form-group col-md-3">
-    <!--<label><input type="checkbox" [checked]="distributionPresent" (click)="toggleDistributionStatus($event)"> Distribution</label>-->
-    <variable-distribution [time-segment]="timeSegment" [branch-id]="branchId" [input-method]="inputMethod"></variable-distribution>
+<div class="form-group col-md-4">
+    <label for="">Distribution</label>
+    <select name="" class="form-control" [(ngModel)]="distributionPresent">
+        <option value="1">None</option>
+        <option value="2">Gaussian</option>
+    </select>
 </div>
-<div></div>
-<div class="form-group">
+
+<div class="form-group col-md-12">
     <label for="inputTable">Entries</label>
     <div class="row">
         <div class="col-md-12">
@@ -26,7 +29,7 @@
                                 [(ngModel)]="col.value">
                         </td>
                     </tr>
-                    <tr *ngIf="distributionPresent == true">
+                    <tr *ngIf="distributionPresent == 2">
                         <td class="active">Std. Deviation</td>
                         <td *ngFor="let col of columns; let i = index;">
                             <input 

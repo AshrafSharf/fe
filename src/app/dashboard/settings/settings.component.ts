@@ -67,21 +67,22 @@ export class SettingsComponent implements OnInit {
     }
 
     onSave() {
-        if (this.pointToLocalhost == null) {
-            this.pointToLocalhost = false;
+        if (this.pointToLocalhost != null) {
+            this.settingsService.setToLocal(this.pointToLocalhost);
         }
-        this.settingsService.setToLocal(this.pointToLocalhost);
-        this.settingsService
-        .updateSettings([{id:this.otherDecId, key: "VARIABLE_DECIMAL", value:this.otherDec},
-                        {id:this.sigmaId, key: "SIGMA", value:this.sigma},
-                        {id:this.breakdownDecId, key:"BREAKDOWN_DECIMAL", value:this.breakdownDec},
-                    {id:this.commaCheckId,key:"COMMA_CHECK", value:this.commaCheck}])
-        .subscribe(result => {
-            console.log("settings updated");
-            this.recalculateEveryBranch();
-            this.router.navigate(['/home/variable-list']);
-        });
 
+        if (this.pointToLocalhost != true) {
+            this.settingsService
+                .updateSettings([{id:this.otherDecId, key: "VARIABLE_DECIMAL", value:this.otherDec},
+                    {id:this.sigmaId, key: "SIGMA", value:this.sigma},
+                    {id:this.breakdownDecId, key:"BREAKDOWN_DECIMAL", value:this.breakdownDec},
+                    {id:this.commaCheckId,key:"COMMA_CHECK", value:this.commaCheck}])
+                .subscribe(result => {
+                    console.log("settings updated");
+                    this.recalculateEveryBranch();
+                    this.router.navigate(['/home/variable-list']);
+                });
+        }
     }
 
     onCancel(){

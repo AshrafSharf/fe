@@ -21,6 +21,7 @@ export class TableViewComponent implements OnInit {
     // for filtering
     originalRows:TableViewRow[];
     filteredRows:TableViewRow[];
+    filterCols = [];
 
     @Input('rows') set rows(rows: TableViewRow[]) {
         this.originalRows = rows;
@@ -29,7 +30,10 @@ export class TableViewComponent implements OnInit {
 
     constructor() { }
 
-    ngOnInit() { 
+    ngOnInit() {
+        for (var index = 0; index < this.cols.length; index++) {
+            this.filterCols[index] = "";
+        }
     }
 
     onRowSelected(event, id) {
@@ -38,17 +42,27 @@ export class TableViewComponent implements OnInit {
     }
 
     filterResult(event, col:TableViewHeader) {
+        var push = false;
+        for (var index = 0; index < this.cols.length; index++) {
+            if (index == this.cols.indexOf(col)) {
+                this.filterCols[index] = event.target.value;
+            }
+        }
         this.filteredRows = new Array<TableViewRow>();
         this.originalRows.forEach(row => {
             for (var index = 0; index < row.columns.length; index++) {
-                if (row.columns[index].columnName.toLowerCase() == col.title.toLowerCase()) {
-                    // found column
-                    if (row.columns[index].value != undefined && row.columns[index].value.toLowerCase().indexOf(event.target.value.toLowerCase()) >= 0) {
-                        this.filteredRows.push(row);
+                    if (row.columns[index].value != undefined && row.columns[index].value.toLowerCase().indexOf(this.filterCols[index].toLowerCase()) >= 0) {
+                        push = true;
                     }
-                    break;
-                }
+                    else {
+                        push = false;
+                        break;
+                    }
             }
+            if (push == true) {
+                this.filteredRows.push(row);
+            }
+
         });
     }
 

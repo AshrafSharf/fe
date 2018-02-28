@@ -150,6 +150,7 @@ export class VariablesComponent implements OnInit {
             console.log('adding');
 
             if (this.variableType == 'breakdown') {
+                this.valueType = 'real';
                 // add new
                 for (var index = 0; index < this.subvariableList.length; index++) {
                     if (this.subvariableList[index].name == this.subvariableName) {
@@ -358,7 +359,7 @@ export class VariablesComponent implements OnInit {
 
     fillMissingDates(keys) {
         let missing = false;
-        // fill the gap 
+        // fill the gap
         for (var index = 0; index < keys.length; index++) {
             //console.log(this.keys[index]);
             if (index + 1 < keys.length) {

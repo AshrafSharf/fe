@@ -41,13 +41,13 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div *ngIf="variableType != 'breakdown'" class="col-md-6">
                                     <div class="form-group">
                                         <label for="">Value Type</label>
                                         <select [(ngModel)]="valueType" class="form-control">
                                             <option value="integer">Integer</option>
                                             <option value="real">Real</option>
-                                            <option *ngIf="variableType != 'breakdown'" value="discrete">Discrete Random</option>
+                                            <option value="discrete">Discrete Random</option>
                                         </select>
                                     </div>
                                 </div>
@@ -64,7 +64,7 @@
                                         <label for="">Value</label>
                                         <input type="text" [(ngModel)]="subvariableValue" class="form-control" placeholder="subvariable value">
                                     </div>
-                                    
+
                                     <button class="btn btn-success" (click)="addVariable()">Save</button>
                                     <button class="btn btn-danger" (click)="clearVariable()">Cancel</button>
                                 </div>
@@ -97,7 +97,7 @@
                                         <label for="">Value</label>
                                         <input type="text" [(ngModel)]="subvariableName" class="form-control" placeholder="subvariable name">
                                     </div>
-                                    
+
                                     <button class="btn btn-success" (click)="addVariable()">Save</button>
                                     <button class="btn btn-danger" (click)="clearVariable()">Cancel</button>
                                 </div>
@@ -182,24 +182,24 @@
                                         <div class="form-group">
                                             <label for="">Starting Time</label>
                                             <div class=' date inputText' id='startDate'>
-                                                <dp-date-picker 
+                                                <dp-date-picker
                                                     [config]="datePickerConfig"
-                                                    [(ngModel)]="startDate" 
-                                                    mode="month" 
+                                                    [(ngModel)]="startDate"
+                                                    mode="month"
                                                     (click)="createTable()"
                                                     [theme]="'dp-material dp-main'"></dp-date-picker>
                                             </div>
                                         </div>
                                     </div>
-        
+
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="">End Time</label>
                                             <div class='date inputText' id='endDate'>
-                                                <dp-date-picker 
+                                                <dp-date-picker
                                                     [config]="datePickerConfig"
-                                                    [(ngModel)]="endDate" 
-                                                    mode="month" 
+                                                    [(ngModel)]="endDate"
+                                                    mode="month"
                                                     (click)="createTable()"
                                                     [theme]="'dp-material dp-main'"></dp-date-picker>
                                             </div>

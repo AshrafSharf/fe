@@ -162,4 +162,23 @@ export class Utils {
     public static getLastSelectedBranch() {
         return sessionStorage['last_branch_id'];
     }
+
+    public static formatNumber(labelValue) {
+
+        // Nine Zeroes for Billions
+        return Math.abs(Number(labelValue)) >= 1.0e+9
+    
+        ? Math.abs(Number(labelValue)) / 1.0e+9 + "B"
+        // Six Zeroes for Millions 
+        : Math.abs(Number(labelValue)) >= 1.0e+6
+    
+        ? Math.abs(Number(labelValue)) / 1.0e+6 + "M"
+        // Three Zeroes for Thousands
+        : Math.abs(Number(labelValue)) >= 1.0e+3
+    
+        ? Math.abs(Number(labelValue)) / 1.0e+3 + "K"
+    
+        : Math.abs(Number(labelValue));
+    }
+    
 }

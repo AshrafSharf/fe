@@ -513,8 +513,9 @@ export class ForecastGraphicalComponent implements OnInit {
                     },
                     yAxis: {
                         axisLabel: '',
-                        tickFormat: function(d){
-                            return d3.format(com+".0"+dec+"f")(d);
+                        tickFormat: function(d) {
+                            return Utils.formatNumber(d);
+                            // return d3.format(com+".0"+dec+"f")(d);
                         },
                         axisLabelDistance: -10
                     },

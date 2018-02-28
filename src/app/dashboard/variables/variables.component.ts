@@ -694,13 +694,14 @@ export class VariablesComponent implements OnInit {
                     yAxis: {
                         axisLabel: '',
                         tickFormat: (d) => {
-                            if (this.variableType == 'breakdown' && this.valueType == 'real'){
-                                return d3.format(com+".0"+breakdownDec+"f")(d);
-                            }else if (this.valueType == "real"){
-                                return d3.format(com+".0"+varDec+"f")(d);
-                            }
+                            // if (this.variableType == 'breakdown' && this.valueType == 'real'){
+                            //     return d3.format(com+".0"+breakdownDec+"f")(d);
+                            // }else if (this.valueType == "real"){
+                            //     return d3.format(com+".0"+varDec+"f")(d);
+                            // }
 
-                            return d3.format(com+".0f")(d);
+                            //return d3.format(com+".0f")(d);
+                            return Utils.formatNumber(d);
                         },
                         axisLabelDistance: -10
                     },

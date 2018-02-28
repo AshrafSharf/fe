@@ -160,7 +160,6 @@ export class VariablesComponent implements OnInit {
                 }
             }
 
-
             this.subvariableList.push({
                 name: this.subvariableName,
                 value: this.subvariableValue,

@@ -69,7 +69,7 @@ export class ForecastGraphicalComponent implements OnInit {
     }
 
     resetDates() {
-        let currentDate = new Date();        
+        let currentDate = new Date();
         this.startDate = unix(currentDate.getTime() / 1000).subtract(6, 'months');
         this.endDate = unix(currentDate.getTime() / 1000).add(12, 'months');
     }
@@ -99,7 +99,7 @@ export class ForecastGraphicalComponent implements OnInit {
         if ((variable.variableType == 'breakdown') && (!this.breakdownVariables) ){
             return true;
         }
-        
+
         if ((variable.valueType == 'discrete') && (!this.discreteVariables) ){
             return true;
         }
@@ -197,7 +197,7 @@ export class ForecastGraphicalComponent implements OnInit {
             } else if (this.projects.length > 0) {
                 id = this.projects[0].id;
             }
-        }  
+        }
 
         this.currentProject = id.toString();
         Utils.selectProject(this.currentProject);
@@ -348,7 +348,7 @@ export class ForecastGraphicalComponent implements OnInit {
                     var counter = 0;
 
                     let item = variable.allTimesegmentsResultList[index];
-                  
+
                     for (var dataIndex = 0; dataIndex < item.data.length; dataIndex++) {
                         var valueItem = item.data[dataIndex];
                         var labelIndex = this.isLabelAdded(valueItem.title);
@@ -404,7 +404,7 @@ export class ForecastGraphicalComponent implements OnInit {
                     for (var index = 0; index < variable.allTimesegmentsResultList.length; index++) {
                         var dataValues = [];
                         let item = variable.allTimesegmentsResultList[index];
-    
+
                         this.lineChartLabels.forEach(pair => {
                             let found = false;
                             for (var dataIndex = 0; dataIndex < item.data.length; dataIndex++) {
@@ -415,7 +415,7 @@ export class ForecastGraphicalComponent implements OnInit {
                                     var num = parseFloat(valueItem.value.toString());
                                     if (num < minValue) minValue = num;
                                     if (num > maxValue) maxValue = num;
-            
+
                                     dataValues.push({ x: pair.key, y:num});
                                     break;
                                 }
@@ -425,11 +425,11 @@ export class ForecastGraphicalComponent implements OnInit {
                                 dataValues.push({ x: pair.key, y: undefined});
                             }
                         });
-                        
-    
+
+
                         if (index == 0) {
-                            var itemKey = (item.title == "-total") ? variable.title +"" + item.title : item.title;    
-                            console.log(itemKey);                                                    
+                            var itemKey = (item.title == "-total") ? variable.title +"" + item.title : item.title;
+                            console.log(itemKey);
                             this.lineChartData.push({
                                 values: dataValues,
                                 key: itemKey,
@@ -443,10 +443,10 @@ export class ForecastGraphicalComponent implements OnInit {
                                     // odd
                                     color = Utils.getShadeOfColor(color, 0.5);
                                 }
-                        
+
                                  //add title total to the sigma of the base line if it has subvariables
                                 if (item.calculationType == "GAUSSIAN_CALCULATION" && variable.compositeType == "breakdown"){
-                                    itemKey = item.title + "."+ "total";    
+                                    itemKey = item.title + "."+ "total";
                                 }
 
                                 if (item.calculationType == "GAUSSIAN_CALCULATION") {
@@ -464,17 +464,27 @@ export class ForecastGraphicalComponent implements OnInit {
                                         this.lineChartData.push({
                                             values: dataValues,
                                             key: itemKey,
+                                            //classed: 'dotted',
+                                            color: color
+                                        });
+                                    }
+                                }
+                                else if (item.calculationType == "GAUSSIAN_SUBVARIABLE_CALCULATION") {
+                                    if (this.breakdownLines != false && this.distributionLines != false) {
+                                        this.lineChartData.push({
+                                            values: dataValues,
+                                            key: itemKey,
                                             classed: 'dotted',
                                             color: color
                                         });
                                     }
                                 }
 
-    
+
                             } else {
                                 if (this.breakdownLines == false) continue;
 
-                                color = Utils.getShadeOfColor(color, 0.5);                                
+                                color = Utils.getShadeOfColor(color, 0.5);
                                 this.lineChartData.push({
                                     values: dataValues,
                                     key:  variable.title +""+item.title,
@@ -542,7 +552,7 @@ export class ForecastGraphicalComponent implements OnInit {
     reloadGraph() {
         this.variableService
             .getCalculationsFor(
-                this.currentBranch, 
+                this.currentBranch,
                 this.startDate.format(Config.getDateFormat()),
                 this.endDate.format(Config.getDateFormat()))
             .subscribe(result => {

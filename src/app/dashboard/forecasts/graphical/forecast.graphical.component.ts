@@ -72,7 +72,7 @@ export class ForecastGraphicalComponent implements OnInit {
 
     resetDates() {
         let currentDate = new Date();
-        this.startDate = this.minStartDate;
+        this.startDate = unix(currentDate.getTime() / 1000).subtract(6, 'months');
         this.endDate = unix(currentDate.getTime() / 1000).add(12, 'months');
     }
 
@@ -108,7 +108,10 @@ export class ForecastGraphicalComponent implements OnInit {
             }
         }
 
-        this.startDate = this.minStartDate;
+        // if the min start date is > start date 
+        if (this.minStartDate.isAfter(this.startDate)) {
+            this.startDate = this.minStartDate;
+        }
     }
 
     toggleBreakdownVariables(event) {

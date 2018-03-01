@@ -203,10 +203,10 @@ export class ForecastTabularComponent implements OnInit {
             }
         }
 
-        // if the min start date is > start date 
-        if (this.minStartDate.isAfter(this.startDate)) {
-            this.startDate = this.minStartDate;
-        }
+        // // if the min start date is > start date 
+        // if (this.minStartDate.isAfter(this.startDate)) {
+        //     this.startDate = this.minStartDate;
+        // }
     }
 
     resetDates() {

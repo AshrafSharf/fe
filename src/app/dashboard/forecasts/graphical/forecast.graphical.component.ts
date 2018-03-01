@@ -109,9 +109,9 @@ export class ForecastGraphicalComponent implements OnInit {
         }
 
         // if the min start date is > start date 
-        if (this.minStartDate.isAfter(this.startDate)) {
-            this.startDate = this.minStartDate;
-        }
+        // if (this.minStartDate.isAfter(this.startDate)) {
+        //     this.startDate = this.minStartDate;
+        // }
     }
 
     toggleBreakdownVariables(event) {

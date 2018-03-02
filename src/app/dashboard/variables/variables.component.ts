@@ -781,11 +781,15 @@ export class VariablesComponent implements OnInit {
     }
 
     onSave(event) {
+        let negative = false;
         let finalValue = 0, finalPercentage = 0, value = 0, decimalSize = 0;
         if (this.subvariableList != undefined) {
             this.subvariableList.forEach((variable) => {
                 decimalSize = variable.value.length - 2;
                 value += parseFloat(variable.value.toString());
+                if (parseFloat(variable.value.toString()) < 0) {
+                    negative = true;
+                }
                 if (value > 1) {
                     finalValue = value;
                 }
@@ -793,9 +797,12 @@ export class VariablesComponent implements OnInit {
                     finalValue = parseFloat(value.toPrecision(decimalSize));
                 }
 
-                if (this.variableType == 'discrete') {
+                /*if (this.valueType == 'discrete') {
                     finalPercentage += parseFloat(variable.probability.toString());
-                }
+                    if (parseFloat(variable.probability.toString()) < 0) {
+                        negative = true;
+                    }
+                }*/
             });
         }
 
@@ -818,7 +825,6 @@ export class VariablesComponent implements OnInit {
         } else {
 
             var timeSegmentValues = Array();
-            let negative = false;
             let lastResult = null;
             this.timeSegmentWidgets.forEach(segment => {
                 var result = segment.getTimeSegmentValues();
@@ -843,6 +849,13 @@ export class VariablesComponent implements OnInit {
             }
 
             timeSegmentValues.forEach(segment => {
+                if (segment.subVariables != null) {
+                    segment.subVariables.forEach(subVar => {
+                        if (subVar.value < 0 || subVar.probability < 0) {
+                            negative = true;
+                        }
+                    });
+                }
                 if (segment.tableInput != null) {
                     segment.tableInput.forEach(column => {
                         if(column.value < 0 || column.stdDeviation < 0) {

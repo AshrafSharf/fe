@@ -781,11 +781,15 @@ export class VariablesComponent implements OnInit {
     }
 
     onSave(event) {
+        let negative = false;
         let finalValue = 0, finalPercentage = 0, value = 0, decimalSize = 0;
         if (this.subvariableList != undefined) {
             this.subvariableList.forEach((variable) => {
                 decimalSize = variable.value.length - 2;
                 value += parseFloat(variable.value.toString());
+                if (parseFloat(variable.value.toString()) < 0) {
+                    negative = true;
+                }
                 if (value > 1) {
                     finalValue = value;
                 }
@@ -793,9 +797,12 @@ export class VariablesComponent implements OnInit {
                     finalValue = parseFloat(value.toPrecision(decimalSize));
                 }
 
-                if (this.variableType == 'discrete') {
+                /*if (this.valueType == 'discrete') {
                     finalPercentage += parseFloat(variable.probability.toString());
-                }
+                    if (parseFloat(variable.probability.toString()) < 0) {
+                        negative = true;
+                    }
+                }*/
             });
         }
 
@@ -818,7 +825,6 @@ export class VariablesComponent implements OnInit {
         } else {
 
             var timeSegmentValues = Array();
-
             let lastResult = null;
             this.timeSegmentWidgets.forEach(segment => {
                 var result = segment.getTimeSegmentValues();
@@ -829,102 +835,142 @@ export class VariablesComponent implements OnInit {
                 }
             });
 
-            if (timeSegmentValues.length != this.timeSegmentWidgets.length) {
-                this.modal.showError(lastResult.reason.toString(), 'Incomplete definition');
-            } else {
-
-                let tempCompositeVariables: { id: String }[] = Array<{ id: String }>();
-                this.compositeVariableList.forEach(variable => {
-                    if (variable.isSelected) {
-                        tempCompositeVariables.push({ id: variable.id });
+            if(this.shouldDefineActualValues) {
+                this.columns.forEach(column => {
+                    if(parseInt((column.value).toString()) < 0) {
+                        negative = true;
+                    }
+                    if (column.stdDeviation != null) {
+                        if (parseInt((column.stdDeviation).toString()) < 0) {
+                            negative = true;
+                        }
                     }
                 });
+            }
 
-                if (this.shouldDefineActualValues && this.selectedInputMethodActual == 'table') {
-                    if (typeof (this.startDate) != "string") {
-                        this.startDate = this.startDate.format(Config.getDateFormat());
+            timeSegmentValues.forEach(segment => {
+                if (segment.subVariables != null) {
+                    segment.subVariables.forEach(subVar => {
+                        if (subVar.value < 0 || subVar.probability < 0) {
+                            negative = true;
+                        }
+                    });
+                }
+                if (segment.tableInput != null) {
+                    segment.tableInput.forEach(column => {
+                        if(column.value < 0 || column.stdDeviation < 0) {
+                            negative = true;
+                        }
+                    });
+                }
+                else {
+                    if(segment.constantValue < 0 || segment.stdDeviation < 0 || segment.expression < 0) {
+                        negative = true;
                     }
-
-                    if (typeof (this.endDate) != "string") {
-                        this.endDate = this.endDate.format(Config.getDateFormat());
-                    }
                 }
+            });
 
-                let actualTimeSegment: TimeSegment = {
-                    userSelectedParametrics: '',
-                    startTime: this.startDate,
-                    endTime: this.endDate,
-                    inputMethod: this.selectedInputMethodActual,
-                    tableInput: this.columns,
-                    growth: 0,
-                    growthPeriod: 0,
-                    distributionType: 'none',
-                    description: '',
-                    constantValue: 0,
-                    //mean: '',
-                    stdDeviation: '',
-                    userSelectedParametricsStdDeviation: '',
-                    breakdownInput: [],
-                    completedWordsArray: [],
-                    subVariables: [],
-                    query: this.queryText
-                }
-
-                let body = {
-                    description: this.description,
-                    branchId: this.branchId,
-                    ownerId: this.ownerId,
-                    timeSegment: timeSegmentValues,
-                    title: this.variableName,
-                    variableType: this.variableType,
-                    valueType: this.valueType,
-                    subVariables: this.subvariableList,
-                    compositeVariables: tempCompositeVariables,
-                    compositeType: this.compositType,
-                    hasActual: this.shouldDefineActualValues,
-                    actualTimeSegment: actualTimeSegment
-                }
-
-                if (this.selectedVariable == null) {
-                    this.variableService
-                        .createVariable(body)
-                        .subscribe(response => {
-                            if (response.status == "UNPROCESSABLE_ENTITY") {
-                                this.modal.showError("Failed to create variable called \"" + this.variableName +
-                                    "\". This name is already associated with another variable in this branch");
-                            } else {
-                                this.variableService
-                                    .calculateVariableValues(this.branchId)
-                                    .subscribe(response => {
-                                        this.selectedVariable = null;
-                                        if (event.srcElement.name == "saveAndExit") {
-                                            this.onCancel();
-                                        } else {
-                                            this.refreshPage();
-                                        }
-
-                                    });
-                            }
-                        });
+            if (negative) {
+                this.modal.showError('Cannot enter negative values');
+            }
+            else {
+                if (timeSegmentValues.length != this.timeSegmentWidgets.length) {
+                    this.modal.showError(lastResult.reason.toString(), 'Incomplete definition');
                 } else {
-                    this.variableService
-                        .updateVariable(body, this.selectedVariable.id)
-                        .subscribe(response => {
-                            if (response.status == "UNPROCESSABLE_ENTITY") {
-                                this.modal.showError("Failed to update variable called \"" + this.variableName + "\". This name is already associated with another 					variable in this branch");
-                            } else {
-                                this.variableService
-                                    .calculateVariableValues(this.branchId)
-                                    .subscribe(response => {
-                                        this.selectedVariable = null;
-                                        if (event.srcElement.name == "saveAndExit") {
-                                            this.onCancel();
-                                        } else {
-                                            location.reload();
-                                        }
-                                    });
-                            }
-                        });
+
+                    let tempCompositeVariables: { id: String }[] = Array<{ id: String }>();
+                    this.compositeVariableList.forEach(variable => {
+                        if (variable.isSelected) {
+                            tempCompositeVariables.push({ id: variable.id });
+                        }
+                    });
+
+                    if (this.shouldDefineActualValues && this.selectedInputMethodActual == 'table') {
+                        if (typeof (this.startDate) != "string") {
+                            this.startDate = this.startDate.format(Config.getDateFormat());
+                        }
+
+                        if (typeof (this.endDate) != "string") {
+                            this.endDate = this.endDate.format(Config.getDateFormat());
+                        }
+                    }
+
+                    let actualTimeSegment: TimeSegment = {
+                        userSelectedParametrics: '',
+                        startTime: this.startDate,
+                        endTime: this.endDate,
+                        inputMethod: this.selectedInputMethodActual,
+                        tableInput: this.columns,
+                        growth: 0,
+                        growthPeriod: 0,
+                        distributionType: 'none',
+                        description: '',
+                        constantValue: 0,
+                        //mean: '',
+                        stdDeviation: '',
+                        userSelectedParametricsStdDeviation: '',
+                        breakdownInput: [],
+                        completedWordsArray: [],
+                        subVariables: [],
+                        query: this.queryText
+                    }
+
+                    let body = {
+                        description: this.description,
+                        branchId: this.branchId,
+                        ownerId: this.ownerId,
+                        timeSegment: timeSegmentValues,
+                        title: this.variableName,
+                        variableType: this.variableType,
+                        valueType: this.valueType,
+                        subVariables: this.subvariableList,
+                        compositeVariables: tempCompositeVariables,
+                        compositeType: this.compositType,
+                        hasActual: this.shouldDefineActualValues,
+                        actualTimeSegment: actualTimeSegment
+                    }
+
+                    if (this.selectedVariable == null) {
+                        this.variableService
+                            .createVariable(body)
+                            .subscribe(response => {
+                                if (response.status == "UNPROCESSABLE_ENTITY") {
+                                    this.modal.showError("Failed to create variable called \"" + this.variableName +
+                                        "\". This name is already associated with another variable in this branch");
+                                } else {
+                                    this.variableService
+                                        .calculateVariableValues(this.branchId)
+                                        .subscribe(response => {
+                                            this.selectedVariable = null;
+                                            if (event.srcElement.name == "saveAndExit") {
+                                                this.onCancel();
+                                            } else {
+                                                this.refreshPage();
+                                            }
+
+                                        });
+                                }
+                            });
+                    } else {
+                        this.variableService
+                            .updateVariable(body, this.selectedVariable.id)
+                            .subscribe(response => {
+                                if (response.status == "UNPROCESSABLE_ENTITY") {
+                                    this.modal.showError("Failed to update variable called \"" + this.variableName + "\". This name is already associated with another 					variable in this branch");
+                                } else {
+                                    this.variableService
+                                        .calculateVariableValues(this.branchId)
+                                        .subscribe(response => {
+                                            this.selectedVariable = null;
+                                            if (event.srcElement.name == "saveAndExit") {
+                                                this.onCancel();
+                                            } else {
+                                                location.reload();
+                                            }
+                                        });
+                                }
+                            });
+                    }
                 }
             }
         }

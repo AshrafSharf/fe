@@ -497,7 +497,7 @@ export class ForecastGraphicalComponent implements OnInit {
                             }
                         } else {
                             if (variable.variableType != 'breakdown') {
-                                var itemKey =item.title;
+                                var itemKey:String = variable.title.toString() + '_' + item.title.toString();
 
                                 if (index % 2 != 0) {
                                     // odd
@@ -515,7 +515,7 @@ export class ForecastGraphicalComponent implements OnInit {
                                             values: dataValues,
                                             key: itemKey,
                                             classed: 'dashed',
-                                            color: color
+                                            color: color,
                                         });
                                     }
                                 }
@@ -576,36 +576,37 @@ export class ForecastGraphicalComponent implements OnInit {
                 });
                 this.options = {
                     chart: {
-                    type: 'lineChart',
-                    height: 450,
-                    x: (d) => { return d.x; },
-                    y: function(d){ return d.y; },
-                    useInteractiveGuideline: true,
-                    interactiveLayer: {
-                        tooltip: {
-                            valueFormatter:(d, i) => {
-                                return d3.format(com+".0"+dec+"f")(d);
-                        }
-                    }
-                    },
-                    xAxis: {
-                        axisLabel: '',
-                        tickFormat: (d) => {
-                            let pair = this.lineChartLabels[d];
-                            if (pair == undefined) return '';
-                            return pair.value;
-                        }
-                    },
-                    yAxis: {
-                        axisLabel: '',
-                        tickFormat: function(d) {
-                            return Utils.formatNumber(d);
-                            // return d3.format(com+".0"+dec+"f")(d);
+                        type: 'lineChart',
+                        height: 450,
+                        x: (d) => { return d.x; },
+                        y: function(d){ return d.y; },
+                        useInteractiveGuideline: true,
+                        interactiveLayer: {
+                            tooltip: {
+                                    valueFormatter:(d, i) => {
+                                    return d3.format(com+".0"+dec+"f")(d);
+                                }
+                            }
                         },
-                        axisLabelDistance: -10
-                    },
-                    yDomain: [minValue, maxValue],
-                    showLegend: true,
+                        xAxis: {
+                            axisLabel: '',
+                            tickFormat: (d) => {
+                                let pair = this.lineChartLabels[d];
+                                if (pair == undefined) return '';
+                                return pair.value;
+                            }
+                        },
+                        yAxis: {
+                            axisLabel: '',
+                            tickFormat: function(d) {
+                                return Utils.formatNumber(d);
+                                // return d3.format(com+".0"+dec+"f")(d);
+                            },
+                            axisLabelDistance: -10
+                        },
+                        yDomain: [minValue, maxValue],
+                        showLegend: true,
+                        clipEdge: false
                     },
                 };
             });

@@ -187,6 +187,10 @@ export class ForecastTabularComponent implements OnInit {
                 dates.push(timeSegment.startTime);
             }
 
+            if (variable.hasActual) {
+                dates.push(variable.actualTimeSegment.startTime);
+            }
+
             // sort the date
             dates.sort();
 

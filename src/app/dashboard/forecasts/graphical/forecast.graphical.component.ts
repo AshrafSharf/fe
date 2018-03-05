@@ -54,6 +54,8 @@ export class ForecastGraphicalComponent implements OnInit {
     data;
     options;
 
+    minStartDate: Moment = unix(new Date().getTime() / 1000);
+
     constructor(
         private router: Router,
         private branchService:BranchService,
@@ -72,6 +74,48 @@ export class ForecastGraphicalComponent implements OnInit {
         let currentDate = new Date();
         this.startDate = unix(currentDate.getTime() / 1000).subtract(6, 'months');
         this.endDate = unix(currentDate.getTime() / 1000).add(12, 'months');
+    }
+
+    /** 
+    Find the minium start date. Iterate over all the timesegments and find the smallest date
+    */
+    findMinimumStartDate() {
+        // reset the minimum start date
+        this.minStartDate = unix(new Date().getTime() / 1000);
+
+        // get the lowest possible start date
+        for (var index = 0; index < this.variables.length; index++) {
+            let variable = this.variables[index];
+            let dates = [];
+            for (var resultIndex = 0; resultIndex < variable.timeSegment.length; resultIndex++) {
+                let timeSegment = variable.timeSegment[resultIndex];
+                dates.push(timeSegment.startTime);
+            }
+
+            if (variable.hasActual) {
+                dates.push(variable.actualTimeSegment.startTime);
+            }
+
+            // sort the date
+            dates.sort();
+
+            if (dates.length > 0) {
+                let components = dates[0].split('-');
+                let month = components[0];
+                let year = components[1];
+
+                let date = new Date(`${month}/01/${year}`);
+                let moment = unix(date.getTime() / 1000);
+                if (moment.isBefore(this.minStartDate)) {
+                    this.minStartDate = moment;
+                }
+            }
+        }
+
+        // if the min start date is > start date 
+        // if (this.minStartDate.isAfter(this.startDate)) {
+        //     this.startDate = this.minStartDate;
+        // }
     }
 
     toggleBreakdownVariables(event) {
@@ -262,7 +306,9 @@ export class ForecastGraphicalComponent implements OnInit {
                 .getVariables(id)
                 .subscribe(result => {
                     if (result.status == "OK") {
-                        this.reloadGraph();
+                        this.variables = result.data as Array<Variable>;
+                        this.findMinimumStartDate();
+                        this.processVariableData();
                     }
                 });
         }
@@ -566,16 +612,23 @@ export class ForecastGraphicalComponent implements OnInit {
     }
 
     reloadGraph() {
-        this.variableService
-            .getCalculationsFor(
-                this.currentBranch,
-                this.startDate.format(Config.getDateFormat()),
-                this.endDate.format(Config.getDateFormat()))
-            .subscribe(result => {
-                console.log(result);
-                this.variables = result.data as Array<Variable>;
-                this.processVariableData();
-            });
+        if (this.startDate.isBefore(this.minStartDate)) {
+            this.modal.showError('Start date can not be less than ' + this.minStartDate.format("MM-YYYY") + '. Please select correct start date.')
+        } else if (this.endDate.isBefore(this.startDate)) {
+            this.modal.showError("End date can not be less than start date. Please correct end date.");
+        } else {
+            this.variableService
+                .getCalculationsFor(
+                    this.currentBranch,
+                    this.startDate.format(Config.getDateFormat()),
+                    this.endDate.format(Config.getDateFormat()))
+                .subscribe(result => {
+                    console.log(result);
+                    this.variables = result.data as Array<Variable>;
+                    //this.processVariableData();
+                    setTimeout(() => {this.renderChart();}, 100);
+                });
+        }
     }
 
 }

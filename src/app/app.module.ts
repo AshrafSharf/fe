@@ -58,6 +58,8 @@ import { VariableDiscreteRandomComponent } from './dashboard/variables/discrete-
 import { VariableTypeComponent } from './dashboard/variable-type/variable.type.component';
 import { SettingsComponent } from './dashboard/settings/settings.component';
 import { SettingsService } from './services/settings.service';
+import { LoaderService } from './services/loader.service';
+import { LoaderComponent } from './shared/loader/loader.component';
 
 
 @NgModule({
@@ -96,7 +98,8 @@ import { SettingsService } from './services/settings.service';
     AutocompleteInputComponent,
     CompletedWordComponent,
 
-    SettingsComponent
+    SettingsComponent,
+    LoaderComponent
   ],
   imports: [
     ChartsModule,
@@ -123,7 +126,8 @@ import { SettingsService } from './services/settings.service';
     AppVariableService,
     AppVariableTypeService,
     D3Service,
-    SettingsService
+    SettingsService,
+    LoaderService
   ],
   bootstrap: [AppComponent]
 })

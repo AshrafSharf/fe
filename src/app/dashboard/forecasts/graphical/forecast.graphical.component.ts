@@ -80,6 +80,7 @@ export class ForecastGraphicalComponent implements OnInit {
         for (var index = 0; index < this.variables.length; index++) {
             let variable = this.variables[index];
             if (this.shouldSkipVariable(variable) == true) {
+                this.exludedVariables.push(variable.id);
                 continue;
             }
 
@@ -428,13 +429,26 @@ export class ForecastGraphicalComponent implements OnInit {
 
 
                         if (index == 0) {
-                            var itemKey = (item.title == "-total") ? variable.title +"" + item.title : item.title;
-                            console.log(itemKey);
-                            this.lineChartData.push({
-                                values: dataValues,
-                                key: itemKey,
-                                color: color
-                            });
+                            if (variable.variableType == 'breakdown') {
+                                if (this.breakdownVariables) {
+                                    var itemKey = (item.title == "-total") ? variable.title +"" + item.title : item.title;
+                                    console.log(itemKey);
+                                    this.lineChartData.push({
+                                        values: dataValues,
+                                        key: itemKey,
+                                        color: color
+                                    });
+                                }
+                            }
+                            else {
+                                var itemKey = (item.title == "-total") ? variable.title +"" + item.title : item.title;
+                                console.log(itemKey);
+                                this.lineChartData.push({
+                                    values: dataValues,
+                                    key: itemKey,
+                                    color: color
+                                });
+                            }
                         } else {
                             if (variable.variableType != 'breakdown') {
                                 var itemKey =item.title;
@@ -482,6 +496,7 @@ export class ForecastGraphicalComponent implements OnInit {
 
 
                             } else {
+                                if (this.breakdownVariables == false) continue;
                                 if (this.breakdownLines == false) continue;
 
                                 color = Utils.getShadeOfColor(color, 0.5);

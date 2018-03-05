@@ -150,6 +150,7 @@ export class VariablesComponent implements OnInit {
             console.log('adding');
 
             if (this.variableType == 'breakdown') {
+                this.valueType = 'real';
                 // add new
                 for (var index = 0; index < this.subvariableList.length; index++) {
                     if (this.subvariableList[index].name == this.subvariableName) {
@@ -158,7 +159,6 @@ export class VariablesComponent implements OnInit {
                     }
                 }
             }
-            
 
             this.subvariableList.push({
                 name: this.subvariableName,
@@ -359,7 +359,7 @@ export class VariablesComponent implements OnInit {
 
     fillMissingDates(keys) {
         let missing = false;
-        // fill the gap 
+        // fill the gap
         for (var index = 0; index < keys.length; index++) {
             //console.log(this.keys[index]);
             if (index + 1 < keys.length) {
@@ -524,7 +524,7 @@ export class VariablesComponent implements OnInit {
                         let element = variable.timeSegment[timeSegmentIndex];
                         if (element.startTime == date) {
                             var keyFound = false;
-    
+
                             var value:String = '';
                             for (var index = 0; index < element.subVariables.length; index++) {
                                 let item = element.subVariables[index];
@@ -534,12 +534,12 @@ export class VariablesComponent implements OnInit {
                                     break;
                                 }
                             }
-        
+
                             if (!keyFound) {
                                 value = '0';
                             }
-        
-                           
+
+
                             dataValues.push({ x: dateIndex, y: value })
 
                             dateFound = true;
@@ -552,7 +552,7 @@ export class VariablesComponent implements OnInit {
                         dataValues.push({ x: dateIndex, y: lastValues })
                     }
                     dateIndex += 1;
-                    
+
                 });
 
                 tempLineChartData.push({
@@ -609,13 +609,13 @@ export class VariablesComponent implements OnInit {
                                 // odd
                                 color = Utils.getShadeOfColor(color, 0.5);
                             }
-                            
+
                             var itemKey =item.title;
                              //add total title to the sigma of the base line
                             if (item.calculationType == "GAUSSIAN_CALCULATION" && variable.compositeType == "breakdown"){
                                 itemKey = item.title + "."+ "total";
                             }
-     
+
                             tempLineChartData.push({
                                 values: dataValues,
                                 key: itemKey,
@@ -792,7 +792,7 @@ export class VariablesComponent implements OnInit {
                 else {
                     finalValue = parseFloat(value.toPrecision(decimalSize));
                 }
-                
+
                 if (this.variableType == 'discrete') {
                     finalPercentage += parseFloat(variable.probability.toString());
                 }

@@ -234,7 +234,9 @@ export class ForecastTabularComponent implements OnInit {
 
     resetDates() {
         let currentDate = new Date();
-        this.startDate = this.minStartDate;// unix(currentDate.getTime() / 1000).subtract(6, 'months');
+        if (this.minStartDate.isBefore(currentDate)) {
+            this.startDate = this.minStartDate;
+        }
         this.endDate = unix(currentDate.getTime() / 1000).add(12, 'months');
     }
 

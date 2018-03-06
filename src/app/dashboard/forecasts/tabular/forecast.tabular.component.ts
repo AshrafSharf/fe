@@ -207,15 +207,15 @@ export class ForecastTabularComponent implements OnInit {
             }
         }
 
-        // // if the min start date is > start date 
+        // if the min start date is > start date 
         // if (this.minStartDate.isAfter(this.startDate)) {
-        //     this.startDate = this.minStartDate;
+        this.startDate = this.minStartDate;
         // }
     }
 
     resetDates() {
         let currentDate = new Date();
-        this.startDate = unix(currentDate.getTime() / 1000).subtract(6, 'months');
+        this.startDate = this.minStartDate;// unix(currentDate.getTime() / 1000).subtract(6, 'months');
         this.endDate = unix(currentDate.getTime() / 1000).add(12, 'months');
     }
 

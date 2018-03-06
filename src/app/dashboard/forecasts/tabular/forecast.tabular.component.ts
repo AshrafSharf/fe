@@ -76,7 +76,7 @@ export class ForecastTabularComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.resetDates();
+        this.initDates();
         this.reloadProjects();
     }
 
@@ -163,8 +163,8 @@ export class ForecastTabularComponent implements OnInit {
                             this.originalVariables.push(variable);
                         });
 
+                        this.initDates();
                         this.findMinimumStartDate();
-
                         this.processVarables();
                     }
                 });
@@ -192,7 +192,23 @@ export class ForecastTabularComponent implements OnInit {
             }
 
             // sort the date
-            dates.sort();
+            dates.sort(function(d1, d2) {
+                let values1 = d1.split('-');
+                let date1 = new Date(`${values1[0]}/01/${values1[1]}`);
+                let m1 = unix(date1.getTime() / 1000);
+
+                let values2 = d2.split('-');
+                let date2 = new Date(`${values2[0]}/01/${values2[1]}`);
+                let m2 = unix(date2.getTime() / 1000);
+
+                if (m1.isAfter(m2)) {
+                    return 1;
+                } else if (m2.isAfter(m1)) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            });
 
             if (dates.length > 0) {
                 let components = dates[0].split('-');
@@ -207,15 +223,32 @@ export class ForecastTabularComponent implements OnInit {
             }
         }
 
-        // // if the min start date is > start date 
-        // if (this.minStartDate.isAfter(this.startDate)) {
-        //     this.startDate = this.minStartDate;
-        // }
+        
+        // check if the minimum date is before 6 months
+        let currentDate = new Date();
+        let date = unix(currentDate.getTime() / 1000).subtract(6, 'months');
+        if (this.minStartDate.isBefore(date)) {
+            this.startDate = date;
+        } else {
+            this.startDate = this.minStartDate;
+        }
+    }
+
+    initDates() {
+        let currentDate = new Date();
+        this.minStartDate = unix(currentDate.getTime() / 1000);
+        this.startDate = this.minStartDate;
+        this.endDate = unix(currentDate.getTime() / 1000).add(12, 'months');
     }
 
     resetDates() {
         let currentDate = new Date();
-        this.startDate = unix(currentDate.getTime() / 1000).subtract(6, 'months');
+        let date = unix(currentDate.getTime() / 1000).subtract(6, 'months');
+        if (this.minStartDate.isBefore(date)) {
+            this.startDate = date;
+        } else {
+            this.startDate = this.minStartDate;
+        }
         this.endDate = unix(currentDate.getTime() / 1000).add(12, 'months');
     }
 

@@ -66,13 +66,23 @@ export class ForecastGraphicalComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.resetDates();
+        this.initDates();
         this.reloadProjects();
+    }
+
+    initDates() {
+        let currentDate = new Date();
+        this.minStartDate = unix(currentDate.getTime() / 1000);
+        this.startDate = this.minStartDate;
+        this.endDate = unix(currentDate.getTime() / 1000).add(12, 'months');
     }
 
     resetDates() {
         let currentDate = new Date();
-        if (this.minStartDate.isBefore(currentDate)) {
+        let date = unix(currentDate.getTime() / 1000).subtract(6, 'months');
+        if (this.minStartDate.isBefore(date)) {
+            this.startDate = date;
+        } else {
             this.startDate = this.minStartDate;
         }
         this.endDate = unix(currentDate.getTime() / 1000).add(12, 'months');
@@ -135,6 +145,8 @@ export class ForecastGraphicalComponent implements OnInit {
         let date = unix(currentDate.getTime() / 1000).subtract(6, 'months');
         if (this.minStartDate.isBefore(date)) {
             this.startDate = date;
+        } else {
+            this.startDate = this.minStartDate;
         }
     }
 
@@ -326,6 +338,7 @@ export class ForecastGraphicalComponent implements OnInit {
                 .subscribe(result => {
                     if (result.status == "OK") {
                         this.variables = result.data as Array<Variable>;
+                        this.initDates();
                         this.findMinimumStartDate();
                         this.processVariableData();
                     }

@@ -76,7 +76,7 @@ export class ForecastTabularComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.resetDates();
+        this.initDates();
         this.reloadProjects();
     }
 
@@ -163,8 +163,8 @@ export class ForecastTabularComponent implements OnInit {
                             this.originalVariables.push(variable);
                         });
 
+                        this.initDates();
                         this.findMinimumStartDate();
-
                         this.processVarables();
                     }
                 });
@@ -229,12 +229,24 @@ export class ForecastTabularComponent implements OnInit {
         let date = unix(currentDate.getTime() / 1000).subtract(6, 'months');
         if (this.minStartDate.isBefore(date)) {
             this.startDate = date;
+        } else {
+            this.startDate = this.minStartDate;
         }
+    }
+
+    initDates() {
+        let currentDate = new Date();
+        this.minStartDate = unix(currentDate.getTime() / 1000);
+        this.startDate = this.minStartDate;
+        this.endDate = unix(currentDate.getTime() / 1000).add(12, 'months');
     }
 
     resetDates() {
         let currentDate = new Date();
-        if (this.minStartDate.isBefore(currentDate)) {
+        let date = unix(currentDate.getTime() / 1000).subtract(6, 'months');
+        if (this.minStartDate.isBefore(date)) {
+            this.startDate = date;
+        } else {
             this.startDate = this.minStartDate;
         }
         this.endDate = unix(currentDate.getTime() / 1000).add(12, 'months');

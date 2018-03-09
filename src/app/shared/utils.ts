@@ -7,7 +7,7 @@ import { Moment, unix } from 'moment';
 export class Utils {
 
     // base url
-    static baseUrl:String = environment.apiUrl;
+    static baseUrl:String = "http://localhost:8443";
     static routeProject:String = "project";
     static routeBranch:String = "branch";
     static routeVariable:String = "variable";
@@ -89,11 +89,11 @@ export class Utils {
 
     public static getRequestOptions() : RequestOptions {
         let header = new Headers({
-            'Content-Type':'application/json', 
-            'Authorization': Utils.getToken()
+            'Content-Type':'application/json' 
+            //'Authorization': Utils.getToken()
         });
         
-        return new RequestOptions( {headers:header} );
+        return new RequestOptions( {headers:header, withCredentials:true} );
     }
 
     public static getUserName() {

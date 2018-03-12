@@ -42,10 +42,12 @@ export class BranchListComponent implements OnInit {
 
     ngOnInit() {
         this.route.queryParams.subscribe(params => {
-            this.selectedProjectId = params['projectId'];
+           // this.selectedProjectId = params['projectId'];
 
             if (this.selectedProjectId == undefined) {
-                this.selectedProjectId = Utils.getLastSelectedProject();
+                   if (Utils.getLastSelectedProject()!="null"){
+                    this.selectedProjectId = Utils.getLastSelectedProject();
+                   }
             }
         });
         this.reloadProjects();
@@ -63,7 +65,7 @@ export class BranchListComponent implements OnInit {
                     this.projects = result.data;
                     if (this.selectedProjectId != null) {
                         this.selectedProject = this.selectedProjectId;
-                        console.log("projectId: " + this.selectedProject);
+                        console.log("projectId: " + this.selectedProjectId);
                     } else {
                         if (this.projects.length > 0) {
                             this.selectedProject = this.projects[0].id.toString();

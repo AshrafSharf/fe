@@ -269,7 +269,7 @@ export class ForecastGraphicalComponent implements OnInit {
     reloadBranches(projectId:String = null) {
         var id = projectId;
         if (projectId == null) {
-            if (Utils.getLastSelectedProject() != undefined) {
+            if (Utils.getLastSelectedProject() != undefined && Utils.getLastSelectedProject()!="null") {
                 id = Utils.getLastSelectedProject();
             } else if (this.projects.length > 0) {
                 id = this.projects[0].id;
@@ -319,7 +319,9 @@ export class ForecastGraphicalComponent implements OnInit {
                 let bId = Utils.getLastSelectedBranch();
                 let ids = bId.split('-');
                 if (this.currentProject == ids[0]) {
-                    id = ids[1];
+                    if (ids[1] != "null"){
+                        id = ids[1];
+                    }
                 } else {
                     if (this.branches.length > 0) {
                         id = this.branches[0].id;

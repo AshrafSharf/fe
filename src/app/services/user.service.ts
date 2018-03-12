@@ -41,14 +41,14 @@ export class UserService implements CanActivate {
         let body = { userName: username, password: password };
 
         let header = new Headers({'Content-Type':'application/json'});
-        let requestOptions = new RequestOptions( {headers:header} );
+        let requestOptions = new RequestOptions( {headers:header, withCredentials: true} );
 
         return this.http
                 .post(url, body, requestOptions)
                 .map(result => {
+                    console.log (result);
                     this.loaderService.hide();
-                    sessionStorage["authorization_token"] = result.headers.get('authorization');
-                    return { status: "OK"};
+                    return result.json();
                 })
                 .catch((error: any) => {
                     this.loaderService.hide();

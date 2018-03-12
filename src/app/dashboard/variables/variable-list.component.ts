@@ -43,11 +43,13 @@ export class VariableListComponent implements OnInit {
 
     ngOnInit() {
         this.route.queryParams.subscribe(params => {
-            this.selectedProjectId = params['projectId'];
-            this.selectedBranchId = params['branchId'];
+            //this.selectedProjectId = params['projectId'];
+            //this.selectedBranchId = params['branchId'];
 
             if (this.selectedProjectId == undefined) {
-                this.selectedProjectId = Utils.getLastSelectedProject();
+                if(Utils.getLastSelectedProject()!="null"){
+                    this.selectedProjectId = Utils.getLastSelectedProject();
+                }
             }
 
             if (this.selectedBranchId == undefined) {
@@ -55,7 +57,9 @@ export class VariableListComponent implements OnInit {
                 if (id != undefined) {
                     let ids = id.split('-');
                     if (this.selectedProjectId == ids[0]) {
-                        this.selectedBranchId = ids[1];
+                        if(ids[1] !="null"){
+                            this.selectedBranchId = ids[1];
+                        }
                     }
                 }
             }
@@ -63,6 +67,8 @@ export class VariableListComponent implements OnInit {
             this.reloadProjects(false);
         });
 
+        console.log("Last project id: ", Utils.getLastSelectedProject());
+        console.log("Last project id: ", Utils.getLastSelectedBranch());
         this.columns = new Array<TableViewHeader>();
         this.columns.push(new TableViewHeader("name", "Variable Name", "col-md-3", "", ""));
         this.columns.push(new TableViewHeader("owner", "Owner", "col-md-2", "", ""));
@@ -173,10 +179,9 @@ export class VariableListComponent implements OnInit {
                         if (this.selectedBranchId != null) {
                             this.selectedBranch = this.selectedBranchId;
                         } else if (this.branches.length > 0) {
-                            this.selectedBranch = this.branches[0].id;
+                            this.selectedBranch = this.branches[0].id; 
                         }
                     }
-
                     this.reloadVariables();
                 });
         }

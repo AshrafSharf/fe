@@ -29,12 +29,15 @@ export class LoginComponent implements OnInit {
             this.ueserService
                 .authenticateUser(this.userName, this.password)
                 .subscribe(result => {
+                    sessionStorage['last_project_id'] = result.data.projectId;
+                    sessionStorage['last_branch_id'] = result.data.projectId + "-" + result.data.branchId;
                     this.ueserService
                         .getUserByName(this.userName)
                         .subscribe(result => {
                             sessionStorage["user_id"] = result.data.id;
                             sessionStorage["user_name"] = result.data.userName;
                             sessionStorage["user_auth_status"] = "1";
+                            
                             this.router.navigate(['home']);
                         });
                 }, 

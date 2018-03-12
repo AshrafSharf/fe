@@ -7,7 +7,7 @@ import { Moment, unix } from 'moment';
 export class Utils {
 
     // base url
-    static baseUrl:String = "http://ec2-52-213-139-255.eu-west-1.compute.amazonaws.com:8443";
+    static baseUrl:String = environment.apiUrl;
     static routeProject:String = "project";
     static routeBranch:String = "branch";
     static routeVariable:String = "variable";

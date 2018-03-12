@@ -4,6 +4,45 @@
     </div>
 
     <div class="row">
-      Coming Soon
+        <div class="col-md-2">
+
+            <div class="row">
+                <h4>Component Template</h4>
+
+                <div class="row">
+                    <button class="button_shape" (click)="addStatic()">Static</button>
+                    <button class="button_shape" (click)="addSingleInterface()">Single Interface</button>
+                    <button class="button_shape" (click)="addGenericMicroService()">Generic Micro Service</button>
+                    <button class="button_shape" (click)="addJavaMicroService()">Java Micro Service</button>
+                </div>
+            </div>
+
+            <div class="row">
+                <h4>Drawing</h4>
+
+                <div class="row">
+                    <button class="button_shape" (click)="addCircle()">Circle</button>
+                    <button class="button_shape" (click)="addDiamond()">Diamond</button>
+                    <button class="button_shape" (click)="addTriangle()">Triangle</button>
+                    <button class="button_shape" (click)="addSquare()">Square</button>
+                    <button class="button_shape" (click)="addLabel()">Label</button>                    
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8 box">
+            <ko-stage [config]="configStage">
+                <ko-layer>
+                    
+                </ko-layer>
+            </ko-stage>
+        </div>
+        
+        <div class="col-md-2">
+            <div class="box" style="padding: 15px;">
+                <h4>Properties</h4>
+            </div>
+        </div>
+
     </div>
 </div>

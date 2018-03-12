@@ -60,6 +60,7 @@ import { SettingsComponent } from './dashboard/settings/settings.component';
 import { SettingsService } from './services/settings.service';
 import { LoaderService } from './services/loader.service';
 import { LoaderComponent } from './shared/loader/loader.component';
+import { KonvaModule } from 'ng2-konva';
 
 
 @NgModule({
@@ -115,7 +116,8 @@ import { LoaderComponent } from './shared/loader/loader.component';
     DpDatePickerModule,
     RouterModule.forRoot(routes),
     NvD3Module,
-    ShContextMenuModule
+    ShContextMenuModule,
+    KonvaModule
   ],
   providers: [
     {provide: LocationStrategy, useClass: HashLocationStrategy},

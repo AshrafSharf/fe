@@ -30,7 +30,7 @@
             </div>
         </div>
 
-        <div class="col-md-8 box">
+        <div class="col-md-7 box">
             <ko-stage [config]="configStage">
                 <ko-layer>
                     
@@ -38,9 +38,76 @@
             </ko-stage>
         </div>
         
-        <div class="col-md-2">
-            <div class="box" style="padding: 15px;">
-                <h4>Properties</h4>
+        <div class="col-md-3">
+            <div style="padding: 5px;" *ngIf="selectedTemplate != null">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Properties</div>
+                    <div class="panel-body">
+
+                        <div class="row component_property">
+                            <div class="col-md-3">Template:</div>
+                            <div class="col-md-9">Generic Template</div>
+                        </div>
+                        
+                        <div class="row component_property">
+                            <div class="col-md-3">Name:</div>
+                            <div class="col-md-9"><input type="text" class="component_name" [(ngModel)]="selectedTemplate.name" ></div>
+                        </div>
+        
+                        <div class="row" style="margin: 10px;">
+                            <button class="btn btn-success" (click)="addInterface()" >Add Interface</button>
+                        </div>
+
+                        <div class="panel panel-default" style="margin-top:10px" *ngFor="let intf of selectedTemplate.interfaces">
+                            <div class="panel-heading">
+                                {{intf.name}}
+                                <fa name="times" (click)="onDelete()" class="link pull-right"></fa>
+
+                            </div>
+                            <div class="panel-body">
+
+                                <div style="padding: 10px;">
+                                    <div class="row">
+                                        <h4>Properties</h4>
+
+                                        <div class="row component_property">
+                                            <div class="col-md-3">Name:</div>
+                                            <div class="col-md-9"><input type="text" [(ngModel)]="intf.name" class="component_name" ></div>
+                                        </div> 
+
+                                        <div class="row component_property">
+                                            <div class="col-md-3">Latency:</div>
+                                            <div class="col-md-9"><input type="text" [(ngModel)]="intf.latency" class="component_name" ></div>
+                                        </div> 
+
+                                        <div class="row component_property" *ngFor="let prop of intf.properties">
+                                            <div class="col-md-3">{{prop.name}}:</div>
+                                            <div class="col-md-9"><input type="text" [(ngModel)]="prop.value" class="component_name" ></div>
+                                        </div> 
+                                    </div>
+
+                                    <div class="row" style="margin-top:10px">
+                                        <h4>Downstream Interfaces</h4>
+                                        <div class="row component_property" *ngFor="let compIntf of intf.downstreamInterfaces">
+                                            <div class="col-md-3">{{compIntf.component}}</div>
+                                            <div class="col-md-9"><input type="text" [(ngModel)]="compIntf.connectedInterface" class="component_name" readonly></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="panel-footer">
+                        <button class="btn btn-success" (click)="savePropertyChanges()">Save</button>
+                        <button class="btn btn-danger" (click)="cancelPropertyChanges()">Cancel</button>
+                        <button class="btn btn-danger" (click)="deleteShape()">Delete</button>
+                    </div>
+                </div>
+                
+                
+                
             </div>
         </div>
 

@@ -6,6 +6,7 @@ import { StageComponent } from 'ng2-konva';
 import { Layer, Stage, Node, Shape, Rect, Transform, Circle, Star, RegularPolygon, Label, Tag, Text, Group } from 'konva';
 import { GenericMicroServiceTemplate } from './models/generic.micro.service.template';
 import { Template, TemplateEventsCallback, TemplateInterface } from './models/templates';
+import { ActivatedRoute, Router } from "@angular/router";
 
 @Component({
     selector: 'component-model',
@@ -30,7 +31,10 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
 
     private fontSize = 15;
 
-    constructor() { }
+    constructor(
+        private route: ActivatedRoute,
+        private router: Router
+    ) { }
 
     ngOnInit() { 
     }
@@ -331,5 +335,9 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
             }
             
         }
+    }
+
+    public onVerify(){
+        this.router.navigate(["home/verify-model"]);
     }
 }

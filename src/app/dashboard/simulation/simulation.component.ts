@@ -7,6 +7,8 @@ import { BranchService } from '../../services/branch.service';
 import { MatchTableComponenet } from './match-table.component';
 import { Modal } from 'ngx-modialog/plugins/bootstrap';
 import { CptLoad } from '../../shared/modelling/cpt-load';
+import { ActivatedRoute, Router } from "@angular/router";
+import {Location} from "@angular/common";
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Layer, Stage, Node, Shape, Rect, Transform, Circle, Star, RegularPolygon, Label, Tag, Text, Group, Arrow  } from 'konva';
@@ -15,6 +17,8 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import { Moment } from 'moment';
 import { AppVariableService } from '../../services/variable.services';
+import { GenericMicroServiceTemplate } from '../component-model/models/generic.micro.service.template';
+import { TemplateInterface } from '../component-model/models/templates';
 
 
 @Component({
@@ -52,8 +56,11 @@ export class SimulationComponent implements OnInit, AfterViewInit {
 
     constructor(
         private branchService:BranchService,
-        public modal:Modal,
-        public variableService:AppVariableService) {
+        private modal:Modal,
+        private variableService:AppVariableService,
+        private route:ActivatedRoute,
+        private router:Router,
+        private location: Location) {
 
     }
 
@@ -145,7 +152,6 @@ export class SimulationComponent implements OnInit, AfterViewInit {
      * Import the values of forecast variables of a branch on a particular date
     */
     onImportForecastVariables(){
-        //TODO: Use new API to get the values of forecast variables for a specific date
         this.forecastBranchId = this.selectedForecastBranch;
     }
 
@@ -195,71 +201,14 @@ export class SimulationComponent implements OnInit, AfterViewInit {
         }
     }
 
-
-    public addMicroService(name:string, positionX:number, positionY:number) {
-        var st:Stage = this.stage.getStage();
-        var layer:Layer = st.getChildren()[0];
-            
-        let group = new Group({
-            x : positionX,
-            y : positionY
-        });
-            
-        let rect = new Rect({
-             x : 0,
-            y : 0,
-            width : 100,
-            height : 150,
-            fill : 'green',
-            stroke : 'black'
-        });
-            
-        let label = new Text({
-            x : 10,
-            y : 10,
-            text:name,
-            fontSize: this.fontSize,
-            fill: 'white'
-        });
-            
-        group.add(rect);
-        group.add(label);
-        layer.add(group);
-        layer.draw();
+    public addGenericMicroService(name:string) {
+        let t = new GenericMicroServiceTemplate(this);
+        //this.templates.push(t);
+        t.name = name;
+        this.addGroup(t.createUI());
+        return t;
     }
 
-
-    public addMicroServiceInterface(name:string, positionX:number, positionY:number) {
-        var st:Stage = this.stage.getStage();
-        var layer:Layer = st.getChildren()[0];
-            
-        let group = new Group({
-            x : positionX,
-            y : positionY
-        });
-            
-        let rect = new Rect({
-             x : 0,
-            y : 0,
-            width : 80,
-            height : 50,
-            fill : 'white',
-            stroke : 'black'
-        });
-            
-        let label = new Text({
-            x : 10,
-            y : 10,
-            text:name,
-            fontSize: this.fontSize,
-            fill: 'black'
-        });
-            
-        group.add(rect);
-        group.add(label);
-        layer.add(group);
-        layer.draw();
-    }
 
     drawArrow(name:string, positionX:number, positionY:number, endX, endY){
         var st:Stage = this.stage.getStage();
@@ -286,15 +235,46 @@ export class SimulationComponent implements OnInit, AfterViewInit {
         layer.add(group);
         layer.draw();
     }
+    public addInterface(temp:GenericMicroServiceTemplate, name:string) {
+            let intf = new TemplateInterface();
+            intf.name = name;
+            temp.interfaces.push(intf);
+    }
 
+    private addGroup(group) {
+        var st:Stage = this.stage.getStage();
+        var layer:Layer = st.getChildren()[0];
+
+        layer.add(group);
+        layer.draw();
+    }
+
+    private reloadTemplateUI(template) {
+        var st:Stage = this.stage.getStage();
+        var layer:Layer = st.getChildren()[0];
+
+        template.uiGroup.remove();
+        layer.add(template.reloadUI());
+        layer.draw();
+    }
     drawModel(){
-        this.addMicroService("Comp1", 100,100); 
-        this.addMicroService("Comp2", 300,100);  
-        this.addMicroService("Comp3", 300,300);
-        this.addMicroServiceInterface("Comp1If1", 110,150);   
-        this.addMicroServiceInterface("Comp2If1", 310,150);
-        this.addMicroServiceInterface("Comp3If1", 310,350);  
-        this.drawArrow("0.5", 185,180, 130, 0 );    
-        this.drawArrow("", 185,180, 130, 200 );      
+        let comp1 = this.addGenericMicroService("Comp1");
+        this.addInterface(comp1, "Comp1If1");
+        this.reloadTemplateUI(comp1);
+
+        let comp2 = this.addGenericMicroService("Comp2");
+        this.addInterface(comp2, "Comp2If1");
+        this.reloadTemplateUI(comp2);
+
+        let comp3 = this.addGenericMicroService("Comp3");
+        this.addInterface(comp3, "Comp3If1");
+        this.reloadTemplateUI(comp3);
+        
+    }
+
+
+
+    onEdit(){
+       this.location.back();
     }
 }

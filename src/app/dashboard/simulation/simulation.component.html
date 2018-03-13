@@ -4,17 +4,10 @@
     </div>
     <div class="row">
             <div class="col-md-3">
-                <div class="form-group">
-                    <select class="app-select">
-                        <option  >  </option>
-                    </select>
-                    <select  class="app-select" >
-                        <option  > </option>
-                    </select>
-                </div>
+               
             </div>
             <div class="col-md-7 text-right">
-                <button type="button" class="btn btn-link">Edit</button>
+                <button (click)="onEdit()" type="button" class="btn btn-link">Edit</button>
             </div>
     </div>
     <div class="row">
@@ -37,6 +30,7 @@
                         <label class="col-md-6" for="forecastDate">Date</label>
                         <dp-date-picker
                         id="forecastDate"
+                        [(ngModel)]="selectedDate"
                         class="col-md-6"
                         [config]="datePickerConfig"
                         mode="month"

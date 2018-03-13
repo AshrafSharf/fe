@@ -1,0 +1,19 @@
+.button_shape,
+.button_shape:focus {
+    display: block;
+    border: solid 1px black;
+    text-align: left;
+    width: 80%;
+}
+
+.box {
+    border: solid 1px black;
+}
+
+.component_name {
+    width: 100%;
+}
+
+.component_property {
+    margin-top: 5px;
+}

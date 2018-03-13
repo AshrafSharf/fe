@@ -38,7 +38,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AngularFontAwesomeModule } from 'angular-font-awesome/angular-font-awesome';
 import { routes } from './shared/routes';
 import {ShContextMenuModule} from 'ng2-right-click-menu';
-import { KonvaModule } from 'ng2-konva';
 
 import { AppComponent } from './app.component';
 import * as $ from 'jquery';
@@ -62,6 +61,8 @@ import { SettingsService } from './services/settings.service';
 import { LoaderService } from './services/loader.service';
 import { LoaderComponent } from './shared/loader/loader.component';
 import { MatchTableComponenet } from './dashboard/simulation/match-table.component';
+import { KonvaModule } from 'ng2-konva';
+
 
 
 @NgModule({

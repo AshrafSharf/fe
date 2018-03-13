@@ -2,8 +2,82 @@
     <div class="row">
         <app-header title="Simulation"></app-header>
     </div>
-
     <div class="row">
-      Coming Soon
+            <div class="col-md-3">
+                <div class="form-group">
+                    <select class="app-select">
+                        <option  >  </option>
+                    </select>
+                    <select  class="app-select" >
+                        <option  > </option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-7 text-right">
+                <button type="button" class="btn btn-link">Edit</button>
+            </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                 <h4>Input Variables</h4>
+                 <div>Import from forecast:</div>
+                 <div class="row">
+                     <div class="col-md-12">
+                        <label class="col-md-6" for="forecastBranch">Branch</label>
+                         <select  class="col-md-6" id="forecastBranch" [(ngModel)]="selectedForecastBranch">
+                            <option *ngFor="let branch of branches" [value]="branch.id"> {{branch.title}} </option>
+                        </select>
+                     </div>
+                
+                 </div> 
+                 <div class="row">
+                    <div class="col-md-12">
+                        <label class="col-md-6" for="forecastDate">Date</label>
+                        <dp-date-picker
+                        id="forecastDate"
+                        class="col-md-6"
+                        [config]="datePickerConfig"
+                        mode="month"
+                        [theme]="'dp-material dp-main'"></dp-date-picker>  
+                    </div>
+                 </div>
+                 <br>
+                <div class="row">
+                    <div class="col-md-12">
+                        <button (click)="onImportForecastVariables()" class="btn btn-primary">Import</button>
+                    </div>
+                </div> 
+                <hr>
+               <match-table
+               [inputVars]="inputVariables"
+               [forecastBranchId]="forecastBranchId"
+               ></match-table>
+                <hr> 
+               
+                <div class="row">
+                    <div class="col-md-12">
+                        <button (click)="onRunSimulation()" class="btn btn-success">Run Simulation</button>
+                    </div>
+                </div>        
+            </div>
+        </div>
+      </div>
+      <div class="col-md-7" id="stage-parent">
+           <ko-stage [config]="configStage">
+                <ko-layer>
+                    
+                </ko-layer>
+            </ko-stage>     
+      </div>
+        <div class="col-md-2">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h4>Output</h4>
+                        <p>{{simOutput}}</p>
+                </div>  
+            </div>  
+        </div>
     </div>
 </div>

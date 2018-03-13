@@ -72,6 +72,17 @@ export class AppVariableService {
                 });
     }
 
+    public gerVariableValuesByDate(branchId, date){
+        this.loaderService.show();
+        let url = Utils.createUrl(Utils.routeVariable) + "/" + branchId + "/" + date;
+        return this.http
+                .get(url, Utils.getRequestOptions())
+                .map(response =>{
+                    this.loaderService.hide();
+                    return response.json();
+                });
+    }
+
     public calculateVariableValues(id) {
         this.loaderService.show();
         let url = Utils.createUrl(Utils.routeVariable) + "/docalc/" + id;

@@ -1,0 +1,32 @@
+<div class="row">
+        <div class="col-md-12">
+            <div class="pre-scrollable">    
+            <table class="table table-bordered table-striped">
+                    <thead>
+                         <tr>
+                            <th>Input variable</th>
+                            <th>Match</th>
+                            <th>Override</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let inputVar of inputVariableMatchings">
+                            <td>{{inputVar.inputVariableName}}</td>
+                            <td class="text-center">
+                                <span *ngIf="inputVar.hasForecastMatch==true" class="glyphicon glyphicon-ok"></span>
+                                <button *ngIf="inputVar.hasForecastMatch==false" 
+                                        (click)="onAddForecastVariable()" 
+                                        class="btn btn-link" 
+                                        style="text-decoration:underline">?</button>
+                            </td>
+                            <td>
+                                <input type="text"  
+                                        class="form-control"
+                                        [(ngModel)]="inputVar.value">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+        </div>
+</div>   

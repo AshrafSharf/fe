@@ -89,11 +89,11 @@ export class Utils {
 
     public static getRequestOptions() : RequestOptions {
         let header = new Headers({
-            'Content-Type':'application/json', 
-            'Authorization': Utils.getToken()
+            'Content-Type':'application/json' 
+            //'Authorization': Utils.getToken()
         });
         
-        return new RequestOptions( {headers:header} );
+        return new RequestOptions( {headers:header, withCredentials:true} );
     }
 
     public static getUserName() {

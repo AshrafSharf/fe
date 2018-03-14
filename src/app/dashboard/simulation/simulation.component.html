@@ -40,7 +40,7 @@
                  <br>
                 <div class="row">
                     <div class="col-md-12">
-                        <button (click)="onImportForecastVariables()" class="btn btn-primary">Import</button>
+                        <button [disabled]="selectedDate==null" (click)="onImportForecastVariables()" class="btn btn-primary">Import</button>
                     </div>
                 </div> 
                 <hr>
@@ -59,11 +59,11 @@
         </div>
       </div>
       <div class="col-md-7" id="stage-parent">
-           <ko-stage [config]="configStage">
+        <!--   <ko-stage [config]="configStage">
                 <ko-layer>
                     
                 </ko-layer>
-            </ko-stage>     
+            </ko-stage>     -->
       </div>
         <div class="col-md-2">
             <div class="panel panel-default">

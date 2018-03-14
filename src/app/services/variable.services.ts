@@ -74,11 +74,12 @@ export class AppVariableService {
 
     public gerVariableValuesByDate(branchId, date){
         this.loaderService.show();
-        let url = Utils.createUrl(Utils.routeVariable) + "/" + branchId + "/" + date;
+        let url = Utils.createUrl(Utils.routeVariable) + "/searchbydate/" + branchId + "/" + date;
         return this.http
                 .get(url, Utils.getRequestOptions())
                 .map(response =>{
                     this.loaderService.hide();
+                    console.log(response);
                     return response.json();
                 });
     }

@@ -67,12 +67,11 @@ export class SimulationComponent implements OnInit, AfterViewInit {
     ngOnInit() { 
         //TODO: Use selected Project ID
         this.reloadBranches("5aa31b14d49fee0db47f67c3");
-        this.forecastBranchId="5aa31b14d49fee0db47f67c4";
         this.setupEnvironment();
     }
 
     ngAfterViewInit(){
-        this.drawModel();
+      //  this.drawModel();
     }
 
     /** 
@@ -153,6 +152,10 @@ export class SimulationComponent implements OnInit, AfterViewInit {
     */
     onImportForecastVariables(){
         this.forecastBranchId = this.selectedForecastBranch;
+        console.log(this.selectedDate);
+        let date:string = this.selectedDate.format("MM-YYYY");
+        console.log(date);
+        this.matchTable.getForecastVariables(this.forecastBranchId, date);
     }
 
     /**
@@ -160,10 +163,10 @@ export class SimulationComponent implements OnInit, AfterViewInit {
      */
     onRunSimulation(){
         this.resetEnvironment();
-        for (let index = 0; index < this.matchTable.inputVariableMatchings.length; index ++){
+        for (let inputVar of this.matchTable.inputVariableMatchings){
             //show warning if no value defined for an input variable
-            if (this.matchTable.inputVariableMatchings[index].hasForecastMatch == false
-            && this.matchTable.inputVariableMatchings[index].value == ""){
+            if (inputVar.hasForecastMatch == false
+            && inputVar.overrideValue == ""){
                 this.modal.alert()
                 .title("Cannot Run Simulation")
                 .body("Inputs variables without values exist. Either create match these forecast variables\
@@ -171,11 +174,19 @@ export class SimulationComponent implements OnInit, AfterViewInit {
                  .open();
                  return;
             }
-            //TODO: if no override value provided, set input variable value to value of forecast
-            this.environment.setInputVariables(this.matchTable.inputVariableMatchings[index].inputVariableName,
-                this.matchTable.inputVariableMatchings[index].value);
+           
+            if (inputVar.forecastValue != null && inputVar.overrideValue == ""){
+                this.environment.setInputVariables(inputVar.inputVariableName,
+                    inputVar.forecastValue);
+            }
+            else{
+                this.environment.setInputVariables(inputVar.inputVariableName,
+                    inputVar.overrideValue);
+            }
         }
         let o = this.environment.runSim();
+        console.log(o);
+        this.displayOutput(o);
         this.simOutput = JSON.stringify(o, null,4);
     } 
 
@@ -208,39 +219,11 @@ export class SimulationComponent implements OnInit, AfterViewInit {
         this.addGroup(t.createUI());
         return t;
     }
-
-
-    drawArrow(name:string, positionX:number, positionY:number, endX, endY){
-        var st:Stage = this.stage.getStage();
-        var layer:Layer = st.getChildren()[0];
-
-        let group = new Group({
-            x : positionX,
-            y : positionY
-        });
-
-        let arrow = new Arrow({
-            x: 0,
-            y: 0,
-            points: [0,0, endX, endY],
-            pointerLength: 10,
-            pointerWidth : 10,
-            fill: 'black',
-            stroke: 'black',
-            strokeWidth: 4
-        });
-
-        group.add(arrow);
-        //group.add(label);
-        layer.add(group);
-        layer.draw();
-    }
     public addInterface(temp:GenericMicroServiceTemplate, name:string) {
             let intf = new TemplateInterface();
             intf.name = name;
             temp.interfaces.push(intf);
     }
-
     private addGroup(group) {
         var st:Stage = this.stage.getStage();
         var layer:Layer = st.getChildren()[0];
@@ -248,7 +231,6 @@ export class SimulationComponent implements OnInit, AfterViewInit {
         layer.add(group);
         layer.draw();
     }
-
     private reloadTemplateUI(template) {
         var st:Stage = this.stage.getStage();
         var layer:Layer = st.getChildren()[0];
@@ -257,6 +239,7 @@ export class SimulationComponent implements OnInit, AfterViewInit {
         layer.add(template.reloadUI());
         layer.draw();
     }
+
     drawModel(){
         let comp1 = this.addGenericMicroService("Comp1");
         this.addInterface(comp1, "Comp1If1");
@@ -271,10 +254,11 @@ export class SimulationComponent implements OnInit, AfterViewInit {
         this.reloadTemplateUI(comp3);
         
     }
-
-
-
     onEdit(){
        this.location.back();
+    }
+
+    displayOutput(o){
+        console.log(o);
     }
 }

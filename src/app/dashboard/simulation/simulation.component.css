@@ -11,4 +11,6 @@
     padding: 0;
     overflow: hidden;
     background-color: #F0F0F0;
+    content:url("model2.png");
+    border: 1px solid grey;
 }

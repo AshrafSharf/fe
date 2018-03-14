@@ -4,6 +4,7 @@ import { TableViewRow } from "../../shared/interfaces/tableview-row";
 import { TableViewColumn } from "../../shared/interfaces/tableview-column";
 import { InputVariableMatching } from "../../shared/interfaces/input-variable-matching";
 import { ActivatedRoute, Router } from "@angular/router";
+import { ForecastVariableValue } from "../../shared/interfaces/forecast-variable-value";
 
 @Component({
     selector: 'match-table',
@@ -12,9 +13,10 @@ import { ActivatedRoute, Router } from "@angular/router";
 })
 
 export class MatchTableComponenet implements OnInit, OnChanges {
-    @Input('inputVars') inputVariableList: string[];
+    @Input('inputVars') inputVariableList: String[];
     @Input('forecastBranchId') forecastBranchID: string;
 
+    forecastVariables: ForecastVariableValue[] = [];
    inputVariableMatchings:InputVariableMatching[] = [];
 
     constructor(
@@ -28,35 +30,44 @@ export class MatchTableComponenet implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges){
-        this.matchVariables();
+       // this.matchVariables();
+    }
+
+    getForecastVariables(forecastBranchId: String, date:string){
+        this.inputVariableMatchings.splice(0, this.inputVariableMatchings.length);
+        this.variableService.gerVariableValuesByDate(forecastBranchId, date)
+        .subscribe(result =>{
+            this.forecastVariables = result.data;
+            console.log(this.forecastVariables);
+            this.matchVariables(forecastBranchId, date);
+        });
+
     }
 
     /** 
      * Checks each input variable to see if it has a matching forecast variable
      * @returns a list of input variable names and whether they have a forecast variable match or not
     */
-    matchVariables(): InputVariableMatching[]{
-        //clear existing matchings
-        this.inputVariableMatchings.splice(0, this.inputVariableMatchings.length);
-
+    matchVariables(forecastBranchId: String, date:string): InputVariableMatching[]{
         for (let index=0; index<this.inputVariableList.length; index++){
             let match = false;
-           this.variableService.getVariableByName(this.forecastBranchID, this.inputVariableList[index])
-           .subscribe(result => {
-                let forecastVariable = result.data;
-                   if (forecastVariable != null){
-                       match = true;
-                   }
-                   else{
-                       match=false;
-                   }
-                   this.inputVariableMatchings.push({
-                    inputVariableName: this.inputVariableList[index],
-                    hasForecastMatch: match,
-                    value:""
-                    });  
-            });          
+            let forecastValue = null;
+            for (let forecastVar of this.forecastVariables){
+                console.log(forecastVar.title);
+                if (this.inputVariableList[index] == forecastVar.title){
+                    match = true;
+                    forecastValue= forecastVar.baseCalValue;
+                    break;
+                }
+            } 
+            this.inputVariableMatchings.push({
+                inputVariableName: this.inputVariableList[index],
+                hasForecastMatch: match,
+                forecastValue: forecastValue,
+                overrideValue:""
+                });        
         }
+        console.log(this.inputVariableMatchings);
         return this.inputVariableMatchings;  
     }
 

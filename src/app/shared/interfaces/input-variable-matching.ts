@@ -1,5 +1,6 @@
 export interface InputVariableMatching{
     inputVariableName:String;
     hasForecastMatch:boolean;
-    value:String;
+    forecastValue:String;
+    overrideValue:String;
 }

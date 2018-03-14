@@ -151,11 +151,20 @@ export class ForecastGraphicalComponent implements OnInit {
     }
 
     toggleBreakdownVariables(event) {
+        this.searchName = "", this.searchType = "", this.searchOwner = "";
         this.breakdownVariables = event.target.checked;
         this.filteredVariables.splice(0, this.filteredVariables.length);
         for (var index = 0; index < this.variables.length; index++) {
             let variable = this.variables[index];
             if (this.shouldSkipVariable(variable) == true) {
+
+                for (var excludeIndex = 0; excludeIndex  < this.exludedVariables.length; excludeIndex ++) {
+                    if (this.exludedVariables[excludeIndex ] == variable.id) {
+                        this.exludedVariables.splice(excludeIndex , 1);
+                        break;
+                    }
+                }
+
                 this.exludedVariables.push(variable.id);
                 continue;
             }

@@ -67,5 +67,20 @@ export class UserService implements CanActivate {
                 callback(result.data as User[]);
             });
     }
+    
+    getLoggedInUser() {
+        this.loaderService.show();
+        let url = Utils.createUrl(Utils.routeUser) + "/username/" + Utils.getUserName();
+        //let url = Utils.createUrl(Utils.routeProject);
+        return this.http
+            .get(url, Utils.getRequestOptions())
+            .map(result => {
+                this.loaderService.hide()
+                return result.json();
+            });
+    }
 
+    getRoles() {
+        
+    }
 }

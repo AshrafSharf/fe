@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Project } from '../../shared/interfaces/project';
 import { ProjectService } from '../../services/project.service';
+import { UserService } from '../../services/user.service';
+import { RoleService } from '../../services/roles.service';
 import { TableViewHeader } from '../../shared/interfaces/tableview-header';
 import { TableViewRow } from '../../shared/interfaces/tableview-row';
 import { TableViewColumn } from '../../shared/interfaces/tableview-column';
@@ -19,10 +21,13 @@ export class ProjectListComponent implements OnInit {
     projects: Project[] = new Array<Project>();
 
     isLoading: Boolean = false;
+    userRole:String;
     
     constructor(
         private router: Router,
-        private modal:Modal, 
+        private modal:Modal,
+        private userService: UserService,
+        private roleService: RoleService,
         private projectService: ProjectService) {
             
         this.columns = new Array<TableViewHeader>();
@@ -32,6 +37,16 @@ export class ProjectListComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.roleService.getRoles().subscribe(result => {
+            console.log(result);
+        });
+        this.userService.getLoggedInUser().subscribe(result => {
+            if (result.status == "OK") {
+                console.log(result.data.roleId);
+                this.userRole = (result.data.roleId == "5aaa5436d49fee163426fbe1" ? "Admin" : "User");
+                //var y = (x == 2 ? “yes” : “no”);
+            }
+        });
         this.reloadProjects();
     }
 

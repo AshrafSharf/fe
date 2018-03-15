@@ -4,7 +4,8 @@
     </div>
 
     <div class="row">
-        <button class="app-button" (click)="addNewProject()">NEW PROJECT</button>
+        <button class="app-button" *ngIf="userRole == 'Admin'" (click)="addNewProject()">NEW PROJECT</button>
+        <button class="app-button" *ngIf="userRole != 'Admin'" disabled>NEW PROJECT</button>
         <table-view 
             (row-edited)="onRowEdit($event)"
             (row-deleted)="onRowDelete($event)"

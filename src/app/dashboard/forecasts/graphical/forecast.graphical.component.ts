@@ -72,6 +72,8 @@ export class ForecastGraphicalComponent implements OnInit {
 
     initDates() {
         let currentDate = new Date();
+        currentDate.setDate(1);
+        currentDate.setHours(0,0,0,0);
         this.minStartDate = unix(currentDate.getTime() / 1000);
         this.startDate = this.minStartDate;
         this.endDate = unix(currentDate.getTime() / 1000).add(12, 'months');
@@ -79,6 +81,8 @@ export class ForecastGraphicalComponent implements OnInit {
 
     resetDates() {
         let currentDate = new Date();
+        currentDate.setDate(1);
+        currentDate.setHours(0,0,0,0);
         let date = unix(currentDate.getTime() / 1000).subtract(6, 'months');
         if (this.minStartDate.isBefore(date)) {
             this.startDate = date;
@@ -93,7 +97,10 @@ export class ForecastGraphicalComponent implements OnInit {
     */
     findMinimumStartDate() {
         // reset the minimum start date
-        this.minStartDate = unix(new Date().getTime() / 1000);
+        let currentDate = new Date();
+        currentDate.setDate(1);
+        currentDate.setHours(0,0,0,0);
+        this.minStartDate = unix(currentDate.getTime() / 1000);
 
         // get the lowest possible start date
         for (var index = 0; index < this.variables.length; index++) {
@@ -141,7 +148,6 @@ export class ForecastGraphicalComponent implements OnInit {
         }
 
         // check if the minimum date is before 6 months
-        let currentDate = new Date();
         let date = unix(currentDate.getTime() / 1000).subtract(6, 'months');
         if (this.minStartDate.isBefore(date)) {
             this.startDate = date;

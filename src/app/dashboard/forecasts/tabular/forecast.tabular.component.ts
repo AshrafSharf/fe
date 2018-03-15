@@ -174,7 +174,7 @@ export class ForecastTabularComponent implements OnInit {
     }
 
     /** 
-    Find the minium start date. Iterate over all the timesegments and find the smallest date
+    Find the minimum start date. Iterate over all the timesegments and find the smallest date
     */
     findMinimumStartDate() {
         // reset the minimum start date

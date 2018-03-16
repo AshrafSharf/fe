@@ -43,6 +43,7 @@
     "ng2-konva": "^2.0.5",
     "ng2-nvd3": "^2.0.0",
     "ng2-right-click-menu": "0.0.16",
+    "ngx-color-picker": "^5.3.5",
     "ngx-line-chart": "^1.0.0",
     "ngx-modialog": "^3.0.4",
     "rxjs": "^5.5.5",

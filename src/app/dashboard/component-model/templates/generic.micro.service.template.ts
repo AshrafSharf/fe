@@ -4,16 +4,15 @@ import { Template, TemplateInterface } from './templates';
 
 export class GenericMicroServiceTemplate extends Template {
 
-    private containerWidth = 230;
-    private containerHeight = 200;
-    private interfaceContainerHeight = 60;
+    private containerWidth = 150;
+    private interfaceContainerHeight = 40;
 
     public constructor(callback) {
         super(callback);
-        this.name = '';
+        this.name = 'Generic Micro Service';
     }
 
-    public createUI(x = Math.random() * 600, y = Math.random() * 600, fontSize = 15) {
+    public createUI(x = Math.random() * 600, y = Math.random() * 600, fontSize = 13) {
 
         this.uiGroup = new Group({
             x : x,
@@ -29,6 +28,13 @@ export class GenericMicroServiceTemplate extends Template {
             this.onMouseButton(event);
         });
      
+        this.uiGroup.on('mouseover', function() {
+            document.body.style.cursor = 'pointer';
+        });
+        this.uiGroup.on('mouseout', function() {
+            document.body.style.cursor = 'default';
+        });
+        
         return this.uiGroup;
     }
 
@@ -36,25 +42,25 @@ export class GenericMicroServiceTemplate extends Template {
         
     }
 
-    private createTitle(fontSize = 15) {
+    private createTitle(fontSize = 13) {
         let group = new Group({ x: 0, y: 0 });
 
         let titleRect = new Rect({
             x : 0,
             y : 0,
             width : this.containerWidth,
-            height : 40,
+            height : this.interfaceContainerHeight,
             stroke : 'black',
-            fill:'lightgray'
+            fill: this.getHeaderColor().toString()
         });
 
         let label = new Text({
-            x : 10,
+            x : 0,
             y : 10,
-            width: this.containerWidth - 20,
+            width: this.containerWidth,
             align: 'center',
             text: this.name.toString(),
-            fontSize: fontSize + 2,
+            fontSize: fontSize,
             fontStyle: 'bold',
             fill: 'black'
         });
@@ -80,21 +86,6 @@ export class GenericMicroServiceTemplate extends Template {
                 stroke : 'black'
             })
 
-            let circleLeft = new Circle({
-                x : 0,
-                y : y + (this.interfaceContainerHeight / 2),
-                radius: 5,
-                fill: 'red',
-                stroke : 'black'
-            });
-
-            let circleRight = new Circle({
-                x : this.containerWidth,
-                y : y + (this.interfaceContainerHeight/2),
-                radius: 5,
-                fill: 'red',
-                stroke : 'black'
-            });
 
             let label = new Text({
                 x : 10,
@@ -107,8 +98,28 @@ export class GenericMicroServiceTemplate extends Template {
             });
 
             group.add(rect);
-            group.add(circleLeft);
-            group.add(circleRight);
+
+            if (intf.properties.length > 0) {
+                let circleLeft = new Circle({
+                    x : 0,
+                    y : y + (this.interfaceContainerHeight / 2),
+                    radius: 5,
+                    fill: 'white',
+                    stroke : 'black'
+                });
+                group.add(circleLeft);
+            }
+
+            if (intf.downstreamInterfaces.length > 0) {
+                let circleRight = new Circle({
+                    x : this.containerWidth,
+                    y : y + (this.interfaceContainerHeight/2),
+                    radius: 5,
+                    fill: 'white',
+                    stroke : 'black'
+                });
+                group.add(circleRight);
+            }
             group.add(label);
         }
 
@@ -154,5 +165,13 @@ export class GenericMicroServiceTemplate extends Template {
 
         // rebuild the ui
         return this.createUI(x, y);
+    }
+
+    public getType(): String {
+        return 'Generic Micro Service';
+    }
+
+    public getHeaderColor(): String {
+        return 'lightgray';
     }
 }

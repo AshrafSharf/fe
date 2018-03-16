@@ -1,6 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { TableViewHeader } from '../interfaces/tableview-header';
 import { TableViewRow } from '../interfaces/tableview-row';
+import { UserService } from '../../services/user.service';
+import { RoleService } from '../../services/roles.service';
 
 @Component({
     selector: 'table-view',
@@ -22,15 +24,37 @@ export class TableViewComponent implements OnInit {
     originalRows:TableViewRow[];
     filteredRows:TableViewRow[];
     filterCols = [];
+    userRole:String;
 
     @Input('rows') set rows(rows: TableViewRow[]) {
         this.originalRows = rows;
         this.filteredRows = rows;
     }
 
-    constructor() { }
+    constructor(private roleService: RoleService,
+                private userService: UserService) { }
 
     ngOnInit() {
+        let roles = [];
+        this.roleService.getRoles().subscribe(result => {
+            let roleData = result.data;
+            roleData.forEach(role => {
+                roles.push(role);
+            });
+
+            this.userService.getLoggedInUser().subscribe(result => {
+                if (result.status == "OK") {
+                    let userData = result.data;
+                    roles.forEach(user => {
+                        if (userData.roleId == user.id) {
+                            this.userRole = user.roleName;
+                        }
+                    });
+
+                }
+            });
+        });
+        
         for (var index = 0; index < this.cols.length; index++) {
             this.filterCols[index] = "";
         }

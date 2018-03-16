@@ -4,6 +4,8 @@ import { Project } from '../../shared/interfaces/project';
 import { Branch } from '../../shared/interfaces/branch';
 import { ProjectService } from '../../services/project.service';
 import { BranchService } from '../../services/branch.service';
+import { UserService } from '../../services/user.service';
+import { RoleService } from '../../services/roles.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ModalDialogService } from '../../services/modal-dialog.service';
 import { TableViewHeader } from '../../shared/interfaces/tableview-header';
@@ -31,6 +33,7 @@ export class VariableListComponent implements OnInit {
 
     selectedProjectId = null;
     selectedBranchId = null;
+    userRole:String;
 
     constructor(
         private route: ActivatedRoute,
@@ -39,9 +42,31 @@ export class VariableListComponent implements OnInit {
         private modal: ModalDialogService,
         private router: Router,
         private projectService:ProjectService,
-        private branchService:BranchService) { }
+        private branchService:BranchService,
+        private roleService: RoleService,
+        private userService: UserService) { }
 
     ngOnInit() {
+        let roles = [];
+        this.roleService.getRoles().subscribe(result => {
+            let roleData = result.data;
+            roleData.forEach(role => {
+                roles.push(role);
+            });
+
+            this.userService.getLoggedInUser().subscribe(result => {
+                if (result.status == "OK") {
+                    let userData = result.data;
+                    roles.forEach(user => {
+                        if (userData.roleId == user.id) {
+                            this.userRole = user.roleName;
+                        }
+                    });
+
+                }
+            });
+        });
+
         this.route.queryParams.subscribe(params => {
             //this.selectedProjectId = params['projectId'];
             //this.selectedBranchId = params['branchId'];

@@ -34,7 +34,7 @@
                     <div class="input-group-addon"> Other Variables </div>
                     <input type="text" class="form-control" [(ngModel)]="otherDec">
                 </div>
-                <span class="help-block">enter number of decimals to be displayed</span>
+                <span class="help-block">Enter number of decimals to be displayed</span>
             </div>
         </div>
     </div>
@@ -50,10 +50,29 @@
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-12">
-            <button class="btn btn-success" (click)="onSave()">Save and Exit</button>
-            <button class="btn btn-danger" (click)="onCancel()">Cancel</button>
-        </div>
+    <div class="row admin-views" *ngIf="userRole == 'admin'">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="headers">Users</th>
+                    <th class="headers" *ngFor="let role of roles">{{role.roleName}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let user of users">
+                    <td>{{user.userName}}</td>
+                    <td *ngFor="let role of roles">
+                        <input type="radio" value="{{role}}" name="{{user.userName}}-role" [checked]="isChecked(user, role)" (click)="setRoles(user, role)">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <button class="btn btn-success" (click)="onSave()">Save and Exit</button>
+        <button class="btn btn-danger" (click)="onCancel()">Cancel</button>
     </div>
+</div>
+
 </div>

@@ -7,6 +7,8 @@ import { TableViewColumn } from '../../shared/interfaces/tableview-column';
 import { Modal } from 'ngx-modialog/plugins/bootstrap';
 import { Router, ActivatedRoute } from '@angular/router';
 import { BranchService } from '../../services/branch.service';
+import { UserService } from '../../services/user.service';
+import { RoleService } from '../../services/roles.service';
 import { Branch } from '../../shared/interfaces/branch';
 import { Utils } from '../../shared/utils';
 
@@ -25,6 +27,7 @@ export class BranchListComponent implements OnInit {
     branches:Branch[] = Array<Branch>();
     
     isLoading: Boolean = false;
+    userRole:String;
     private selectedProjectId = null;
     
     constructor(
@@ -32,7 +35,9 @@ export class BranchListComponent implements OnInit {
         private router: Router,
         private branchService:BranchService,
         private modal:Modal, 
-        private projectService: ProjectService) {
+        private projectService: ProjectService,
+        private roleService: RoleService,
+        private userService: UserService) {
             
         this.columns = new Array<TableViewHeader>();
         this.columns.push(new TableViewHeader("name", "Branch Name", "col-md-3", "", ""));
@@ -41,6 +46,26 @@ export class BranchListComponent implements OnInit {
     }
 
     ngOnInit() {
+        let roles = [];
+        this.roleService.getRoles().subscribe(result => {
+            let roleData = result.data;
+            roleData.forEach(role => {
+                roles.push(role);
+            });
+
+            this.userService.getLoggedInUser().subscribe(result => {
+                if (result.status == "OK") {
+                    let userData = result.data;
+                    roles.forEach(user => {
+                        if (userData.roleId == user.id) {
+                            this.userRole = user.roleName;
+                        }
+                    });
+
+                }
+            });
+        });
+
         this.route.queryParams.subscribe(params => {
            // this.selectedProjectId = params['projectId'];
 

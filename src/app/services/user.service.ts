@@ -14,7 +14,7 @@ export class UserService implements CanActivate {
         private router: Router,
         private http: Http,
         private loaderService:LoaderService) {}
-
+    
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
         if (sessionStorage.getItem('user_auth_status') == '1') {
             return true;
@@ -68,4 +68,63 @@ export class UserService implements CanActivate {
             });
     }
 
+    createUser(userName:String, password:String) {
+        this.loaderService.show();
+        let url = Utils.createUrl(Utils.routeUser);
+        let body = { userName: userName, password: password};
+
+        return this.http
+            .post(url, body, Utils.getRequestOptions())
+            .map(result => {
+                this.loaderService.hide()
+                return result.json();
+            });
+    }
+
+    updateUser(id:String, userName:String, password:String, roleId: String, projectId: String, branchId: String) {
+        this.loaderService.show();
+        let url = Utils.createUrl(Utils.routeUser) + "/" + id;
+
+        let body = { id: id, userName: userName, password: password, roleId: roleId, projectId: projectId, branchId: branchId };
+        return this.http
+            .put(url, body, Utils.getRequestOptions())
+            .map(result => {
+                this.loaderService.hide()
+                return result.json();
+            });
+    }
+
+    deleteUser(id) {
+        this.loaderService.show();
+        let url = Utils.createUrl(Utils.routeUser) + "/" + id;
+        return this.http
+            .delete(url, Utils.getRequestOptions())
+            .map(result => {
+                this.loaderService.hide()
+                return result.json();
+            });
+    }
+
+    getUsers() {
+        this.loaderService.show();
+        let url = Utils.createUrl(Utils.routeUser);
+        return this.http
+            .get(url, Utils.getRequestOptions())
+            .map(result => {
+                this.loaderService.hide()
+                return result.json();
+            });
+    }
+    
+    getLoggedInUser() {
+        this.loaderService.show();
+        let url = Utils.createUrl(Utils.routeUser) + "/username/" + Utils.getUserName();
+        return this.http
+            .get(url, Utils.getRequestOptions())
+            .map(result => {
+                this.loaderService.hide()
+                return result.json();
+            });
+    }
+    
 }

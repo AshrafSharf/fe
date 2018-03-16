@@ -46,6 +46,7 @@ import { TableViewComponent } from './shared/table-view/table.view.component';
 import { ProjectListComponent } from './dashboard/projects/project.list.component';
 import { BranchListComponent } from './dashboard/branches/branches-list.component';
 import { UserService } from './services/user.service';
+import { RoleService } from './services/roles.service';
 import { VariableDistributionComponent } from './dashboard/variables/distribution/distribution.variable.component';
 import { ModalDialogService } from './services/modal-dialog.service';
 import { VariableExpressionComponent } from './dashboard/variables/expression/expression.variable.component';
@@ -129,6 +130,7 @@ import { SystemModelService } from './services/system-model.service';
     ProjectService,
     BranchService,
     UserService,
+    RoleService,
     ModalDialogService,
     AppVariableService,
     AppVariableTypeService,

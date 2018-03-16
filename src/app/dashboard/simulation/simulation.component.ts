@@ -96,17 +96,9 @@ export class SimulationComponent implements OnInit, AfterViewInit {
                 cptComp = new CptMicroserviceComponent();
             }
 
-            //hard coded order as topological sorting not implemented
-            if (component.title =="Comp1"){
-                cptComp.order = 0;
-            } 
-            else if (component.title == "Comp2"){
-                cptComp.order = 1;
-            } 
-            else {
-                cptComp.order = 2;
-            }
+            cptComp.order = component.order;
             cptComp.setName(component.title);
+            
             for (let interf of component.modelComponentInterfaceList){
                 let cptInt = cptComp.addInterface(interf.title);
                 cptInt.id = interf.id;

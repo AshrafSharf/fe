@@ -72,6 +72,7 @@ export class SimulationComponent implements OnInit, AfterViewInit {
     ngOnInit() { 
         //TODO: Use selected Project ID
         this.reloadBranches("5aa31b14d49fee0db47f67c3");
+        this.clearEnvironment();
         this.setupEnvironment();
     }
 
@@ -195,6 +196,11 @@ export class SimulationComponent implements OnInit, AfterViewInit {
            }
         
        }
+    }
+
+    clearEnvironment(){
+        this.environment.envComponents = [];
+        this.environment.inputVars = [];
     }
 
     /** 

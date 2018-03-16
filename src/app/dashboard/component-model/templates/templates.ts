@@ -33,6 +33,8 @@ export abstract class Template {
 
     public abstract createUI(): any;
     public abstract reloadUI(): any;
+    public abstract getType(): String;
+    public abstract getHeaderColor(): String;
 }
 
 export interface TemplateEventsCallback {

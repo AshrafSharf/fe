@@ -30,10 +30,9 @@
             </div>
         </div>
 
-        <div class="col-md-7 box">
+        <div id="container" class="col-md-7 box" style="background-color: lightgray;">
             <ko-stage [config]="configStage">
                 <ko-layer>
-                    
                 </ko-layer>
             </ko-stage>
         </div>
@@ -46,7 +45,7 @@
 
                         <div class="row component_property">
                             <div class="col-md-3">Template:</div>
-                            <div class="col-md-9">Generic Template</div>
+                            <div class="col-md-9">{{selectedTemplate.getType()}}</div>
                         </div>
                         
                         <div class="row component_property">
@@ -58,17 +57,19 @@
                             <button class="btn btn-success" (click)="addInterface()" >Add Interface</button>
                         </div>
 
-                        <div class="panel panel-default" style="margin-top:10px" *ngFor="let intf of selectedTemplate.interfaces">
+                        <div class="panel panel-default" style="margin-top:10px" *ngFor="let intf of selectedTemplate.interfaces; let i = index">
                             <div class="panel-heading">
-                                {{intf.name}}
-                                <fa name="times" (click)="onDelete()" class="link pull-right"></fa>
-
+                                {{intf.name.length == 0? 'interface' : intf.name}}
+                                <fa name="times" (click)="onDelete(i)" class="link pull-right"></fa>
                             </div>
                             <div class="panel-body">
 
                                 <div style="padding: 10px;">
                                     <div class="row">
-                                        <h4>Properties</h4>
+                                        <div>
+                                            <span class="heading">Properties</span>
+                                            <fa name="plus" (click)="onAddProperty(i)" class="link pull-right"></fa>
+                                        </div>
 
                                         <div class="row component_property">
                                             <div class="col-md-3">Name:</div>
@@ -80,17 +81,30 @@
                                             <div class="col-md-9"><input type="text" [(ngModel)]="intf.latency" class="component_name" ></div>
                                         </div> 
 
-                                        <div class="row component_property" *ngFor="let prop of intf.properties">
-                                            <div class="col-md-3">{{prop.name}}:</div>
-                                            <div class="col-md-9"><input type="text" [(ngModel)]="prop.value" class="component_name" ></div>
+                                        <div class="row component_property" *ngFor="let prop of intf.properties; let propertyIndex = index">
+                                            <div class="col-md-3"><input type="text" [(ngModel)]="prop.name" class="component_name" ></div>
+                                            <div class="col-md-9">
+                                                <input type="text" [(ngModel)]="prop.value" class="component_name" >
+                                                <fa name="times" (click)="onDeleteProperty(i,  propertyIndex)" class="link pull-right"></fa>
+                                            </div>
                                         </div> 
                                     </div>
 
                                     <div class="row" style="margin-top:10px">
-                                        <h4>Downstream Interfaces</h4>
-                                        <div class="row component_property" *ngFor="let compIntf of intf.downstreamInterfaces">
+                                        <div>
+                                            <span class="heading">Downstream Interfaces</span>
+                                            <fa name="plus" (click)="onAddDownstreamInterface(i)" class="link pull-right"></fa>
+                                        </div>  
+                                        <!--<div class="row component_property" *ngFor="let compIntf of intf.downstreamInterfaces">
                                             <div class="col-md-3">{{compIntf.component}}</div>
                                             <div class="col-md-9"><input type="text" [(ngModel)]="compIntf.connectedInterface" class="component_name" readonly></div>
+                                        </div>-->
+
+                                        <div class="row component_property" *ngFor="let compIntf of intf.downstreamInterfaces; let propertyIndex = index">
+                                            <div class="col-md-12">
+                                                <input type="text" [(ngModel)]="compIntf.component" class="component_name" >
+                                                <fa name="times" (click)="onDeleteDownstreamInterface(i,  propertyIndex)" class="link pull-right"></fa>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

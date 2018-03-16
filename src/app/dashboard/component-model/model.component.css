@@ -4,6 +4,7 @@
     border: solid 1px black;
     text-align: left;
     width: 80%;
+    outline: 0;
 }
 
 .box {
@@ -11,9 +12,14 @@
 }
 
 .component_name {
-    width: 100%;
+    width: 80%;
 }
 
 .component_property {
     margin-top: 5px;
+}
+
+.heading {
+    font-size: 20px;
+    font-style: bold;
 }

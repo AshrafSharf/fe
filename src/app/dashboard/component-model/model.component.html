@@ -4,6 +4,131 @@
     </div>
 
     <div class="row">
-      Coming Soon
+        <div class="col-md-9 text-right">
+             <button (click)="onVerify()" type="button" class="btn btn-link">Verify</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+
+            <div class="row">
+                <h4>Component Template</h4>
+
+                <div class="row">
+                    <button class="button_shape" (click)="addStatic()">Static</button>
+                    <button class="button_shape" (click)="addSingleInterface()">Single Interface</button>
+                    <button class="button_shape" (click)="addGenericMicroService()">Generic Micro Service</button>
+                    <button class="button_shape" (click)="addJavaMicroService()">Java Micro Service</button>
+                </div>
+            </div>
+
+            <div class="row">
+                <h4>Drawing</h4>
+
+                <div class="row">
+                    <button class="button_shape" (click)="addCircle()">Circle</button>
+                    <button class="button_shape" (click)="addDiamond()">Diamond</button>
+                    <button class="button_shape" (click)="addTriangle()">Triangle</button>
+                    <button class="button_shape" (click)="addSquare()">Square</button>
+                    <button class="button_shape" (click)="addLabel()">Label</button>                    
+                </div>
+            </div>
+        </div>
+
+        <div id="container" class="col-md-7 box" style="background-color: lightgray;">
+            <ko-stage [config]="configStage">
+                <ko-layer>
+                </ko-layer>
+            </ko-stage>
+        </div>
+        
+        <div class="col-md-3">
+            <div style="padding: 5px;" *ngIf="selectedTemplate != null">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Properties</div>
+                    <div class="panel-body">
+
+                        <div class="row component_property">
+                            <div class="col-md-3">Template:</div>
+                            <div class="col-md-9">{{selectedTemplate.getType()}}</div>
+                        </div>
+                        
+                        <div class="row component_property">
+                            <div class="col-md-3">Name:</div>
+                            <div class="col-md-9"><input type="text" class="component_name" [(ngModel)]="selectedTemplate.name" ></div>
+                        </div>
+        
+                        <div class="row" style="margin: 10px;">
+                            <button class="btn btn-success" (click)="addInterface()" >Add Interface</button>
+                        </div>
+
+                        <div class="panel panel-default" style="margin-top:10px" *ngFor="let intf of selectedTemplate.interfaces; let i = index">
+                            <div class="panel-heading">
+                                {{intf.name.length == 0? 'interface' : intf.name}}
+                                <fa name="times" (click)="onDelete(i)" class="link pull-right"></fa>
+                            </div>
+                            <div class="panel-body">
+
+                                <div style="padding: 10px;">
+                                    <div class="row">
+                                        <div>
+                                            <span class="heading">Properties</span>
+                                            <fa name="plus" (click)="onAddProperty(i)" class="link pull-right"></fa>
+                                        </div>
+
+                                        <div class="row component_property">
+                                            <div class="col-md-3">Name:</div>
+                                            <div class="col-md-9"><input type="text" [(ngModel)]="intf.name" class="component_name" ></div>
+                                        </div> 
+
+                                        <div class="row component_property">
+                                            <div class="col-md-3">Latency:</div>
+                                            <div class="col-md-9"><input type="text" [(ngModel)]="intf.latency" class="component_name" ></div>
+                                        </div> 
+
+                                        <div class="row component_property" *ngFor="let prop of intf.properties; let propertyIndex = index">
+                                            <div class="col-md-3"><input type="text" [(ngModel)]="prop.name" class="component_name" ></div>
+                                            <div class="col-md-9">
+                                                <input type="text" [(ngModel)]="prop.value" class="component_name" >
+                                                <fa name="times" (click)="onDeleteProperty(i,  propertyIndex)" class="link pull-right"></fa>
+                                            </div>
+                                        </div> 
+                                    </div>
+
+                                    <div class="row" style="margin-top:10px">
+                                        <div>
+                                            <span class="heading">Downstream Interfaces</span>
+                                            <fa name="plus" (click)="onAddDownstreamInterface(i)" class="link pull-right"></fa>
+                                        </div>  
+                                        <!--<div class="row component_property" *ngFor="let compIntf of intf.downstreamInterfaces">
+                                            <div class="col-md-3">{{compIntf.component}}</div>
+                                            <div class="col-md-9"><input type="text" [(ngModel)]="compIntf.connectedInterface" class="component_name" readonly></div>
+                                        </div>-->
+
+                                        <div class="row component_property" *ngFor="let compIntf of intf.downstreamInterfaces; let propertyIndex = index">
+                                            <div class="col-md-12">
+                                                <input type="text" [(ngModel)]="compIntf.component" class="component_name" >
+                                                <fa name="times" (click)="onDeleteDownstreamInterface(i,  propertyIndex)" class="link pull-right"></fa>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="panel-footer">
+                        <button class="btn btn-success" (click)="savePropertyChanges()">Save</button>
+                        <button class="btn btn-danger" (click)="cancelPropertyChanges()">Cancel</button>
+                        <button class="btn btn-danger" (click)="deleteShape()">Delete</button>
+                    </div>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+
     </div>
 </div>

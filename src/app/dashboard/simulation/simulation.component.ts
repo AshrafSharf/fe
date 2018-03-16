@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, Output } from '@angular/core';
 import { CptEnvironment } from '../../shared/modelling/cpt-environment';
 import { CptMicroserviceComponent, CptMicroserviceInterface } from '../../shared/modelling/templates/cpt-microservice';
 import { CptOutput } from '../../shared/modelling/cpt-output';
@@ -19,6 +19,10 @@ import { Moment } from 'moment';
 import { AppVariableService } from '../../services/variable.services';
 import { GenericMicroServiceTemplate } from '../component-model/models/generic.micro.service.template';
 import { TemplateInterface } from '../component-model/models/templates';
+import { CptComponent } from '../../shared/modelling/cpt-component';
+import { SystemModelService } from '../../services/system-model.service';
+import { SystemModel } from '../../shared/interfaces/system-model';
+import { CptInterface, CptInterfaceOutput } from '../../shared/modelling/cpt-interface';
 
 
 @Component({
@@ -34,7 +38,7 @@ export class SimulationComponent implements OnInit, AfterViewInit {
     
     branches:Branch[] = Array<Branch>();
     
-    environment:CptEnvironment;
+    environment:CptEnvironment =  CptEnvironment.get();
     simOutput:string;
     inputVariables:string[] = [];
     forecastBranchId:String=null;
@@ -58,6 +62,7 @@ export class SimulationComponent implements OnInit, AfterViewInit {
         private branchService:BranchService,
         private modal:Modal,
         private variableService:AppVariableService,
+        private modelService:SystemModelService,
         private route:ActivatedRoute,
         private router:Router,
         private location: Location) {
@@ -71,52 +76,97 @@ export class SimulationComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit(){
-      //  this.drawModel();
+     
     }
 
     /** 
      * Set up the System Model environment
     */
     setupEnvironment(){
-        //TODO: Use APIS to retrieve enviroment data
-        this.environment = CptEnvironment.get();
-        let c1 = new CptMicroserviceComponent();
-        c1.order = 0;
-        c1.setName("Comp1");
-       // this.addJavaMicroService("Comp1", 100,100);
-        let c1if1 = c1.addInterface("Comp1If1");
-        c1if1.latency=10;
-        c1if1.inputLoadVariable="A";
-        this.inputVariables.push("A");
-        this.inputVariables.push("iosSubs");
-        let c1if1o1 = c1if1.addOutput();
-        c1if1o1.multiplier = 0.5;
-        let c1if1o2 = c1if1.addOutput();
-        this.environment.registerComponent(c1);
-
+       this.modelService.getModel("4567").subscribe(result =>{
+            let model =  result.data[0] as SystemModel;
+            console.log(model);
         
-        let c2 = new CptMicroserviceComponent();
-        c2.order = 1;
-        c2.setName("Comp2");
-        let c2if1 = c2.addInterface("Comp2If1");
-        let c2if1o1 = c2if1.addOutput();
-        c2if1.latency = 20;
-        this.environment.registerComponent(c2);
-        c1if1o1.connect(c2if1);
+       // this.environment = CptEnvironment.get();
+     
+        for (let component of model.modelComponentList){
+            let cptComp ;
+            if (component.templateName == "Microservice"){
+                cptComp = new CptMicroserviceComponent();
+            }
 
+            //hard coded order as topological sorting not implemented
+            if (component.title =="Comp1"){
+                cptComp.order = 0;
+            } 
+            else if (component.title == "Comp2"){
+                cptComp.order = 1;
+            } 
+            else {
+                cptComp.order = 2;
+            }
+            cptComp.setName(component.title);
+            for (let interf of component.modelComponentInterfaceList){
+                let cptInt = cptComp.addInterface(interf.title);
+                cptInt.id = interf.id;
+                
+                //add properties
+                for (let property of interf.modelInterfacePropertiesList){
+                    if (property.key == "latency"){
+                        cptInt.latency = Number(property.value);
+                        break;
+                    } 
+                }
 
-        let c3 = new CptMicroserviceComponent();
-        c3.order = 2;
-        c3.setName("Comp3");
-        let c3if1 = c3.addInterface("Comp3If1");
-        c3if1.latency = 5;
-        c2if1o1.connect(c3if1);
-        c1if1o2.connect(c3if1);
-        this.environment.registerComponent(c3);
+                //add input variables
+                if (interf.modelInputVariableList.length>0){
+                    cptInt.inputLoadVariable = interf.modelInputVariableList[0].title;
+                    this.inputVariables.push(interf.modelInputVariableList[0].title);
+                    this.environment.addInputVariable(interf.modelInputVariableList[0].title);
+                }
+
+                //add outputs
+                if (interf.modelInterfaceEndPointsList.length>0){
+                    for (let output of interf.modelInterfaceEndPointsList){
+                        let cptOutput = cptInt.addOutput() as CptInterfaceOutput;
+                        if (component.title == "Comp1" && output.outputModelInterfaceId =="5aaa5dead49fee15886c5b90"){
+                            cptOutput.multiplier = 0.5;
+                        } 
+                        cptOutput.downstreamInterfaceId = output.outputModelInterfaceId;
+                    }    
+                }
+
+            }
+            this.environment.registerComponent(cptComp);
+        }
+        
+        console.log(this.inputVariables);
+        this.connectInterfaces();
+        console.log(this.environment.envComponents);
+        console.log(this.environment.inputVars);
 
         // let hookCode = "if (load.loadValues['tps'] < 700 ){ return latency; } " +
         //     "else{ return latency*2; } ";
        //c3if1.addHookCode("adjustLatencyToLoad", hookCode);
+
+        });
+    }
+
+    /** 
+     * Connect any Interfaces which have an output pointing to a Downstream Interface
+    */
+    connectInterfaces(){
+        for (let component of this.environment.envComponents){
+            for (let interf of component.getInterfaces()){
+                for (let output of interf.outputs){
+                    if (output.downstreamInterfaceId != null){
+                        output.connect(this.environment.getInterface(output.downstreamInterfaceId));
+                        console.log("connected "+ component.displayName + ":" + interf.displayName 
+                        + "to " + this.environment.getInterface(output.downstreamInterfaceId).displayName);
+                    }
+                }
+            }
+        }
     }
 
     /** 
@@ -179,6 +229,7 @@ export class SimulationComponent implements OnInit, AfterViewInit {
                 this.environment.setInputVariables(inputVar.inputVariableName,
                     inputVar.forecastValue);
             }
+
             else{
                 this.environment.setInputVariables(inputVar.inputVariableName,
                     inputVar.overrideValue);
@@ -186,8 +237,8 @@ export class SimulationComponent implements OnInit, AfterViewInit {
         }
         let o = this.environment.runSim();
         console.log(o);
-        this.displayOutput(o);
-        this.simOutput = JSON.stringify(o, null,4);
+        //this.simOutput = JSON.stringify(o, null,4);
+        this.simOutput =  this.displayOutput();
     } 
 
     reloadBranches(projectId:String = null, forceReload = false) {
@@ -203,7 +254,6 @@ export class SimulationComponent implements OnInit, AfterViewInit {
                         if (this.selectedForecastBranchId != null) {
                             this.selectedForecastBranch = this.selectedForecastBranchId;
                         } else if (this.branches.length > 0) {
-                            console.log("hello");
                             //this.forecastBranchId = this.branches[0].id;
                             this.selectedForecastBranch = this.branches[0].id;
                         }
@@ -212,53 +262,22 @@ export class SimulationComponent implements OnInit, AfterViewInit {
         }
     }
 
-    public addGenericMicroService(name:string) {
-        let t = new GenericMicroServiceTemplate(this);
-        //this.templates.push(t);
-        t.name = name;
-        this.addGroup(t.createUI());
-        return t;
-    }
-    public addInterface(temp:GenericMicroServiceTemplate, name:string) {
-            let intf = new TemplateInterface();
-            intf.name = name;
-            temp.interfaces.push(intf);
-    }
-    private addGroup(group) {
-        var st:Stage = this.stage.getStage();
-        var layer:Layer = st.getChildren()[0];
-
-        layer.add(group);
-        layer.draw();
-    }
-    private reloadTemplateUI(template) {
-        var st:Stage = this.stage.getStage();
-        var layer:Layer = st.getChildren()[0];
-
-        template.uiGroup.remove();
-        layer.add(template.reloadUI());
-        layer.draw();
+    displayOutput(){
+        let outputString = "";
+        let comps = this.environment.envComponents;
+        for (let comp of comps){
+            outputString+= comp.displayName+": \n";
+            let interfaces = comp.getInterfaces();
+            for (let interf of interfaces){
+                outputString+=interf.displayName + ": \n" ;
+                outputString += "tps: " + interf.load.loadValues.tps + " \n";
+                outputString += "latency: " + interf.getStats().val["lat"] + " \n";          
+            }
+        }
+        return outputString;
     }
 
-    drawModel(){
-        let comp1 = this.addGenericMicroService("Comp1");
-        this.addInterface(comp1, "Comp1If1");
-        this.reloadTemplateUI(comp1);
-
-        let comp2 = this.addGenericMicroService("Comp2");
-        this.addInterface(comp2, "Comp2If1");
-        this.reloadTemplateUI(comp2);
-
-        let comp3 = this.addGenericMicroService("Comp3");
-        this.addInterface(comp3, "Comp3If1");
-        this.reloadTemplateUI(comp3);
-        
-    }
     onEdit(){
-       this.location.back();
-    }
-
-    displayOutput(o){
-        console.log(o);
+        this.location.back();
     }
 }

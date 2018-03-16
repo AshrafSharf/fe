@@ -5,6 +5,7 @@ import { TableViewColumn } from "../../shared/interfaces/tableview-column";
 import { InputVariableMatching } from "../../shared/interfaces/input-variable-matching";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ForecastVariableValue } from "../../shared/interfaces/forecast-variable-value";
+import { CptInputVariable } from "../../shared/modelling/cpt-input-variable";
 
 @Component({
     selector: 'match-table',
@@ -13,11 +14,14 @@ import { ForecastVariableValue } from "../../shared/interfaces/forecast-variable
 })
 
 export class MatchTableComponenet implements OnInit, OnChanges {
-    @Input('inputVars') inputVariableList: String[];
+    //TODO: use API to get Input Variables instead
     @Input('forecastBranchId') forecastBranchID: string;
+    @Input("vars") inputVariables:CptInputVariable[];
+
 
     forecastVariables: ForecastVariableValue[] = [];
    inputVariableMatchings:InputVariableMatching[] = [];
+
 
     constructor(
         private variableService: AppVariableService,
@@ -26,11 +30,11 @@ export class MatchTableComponenet implements OnInit, OnChanges {
     ) {}
     
     ngOnInit() { 
-        
+
     }
 
     ngOnChanges(changes: SimpleChanges){
-       // this.matchVariables();
+       
     }
 
     getForecastVariables(forecastBranchId: String, date:string){
@@ -44,33 +48,34 @@ export class MatchTableComponenet implements OnInit, OnChanges {
 
     }
 
+
     /** 
      * Checks each input variable to see if it has a matching forecast variable
      * @returns a list of input variable names and whether they have a forecast variable match or not
     */
     matchVariables(forecastBranchId: String, date:string): InputVariableMatching[]{
-        for (let index=0; index<this.inputVariableList.length; index++){
+   
+        for (let index=0; index<this.inputVariables.length; index++){
             let match = false;
             let forecastValue = null;
             for (let forecastVar of this.forecastVariables){
                 console.log(forecastVar.title);
-                if (this.inputVariableList[index] == forecastVar.title){
+                if (this.inputVariables[index].title == forecastVar.title){
                     match = true;
                     forecastValue= forecastVar.baseCalValue;
                     break;
                 }
             } 
             this.inputVariableMatchings.push({
-                inputVariableName: this.inputVariableList[index],
+                inputVariableName: this.inputVariables[index].title,
                 hasForecastMatch: match,
                 forecastValue: forecastValue,
                 overrideValue:""
-                });        
+            });        
         }
         console.log(this.inputVariableMatchings);
         return this.inputVariableMatchings;  
     }
-
     /** 
      * Goes to 'Add Variable' screen of the defined forecast branch
     */

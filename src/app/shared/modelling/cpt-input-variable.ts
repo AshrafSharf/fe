@@ -1,4 +1,5 @@
 export class CptInputVariable {
+    public title:String;
     public tps: number;
     constructor(obj?: CptInputVariable) {
         if (obj) {

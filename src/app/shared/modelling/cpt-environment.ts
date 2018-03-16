@@ -3,6 +3,7 @@ import { CptObject } from './cpt-object';
 import { CptInterface } from './cpt-interface';
 import { CptLoad } from './cpt-load';
 import { CptOutput } from './cpt-output';
+import { CptInputVariable } from "./cpt-input-variable";
 
 
 
@@ -21,8 +22,10 @@ export class CptEnvironment {
     /**
      * The names of all input variables in the environment
      */
-    public envInputVariableNames: String[] = [];
-
+    public inputVars: CptInputVariable[] = [];
+    /**
+     * A map containing input variable names and their assigned values
+     */
      public envInputVariables: Map<String, number > = new Map<String, number>();
 
     public constructor(obj?: CptEnvironment) {
@@ -41,7 +44,7 @@ export class CptEnvironment {
 
     /**
      *
-     * @param id The id of the requested cpt oject
+     * @param id The id of the requested cpt object
      * @returns The cpt object with the specified id
      */
     public getObject(id: string): CptObject {
@@ -88,6 +91,14 @@ export class CptEnvironment {
     public setInputVariables(name:String, value:String){
         let valueNum = Number(value);
         this.envInputVariables.set(name,valueNum);
+        let varible = new CptInputVariable();
+    }
+
+    public addInputVariable(name:string): CptInputVariable{
+        let variable = new CptInputVariable();
+        variable.title = name;
+        this.inputVars.push(variable);
+        return variable;
     }
 
     private getCompByTop(nr: number): CptComponent {
@@ -118,16 +129,10 @@ export class CptEnvironment {
     }
 
     public getLoad(inputVariable: string): CptLoad {
-     //   if (loadVariable === "A") {
             let l = new CptLoad();
-            console.log("varName", inputVariable);
-            console.log(this.envInputVariables);
             l.loadValues["tps"] = this.envInputVariables.get(inputVariable);
             console.log(l);
             return l;
-           
-      //  }
-        
     }
 
     public runSim() {

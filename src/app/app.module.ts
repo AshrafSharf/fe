@@ -62,6 +62,8 @@ import { LoaderService } from './services/loader.service';
 import { LoaderComponent } from './shared/loader/loader.component';
 import { MatchTableComponenet } from './dashboard/simulation/match-table.component';
 import { KonvaModule } from 'ng2-konva';
+import { SystemModelService } from './services/system-model.service';
+
 
 
 
@@ -132,7 +134,8 @@ import { KonvaModule } from 'ng2-konva';
     AppVariableTypeService,
     D3Service,
     SettingsService,
-    LoaderService
+    LoaderService,
+    SystemModelService
   ],
   bootstrap: [AppComponent]
 })

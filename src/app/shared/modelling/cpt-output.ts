@@ -13,4 +13,11 @@ export class CptOutput {
         this.sub[key] = output;
     }
 
+    public getVal(){
+        return this.val;
+    }
+
+    public getSub(){
+        return this.sub;
+    }
 }

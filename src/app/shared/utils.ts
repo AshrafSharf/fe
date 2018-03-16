@@ -8,6 +8,7 @@ export class Utils {
 
     // base url
     static baseUrl:String = environment.apiUrl;
+    static modelBaseUrl:String = "http://ec2-34-243-45-92.eu-west-1.compute.amazonaws.com:8080";
     static routeProject:String = "project";
     static routeBranch:String = "branch";
     static routeVariable:String = "variable";
@@ -15,6 +16,7 @@ export class Utils {
     static routeLogin:String = "login";
     static routeSettings:String = "settings";
     static routeVariableType:String = "variableType";
+    static routeSystemModel:String = "model"
 
     static buffer:Array<TableInputPair>;
     static localDev:boolean = environment.local;
@@ -22,6 +24,11 @@ export class Utils {
     // create url for route
     public static createUrl(route:String) {
         return `${this.baseUrl}\\${route}`;
+    }
+
+    // create url for model route
+    public static createModelUrl(route:String) {
+        return `${this.modelBaseUrl}\/${route}`;
     }
 
     // get the token

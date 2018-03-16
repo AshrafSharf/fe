@@ -60,6 +60,11 @@ import { SettingsComponent } from './dashboard/settings/settings.component';
 import { SettingsService } from './services/settings.service';
 import { LoaderService } from './services/loader.service';
 import { LoaderComponent } from './shared/loader/loader.component';
+import { MatchTableComponenet } from './dashboard/simulation/match-table.component';
+import { KonvaModule } from 'ng2-konva';
+import { SystemModelService } from './services/system-model.service';
+
+
 
 
 @NgModule({
@@ -76,6 +81,7 @@ import { LoaderComponent } from './shared/loader/loader.component';
     ForecastTabularComponent,
     ForecastGraphicalComponent,
     SimulationComponent,
+    MatchTableComponenet,
     ComponentModelComponent,
     TimeSegmentComponent,
 
@@ -115,7 +121,8 @@ import { LoaderComponent } from './shared/loader/loader.component';
     DpDatePickerModule,
     RouterModule.forRoot(routes),
     NvD3Module,
-    ShContextMenuModule
+    ShContextMenuModule,
+    KonvaModule
   ],
   providers: [
     {provide: LocationStrategy, useClass: HashLocationStrategy},
@@ -127,7 +134,8 @@ import { LoaderComponent } from './shared/loader/loader.component';
     AppVariableTypeService,
     D3Service,
     SettingsService,
-    LoaderService
+    LoaderService,
+    SystemModelService
   ],
   bootstrap: [AppComponent]
 })

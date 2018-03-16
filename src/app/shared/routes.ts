@@ -42,7 +42,8 @@ export const routes: Routes = [
             { path:'simulation', component: SimulationComponent, canActivate:[UserService] },
             { path:'variable-type-list', component: VariableTypeListComponent, canActivate: [UserService]},
             { path:'create-variable-type', component: VariableTypeComponent, canActivate: [UserService]},
-            { path: 'settings', component: SettingsComponent, canActivate: [UserService]}
+            { path: 'settings', component: SettingsComponent, canActivate: [UserService]},
+            {path: "verify-model", component:SimulationComponent, canActivate: [UserService]}
         ] 
     },
 

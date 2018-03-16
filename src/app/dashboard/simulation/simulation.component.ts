@@ -23,6 +23,7 @@ import { CptComponent } from '../../shared/modelling/cpt-component';
 import { SystemModelService } from '../../services/system-model.service';
 import { SystemModel } from '../../shared/interfaces/system-model';
 import { CptInterface, CptInterfaceOutput } from '../../shared/modelling/cpt-interface';
+import { Config } from '../../shared/config';
 
 
 @Component({
@@ -45,7 +46,7 @@ export class SimulationComponent implements OnInit, AfterViewInit {
     
     selectedForecastBranch:String = null
     selectedForecastBranchId:String=null;
-
+	datePickerConfig = { format: Config.getDateFormat() };
     selectedDate:Moment;
     
      // drawing area

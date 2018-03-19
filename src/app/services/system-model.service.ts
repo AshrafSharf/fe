@@ -16,14 +16,23 @@ export class SystemModelService {
       getModel(modelBranchId:string) {
         this.loaderService.show();
         let url = Utils.createModelUrl(Utils.routeSystemModel) + "/" + modelBranchId;
-
-        console.log(url);
         return this.http
                 .get(url, Utils.getRequestOptions())
                 .map(result => {
-                    this.loaderService.hide()
-                    console.log(result);
+                    this.loaderService.hide();
                     return result.json();
                 });
     }   
+
+    //get model by model id
+    getModelById(modelId:string){
+        this.loaderService.show();
+        let url = Utils.createModelUrl(Utils.routeSystemModel) + "/model/" + modelId;
+        return this.http
+                    .get(url,Utils.getRequestOptions())
+                    .map(result => {
+                        this.loaderService.hide();
+                        return result.json();
+                    });
+    }
 }

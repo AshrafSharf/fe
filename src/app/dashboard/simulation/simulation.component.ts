@@ -38,7 +38,7 @@ export class SimulationComponent implements OnInit, AfterViewInit {
     @ViewChild(StageComponent) stage: StageComponent;
     
     branches:Branch[] = Array<Branch>();
-    
+    models:SystemModel[] = Array<SystemModel>();
     environment:CptEnvironment =  CptEnvironment.get();
     simOutput:string;
     inputVariables:string[] = [];
@@ -48,6 +48,8 @@ export class SimulationComponent implements OnInit, AfterViewInit {
     selectedForecastBranchId:String=null;
 	datePickerConfig = { format: Config.getDateFormat() };
     selectedDate:Moment;
+    selectedModelId:string = null;
+    systemModel:SystemModel = null;
     
      // drawing area
      public width = 750;
@@ -73,25 +75,46 @@ export class SimulationComponent implements OnInit, AfterViewInit {
     ngOnInit() { 
         //TODO: Use selected Project ID
         this.reloadBranches("5aa31b14d49fee0db47f67c3");
-        this.clearEnvironment();
-        this.setupEnvironment();
+        this.getModels("4567");
+     //   this.clearEnvironment();
+     //   this.setupEnvironment();
     }
 
     ngAfterViewInit(){
      
     }
 
+    getModels(branchId:string){
+        this.modelService.getModel(branchId).subscribe(result =>{
+            this.models = result.data;
+            if (this.selectedModelId== null){
+                this.selectedModelId = this.models[0].id;
+                this.loadSelectedModel();
+            }
+        });
+    }
+
+    loadSelectedModel(){
+        console.log('hello')
+        this.modelService.getModelById(this.selectedModelId)
+        .subscribe(result =>{
+            this.systemModel = result.data as SystemModel
+            console.log(this.systemModel);
+            this.clearEnvironment();
+            this.setupEnvironment();
+        });
+    }
+
     /** 
      * Set up the System Model environment
     */
     setupEnvironment(){
-       this.modelService.getModel("4567").subscribe(result =>{
-            let model =  result.data[0] as SystemModel;
-            console.log(model);
+     //  this.modelService.getModel("4567").subscribe(result =>{
+      //      this.systemModel =  result.data[0] as SystemModel;
         
-       // this.environment = CptEnvironment.get();
+            this.environment = CptEnvironment.get();
      
-        for (let component of model.modelComponentList){
+        for (let component of this.systemModel.modelComponentList){
             let cptComp ;
             if (component.templateName == "Microservice"){
                 cptComp = new CptMicroserviceComponent();
@@ -143,7 +166,7 @@ export class SimulationComponent implements OnInit, AfterViewInit {
         //     "else{ return latency*2; } ";
        //c3if1.addHookCode("adjustLatencyToLoad", hookCode);
 
-        });
+      //  });
     }
 
     /** 
@@ -167,27 +190,20 @@ export class SimulationComponent implements OnInit, AfterViewInit {
      * Reset the attributes of each interface to their inital state
     */
     resetEnvironment(){
-        //TODO: Use Model APIs to get original values
-       let components= this.environment.envComponents as CptMicroserviceComponent[];
-       for (let comp of components){
-           let interfaces = comp.getInterfaces();
-           for (let interf of interfaces){
-                if (interf.displayName == "Comp1If1"){
-                    interf.latency = 10;
-                }
-                else if(interf.displayName =="Comp2If1"){
-                    interf.latency = 20;
-                }
-                else if(interf.displayName == "Comp3If1"){
-                    interf.latency = 5;
-                }
-              
-                //reset each load value
-                for (let key in interf.load.loadValues){
-                    interf.load.loadValues[key] = 0;
-                }
+       for (let component of this.systemModel.modelComponentList){
+           for (let interf of component.modelComponentInterfaceList){
+               let cptIf = this.environment.getInterface(interf.id) as CptMicroserviceInterface;
+               for (let property of interf.modelInterfacePropertiesList){
+                   if (property.key == "latency"){
+                        cptIf.latency = Number(property.value);
+                   }
+                   else{
+                        if(cptIf.load.loadValues.hasOwnProperty(property.key)){
+                            cptIf.load.loadValues[property.key] = 0;
+                        }
+                   }
+               }
            }
-        
        }
     }
 

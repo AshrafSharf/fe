@@ -1,0 +1,16 @@
+#forecastDate{
+    width:100%;
+   
+}
+.box {
+        border: solid 1px black;
+}
+
+#stage-parent{
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #F0F0F0;
+    content:url("model2.png");
+    border: 1px solid grey;
+}

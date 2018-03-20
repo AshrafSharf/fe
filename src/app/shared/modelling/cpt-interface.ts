@@ -32,7 +32,7 @@ export class CptInterfaceOutput extends CptObject {
         let target = CptEnvironment.get().getInterface(this.downstreamInterfaceId);
         if (target !== null)
             target.receiveLoad(l.multiply(this.multiplier));
-
+    
     }
 
     public getDownstreamStats(): CptStats {

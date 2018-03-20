@@ -21,7 +21,8 @@ import { VariableListComponent } from '../dashboard/variables/variable-list.comp
 import { VariableTypeListComponent } from '../dashboard/variable-type/variable.type.list.component';
 import { SettingsComponent } from '../dashboard/settings/settings.component';
 import { UsersComponent } from '../dashboard/users/users.component';
-
+import { VerifyModelComponent } from '../dashboard/component-model/verify-model.component';
+import { ComponentModelListComponent } from '../dashboard/component-model/model.list.component';
 export const routes: Routes = [
     { path:'login', component: LoginComponent },
     { 
@@ -37,15 +38,16 @@ export const routes: Routes = [
             { path:'create-variable', component: VariablesComponent, canActivate:[UserService] },
             { path:'forecast_tabular', component: ForecastTabularComponent, canActivate:[UserService] },
             { path:'forecast_graphical', component: ForecastGraphicalComponent, canActivate:[UserService] },
-            { path:'component_model', component: ComponentModelComponent, canActivate:[UserService] },
+            { path:'component_model-list', component: ComponentModelListComponent, canActivate:[UserService] },
+            { path:'create-component-model', component: ComponentModelComponent, canActivate:[UserService] },
             { path:'data_flow', component: DataFlowComponent, canActivate:[UserService] },
             { path:'login', component: LoginComponent },
             { path:'simulation', component: SimulationComponent, canActivate:[UserService] },
             { path:'variable-type-list', component: VariableTypeListComponent, canActivate: [UserService]},
             { path:'create-variable-type', component: VariableTypeComponent, canActivate: [UserService]},
             { path: 'settings', component: SettingsComponent, canActivate: [UserService]},
-            {path: "verify-model", component:SimulationComponent, canActivate: [UserService]},
             {path: "users", component:UsersComponent, canActivate: [UserService]}
+            {path:'verify-model', component:VerifyModelComponent, canActivate: [UserService] }
         ] 
     },
 

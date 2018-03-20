@@ -35,12 +35,26 @@
             </div>
         </div>
 
-        <div id="container" class="col-md-7 box" style="background-color: lightgray;">
-            <ko-stage [config]="configStage">
-                <ko-layer>
-                </ko-layer>
-            </ko-stage>
+        <div id="container" class="col-md-7" >
+            <div>
+                <div class="form-group">
+                    <label for="">Title</label>
+                    <input type="text" [(ngModel)]="modelTitle" class="form-control" placeholder="title">
+                </div>
+            </div>
+            <div class="box" style="background-color: lightgray;">
+                <ko-stage [config]="configStage">
+                    <ko-layer>
+                    </ko-layer>
+                </ko-stage>
+            </div>
+
+            <div style="margin-top: 10px;margin-bottom: 10px;">
+                <button class="btn btn-success" (click)="saveModel()">Save</button>
+                <button class="btn btn-danger" (click)="cancelModel()">Cancel</button>
+            </div>
         </div>
+
         
         <div class="col-md-3">
             <div style="padding: 5px;" *ngIf="selectedTemplate != null">

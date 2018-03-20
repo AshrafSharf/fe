@@ -8,7 +8,7 @@ export class Utils {
 
     // base url
     static baseUrl:String = environment.apiUrl;
-    static modelBaseUrl:String = "http://ec2-34-243-45-92.eu-west-1.compute.amazonaws.com:8080";
+    static modelBaseUrl:String = environment.modelApiUrl;
     static routeProject:String = "project";
     static routeBranch:String = "branch";
     static routeVariable:String = "variable";
@@ -18,6 +18,7 @@ export class Utils {
     static routeVariableType:String = "variableType";
     static routeRole:String = "role";
     static routeSystemModel:String = "model"
+    static routeModel:String = "model";
 
 
     static buffer:Array<TableInputPair>;

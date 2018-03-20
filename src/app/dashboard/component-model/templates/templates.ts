@@ -32,7 +32,11 @@ export abstract class Template {
         this.identifier = Guid.newGuid().toString();
     }
 
+<<<<<<< HEAD
     public abstract createUI(isDraggable?:boolean): any;
+=======
+    public abstract createUI(x, y): any;
+>>>>>>> d78b833105cb79a19e3649b99a80cfd02e2dfca6
     public abstract reloadUI(): any;
     public abstract getType(): String;
     public abstract getHeaderColor(): String;

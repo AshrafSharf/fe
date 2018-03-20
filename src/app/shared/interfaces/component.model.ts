@@ -33,7 +33,6 @@ export interface ComponentModelInterface {
     modelInterfaceEndPointPropertiesList: Array<ComponentModelInterfaceEndPointProperty>;
     modelInterfaceEndPointsList: Array<ComponentModelInterfaceEndPoint>;
     modelInterfacePropertiesList: Array<ComponentModelInterfaceProperty>;
-    modelComponentVisualProperties: ComponentModelInterfaceVisualProperties;
 }
 
 export interface ComponentModelComponent {
@@ -44,6 +43,7 @@ export interface ComponentModelComponent {
     templateName: String;
     modelComponentInterfaceList: Array<ComponentModelInterface>;
     modelComponentPropertiesList;
+    modelComponentVisualProperties: ComponentModelInterfaceVisualProperties;
 }
 
 export interface ComponentModel {

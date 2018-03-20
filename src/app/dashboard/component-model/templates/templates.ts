@@ -32,7 +32,7 @@ export abstract class Template {
         this.identifier = Guid.newGuid().toString();
     }
 
-    public abstract createUI(): any;
+    public abstract createUI(x, y): any;
     public abstract reloadUI(): any;
     public abstract getType(): String;
     public abstract getHeaderColor(): String;

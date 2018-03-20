@@ -112,8 +112,13 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                                 this.templates.push(template);
 
                                 // draw template
-                                var group = template.createUI()
-                                group.x = template
+                                let x = 0; let y;
+                                if (tempTemplate.modelComponentVisualProperties != null) {
+                                    x = parseFloat(tempTemplate.modelComponentVisualProperties.xPosition.toString());
+                                    y = parseFloat(tempTemplate.modelComponentVisualProperties.yPosition.toString());
+                                }
+
+                                var group = template.createUI(x, y);
                                 this.addGroup(group);
                             }
                         }
@@ -394,30 +399,31 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                     dinterfaces.push(intObject);
                 }
 
-                var visualProperties = {
-                    color: 'red',
-                    height: template.uiGroup.height,
-                    id: '',
-                    width: template.uiGroup.width,
-                    xPosition: template.uiGroup.x,
-                    yPosition: template.uiGroup.y
-                }
-
                 var intfObj = {
                     title: intf.name,
                     latency: intf.latency,
                     modelInterfacePropertiesList: properties,
-                    modelInterfaceEndPointsList: dinterfaces,
-                    modelComponentVisualProperties: visualProperties
+                    modelInterfaceEndPointsList: dinterfaces
                 }
 
                 interfaces.push(intfObj);
             }
 
+            var visualProperties = {
+                color: 'red',
+                height: '', //template.uiGroup.height,
+                id: '',
+                shape: '',
+                width: '', //template.uiGroup.width,
+                xPosition: '' + template.uiGroup.getAttrs().x,
+                yPosition: '' + template.uiGroup.getAttrs().y
+            }
+
             var component = {
                 title: template.name,
                 templateName: template.type,
-                modelComponentInterfaceList: interfaces
+                modelComponentInterfaceList: interfaces,
+                modelComponentVisualProperties: visualProperties
             }
 
             components.push(component);

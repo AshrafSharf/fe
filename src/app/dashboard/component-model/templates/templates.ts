@@ -20,9 +20,10 @@ export class TemplateInterface {
 }
 
 export abstract class Template {
-    public identifier:String = '';
-    public name:String = '';
-    public interfaces:TemplateInterface[] = Array<TemplateInterface>();
+    public identifier: String = '';
+    public name: String = '';
+    public type: String  = '';
+    public interfaces: TemplateInterface[] = Array<TemplateInterface>();
     protected callback: TemplateEventsCallback;
     public uiGroup:Group = null;
 

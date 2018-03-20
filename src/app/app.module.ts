@@ -61,6 +61,8 @@ import { SettingsService } from './services/settings.service';
 import { LoaderService } from './services/loader.service';
 import { LoaderComponent } from './shared/loader/loader.component';
 import { KonvaModule } from 'ng2-konva';
+import { ModelService } from './services/model.service';
+import { ComponentModelListComponent } from './dashboard/component-model/model.list.component';
 
 
 @NgModule({
@@ -77,9 +79,11 @@ import { KonvaModule } from 'ng2-konva';
     ForecastTabularComponent,
     ForecastGraphicalComponent,
     SimulationComponent,
-    ComponentModelComponent,
     TimeSegmentComponent,
 
+    ComponentModelComponent,
+    ComponentModelListComponent,
+    
     VariableConstantComponent,
     VariableDistributionComponent,
     VariableExpressionComponent,
@@ -129,7 +133,8 @@ import { KonvaModule } from 'ng2-konva';
     AppVariableTypeService,
     D3Service,
     SettingsService,
-    LoaderService
+    LoaderService,
+    ModelService
   ],
   bootstrap: [AppComponent]
 })

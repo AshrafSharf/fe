@@ -20,6 +20,7 @@ import { SimulationComponent } from '../dashboard/simulation/simulation.componen
 import { VariableListComponent } from '../dashboard/variables/variable-list.component';
 import { VariableTypeListComponent } from '../dashboard/variable-type/variable.type.list.component';
 import { SettingsComponent } from '../dashboard/settings/settings.component';
+import { ComponentModelListComponent } from '../dashboard/component-model/model.list.component';
 
 export const routes: Routes = [
     { path:'login', component: LoginComponent },
@@ -36,7 +37,8 @@ export const routes: Routes = [
             { path:'create-variable', component: VariablesComponent, canActivate:[UserService] },
             { path:'forecast_tabular', component: ForecastTabularComponent, canActivate:[UserService] },
             { path:'forecast_graphical', component: ForecastGraphicalComponent, canActivate:[UserService] },
-            { path:'component_model', component: ComponentModelComponent, canActivate:[UserService] },
+            { path:'component_model-list', component: ComponentModelListComponent, canActivate:[UserService] },
+            { path:'create-component-model', component: ComponentModelComponent, canActivate:[UserService] },
             { path:'data_flow', component: DataFlowComponent, canActivate:[UserService] },
             { path:'login', component: LoginComponent },
             { path:'simulation', component: SimulationComponent, canActivate:[UserService] },

@@ -15,6 +15,7 @@ export class Utils {
     static routeLogin:String = "login";
     static routeSettings:String = "settings";
     static routeVariableType:String = "variableType";
+    static routeModel:String = "model";
 
     static buffer:Array<TableInputPair>;
     static localDev:boolean = environment.local;

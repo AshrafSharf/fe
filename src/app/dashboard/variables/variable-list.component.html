@@ -11,8 +11,8 @@
             <select [(ngModel)]="selectedBranch" (change)="reloadVariables()" class="app-select" #branchList>
                 <option *ngFor="let branch of branches" [value]="branch.id"> {{branch.title}} </option>
             </select>
-            <button class="app-button" *ngIf="userRole != null && userRole != 'read-only'" (click)="addNewVariable()">NEW VARIABLE</button>
-            <button class="app-button" *ngIf="userRole == null || userRole == 'read-only'" disabled style="opacity:0.5;">NEW VARIABLE</button>
+            <button class="app-button" *ngIf="userRole != null && userRole != 'Read-only'" (click)="addNewVariable()">NEW VARIABLE</button>
+            <button class="app-button" *ngIf="userRole == null || userRole == 'Read-only'" disabled style="opacity:0.5;">NEW VARIABLE</button>
         </div>
 
         <table-view 

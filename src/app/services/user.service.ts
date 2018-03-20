@@ -68,10 +68,21 @@ export class UserService implements CanActivate {
             });
     }
 
-    createUser(userName:String, password:String) {
+    getDetails(id:String) {
+        this.loaderService.show();
+        let url = Utils.createUrl(Utils.routeUser) + "/" + id;
+        return this.http
+            .get(url, Utils.getRequestOptions())
+            .map(result => {
+                this.loaderService.hide()
+                return result.json();
+            });
+    }
+
+    createUser(userName:String, password:String, roleId: String) {
         this.loaderService.show();
         let url = Utils.createUrl(Utils.routeUser);
-        let body = { userName: userName, password: password};
+        let body = { userName: userName, password: password, roleId: roleId};
 
         return this.http
             .post(url, body, Utils.getRequestOptions())

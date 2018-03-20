@@ -8,8 +8,8 @@
                 <select (change)="selectBranch($event)" class="app-select" [(ngModel)]="selectedProject">
                     <option *ngFor="let project of projects" [value]="project.id"> {{project.title}} </option>
                 </select>
-                <button class="app-button" *ngIf="userRole != null && userRole != 'read-only'" (click)="addNewBranch()">NEW BRANCH</button>
-                <button class="app-button" *ngIf="userRole == null || userRole == 'read-only'" disabled style="opacity:0.5;">NEW BRANCH</button>
+                <button class="app-button" *ngIf="userRole != null && userRole != 'Read-only'" (click)="addNewBranch()">NEW BRANCH</button>
+                <button class="app-button" *ngIf="userRole == null || userRole == 'Read-only'" disabled style="opacity:0.5;">NEW BRANCH</button>
             </div>
 
             <table-view 

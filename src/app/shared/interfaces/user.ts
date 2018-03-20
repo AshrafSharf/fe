@@ -3,4 +3,6 @@ export interface User {
     password: String;
     roleId: String;
     id: String;
+    projectId: String;
+    branchId: String;
 }

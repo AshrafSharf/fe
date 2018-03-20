@@ -46,7 +46,7 @@ export const routes: Routes = [
             { path:'variable-type-list', component: VariableTypeListComponent, canActivate: [UserService]},
             { path:'create-variable-type', component: VariableTypeComponent, canActivate: [UserService]},
             { path: 'settings', component: SettingsComponent, canActivate: [UserService]},
-            {path: "users", component:UsersComponent, canActivate: [UserService]}
+            {path: "users", component:UsersComponent, canActivate: [UserService]},
             {path:'verify-model', component:VerifyModelComponent, canActivate: [UserService] }
         ] 
     },

@@ -5,6 +5,7 @@ export class JavaMicroServiceTemplate extends GenericMicroServiceTemplate {
     public constructor(callback) {
         super(callback)
         this.name = 'Java Micro Service';
+        this.type = 'JavaMicroServiceTemplate';
     }
 
     public getType(): String {

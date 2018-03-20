@@ -5,6 +5,7 @@ export class SingleInterfaceTemplate extends GenericMicroServiceTemplate {
     public constructor(callback) {
         super(callback)
         this.name = 'Single Interface';
+        this.type = 'SingleInterfaceTemplate';
     }
 
     public getType(): String {

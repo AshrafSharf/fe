@@ -30,11 +30,11 @@ export class MatchTableComponenet implements OnInit, OnChanges {
     ) {}
     
     ngOnInit() { 
-
+        
     }
 
     ngOnChanges(changes: SimpleChanges){
-       
+        this.inputVariableMatchings.splice(0, this.inputVariableMatchings.length);
     }
 
     getForecastVariables(forecastBranchId: String, date:string){

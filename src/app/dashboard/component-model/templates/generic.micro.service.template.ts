@@ -10,15 +10,26 @@ export class GenericMicroServiceTemplate extends Template {
     public constructor(callback) {
         super(callback);
         this.name = 'Generic Micro Service';
+        this.type = 'GenericMicroServiceTemplate';
     }
 
-    public createUI(x = Math.random() * 600, y = Math.random() * 600, fontSize = 13) {
-
-        this.uiGroup = new Group({
-            x : x,
-            y : y,
-            draggable: true
-        })
+    public createUI(isDraggable?, x = Math.random() * 600, y = Math.random() * 600, fontSize = 13) {
+            if (isDraggable !=null){
+                this.uiGroup = new Group({
+                    x : x,
+                    y : y,
+                    draggable: isDraggable
+                })
+            }
+            else{
+                this.uiGroup = new Group({
+                    x : x,
+                    y : y,
+                    draggable: true
+                })
+            }
+        
+       
 
         this.uiGroup.add(this.createContainer());
         this.uiGroup.add(this.createTitle());

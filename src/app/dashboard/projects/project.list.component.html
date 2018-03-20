@@ -4,8 +4,8 @@
     </div>
 
     <div class="row">
-        <button class="app-button" *ngIf="userRole != null && userRole != 'read-only'" (click)="addNewProject()">NEW PROJECT</button>
-        <button class="app-button" *ngIf="userRole == null || userRole == 'read-only'" disabled style="opacity:0.5;">NEW PROJECT</button>
+        <button class="app-button" *ngIf="userRole != null && userRole != 'Read-only'" (click)="addNewProject()">NEW PROJECT</button>
+        <button class="app-button" *ngIf="userRole == null || userRole == 'Read-only'" disabled style="opacity:0.5;">NEW PROJECT</button>
         <table-view 
             (row-edited)="onRowEdit($event)"
             (row-deleted)="onRowDelete($event)"

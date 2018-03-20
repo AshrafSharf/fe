@@ -8,6 +8,7 @@ import { Project } from  './../../shared/interfaces/project';
 import { Branch } from './../../shared/interfaces/branch';
 import { UserService } from '../../services/user.service';
 import { RoleService } from '../../services/roles.service';
+import { Utils } from '../../shared/utils';
 
 
 @Component({
@@ -67,12 +68,7 @@ export class SettingsComponent implements OnInit {
             });
         });
 
-        // get all users
-        this.userService.getUsers().subscribe(result => {
-            if (result.status == "OK") {
-                this.users = result.data;
-            }
-        });
+        this.getUsers();
 
         this.showLocalCheck = this.settingsService.getLocal();
         this.settingsService
@@ -101,6 +97,16 @@ export class SettingsComponent implements OnInit {
             });
     }
 
+    getUsers() {
+        // get all users
+        this.users.splice(0, this.users.length);
+        this.userService.getUsers().subscribe(result => {
+            if (result.status == "OK") {
+                this.users = result.data;
+            }
+        });
+    }
+
     setRoles(user, role) {
         for(var index = 0; index < this.users.length; index ++) {
             if (this.users[index].userName == user.userName) {
@@ -127,7 +133,7 @@ export class SettingsComponent implements OnInit {
             this.settingsService.setToLocal(this.pointToLocalhost);
         }
 
-        if (this.userRole == "admin") {
+        if (this.userRole == "Admin") {
             this.users.forEach(user => {
                 this.userService
                     .updateUser(user.id, user.userName, user.password, user.roleId, user.projectId, user.branchId)
@@ -149,6 +155,25 @@ export class SettingsComponent implements OnInit {
             });
 
         
+    }
+    
+    createUser(){
+        this.router.navigate(['/home/users']);
+    }
+
+    editUser(){
+        this.router.navigate(['home/users'], { queryParams: {
+            id: Utils.getUserId()
+        }});
+    }
+
+    deleteUser(user){
+        this.userService.deleteUser(user.id).subscribe(result => {
+            if (result.status == "OK") {
+                console.log('"'+user.userName+'" deleted');
+            }
+        });
+        this.getUsers();
     }
 
     onCancel(){

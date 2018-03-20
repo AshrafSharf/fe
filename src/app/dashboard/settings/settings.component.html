@@ -50,12 +50,20 @@
             </div>
         </div>
     </div>
-    <div class="row admin-views" *ngIf="userRole == 'admin'">
+    <div class="row pull-right">
+        <div class="col-md-12">
+            <button class="btn btn-info" *ngIf="userRole == 'Admin'" (click)="createUser()">CREATE NEW USER</button>
+            <button class="btn btn-warning" (click)="editUser()">EDIT USER</button>
+        </div>
+    </div>
+
+    <div class="row admin-views" *ngIf="userRole == 'Admin'">
         <table class="table">
             <thead>
                 <tr>
                     <th class="headers">Users</th>
                     <th class="headers" *ngFor="let role of roles">{{role.roleName}}</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -63,16 +71,20 @@
                     <td>{{user.userName}}</td>
                     <td *ngFor="let role of roles">
                         <input type="radio" value="{{role}}" name="{{user.userName}}-role" [checked]="isChecked(user, role)" (click)="setRoles(user, role)">
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <button class="btn btn-success" (click)="onSave()">Save and Exit</button>
-        <button class="btn btn-danger" (click)="onCancel()">Cancel</button>
+                    </td>
+                    <td class="col-md-1 text-center">
+                        <fa name="trash" class="btn btn-danger" (click)="deleteUser(user)"></fa>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
-</div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <button class="btn btn-success" (click)="onSave()">Save and Exit</button>
+            <button class="btn btn-danger" (click)="onCancel()">Cancel</button>
+        </div>
+    </div>
 
 </div>

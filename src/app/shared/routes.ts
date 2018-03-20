@@ -20,10 +20,9 @@ import { SimulationComponent } from '../dashboard/simulation/simulation.componen
 import { VariableListComponent } from '../dashboard/variables/variable-list.component';
 import { VariableTypeListComponent } from '../dashboard/variable-type/variable.type.list.component';
 import { SettingsComponent } from '../dashboard/settings/settings.component';
+import { UsersComponent } from '../dashboard/users/users.component';
 import { VerifyModelComponent } from '../dashboard/component-model/verify-model.component';
 import { ComponentModelListComponent } from '../dashboard/component-model/model.list.component';
-
-
 export const routes: Routes = [
     { path:'login', component: LoginComponent },
     { 
@@ -47,6 +46,7 @@ export const routes: Routes = [
             { path:'variable-type-list', component: VariableTypeListComponent, canActivate: [UserService]},
             { path:'create-variable-type', component: VariableTypeComponent, canActivate: [UserService]},
             { path: 'settings', component: SettingsComponent, canActivate: [UserService]},
+            {path: "users", component:UsersComponent, canActivate: [UserService]},
             {path:'verify-model', component:VerifyModelComponent, canActivate: [UserService] }
         ] 
     },

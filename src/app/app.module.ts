@@ -25,6 +25,7 @@ import { NgDatepickerModule } from 'ng2-datepicker';
 import { DpDatePickerModule } from 'ng2-date-picker';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { NvD3Module } from 'ng2-nvd3';
+import { UsersComponent } from './dashboard/users/users.component';
 
 import { ModalModule } from 'ngx-modialog';
 import { BootstrapModalModule } from 'ngx-modialog/plugins/bootstrap';
@@ -86,6 +87,7 @@ import { ComponentModelListComponent } from './dashboard/component-model/model.l
     ComponentModelComponent,
     VerifyModelComponent,
     TimeSegmentComponent,
+    UsersComponent,
 
     ComponentModelComponent,
     ComponentModelListComponent,

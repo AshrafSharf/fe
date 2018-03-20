@@ -41,7 +41,6 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
     models:SystemModel[] = Array<SystemModel>();
     environment:CptEnvironment =  CptEnvironment.get();
     simOutput:string;
-   // inputVariables:string[] = [];
     forecastBranchId:String=null;
     
     selectedForecastBranch:String = null
@@ -76,8 +75,6 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
         //TODO: Use selected Project ID
         this.reloadBranches("5aa31b14d49fee0db47f67c3");
         this.getModels("4567");
-     //   this.clearEnvironment();
-     //   this.setupEnvironment();
     }
 
     ngAfterViewInit(){
@@ -109,17 +106,15 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
      * Set up the System Model environment
     */
     setupEnvironment(){
-     //  this.modelService.getModel("4567").subscribe(result =>{
-      //      this.systemModel =  result.data[0] as SystemModel;
-        
-            this.environment = CptEnvironment.get();
-     
+        this.environment = CptEnvironment.get();
+
         for (let component of this.systemModel.modelComponentList){
-            let cptComp ;
+            let cptComp;
             if (component.templateName == "Microservice"){
                 cptComp = new CptMicroserviceComponent();
             }
-
+            //TODO: add more if cases with for other templates
+            
             cptComp.order = component.order;
             cptComp.setName(component.title);
             

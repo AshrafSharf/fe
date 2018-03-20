@@ -34,6 +34,7 @@ export class SettingsComponent implements OnInit {
     private users = [];
     private roles = [];
     checked = true;
+    userName:String;
 
     constructor(
         private settingsService:SettingsService,
@@ -58,9 +59,10 @@ export class SettingsComponent implements OnInit {
             this.userService.getLoggedInUser().subscribe(result => {
                 if (result.status == "OK") {
                     let userData = result.data;
-                    this.roles.forEach(user => {
-                        if (userData.roleId == user.id) {
-                            this.userRole = user.roleName;
+                    this.userName = userData.userName;
+                    this.roles.forEach(role => {
+                        if (userData.roleId == role.id) {
+                            this.userRole = role.roleName;
                         }
                     });
 
@@ -171,9 +173,17 @@ export class SettingsComponent implements OnInit {
         this.userService.deleteUser(user.id).subscribe(result => {
             if (result.status == "OK") {
                 console.log('"'+user.userName+'" deleted');
+                
+                if (user.userName == this.userName) {
+                    sessionStorage.removeItem('user_auth_status');
+                    this.router.navigate(['login']);
+                }
+                else {
+                    this.getUsers();
+                }
+
             }
         });
-        this.getUsers();
     }
 
     onCancel(){

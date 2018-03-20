@@ -8,6 +8,7 @@ export interface ModelInterface{
     modelInputVariableList:ModelVariable[];
     modelInterfaceEndPointsList:ModelInterfaceEndpoint[];
     modelInterfacePropertiesList: ModelProperty[];
+    latency:string;
           
       
 }

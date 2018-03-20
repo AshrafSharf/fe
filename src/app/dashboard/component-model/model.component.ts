@@ -343,7 +343,9 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
     }
 
     public onVerify(){
-        this.router.navigate(["home/verify-model"]);
+        this.router.navigate(["home/verify-model"], { queryParams: {
+            id: this.selectedModel.id
+        }});
     }
 
     public onDelete(index) {

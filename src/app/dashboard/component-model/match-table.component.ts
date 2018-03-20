@@ -30,7 +30,7 @@ export class MatchTableComponenet implements OnInit, OnChanges {
     ) {}
     
     ngOnInit() { 
-
+        
     }
 
     ngOnChanges(changes: SimpleChanges){

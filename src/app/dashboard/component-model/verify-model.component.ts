@@ -18,12 +18,16 @@ import 'rxjs/add/observable/of';
 import { Moment } from 'moment';
 import { AppVariableService } from '../../services/variable.services';
 import { GenericMicroServiceTemplate } from '../component-model/templates/generic.micro.service.template';
-import { TemplateInterface } from '../component-model/templates/templates';
+import { TemplateInterface, Template } from '../component-model/templates/templates';
 import { CptComponent } from '../../shared/modelling/cpt-component';
-import { SystemModelService } from '../../services/system-model.service';
 import { SystemModel } from '../../shared/interfaces/system-model';
 import { CptInterface, CptInterfaceOutput } from '../../shared/modelling/cpt-interface';
 import { Config } from '../../shared/config';
+import { ComponentModel } from '../../shared/interfaces/component.model';
+import { JavaMicroServiceTemplate } from './templates/java.micro.service.template';
+import { StaticTemplate } from './templates/static.template';
+import { SingleInterfaceTemplate } from './templates/single.interface.template';
+import { ModelService } from '../../services/model.service';
 
 
 @Component({
@@ -34,8 +38,10 @@ import { Config } from '../../shared/config';
 
 export class VerifyModelComponent implements OnInit, AfterViewInit {
     @ViewChild(MatchTableComponenet) matchTable:MatchTableComponenet;
-    @ViewChild(Layer) layer: Layer;
-    @ViewChild(StageComponent) stage: StageComponent;
+    @ViewChild(StageComponent) stageComponent: StageComponent;
+
+    private stage: Stage;
+    private layer: Layer;
     
     branches:Branch[] = Array<Branch>();
     models:SystemModel[] = Array<SystemModel>();
@@ -49,6 +55,11 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
     selectedDate:Moment;
     selectedModelId:string = null;
     systemModel:SystemModel = null;
+    selectedModel = null;
+    modelTitle:string = "";
+
+    // list of templatea
+    public templates: Array<Template> = new Array<Template>();
     
      // drawing area
      public width = 750;
@@ -64,7 +75,7 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
         private branchService:BranchService,
         private modal:Modal,
         private variableService:AppVariableService,
-        private modelService:SystemModelService,
+        private modelService:ModelService,
         private route:ActivatedRoute,
         private router:Router,
         private location: Location) {
@@ -74,29 +85,33 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
     ngOnInit() { 
         //TODO: Use selected Project ID
         this.reloadBranches("5aa31b14d49fee0db47f67c3");
-        this.getModels("4567");
+        this.getSelectedModel();
+
     }
 
     ngAfterViewInit(){
      
     }
 
-    getModels(branchId:string){
-        this.modelService.getModel(branchId).subscribe(result =>{
-            this.models = result.data;
-            if (this.selectedModelId== null){
-                this.selectedModelId = this.models[0].id;
-                this.loadSelectedModel();
-            }
-        });
+    getSelectedModel(){
+        this.route
+        .queryParams
+        .subscribe(params => {
+            var id = params["id"];
+            console.log("id", id);
+            if (id == undefined) return;
+            this.selectedModelId = id;
+            this.loadSelectedModel();
+        });  
     }
 
     loadSelectedModel(){
-        console.log('hello')
-        this.modelService.getModelById(this.selectedModelId)
+        console.log (this.selectedModelId);
+        this.modelService.getModel(this.selectedModelId)
         .subscribe(result =>{
             this.systemModel = result.data as SystemModel
             console.log(this.systemModel);
+            this.drawDiagram(this.selectedModelId);
             this.clearEnvironment();
             this.setupEnvironment();
         });
@@ -110,28 +125,28 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
 
         for (let component of this.systemModel.modelComponentList){
             let cptComp;
-            if (component.templateName == "Microservice"){
+            if (component.templateName == "GenericMicroServiceTemplate"){
                 cptComp = new CptMicroserviceComponent();
             }
             //TODO: add more if cases with for other templates
-            
+
             cptComp.order = component.order;
             cptComp.setName(component.title);
             
             for (let interf of component.modelComponentInterfaceList){
                 let cptInt = cptComp.addInterface(interf.title);
                 cptInt.id = interf.id;
-                
+                cptInt.latency = Number(interf.latency);
                 //add properties
-                for (let property of interf.modelInterfacePropertiesList){
+                /*for (let property of interf.modelInterfacePropertiesList){
                     if (property.key == "latency"){
                         cptInt.latency = Number(property.value);
                         break;
                     } 
-                }
+                }*/
 
                 //add input variables
-                if (interf.modelInputVariableList.length>0){
+                if (interf.modelInputVariableList != null && interf.modelInputVariableList.length>0){
                     cptInt.inputLoadVariable = interf.modelInputVariableList[0].title;
                    // this.inputVariables.push(interf.modelInputVariableList[0].title);
                     this.environment.addInputVariable(interf.modelInputVariableList[0].title);
@@ -188,15 +203,11 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
        for (let component of this.systemModel.modelComponentList){
            for (let interf of component.modelComponentInterfaceList){
                let cptIf = this.environment.getInterface(interf.id) as CptMicroserviceInterface;
+               cptIf.latency = Number(interf.latency);
                for (let property of interf.modelInterfacePropertiesList){
-                   if (property.key == "latency"){
-                        cptIf.latency = Number(property.value);
-                   }
-                   else{
-                        if(cptIf.load.loadValues.hasOwnProperty(property.key)){
-                            cptIf.load.loadValues[property.key] = 0;
-                        }
-                   }
+                   if(cptIf.load.loadValues.hasOwnProperty(property.key)){
+                        cptIf.load.loadValues[property.key] = 0;
+                    }
                }
            }
        }
@@ -223,6 +234,16 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
      */
     onRunSimulation(){
         this.resetEnvironment();
+        {
+            
+            if (this.matchTable.inputVariableMatchings.length == 0){
+                this.modal.alert()
+                .title("Cannot Run Simulation")
+                .body("Forecast variables need to be imported first")
+                .open();
+                return;
+            }
+        }
         for (let inputVar of this.matchTable.inputVariableMatchings){
             //show warning if no value defined for an input variable
             if (inputVar.hasForecastMatch == false
@@ -289,5 +310,82 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
 
     onEdit(){
         this.location.back();
+    }
+
+    drawDiagram(id:string){
+            this.modelService
+                .getModel(id)
+                .subscribe(result => {
+                    if (result.status == 'OK') {
+
+                        this.selectedModel = result.data as ComponentModel;
+                        
+                        this.modelTitle = this.selectedModel.title.toString();
+                        
+                        // create templates
+                        for (let index = 0; index < this.selectedModel.modelComponentList.length; index++) {
+
+                            // create template
+                            let tempTemplate = this.selectedModel.modelComponentList[index];
+                            var template: Template;
+                            if (tempTemplate.templateName == 'GenericMicroServiceTemplate') {
+                                template = new GenericMicroServiceTemplate(this);
+                            } else if (tempTemplate.templateName == 'JavaMicroServiceTemplate') {
+                                template = new JavaMicroServiceTemplate(this);
+                            } else if (tempTemplate.templateName == 'StaticTemplate') {
+                                template = new StaticTemplate(this);
+                            } else if (tempTemplate.templateName == 'SingleInterfaceTemplate') {
+                                template = new SingleInterfaceTemplate(this);
+                            }
+
+                            template.identifier = tempTemplate.id;
+                            template.name = tempTemplate.title;
+
+                            // get interfaces from template
+                            for (let interfaceIndex = 0;interfaceIndex < tempTemplate.modelComponentInterfaceList.length; interfaceIndex++) {
+                                let tempInterface = tempTemplate.modelComponentInterfaceList[interfaceIndex];
+
+                                var templateInterface = new TemplateInterface();
+                                templateInterface.name = tempInterface.title;
+                                templateInterface.latency = tempInterface.latency;
+                                
+
+                                // get properties of interface
+                                for (let propertyIndex = 0; propertyIndex < tempInterface.modelInterfacePropertiesList.length; propertyIndex ++) {
+                                    let property = tempInterface.modelInterfacePropertiesList[propertyIndex];
+                                    templateInterface.properties.push({ name: property.key, value: property.value});
+                                }
+
+                                // get downstream interfaces
+                                for (let dInterfaceIndex = 0; dInterfaceIndex < tempInterface.modelInterfaceEndPointsList.length; dInterfaceIndex ++) {
+                                    let dInterface = tempInterface.modelInterfaceEndPointsList[dInterfaceIndex];
+                                    templateInterface.downstreamInterfaces.push( { component: dInterface.outputModelInterfaceId, connectedInterface: dInterface.inputModelInterfaceId });
+                                }
+
+                                template.interfaces.push(templateInterface);
+                            }
+
+                            // save template
+                            this.templates.push(template);
+
+                            // draw template
+                            var group = template.createUI(false);
+                            group.x = template
+                            this.addGroup(group);
+                        }
+                    }
+                    console.log(result);
+                });
+    }
+
+    private addGroup(group) {
+        this.addEditorEventHandler();
+        this.layer.add(group);
+        this.layer.draw();
+    }
+
+    private addEditorEventHandler() {
+        this.stage = this.stageComponent.getStage();
+        this.layer = this.stage.getChildren()[0];
     }
 }

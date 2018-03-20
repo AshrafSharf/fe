@@ -3,10 +3,8 @@
             <app-header title="Verify System Model"></app-header>
         </div>
         <div class="row">
-                <div class="col-md-3">
-                    <select (change)="loadSelectedModel()" [(ngModel)]="selectedModelId">
-                            <option *ngFor="let model of models" [value]="model.id"> {{model.title}} </option>
-                    </select>
+                <div class="col-md-10 text-right">
+                        <button (click)="onEdit()" type="button" class="btn btn-link">Edit</button>
                 </div>
         </div>
         <br>
@@ -52,18 +50,18 @@
                    
                     <div class="row">
                         <div class="col-md-12">
-                            <button (click)="onRunSimulation()" class="btn btn-success">Run Simulation</button>
+                            <button [disabled]="forecastBranchId==null"(click)="onRunSimulation()" class="btn btn-success">Run Simulation</button>
                         </div>
                     </div>        
                 </div>
             </div>
           </div>
           <div class="col-md-7" id="stage-parent">
-            <!--   <ko-stage [config]="configStage">
+               <ko-stage [config]="configStage">
                     <ko-layer>
                         
                     </ko-layer>
-                </ko-stage>     -->
+                </ko-stage>    
           </div>
             <div class="col-md-2">
                 <div class="panel panel-default">

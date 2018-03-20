@@ -18,7 +18,7 @@ export class ModelService {
 
     public createModel(body) {
         this.loaderService.show();
-        let url = Utils.createUrl(Utils.routeModel);
+        let url = Utils.createModelUrl(Utils.routeModel);
         console.log(body);
         return this.http
                 .post(url, body, Utils.getRequestOptions())
@@ -30,7 +30,7 @@ export class ModelService {
 
     public updateModel(id, body) {
         this.loaderService.show();
-        let url = Utils.createUrl(Utils.routeModel) + '/' + id;
+        let url = Utils.createModelUrl(Utils.routeModel) + '/' + id;
         console.log(body);
         return this.http
                 .put(url, body, Utils.getRequestOptions())
@@ -42,7 +42,7 @@ export class ModelService {
 
     public getModel(id) {
         this.loaderService.show();
-        let url = Utils.createUrl(Utils.routeModel) + "/model/" + id;
+        let url = Utils.createModelUrl(Utils.routeModel) + "/model/" + id;
         return this.http
             .get(url, Utils.getRequestOptions())
             .map(result => {
@@ -53,7 +53,7 @@ export class ModelService {
 
     public deleteModel(modelId) {
         this.loaderService.show();
-        let url = Utils.createUrl(Utils.routeModel) + "/" + modelId;
+        let url = Utils.createModelUrl(Utils.routeModel) + "/" + modelId;
         return this.http
                 .delete(url, Utils.getRequestOptions())
                 .map(result => {
@@ -64,7 +64,7 @@ export class ModelService {
 
     public getModels(branchId) {
         this.loaderService.show();
-        let url = Utils.createUrl(Utils.routeModel + "/" + branchId);
+        let url = Utils.createModelUrl(Utils.routeModel + "/" + branchId);
         return this.http
                 .get(url, Utils.getRequestOptions())
                 .map(result => {

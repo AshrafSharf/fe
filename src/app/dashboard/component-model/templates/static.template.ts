@@ -5,6 +5,7 @@ export class StaticTemplate extends GenericMicroServiceTemplate {
     public constructor(callback) {
         super(callback)
         this.name = 'Static Template';
+        this.type = 'StaticTemplate';
     }
 
     public getType(): String {

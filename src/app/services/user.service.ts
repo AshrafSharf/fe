@@ -15,7 +15,7 @@ export class UserService implements CanActivate {
         private http: Http,
         private loaderService:LoaderService) {}
     
-    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {  
         if (sessionStorage.getItem('user_auth_status') == '1') {
             return true;
         }

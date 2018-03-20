@@ -65,8 +65,8 @@ import { MatchTableComponenet } from './dashboard/component-model/match-table.co
 import { KonvaModule } from 'ng2-konva';
 import { SystemModelService } from './services/system-model.service';
 import { VerifyModelComponent } from './dashboard/component-model/verify-model.component';
-
-
+import { ModelService } from './services/model.service';
+import { ComponentModelListComponent } from './dashboard/component-model/model.list.component';
 
 
 @NgModule({
@@ -88,6 +88,9 @@ import { VerifyModelComponent } from './dashboard/component-model/verify-model.c
     VerifyModelComponent,
     TimeSegmentComponent,
 
+    ComponentModelComponent,
+    ComponentModelListComponent,
+    
     VariableConstantComponent,
     VariableDistributionComponent,
     VariableExpressionComponent,
@@ -139,7 +142,9 @@ import { VerifyModelComponent } from './dashboard/component-model/verify-model.c
     D3Service,
     SettingsService,
     LoaderService,
-    SystemModelService
+    SystemModelService,
+    ModelService
+
   ],
   bootstrap: [AppComponent]
 })

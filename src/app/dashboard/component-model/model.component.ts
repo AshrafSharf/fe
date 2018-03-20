@@ -1,3 +1,4 @@
+import { ComponentModel } from './../../shared/interfaces/component.model';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
@@ -10,6 +11,8 @@ import { Template, TemplateEventsCallback, TemplateInterface } from './templates
 import { StaticTemplate } from './templates/static.template';
 import { SingleInterfaceTemplate } from './templates/single.interface.template';
 import { JavaMicroServiceTemplate } from './templates/java.micro.service.template';
+import { ModelService } from '../../services/model.service';
+
 
 
 @Component({
@@ -17,7 +20,6 @@ import { JavaMicroServiceTemplate } from './templates/java.micro.service.templat
     templateUrl: './model.component.html',
     styleUrls: ['./model.component.css']
 })
-
 export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
 
     @ViewChild(StageComponent) stageComponent:StageComponent;
@@ -32,18 +34,96 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
     public selectedTemplate:Template = null;
 
     // drawing area
-    public width = 600;
+    public width = 800;
     public height = 600;
+
+    // model title
+    public modelTitle = '';
 
     private fontSize = 15;
 
+
+    // model to edit
+    private selectedModel: ComponentModel = null;
+
     constructor(
         private route: ActivatedRoute,
-        private router: Router
-    ) { }
+        private router: Router,
+        private service:ModelService) { }
+
 
     ngOnInit() { 
         //this.addDrawingEditor();
+
+        this.route
+            .queryParams
+            .subscribe(params => {
+                var id = params["id"];
+                if (id == undefined) return;
+
+                this.service
+                    .getModel(id)
+                    .subscribe(result => {
+                        if (result.status == 'OK') {
+
+                            this.selectedModel = result.data as ComponentModel;
+                            
+                            this.modelTitle = this.selectedModel.title.toString();
+                            
+                            // create templates
+                            for (let index = 0; index < this.selectedModel.modelComponentList.length; index++) {
+
+                                // create template
+                                let tempTemplate = this.selectedModel.modelComponentList[index];
+                                var template: Template;
+                                if (tempTemplate.templateName == 'GenericMicroServiceTemplate') {
+                                    template = new GenericMicroServiceTemplate(this);
+                                } else if (tempTemplate.templateName == 'JavaMicroServiceTemplate') {
+                                    template = new JavaMicroServiceTemplate(this);
+                                } else if (tempTemplate.templateName == 'StaticTemplate') {
+                                    template = new StaticTemplate(this);
+                                } else if (tempTemplate.templateName == 'SingleInterfaceTemplate') {
+                                    template = new SingleInterfaceTemplate(this);
+                                }
+
+                                template.identifier = tempTemplate.id;
+
+                                // get interfaces from template
+                                for (let interfaceIndex = 0;interfaceIndex < tempTemplate.modelComponentInterfaceList.length; interfaceIndex++) {
+                                    let tempInterface = tempTemplate.modelComponentInterfaceList[interfaceIndex];
+
+                                    var templateInterface = new TemplateInterface();
+                                    templateInterface.name = tempInterface.title;
+                                    templateInterface.latency = tempInterface.latency;
+                                    
+
+                                    // get properties of interface
+                                    for (let propertyIndex = 0; propertyIndex < tempInterface.modelInterfacePropertiesList.length; propertyIndex ++) {
+                                        let property = tempInterface.modelInterfacePropertiesList[propertyIndex];
+                                        templateInterface.properties.push({ name: property.key, value: property.value});
+                                    }
+
+                                    // get downstream interfaces
+                                    for (let dInterfaceIndex = 0; dInterfaceIndex < tempInterface.modelInterfaceEndPointsList.length; dInterfaceIndex ++) {
+                                        let dInterface = tempInterface.modelInterfaceEndPointsList[dInterfaceIndex];
+                                        templateInterface.downstreamInterfaces.push( { component: dInterface.outputModelInterfaceId, connectedInterface: dInterface.inputModelInterfaceId });
+                                    }
+
+                                    template.interfaces.push(templateInterface);
+                                }
+
+                                // save template
+                                this.templates.push(template);
+
+                                // draw template
+                                var group = template.createUI()
+                                group.x = template
+                                this.addGroup(group);
+                            }
+                        }
+                        console.log(result);
+                    });
+            });
     }
 
     private addEditorEventHandler() {
@@ -289,5 +369,96 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
         let intf = this.selectedTemplate.interfaces[index];
         intf.downstreamInterfaces.splice(propertyIndex, 1);
 
+    }
+
+    public saveModel() {
+        var components = [];
+
+        // get components
+        for (let index = 0; index < this.templates.length; index++) {
+            var template = this.templates[index];
+
+            var interfaces = [];
+            // get all interfaces
+            for (let intfIndex = 0; intfIndex < template.interfaces.length; intfIndex++) {
+                var intf = template.interfaces[intfIndex];
+                
+                var properties = [];
+                // get all component properties
+                for (let propIndex = 0; propIndex < intf.properties.length; propIndex++) {
+                    var propObject = {
+                        key: intf.properties[propIndex].name,
+                        value: intf.properties[propIndex].value,
+                    }
+                    properties.push(propObject);
+                }
+
+                var dinterfaces = [];
+                // get all component downstream interfaces
+                for (let intIndex = 0; intIndex < intf.downstreamInterfaces.length; intIndex++) {
+                    var intObject = {
+                        inputModelInterfaceId: intf.downstreamInterfaces[intIndex].connectedInterface,
+                        outputModelInterfaceId: intf.downstreamInterfaces[intIndex].component
+                    }
+                    dinterfaces.push(intObject);
+                }
+
+                var visualProperties = {
+                    color: 'red',
+                    height: template.uiGroup.height,
+                    id: '',
+                    width: template.uiGroup.width,
+                    xPosition: template.uiGroup.x,
+                    yPosition: template.uiGroup.y
+                }
+
+                var intfObj = {
+                    title: intf.name,
+                    latency: intf.latency,
+                    modelInterfacePropertiesList: properties,
+                    modelInterfaceEndPointsList: dinterfaces,
+                    modelComponentVisualProperties: visualProperties
+                }
+
+                interfaces.push(intfObj);
+            }
+
+            var component = {
+                title: template.name,
+                templateName: template.type,
+                modelComponentInterfaceList: interfaces
+            }
+
+            components.push(component);
+        }
+
+        var body = {            
+            modelBranchId: "test-branch",
+            modelComponentList: components,
+            title: this.modelTitle
+        }
+
+        if (this.selectedModel == null) {
+            // create a model
+            this.service
+                .createModel(body)
+                .subscribe(result => {
+                    console.log(result)
+                    this.router.navigate(['home/component_model-list']);
+                });
+        } else {
+            // update the model
+            this.service
+                .updateModel(this.selectedModel.id, body)
+                .subscribe(result => {
+                    console.log(result)
+                    this.router.navigate(['home/component_model-list']);
+                });
+        }
+
+    }
+
+    public cancelModel() {
+        this.router.navigate(['home/component_model-list']);
     }
 }

@@ -10,6 +10,7 @@ export class GenericMicroServiceTemplate extends Template {
     public constructor(callback) {
         super(callback);
         this.name = 'Generic Micro Service';
+        this.type = 'GenericMicroServiceTemplate';
     }
 
     public createUI(x = Math.random() * 600, y = Math.random() * 600, fontSize = 13) {

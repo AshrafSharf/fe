@@ -45,7 +45,7 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
 
     // model to edit
     private selectedModel: ComponentModel = null;
-    private selectedId:String =null;
+    public selectedId:String =null;
 
     // collapse
     public isVisualPropertiesSectionClosed = false;

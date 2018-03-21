@@ -110,7 +110,8 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
         this.modelService.getModel(this.selectedModelId)
         .subscribe(result =>{
             this.systemModel = result.data as SystemModel
-            console.log(this.systemModel);
+            this.modelTitle = this.systemModel.title;
+            console.log(this.modelTitle);
             this.drawDiagram(this.selectedModelId);
             this.clearEnvironment();
             this.setupEnvironment();
@@ -268,7 +269,6 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
         }
         let o = this.environment.runSim();
         console.log(o);
-        //this.simOutput = JSON.stringify(o, null,4);
         this.simOutput =  this.displayOutput();
     } 
 
@@ -308,8 +308,12 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
         return outputString;
     }
 
-    onEdit(){
+    public onEdit(){
         this.location.back();
+    }
+
+    public cancelModel() {
+        this.router.navigate(['home/component_model-list']);
     }
 
     drawDiagram(id:string){
@@ -369,7 +373,13 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
                             this.templates.push(template);
 
                             // draw template
-                            var group = template.createUI(false);
+                            let x=0;
+                            let y;
+                            if (tempTemplate.modelComponentVisualProperties != null) {
+                                 x =  parseFloat(tempTemplate.modelComponentVisualProperties.xPosition.toString());
+                                 y = parseFloat(tempTemplate.modelComponentVisualProperties.yPosition.toString());
+                            }
+                            var group = template.createUI(x,y,false);
                             group.x = template
                             this.addGroup(group);
                         }

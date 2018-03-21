@@ -31,11 +31,16 @@ export abstract class Template {
         this.callback = callback;
         this.identifier = Guid.newGuid().toString();
     }
-
-    public abstract createUI(isDraggable?:boolean): any;
+    
+    public abstract createUI( x, y, isDraggable?:boolean): any;
     public abstract reloadUI(): any;
     public abstract getType(): String;
     public abstract getHeaderColor(): String;
+    public abstract getX();
+    public abstract getY();
+    public abstract getWidth();
+    public abstract getHeight();
+    public abstract deselectTemplate();
 }
 
 export interface TemplateEventsCallback {

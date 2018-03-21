@@ -14,6 +14,7 @@ export class UserService implements CanActivate {
         private router: Router,
         private http: Http,
         private loaderService:LoaderService) {}
+
     
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {  
         if (sessionStorage.getItem('user_auth_status') == '1') {
@@ -21,6 +22,7 @@ export class UserService implements CanActivate {
         }
         this.router.navigate(['login']);
         return false;
+
     }
 
     getUserByName(username:String) {

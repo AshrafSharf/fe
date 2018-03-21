@@ -43,10 +43,62 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
     // model to edit
     private selectedModel: ComponentModel = null;
 
+    // collapse
+    public isVisualPropertiesSectionClosed = false;
+    public isComponentPropertiesSectionClosed = false;
+
     constructor(
         private route: ActivatedRoute,
         private router: Router,
         private service:ModelService) { }
+
+    public toggleVisualProperties() {
+        this.isVisualPropertiesSectionClosed = !this.isVisualPropertiesSectionClosed;
+    }
+
+    public toggleComponentProperties() {
+        this.isComponentPropertiesSectionClosed = !this.isComponentPropertiesSectionClosed;
+    }
+
+    public getComponentX() {
+        let template = this.getSelectedTemplate();
+        if (template != null) {
+            return parseInt(template.getX());
+        }
+        return '-';
+    }
+
+    public getComponentY() {
+        let template = this.getSelectedTemplate();
+        if (template != null) {
+            return parseInt(template.getY());
+        }
+        return '-';
+    }
+
+    public getComponentWidth() {
+        let template = this.getSelectedTemplate();
+        if (template != null) {
+            return parseInt(template.getWidth());
+        }
+        return '-';
+    }
+
+    public getComponentHeight() {
+        let template = this.getSelectedTemplate();
+        if (template != null) {
+            return parseInt(template.getHeight());
+        }
+        return '-';
+    }
+
+    public getComponentColor() {
+        let template = this.getSelectedTemplate();
+        if (template != null) {
+            return template.getHeaderColor();
+        }
+        return '-';
+    }
 
     ngOnInit() { 
         //this.addDrawingEditor();
@@ -81,8 +133,6 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                                 } else if (tempTemplate.templateName == 'SingleInterfaceTemplate') {
                                     template = new SingleInterfaceTemplate(this);
                                 }
-
-                                template.identifier = tempTemplate.id;
 
                                 // get interfaces from template
                                 for (let interfaceIndex = 0;interfaceIndex < tempTemplate.modelComponentInterfaceList.length; interfaceIndex++) {
@@ -288,7 +338,12 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
     }
 
     public templateClicked(template: any) {
+        if (this.selectedTemplate != null && this.selectedTemplate.identifier != template.identifier) {
+            let template = this.getSelectedTemplate();
+            template.deselectTemplate();
+        }
         this.selectedTemplate = template.clone();
+        this.layer.draw();        
     }
 
     public addInterface() {
@@ -300,6 +355,7 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
 
     public cancelPropertyChanges() {
         this.selectedTemplate = null;
+        this.deselectTemplates();
     }
 
     public savePropertyChanges() {
@@ -336,11 +392,20 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                     this.templates.splice(index, 1);     
                     
                     this.selectedTemplate = null;
+                    this.deselectTemplates();
                     break;
                 }
             }
             
         }
+    }
+
+    public deselectTemplates() {
+        this.templates.forEach(template => {
+            let tmp = this.getTemplateById(template.identifier);
+            tmp.deselectTemplate();
+            this.layer.draw();
+        });
     }
 
     public onDelete(index) {
@@ -410,11 +475,11 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
             }
 
             var visualProperties = {
-                color: 'red',
-                height: '', //template.uiGroup.height,
+                color: template.getHeaderColor(),
+                height: '' + template.getHeight(),
                 id: '',
                 shape: '',
-                width: '', //template.uiGroup.width,
+                width: '' + template.getWidth(),
                 xPosition: '' + template.uiGroup.getAttrs().x,
                 yPosition: '' + template.uiGroup.getAttrs().y
             }
@@ -452,10 +517,28 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                     this.router.navigate(['home/component_model-list']);
                 });
         }
-
     }
 
     public cancelModel() {
         this.router.navigate(['home/component_model-list']);
+    }
+
+    private getSelectedTemplate() {
+        if (this.selectedTemplate != null) {
+            return this.getTemplateById(this.selectedTemplate.identifier);
+        }
+
+        return null;
+    }
+
+    private getTemplateById(id) {
+        for (let index = 0; index < this.templates.length; index++) {
+            var template = this.templates[index];
+            if (template.identifier == id) {
+                return template;
+            }
+        }
+
+        return null;
     }
 }

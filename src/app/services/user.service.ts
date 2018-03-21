@@ -19,11 +19,11 @@ export class UserService implements CanActivate {
         //TODO: remove this
         return true;
         
-        if (sessionStorage.getItem('user_auth_status') == '1') {
-            return true;
-        }
-        this.router.navigate(['login']);
-        return false;
+        // if (sessionStorage.getItem('user_auth_status') == '1') {
+        //     return true;
+        // }
+        // this.router.navigate(['login']);
+        // return false;
     }
 
     getUserByName(username:String) {

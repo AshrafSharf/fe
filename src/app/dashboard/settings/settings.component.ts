@@ -9,7 +9,7 @@ import { Branch } from './../../shared/interfaces/branch';
 import { UserService } from '../../services/user.service';
 import { RoleService } from '../../services/roles.service';
 import { Utils } from '../../shared/utils';
-
+import { Modal } from 'ngx-modialog/plugins/bootstrap';
 
 @Component({
     selector: 'app-configuration',
@@ -44,7 +44,8 @@ export class SettingsComponent implements OnInit {
         private variableService: AppVariableService,
         private roleService: RoleService,
         private userService: UserService,
-        private router: Router
+        private router: Router,
+        private modalDialog: Modal
     ) {}
 
     ngOnInit() {
@@ -170,19 +171,29 @@ export class SettingsComponent implements OnInit {
     }
 
     deleteUser(user){
-        this.userService.deleteUser(user.id).subscribe(result => {
-            if (result.status == "OK") {
-                console.log('"'+user.userName+'" deleted');
-                
-                if (user.userName == this.userName) {
-                    sessionStorage.removeItem('user_auth_status');
-                    this.router.navigate(['login']);
-                }
-                else {
-                    this.getUsers();
-                }
+        const dialog = this.modalDialog
+            .confirm()
+            .title("Confirmation")
+            .body("Are you sure you want to delete this user")
+            .okBtn("Yes").okBtnClass("btn btn-danger")
+            .cancelBtn("No")
+            .open();
+        dialog.then(promise => {
+            promise.result.then(result => {
+                this.userService.deleteUser(user.id).subscribe(result => {
+                    if (result.status == "OK") {
+                        console.log('"'+user.userName+'" deleted');
 
-            }
+                        if (user.userName == this.userName) {
+                            sessionStorage.removeItem('user_auth_status');
+                            this.router.navigate(['login']);
+                        }
+                        else {
+                            this.getUsers();
+                        }
+                    }
+                });
+            });
         });
     }
 

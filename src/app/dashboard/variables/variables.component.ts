@@ -980,7 +980,7 @@ export class VariablesComponent implements OnInit {
         const dialog = this.modalDialog
             .confirm()
             .title("Confirmation")
-            .body("Are you sure you want to delete this varaible")
+            .body("Are you sure you want to delete this variable")
             .okBtn("Yes").okBtnClass("btn btn-danger")
             .cancelBtn("No")
             .open();

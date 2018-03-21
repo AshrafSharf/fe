@@ -13,7 +13,7 @@ export class GenericMicroServiceTemplate extends Template {
         this.type = 'GenericMicroServiceTemplate';
     }
 
-    public createUI(isDraggable?, x = Math.random() * 600, y = Math.random() * 600, fontSize = 13) {
+    public createUI( x = Math.random() * 600, y = Math.random() * 600, isDraggable?, fontSize = 13) {
             if (isDraggable !=null){
                 this.uiGroup = new Group({
                     x : x,

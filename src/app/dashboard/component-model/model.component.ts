@@ -45,6 +45,7 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
 
     // model to edit
     private selectedModel: ComponentModel = null;
+    private selectedId:String =null;
 
     constructor(
         private route: ActivatedRoute,
@@ -67,7 +68,7 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                         if (result.status == 'OK') {
 
                             this.selectedModel = result.data as ComponentModel;
-                            
+                            this.selectedId = this.selectedModel.id;
                             this.modelTitle = this.selectedModel.title.toString();
                             
                             // create templates

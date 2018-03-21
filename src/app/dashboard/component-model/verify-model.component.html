@@ -3,12 +3,6 @@
             <app-header title="Verify System Model"></app-header>
         </div>
         <div class="row">
-                <div class="col-md-10 text-right">
-                        <button (click)="onEdit()" type="button" class="btn btn-link">Edit</button>
-                </div>
-        </div>
-        <br>
-        <div class="row">
           <div class="col-md-3">
             <div class="panel panel-default">
                 <div class="panel-body">
@@ -56,12 +50,18 @@
                 </div>
             </div>
           </div>
-          <div class="col-md-7" id="stage-parent">
+          <div class="col-md-7" >
+                <label>Title: {{modelTitle}}</label>
+          <div class="col-md-12" id="stage-parent">      
                <ko-stage [config]="configStage">
-                    <ko-layer>
-                        
+                    <ko-layer>             
                     </ko-layer>
                 </ko-stage>    
+          </div>
+          <div class="col-md-12" style="margin-top: 20px;margin-bottom: 10px;">
+                <button class="btn btn-primary" (click)="onEdit()">Edit</button>
+                <button class="btn btn-danger" (click)="cancelModel()">Cancel</button>
+          </div>
           </div>
             <div class="col-md-2">
                 <div class="panel panel-default">

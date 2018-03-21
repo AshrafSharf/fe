@@ -2,12 +2,6 @@
     <div class="row">
         <app-header title="Component Model"></app-header>
     </div>
-
-    <div class="row">
-        <div class="col-md-9 text-right">
-             <button (click)="onVerify()" type="button" class="btn btn-link">Verify</button>
-        </div>
-    </div>
     <div class="row">
         <div class="col-md-2">
 
@@ -48,10 +42,10 @@
                     </ko-layer>
                 </ko-stage>
             </div>
-
             <div style="margin-top: 10px;margin-bottom: 10px;">
                 <button class="btn btn-success" (click)="saveModel()">Save</button>
                 <button class="btn btn-danger" (click)="cancelModel()">Cancel</button>
+                <button [disabled]="selectedId==null" class="btn btn-primary" (click)="onVerify()">Verify</button>
             </div>
         </div>
 

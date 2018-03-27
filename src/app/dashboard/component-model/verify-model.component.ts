@@ -133,6 +133,9 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
             if (component.templateName == "GenericMicroServiceTemplate"){
                 cptComp = new CptMicroserviceComponent();
             }
+            else if (component.templateName == "Circle"){
+              
+            }
             //TODO: add more if cases with for other templates
 
             cptComp.order = component.order;
@@ -142,18 +145,10 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
                 let cptInt = cptComp.addInterface(interf.title);
                 cptInt.id = interf.id;
                 cptInt.latency = Number(interf.latency);
-                //add properties
-                /*for (let property of interf.modelInterfacePropertiesList){
-                    if (property.key == "latency"){
-                        cptInt.latency = Number(property.value);
-                        break;
-                    } 
-                }*/
 
                 //add input variables
                 if (interf.modelInputVariableList != null && interf.modelInputVariableList.length>0){
                     cptInt.inputLoadVariable = interf.modelInputVariableList[0].title;
-                   // this.inputVariables.push(interf.modelInputVariableList[0].title);
                     this.environment.addInputVariable(interf.modelInputVariableList[0].title);
                 }
 
@@ -373,10 +368,10 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
                                 }
 
                                 // get downstream interfaces
-                                for (let dInterfaceIndex = 0; dInterfaceIndex < tempInterface.modelInterfaceEndPointsList.length; dInterfaceIndex ++) {
+                              /*  for (let dInterfaceIndex = 0; dInterfaceIndex < tempInterface.modelInterfaceEndPointsList.length; dInterfaceIndex ++) {
                                     let dInterface = tempInterface.modelInterfaceEndPointsList[dInterfaceIndex];
                                     templateInterface.downstreamInterfaces.push( { component: dInterface.outputModelInterfaceId, connectedInterface: dInterface.inputModelInterfaceId });
-                                }
+                                }*/
 
                                 template.interfaces.push(templateInterface);
                             }

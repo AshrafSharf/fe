@@ -166,10 +166,10 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                                     }
 
                                     // get downstream interfaces
-                                    for (let dInterfaceIndex = 0; dInterfaceIndex < tempInterface.modelInterfaceEndPointsList.length; dInterfaceIndex ++) {
+                                   /* for (let dInterfaceIndex = 0; dInterfaceIndex < tempInterface.modelInterfaceEndPointsList.length; dInterfaceIndex ++) {
                                         let dInterface = tempInterface.modelInterfaceEndPointsList[dInterfaceIndex];
                                         templateInterface.downstreamInterfaces.push( { component: dInterface.outputModelInterfaceId, connectedInterface: dInterface.inputModelInterfaceId });
-                                    }
+                                    }*/
 
                                     template.interfaces.push(templateInterface);
                                 }
@@ -468,6 +468,7 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                 templateName: template.type,
                 modelComponentInterfaceList: interfaces,
                 modelComponentVisualProperties: visualProperties
+                
             }
 
             components.push(component);
@@ -476,6 +477,7 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
         var body = {            
             modelBranchId: "test-branch",
             modelComponentList: components,
+
             title: this.modelTitle
         }
 

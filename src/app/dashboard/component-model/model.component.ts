@@ -136,6 +136,14 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                                     template = new StaticTemplate(this);
                                 } else if (tempTemplate.templateName == 'SingleInterfaceTemplate') {
                                     template = new SingleInterfaceTemplate(this);
+                                } else if (tempTemplate.templateName == 'Circle') {
+                                    template = new CircleShape(this);
+                                } else if (tempTemplate.templateName == 'Diamond') {
+                                    template = new DiamondShape(this);
+                                } else if (tempTemplate.templateName == 'Square') {
+                                    template = new SquareShape(this);
+                                } else if (tempTemplate.templateName == 'Triangle') {
+                                    template = new TriangleShape(this);
                                 }
 
                                 // get interfaces from template

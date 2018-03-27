@@ -155,7 +155,7 @@ export class ForecastTabularComponent implements OnInit {
 
         if (id != null) {
             this.variableService
-                .getVariables(id)
+                .getUserAccessVariables(id, Utils.getUserId())
                 .subscribe(result => {
                     if (result.status == "OK") {
                         console.log(result);
@@ -170,6 +170,22 @@ export class ForecastTabularComponent implements OnInit {
                         this.processVarables();
                     }
                 });
+            // this.variableService
+            //     .getVariables(id)
+            //     .subscribe(result => {
+            //         if (result.status == "OK") {
+            //             console.log(result);
+            //             this.variables = result.data as Array<Variable>;
+            //             this.originalVariables = new Array<Variable>();
+            //             this.variables.forEach(variable => {
+            //                 this.originalVariables.push(variable);
+            //             });
+            //
+            //             this.initDates();
+            //             this.findMinimumStartDate();
+            //             this.processVarables();
+            //         }
+            //     });
         }
     }
 

@@ -7,7 +7,7 @@ import { Moment, unix } from 'moment';
 export class Utils {
 
     // base url
-    static baseUrl:String = environment.apiUrl;
+    static baseUrl:String = "http://localhost:8443";
     static modelBaseUrl:String = environment.modelApiUrl;
     static routeProject:String = "project";
     static routeBranch:String = "branch";

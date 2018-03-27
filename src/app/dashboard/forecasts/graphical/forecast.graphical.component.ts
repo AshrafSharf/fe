@@ -352,7 +352,7 @@ export class ForecastGraphicalComponent implements OnInit {
 
         if (id != null) {
             this.variableService
-                .getVariables(id)
+                .getUserAccessVariables(id, Utils.getUserId())
                 .subscribe(result => {
                     if (result.status == "OK") {
                         this.variables = result.data as Array<Variable>;
@@ -361,6 +361,16 @@ export class ForecastGraphicalComponent implements OnInit {
                         this.processVariableData();
                     }
                 });
+            // this.variableService
+            //     .getVariables(id)
+            //     .subscribe(result => {
+            //         if (result.status == "OK") {
+            //             this.variables = result.data as Array<Variable>;
+            //             this.initDates();
+            //             this.findMinimumStartDate();
+            //             this.processVariableData();
+            //         }
+            //     });
         }
     }
 

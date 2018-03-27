@@ -426,8 +426,16 @@ export class ForecastTabularComponent implements OnInit {
                 .subscribe(result => {
                     console.log(result);
                     var extendedVars = result.data as Array<Variable>;
+                    var position = 0;
+                    var goBackOne = false;
+                    
                     extendedVars.forEach(exVar => {
                         var match = false;
+                        if(goBackOne) {
+                            exVar = extendedVars[0];
+                            goBackOne = false;
+                        }
+
                         for (var index = 0; index < this.variables.length; index++) {
                             if (exVar.title == this.variables[index].title) {
                                 match = true;
@@ -435,7 +443,10 @@ export class ForecastTabularComponent implements OnInit {
                             }
                         }
                         if (!match) {
-                            var position = extendedVars.indexOf(exVar);
+                            position = extendedVars.indexOf(exVar);
+                            if(position == 0) {
+                                goBackOne = true;
+                            }
                             extendedVars.splice(position, 1);
                         }
                     });

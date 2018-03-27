@@ -685,8 +685,22 @@ export class ForecastGraphicalComponent implements OnInit {
                     this.endDate.format(Config.getDateFormat()))
                 .subscribe(result => {
                     console.log(result);
-                    this.variables = result.data as Array<Variable>;
-                    //this.processVariableData();
+                    var extendedVars = result.data as Array<Variable>;
+                    extendedVars.forEach(exVar => {
+                        var match = false;
+                        for (var index = 0; index < this.variables.length; index++) {
+                            if (exVar.title == this.variables[index].title) {
+                                match = true;
+                                break;
+                            }
+                        }
+                        if (!match) {
+                            var position = extendedVars.indexOf(exVar);
+                            extendedVars.splice(position, 1);
+                        }
+                    });
+
+                    this.variables = extendedVars;
                     setTimeout(() => {this.renderChart();}, 100);
                 });
         }

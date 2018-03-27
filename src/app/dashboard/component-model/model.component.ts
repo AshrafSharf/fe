@@ -12,6 +12,10 @@ import { SingleInterfaceTemplate } from './templates/single.interface.template';
 import { JavaMicroServiceTemplate } from './templates/java.micro.service.template';
 import { ModelService } from '../../services/model.service';
 import { Router, ActivatedRoute } from '@angular/router';
+import { CircleShape } from './shapes/circle.shape';
+import { TriangleShape } from './shapes/triangle.shape';
+import { SquareShape } from './shapes/square.shape';
+import { DiamondShape } from './shapes/diamond.shape';
 
 @Component({
     selector: 'component-model',
@@ -220,57 +224,21 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
     });
 
     public addCircle() {
-        var st:Stage = this.stage.getStage();
-        var layer:Layer = st.getChildren()[0];
-
-        let rect = new Circle({
-            x : Math.random() * 800,
-            y : Math.random() * 800,
-            radius: 80,
-            fill: 'red',
-            stroke: 'black',
-            draggable: true
-        })
-        layer.add(rect);
-
-        layer.draw();
+        let t = new CircleShape(this);
+        this.templates.push(t);
+        this.addGroup(t.createUI());
     }
 
     public addTriangle() {
-        var st:Stage = this.stage.getStage();
-        var layer:Layer = st.getChildren()[0];
-
-        let rect = new RegularPolygon({
-            x : Math.random() * 800,
-            y : Math.random() * 800,
-            sides: 3,
-            radius: 70,
-            fill: 'red',
-            stroke: 'black',
-            strokeWidth: 2,
-            draggable: true
-        })
-        layer.add(rect);
-
-        layer.draw();
+        let t = new TriangleShape(this);
+        this.templates.push(t);
+        this.addGroup(t.createUI());
     }
 
     public addSquare() {
-        var st:Stage = this.stage.getStage();
-        var layer:Layer = st.getChildren()[0];
-
-        let rect = new Rect({
-            x : Math.random() * 800,
-            y : Math.random() * 800,
-            width: 100,
-            height: 100,
-            fill: 'yellow',
-            stroke: 'black',
-            draggable: true
-        })
-        layer.add(rect);
-
-        layer.draw();
+        let t = new SquareShape(this);
+        this.templates.push(t);
+        this.addGroup(t.createUI());
     }
 
     public addLabel() {
@@ -291,20 +259,9 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
     }
 
     public addDiamond() {
-        let rect = new Star({
-            x : Math.random() * 800,
-            y : Math.random() * 800,
-            numPoints: 4,
-            innerRadius: 40,
-            outerRadius: 70,
-            fill: 'yellow',
-            stroke: 'black',
-            strokeWidth: 4,
-            draggable: true
-        })
-
-        this.layer.add(rect);
-        this.layer.draw();
+        let t = new DiamondShape(this);
+        this.templates.push(t);
+        this.addGroup(t.createUI());
     }
 
     public addStatic() {
@@ -373,9 +330,10 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
         }
     }
 
-    private reloadTemplateUI(template) {
+    private reloadTemplateUI(template:Template) {
         template.uiGroup.remove();
         this.layer.add(template.reloadUI());
+        template.select();
         this.layer.draw();
     }
 

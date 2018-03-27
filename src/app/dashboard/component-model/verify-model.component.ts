@@ -28,6 +28,10 @@ import { JavaMicroServiceTemplate } from './templates/java.micro.service.templat
 import { StaticTemplate } from './templates/static.template';
 import { SingleInterfaceTemplate } from './templates/single.interface.template';
 import { ModelService } from '../../services/model.service';
+import { CircleShape } from './shapes/circle.shape';
+import { DiamondShape } from './shapes/diamond.shape';
+import { SquareShape } from './shapes/square.shape';
+import { TriangleShape } from './shapes/triangle.shape';
 
 
 @Component({
@@ -340,6 +344,14 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
                                 template = new StaticTemplate(this);
                             } else if (tempTemplate.templateName == 'SingleInterfaceTemplate') {
                                 template = new SingleInterfaceTemplate(this);
+                            } else if (tempTemplate.templateName == 'Circle') {
+                                template = new CircleShape(this);
+                            } else if (tempTemplate.templateName == 'Diamond') {
+                                template = new DiamondShape(this);
+                            } else if (tempTemplate.templateName == 'Square') {
+                                template = new SquareShape(this);
+                            } else if (tempTemplate.templateName == 'Triangle') {
+                                template = new TriangleShape(this);
                             }
 
                             template.identifier = tempTemplate.id;

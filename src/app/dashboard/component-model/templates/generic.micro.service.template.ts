@@ -13,6 +13,7 @@ export class GenericMicroServiceTemplate extends Template {
         this.type = 'GenericMicroServiceTemplate';
     }
 
+
     public getX() {
         return this.uiGroup.getAttr('x');
     }
@@ -69,6 +70,7 @@ export class GenericMicroServiceTemplate extends Template {
                 })
             }
 
+
         this.uiGroup.add(this.createContainer());
         this.uiGroup.add(this.createTitle());
         this.uiGroup.add(this.createInterfaceContainer(fontSize));
@@ -85,10 +87,6 @@ export class GenericMicroServiceTemplate extends Template {
         });
         
         return this.uiGroup;
-    }
-
-    private addCloseButton() {
-        
     }
 
     private createTitle(fontSize = 13) {
@@ -191,19 +189,6 @@ export class GenericMicroServiceTemplate extends Template {
         return rect;
     }
 
-    private onMouseButton(event) {
-        let children = this.uiGroup.getChildren();
-        if (children.length > 0) {
-            let child = children[0] as Rect;
-            child.setAttr('stroke', '#006bb3');
-            child.setAttr('strokeWidth', '5');
-            child.dash([10, 5]);
-        }
-
-        this.callback.templateClicked(this);
-        event.cancelBubble = true;
-    }
-
     public clone() {
         let obj = new GenericMicroServiceTemplate(this.callback);
         obj.identifier = this.identifier;
@@ -212,17 +197,6 @@ export class GenericMicroServiceTemplate extends Template {
         return obj;
     }
 
-    public reloadUI() {
-
-        let x = this.uiGroup.x();
-        let y = this.uiGroup.y();
-
-        // remove the older contents
-        this.uiGroup.remove;
-
-        // rebuild the ui
-        return this.createUI(x, y);
-    }
 
     public getType(): String {
         return 'Generic Micro Service';

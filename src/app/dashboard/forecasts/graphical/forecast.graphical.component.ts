@@ -686,15 +686,11 @@ export class ForecastGraphicalComponent implements OnInit {
                 .subscribe(result => {
                     console.log(result);
                     var extendedVars = result.data as Array<Variable>;
-                    var position = 0;
-                    var goBackOne = false;
-                    
+                    var finalVars = result.data as Array<Variable>;
+                    var position = [];
+
                     extendedVars.forEach(exVar => {
                         var match = false;
-                        if(goBackOne) {
-                            exVar = extendedVars[0];
-                            goBackOne = false;
-                        }
                         for (var index = 0; index < this.variables.length; index++) {
                             if (exVar.title == this.variables[index].title) {
                                 match = true;
@@ -702,15 +698,16 @@ export class ForecastGraphicalComponent implements OnInit {
                             }
                         }
                         if (!match) {
-                            position = extendedVars.indexOf(exVar);
-                            if(position == 0) {
-                                goBackOne = true;
-                            }
-                            extendedVars.splice(position, 1);
+                            position.push(extendedVars.indexOf(exVar));
                         }
                     });
 
-                    this.variables = extendedVars;
+                    if (position.length != 0) {
+                        for (var index = position.length-1; index >= 0; index--) {
+                            finalVars.splice(position[index], 1);
+                        }
+                    }
+                    this.variables = finalVars;
                     setTimeout(() => {this.renderChart();}, 100);
                 });
         }

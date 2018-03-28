@@ -185,10 +185,13 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                                 }
 
                                 // get properties of component
-                                for (let propertyIndex = 0; propertyIndex < tempTemplate.modelComponentPropertiesList.length; propertyIndex ++) {
-                                    let property = tempTemplate.modelComponentPropertiesList[propertyIndex];
-                                    template.modelComponentPropertiesList.push({ name: property.key, value: property.value});
+                                if (tempTemplate.modelComponentPropertiesList !=null){
+                                    for (let propertyIndex = 0; propertyIndex < tempTemplate.modelComponentPropertiesList.length; propertyIndex ++) {
+                                        let property = tempTemplate.modelComponentPropertiesList[propertyIndex];
+                                        template.modelComponentPropertiesList.push({ name: property.key, value: property.value});
+                                    }
                                 }
+                                
 
                                 // save template
                                 this.templates.push(template);

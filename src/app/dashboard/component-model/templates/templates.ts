@@ -23,6 +23,7 @@ export abstract class Template {
     public identifier: String = '';
     public name: String = '';
     public type: String  = '';
+    public modelComponentPropertiesList: TemplateInterfaceProperty[] = new Array<TemplateInterfaceProperty>();
     public interfaces: TemplateInterface[] = Array<TemplateInterface>();
     protected callback: TemplateEventsCallback;
     public uiGroup:Group = null;

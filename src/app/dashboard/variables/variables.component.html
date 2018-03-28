@@ -161,14 +161,33 @@
                         </div>
                     </div>
 
-                    <div *ngIf="variableType == 'variable'">
+                    <div class="col-md-3">
                         <div class="form-group">
-                            <label><input type="checkbox" (click)="defineActualValues($event)" [(ngModel)]="shouldDefineActualValues"> Define Actual Values</label>
+                            <label *ngIf="(isOwner)" class="pull-left"><input type="checkbox" (click)="isPrivateVariable($event)" [(ngModel)]="privateVariable"> Private Variable</label>
+                            <label *ngIf="(!isOwner)" class="pull-left"><input type="checkbox" (click)="isPrivateVariable($event)" [(ngModel)]="privateVariable" disabled> Private Variable</label>
+                        </div>
+                        <div *ngIf="(privateVariable == true) && (isOwner == true)">
+                            <table class="table">
+                                <thead>
+                                <tr *ngFor="let user of users">
+                                    <th *ngIf="(user.id != loggedInUser)" class="users">{{user.userName}}</th>
+                                    <th *ngIf="(user.id != loggedInUser)" class="private"><input type="checkbox" value="{{private}}" name="private" [checked]="hasAccess(user)" (click)="setAccess($event, user)"></th>
+                                </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div *ngIf="variableType == 'variable'">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label><input type="checkbox" (click)="defineActualValues($event)" [(ngModel)]="shouldDefineActualValues"> Define Actual Values</label>
+                            </div>
                         </div>
 
                         <div *ngIf="shouldDefineActualValues == true">
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-6 pull-right">
                                     <div class="form-group">
                                         <label for="">Input Method</label>
                                         <select id="input-method" [(ngModel)]="selectedInputMethodActual" class="form-control">
@@ -177,7 +196,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-6" *ngIf="selectedInputMethodActual == 'table'">
+                                <div class="col-md-6 pull-right" *ngIf="selectedInputMethodActual == 'table'">
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="">Starting Time</label>

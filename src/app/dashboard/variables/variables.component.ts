@@ -62,12 +62,16 @@ export class VariablesComponent implements OnInit {
     selectedVariable: Variable = null
 
     users: User[] = Array<User>();
+    isOwner:Boolean = false;
+    loggedInUser:String = '';
 
     selectedInputMethodActual = 'table';
     variableName = '';
     valueType = 'integer';
     variableType = 'variable';
     ownerId: String = '';
+    privateVariable: Boolean = false;
+    usersWithAccess: User[] = Array<User>();
 
     variableTypeList: Subvariable[] = Array<Subvariable>();
     selectedVariableTypeList: VariableType[] = Array<VariableType>();
@@ -241,11 +245,15 @@ export class VariablesComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.loggedInUser = Utils.getUserId();
         this.userService
             .getOwners((users) => {
                 this.users = users;
                 this.ownerId = (this.users.length > 0) ? Utils.getUserId() : '';
-            })
+                if (this.ownerId == Utils.getUserId()) {
+                    this.isOwner = true;
+                }
+            });
 
         this.route.queryParams.subscribe(params => {
             console.log(params);
@@ -397,7 +405,12 @@ export class VariablesComponent implements OnInit {
     }
 
     selectVariable(variable: Variable) {
+        this.isOwner = false;
         this.title = variable.title;
+        this.privateVariable = variable.isPrivate;
+        if (this.privateVariable) {
+            this.usersWithAccess = variable.usersWithAccess;
+        }
         this.shouldDefineActualValues = variable.hasActual;
         if (variable.hasActual) {
             this.columns = variable.actualTimeSegment.tableInput;
@@ -442,6 +455,9 @@ export class VariablesComponent implements OnInit {
         this.description = variable.description.toString();
         this.variableName = variable.title.toString();
         this.ownerId = variable.ownerId;
+        if (this.ownerId == Utils.getUserId()) {
+            this.isOwner = true;
+        }
         this.valueType = variable.valueType.toString();
         this.variableType = variable.variableType.toString();
         this.subvariableList = variable.subVariables;
@@ -538,7 +554,6 @@ export class VariablesComponent implements OnInit {
                             if (!keyFound) {
                                 value = '0';
                             }
-
 
                             dataValues.push({ x: dateIndex, y: value })
 
@@ -921,6 +936,8 @@ export class VariablesComponent implements OnInit {
                         ownerId: this.ownerId,
                         timeSegment: timeSegmentValues,
                         title: this.variableName,
+                        isPrivate: this.privateVariable,
+                        usersWithAccess: this.usersWithAccess,
                         variableType: this.variableType,
                         valueType: this.valueType,
                         subVariables: this.subvariableList,
@@ -1090,6 +1107,44 @@ export class VariablesComponent implements OnInit {
 
     defineActualValues(event) {
         this.shouldDefineActualValues = event.target.checked;
+    }
+
+    isPrivateVariable(event) {
+        this.privateVariable = event.target.checked;
+        if (this.privateVariable == true) {
+            if (this.isOwner) {
+                this.users.forEach(user => {
+                    if (user.id == this.ownerId) {
+                        this.usersWithAccess.push(user);
+                    }
+                });
+            }
+        }
+        else {
+            this.usersWithAccess.splice(0, this.usersWithAccess.length);
+        }
+    }
+
+    hasAccess(user) {
+        for(var index = 0; index < this.usersWithAccess.length; index ++) {
+            if (this.usersWithAccess[index].id == user.id) {
+                return true;
+            }
+        }
+    }
+
+    setAccess(event, user) {
+        var access = event.target.checked;
+        if (access == true) {
+            this.usersWithAccess.push(user);
+        }
+        else {
+            var position = this.usersWithAccess.findIndex(accessUser => accessUser.id == user.id);
+
+            this.usersWithAccess.splice(position, 1);
+
+        }
+
     }
 
     valuePasted(event) {

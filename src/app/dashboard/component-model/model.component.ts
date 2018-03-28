@@ -437,11 +437,12 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                 // get all component downstream interfaces
                 for (let intIndex = 0; intIndex < intf.downstreamInterfaces.length; intIndex++) {
                     var intObject = {
-                        inputModelInterfaceId: intf.downstreamInterfaces[intIndex].connectedInterface,
+                        inputModelInterfaceId:  template.name +"_"+ intf.name,
                         outputModelInterfaceId: intf.downstreamInterfaces[intIndex].component
                     }
                     dinterfaces.push(intObject);
                 }
+               
 
                 var intfObj = {
                     title: intf.name,
@@ -477,6 +478,7 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
         var body = {            
             modelBranchId: "test-branch",
             modelComponentList: components,
+            modelInterfaceEndPointsList:dinterfaces,
 
             title: this.modelTitle
         }

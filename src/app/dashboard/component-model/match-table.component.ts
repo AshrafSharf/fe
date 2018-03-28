@@ -6,6 +6,7 @@ import { InputVariableMatching } from "../../shared/interfaces/input-variable-ma
 import { ActivatedRoute, Router } from "@angular/router";
 import { ForecastVariableValue } from "../../shared/interfaces/forecast-variable-value";
 import { CptInputVariable } from "../../shared/modelling/cpt-input-variable";
+import { InputVariable } from "../../shared/modelling/templates/input-variable";
 
 @Component({
     selector: 'match-table',
@@ -16,8 +17,8 @@ import { CptInputVariable } from "../../shared/modelling/cpt-input-variable";
 export class MatchTableComponenet implements OnInit, OnChanges {
     //TODO: use API to get Input Variables instead
     @Input('forecastBranchId') forecastBranchID: string;
-    @Input("vars") inputVariables:CptInputVariable[];
-
+   // @Input("vars") inputVariables:CptInputVariable[];
+   @Input("vars") inputVariables:InputVariable[];
 
     forecastVariables: ForecastVariableValue[] = [];
    inputVariableMatchings:InputVariableMatching[] = [];
@@ -58,18 +59,22 @@ export class MatchTableComponenet implements OnInit, OnChanges {
         for (let index=0; index<this.inputVariables.length; index++){
             let match = false;
             let forecastValue = null;
+            let forecastVarId = null;
             for (let forecastVar of this.forecastVariables){
                 console.log(forecastVar.title);
-                if (this.inputVariables[index].title == forecastVar.title){
+                if (this.inputVariables[index].displayName == forecastVar.title){
                     match = true;
                     forecastValue= forecastVar.baseCalValue;
+                    forecastVarId= forecastVar.id;
                     break;
                 }
             } 
             this.inputVariableMatchings.push({
-                inputVariableName: this.inputVariables[index].title,
+                inputVarId: this.inputVariables[index].id,
+                inputVariableName: this.inputVariables[index].displayName,
                 hasForecastMatch: match,
                 forecastValue: forecastValue,
+                forecastVarId: forecastVarId,
                 overrideValue:""
             });        
         }

@@ -6,18 +6,18 @@ import { CptOutput } from '../cpt-output';
 
 
 
-export class CptMicroserviceInterface extends CptInterface {
+export class InputVariableInterface extends CptInterface {
     public tps: number = 0;
     public latency: number = 0;
-  
+    public componentId:string;
 
 
-    constructor(obj?: CptMicroserviceInterface) {
+    constructor(obj?: InputVariableInterface) {
         super(obj);
         this.load.loadValues["tps"] = this.tps;
     }
     public getClassId() {
-        return CptMicroserviceInterface.name;
+        return InputVariableInterface.name;
     }
 
     public getStats(): CptStats {
@@ -48,23 +48,21 @@ export class CptMicroserviceInterface extends CptInterface {
         return o;
     }
 
-
     @CptHook("load", "latency")
     public adjustLatencyToLoad?: Function;
-
 
 }
 
 
-export class CptMicroserviceComponent extends CptComponent {
-    public ifs: CptMicroserviceInterface[] = [];
-    constructor(obj?: CptMicroserviceComponent) {
+export class InputVariable extends CptComponent {
+    public ifs: InputVariableInterface[] = [];
+    constructor(obj?: InputVariable) {
         super(obj);
 
     }
 
-    public addInterface(name: string): CptMicroserviceInterface {
-        let newInterface = new CptMicroserviceInterface();
+    public addInterface(name: string): InputVariableInterface {
+        let newInterface = new InputVariableInterface();
         newInterface.setName(name);
         this.ifs.push(newInterface);
         console.log("CptMicroserviceInterface " + newInterface.displayName + " added to " + this.displayName);
@@ -72,10 +70,10 @@ export class CptMicroserviceComponent extends CptComponent {
     }
 
     public getClassId() {
-        return CptMicroserviceComponent.name;
+        return InputVariable.name;
     }
 
-    public getInterfaces(): CptMicroserviceInterface[]{
+    public getInterfaces(): InputVariableInterface[]{
         return this.ifs;
     }
 

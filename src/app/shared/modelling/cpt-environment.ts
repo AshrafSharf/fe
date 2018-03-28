@@ -4,6 +4,7 @@ import { CptInterface } from './cpt-interface';
 import { CptLoad } from './cpt-load';
 import { CptOutput } from './cpt-output';
 import { CptInputVariable } from "./cpt-input-variable";
+import { InputVariable, InputVariableInterface } from "./templates/input-variable";
 
 
 
@@ -22,7 +23,10 @@ export class CptEnvironment {
     /**
      * The names of all input variables in the environment
      */
-    public inputVars: CptInputVariable[] = [];
+    public inputVars: InputVariable[] = [];
+
+    public vars:InputVariable[] = [];
+
     /**
      * A map containing input variable names and their assigned values
      */
@@ -43,7 +47,6 @@ export class CptEnvironment {
     }
 
     /**
-     *
      * @param id The id of the requested cpt object
      * @returns The cpt object with the specified id
      */
@@ -91,14 +94,18 @@ export class CptEnvironment {
     public setInputVariables(name:String, value:String){
         let valueNum = Number(value);
         this.envInputVariables.set(name,valueNum);
-        let varible = new CptInputVariable();
     }
 
-    public addInputVariable(name:string): CptInputVariable{
-        let variable = new CptInputVariable();
-        variable.title = name;
-        this.inputVars.push(variable);
-        return variable;
+    public setInputVariableComponent(id:string, value:String){
+        let valueNum = Number(value);
+        let inputVar =  this.getComponent(id) as InputVariable
+        let interf =inputVar.ifs[0] as InputVariableInterface
+        interf.tps = valueNum;
+    }
+
+    public addInputVariable(inputVariable:InputVariable): InputVariable{
+        this.inputVars.push(inputVariable);
+        return inputVariable;
     }
 
     private getCompByTop(nr: number): CptComponent {
@@ -133,6 +140,17 @@ export class CptEnvironment {
             l.loadValues["tps"] = this.envInputVariables.get(inputVariable);
             console.log(l);
             return l;
+    }
+
+    getLoadComponentValue(id:string){
+        let l = new CptLoad();
+        let inputVar =  this.getComponent(id) as InputVariable
+        console.log(this.getComponent(id));
+        console.log(inputVar);
+        console.log(inputVar.ifs);
+        let interf =inputVar.ifs[0];
+        l.loadValues["tps"] = interf.tps
+        return l;
     }
 
     public runSim() {

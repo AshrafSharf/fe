@@ -135,7 +135,7 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
             if (component.templateName == "GenericMicroServiceTemplate"){
                 cptComp = new CptMicroserviceComponent();
             }
-            else if (component.templateName == "Circle"){
+            else if (component.templateName == "Circle" || component.templateName == "Diamond" ){
               cptComp = new InputVariable();
               this.environment.addInputVariable(cptComp);
             }
@@ -287,7 +287,9 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
             for (let interf of interfaces){
                 outputString+=interf.displayName + ": \n" ;
                 outputString += "tps: " + interf.load.loadValues.tps + " \n";
-                outputString += "latency: " + interf.getStats().val["lat"] + " \n";          
+                if (comp instanceof CptMicroserviceComponent){
+                    outputString += "latency: " + interf.getStats().val["lat"] + " \n";       
+                }   
             }
         }
         return outputString;

@@ -125,6 +125,8 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                             this.selectedModel = result.data as ComponentModel;
                             this.selectedId = this.selectedModel.id;
                             this.modelTitle = this.selectedModel.title.toString();
+
+                            let connectionList = this.selectedModel.modelInterfaceEndPointsList;
                             
                             // create templates
                             for (let index = 0; index < this.selectedModel.modelComponentList.length; index++) {
@@ -149,6 +151,8 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                                 } else if (tempTemplate.templateName == 'Triangle') {
                                     template = new TriangleShape(this);
                                 }
+                                
+                                template.name = tempTemplate.title;
 
                                 // get interfaces from template
                                 for (let interfaceIndex = 0;interfaceIndex < tempTemplate.modelComponentInterfaceList.length; interfaceIndex++) {
@@ -170,6 +174,12 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                                         let dInterface = tempInterface.modelInterfaceEndPointsList[dInterfaceIndex];
                                         templateInterface.downstreamInterfaces.push( { component: dInterface.outputModelInterfaceId, connectedInterface: dInterface.inputModelInterfaceId });
                                     }*/
+
+                                    for (let connection of connectionList){
+                                        if (connection.inputModelInterfaceId == tempInterface.id){
+                                            templateInterface.downstreamInterfaces.push( { component: connection.outputModelInterfaceName, connectedInterface: connection.inputModelInterfaceName });
+                                        }
+                                    }
 
                                     template.interfaces.push(templateInterface);
                                 }
@@ -413,11 +423,12 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
 
     public saveModel() {
         var components = [];
+        var connections = [];
 
         // get components
         for (let index = 0; index < this.templates.length; index++) {
             var template = this.templates[index];
-
+           
             var interfaces = [];
             // get all interfaces
             for (let intfIndex = 0; intfIndex < template.interfaces.length; intfIndex++) {
@@ -437,10 +448,11 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                 // get all component downstream interfaces
                 for (let intIndex = 0; intIndex < intf.downstreamInterfaces.length; intIndex++) {
                     var intObject = {
-                        inputModelInterfaceId:  template.name +"_"+ intf.name,
-                        outputModelInterfaceId: intf.downstreamInterfaces[intIndex].component
+                        inputModelInterfaceName:  template.name +"_"+ intf.name,
+                        outputModelInterfaceName: intf.downstreamInterfaces[intIndex].component
                     }
                     dinterfaces.push(intObject);
+                    connections.push(intObject);
                 }
                
 
@@ -478,13 +490,14 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
         var body = {            
             modelBranchId: "test-branch",
             modelComponentList: components,
-            modelInterfaceEndPointsList:dinterfaces,
+            modelInterfaceEndPointsList:connections,
 
             title: this.modelTitle
         }
 
         if (this.selectedModel == null) {
             // create a model
+            console.log(body);
             this.service
                 .createModel(body)
                 .subscribe(result => {

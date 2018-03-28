@@ -27,7 +27,7 @@ export class InputVariableInterface extends CptInterface {
     }
 
     public simulationStop() {
-        if (this.adjustLatencyToLoad) {
+      /*  if (this.adjustLatencyToLoad) {
             this.latency = this.adjustLatencyToLoad(this.load, this.latency);
         }
         let stats = this.collectDownstreamStats();
@@ -38,13 +38,12 @@ export class InputVariableInterface extends CptInterface {
             }
         }
         console.log("latency on " + this.displayName, ":", this.latency);
-
+        */
     }
 
     public getOutput() {
         let o = new CptOutput();
         o.addVal("tps", this.load.loadValues["tps"]);
-        o.addVal("lat", this.latency);
         return o;
     }
 

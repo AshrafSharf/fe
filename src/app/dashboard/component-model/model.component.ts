@@ -125,6 +125,8 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                             this.selectedModel = result.data as ComponentModel;
                             this.selectedId = this.selectedModel.id;
                             this.modelTitle = this.selectedModel.title.toString();
+
+                            let connectionList = this.selectedModel.modelInterfaceEndPointsList;
                             
                             // create templates
                             for (let index = 0; index < this.selectedModel.modelComponentList.length; index++) {
@@ -149,6 +151,8 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                                 } else if (tempTemplate.templateName == 'Triangle') {
                                     template = new TriangleShape(this);
                                 }
+                                
+                                template.name = tempTemplate.title;
 
                                 // get interfaces from template
                                 for (let interfaceIndex = 0;interfaceIndex < tempTemplate.modelComponentInterfaceList.length; interfaceIndex++) {
@@ -171,8 +175,23 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                                         templateInterface.downstreamInterfaces.push( { component: dInterface.outputModelInterfaceId, connectedInterface: dInterface.inputModelInterfaceId });
                                     }*/
 
+                                    for (let connection of connectionList){
+                                        if (connection.inputModelInterfaceId == tempInterface.id){
+                                            templateInterface.downstreamInterfaces.push( { component: connection.outputModelInterfaceName, connectedInterface: connection.inputModelInterfaceName });
+                                        }
+                                    }
+
                                     template.interfaces.push(templateInterface);
                                 }
+
+                                // get properties of component
+                                if (tempTemplate.modelComponentPropertiesList !=null){
+                                    for (let propertyIndex = 0; propertyIndex < tempTemplate.modelComponentPropertiesList.length; propertyIndex ++) {
+                                        let property = tempTemplate.modelComponentPropertiesList[propertyIndex];
+                                        template.modelComponentPropertiesList.push({ name: property.key, value: property.value});
+                                    }
+                                }
+                                
 
                                 // save template
                                 this.templates.push(template);
@@ -335,6 +354,7 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
 
                 template.name = this.selectedTemplate.name;
                 template.interfaces = this.selectedTemplate.interfaces;
+                template.modelComponentPropertiesList = this.selectedTemplate.modelComponentPropertiesList;
 
                 this.reloadTemplateUI(template);
                 break;
@@ -395,6 +415,10 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
         intf.properties.push({ name: '', value: ''});
     }
 
+    public onAddComponentProperty(index) {
+        this.selectedTemplate.modelComponentPropertiesList.push({ name: '', value: ''});
+    }
+
     public onAddDownstreamInterface(index) {
         let intf = this.selectedTemplate.interfaces[index];
         intf.downstreamInterfaces.push({ component: '', connectedInterface: '' })
@@ -405,6 +429,10 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
         intf.properties.splice(propertyIndex, 1);
     }
 
+    public onDeleteComponentProperty(index, propertyIndex) {
+        this.selectedTemplate.modelComponentPropertiesList.splice(propertyIndex, 1);
+    }
+
     public onDeleteDownstreamInterface(index, propertyIndex) {
         let intf = this.selectedTemplate.interfaces[index];
         intf.downstreamInterfaces.splice(propertyIndex, 1);
@@ -413,11 +441,12 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
 
     public saveModel() {
         var components = [];
+        var connections = [];
 
         // get components
         for (let index = 0; index < this.templates.length; index++) {
             var template = this.templates[index];
-
+           
             var interfaces = [];
             // get all interfaces
             for (let intfIndex = 0; intfIndex < template.interfaces.length; intfIndex++) {
@@ -437,11 +466,13 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                 // get all component downstream interfaces
                 for (let intIndex = 0; intIndex < intf.downstreamInterfaces.length; intIndex++) {
                     var intObject = {
-                        inputModelInterfaceId: intf.downstreamInterfaces[intIndex].connectedInterface,
-                        outputModelInterfaceId: intf.downstreamInterfaces[intIndex].component
+                        inputModelInterfaceName:  template.name +"_"+ intf.name,
+                        outputModelInterfaceName: intf.downstreamInterfaces[intIndex].component
                     }
                     dinterfaces.push(intObject);
+                    connections.push(intObject);
                 }
+               
 
                 var intfObj = {
                     title: intf.name,
@@ -463,9 +494,21 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                 yPosition: '' + template.uiGroup.getAttrs().y
             }
 
+            var modelComponentPropertiesList = [];
+            for (let propIndex = 0; propIndex < template.modelComponentPropertiesList.length; propIndex ++) {
+                let prop = template.modelComponentPropertiesList[propIndex];
+                var propObject = {
+                    key: prop.name,
+                    value: prop.value,
+                }
+
+                modelComponentPropertiesList.push(propObject);
+            }
+
             var component = {
                 title: template.name,
                 templateName: template.type,
+                modelComponentPropertiesList: modelComponentPropertiesList,
                 modelComponentInterfaceList: interfaces,
                 modelComponentVisualProperties: visualProperties
                 
@@ -477,12 +520,14 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
         var body = {            
             modelBranchId: "test-branch",
             modelComponentList: components,
+            modelInterfaceEndPointsList:connections,
 
             title: this.modelTitle
         }
 
         if (this.selectedModel == null) {
             // create a model
+            console.log(body);
             this.service
                 .createModel(body)
                 .subscribe(result => {

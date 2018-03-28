@@ -17,6 +17,7 @@ export class SingleInterfaceTemplate extends GenericMicroServiceTemplate {
         obj.identifier = this.identifier;
         obj.name = this.name;
         obj.interfaces = this.interfaces;
+        obj.modelComponentPropertiesList = this.modelComponentPropertiesList;
         return obj;
     }
 

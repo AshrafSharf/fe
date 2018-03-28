@@ -32,6 +32,8 @@ import { CircleShape } from './shapes/circle.shape';
 import { DiamondShape } from './shapes/diamond.shape';
 import { SquareShape } from './shapes/square.shape';
 import { TriangleShape } from './shapes/triangle.shape';
+import { CptInputVariable } from '../../shared/modelling/cpt-input-variable';
+import { InputVariable } from '../../shared/modelling/templates/input-variable';
 
 
 @Component({
@@ -133,41 +135,26 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
             if (component.templateName == "GenericMicroServiceTemplate"){
                 cptComp = new CptMicroserviceComponent();
             }
-            else if (component.templateName == "Circle"){
-              
+            else if (component.templateName == "Circle" || component.templateName == "Diamond" ){
+              cptComp = new InputVariable();
+              this.environment.addInputVariable(cptComp);
             }
             //TODO: add more if cases with for other templates
 
             cptComp.order = component.order;
+            cptComp.id = component.id;
             cptComp.setName(component.title);
             
             for (let interf of component.modelComponentInterfaceList){
                 let cptInt = cptComp.addInterface(interf.title);
                 cptInt.id = interf.id;
+                cptInt.componentId = component.id;
                 cptInt.latency = Number(interf.latency);
-
-                //add input variables
-                if (interf.modelInputVariableList != null && interf.modelInputVariableList.length>0){
-                    cptInt.inputLoadVariable = interf.modelInputVariableList[0].title;
-                    this.environment.addInputVariable(interf.modelInputVariableList[0].title);
-                }
-
-                //add outputs
-                if (interf.modelInterfaceEndPointsList.length>0){
-                    for (let output of interf.modelInterfaceEndPointsList){
-                        let cptOutput = cptInt.addOutput() as CptInterfaceOutput;
-                        if (component.title == "Comp1" && output.outputModelInterfaceId =="5aaa5dead49fee15886c5b90"){
-                            cptOutput.multiplier = 0.5;
-                        } 
-                        cptOutput.downstreamInterfaceId = output.outputModelInterfaceId;
-                    }    
-                }
-
             }
+            
             this.environment.registerComponent(cptComp);
         }
-        
-       // console.log(this.inputVariables);
+        console.log(this.systemModel);
         this.connectInterfaces();
         console.log(this.environment.envComponents);
         console.log(this.environment.inputVars);
@@ -183,17 +170,16 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
      * Connect any Interfaces which have an output pointing to a Downstream Interface
     */
     connectInterfaces(){
-        for (let component of this.environment.envComponents){
-            for (let interf of component.getInterfaces()){
-                for (let output of interf.outputs){
-                    if (output.downstreamInterfaceId != null){
-                        output.connect(this.environment.getInterface(output.downstreamInterfaceId));
-                        console.log("connected "+ component.displayName + ":" + interf.displayName 
-                        + "to " + this.environment.getInterface(output.downstreamInterfaceId).displayName);
-                    }
-                }
-            }
+        console.log(this.systemModel)
+        for (let connection of this.systemModel.modelInterfaceEndPointsList){
+            let interf = this.environment.getInterface(connection.inputModelInterfaceId);
+            let cptOutput = interf.addOutput() as CptInterfaceOutput;
+            cptOutput.downstreamInterfaceId = connection.outputModelInterfaceId;
+            
+            console.log("connected "+ interf.displayName 
+            + "to " + this.environment.getInterface(connection.outputModelInterfaceId).displayName);
         }
+
     }
 
     /** 
@@ -257,13 +243,13 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
             }
            
             if (inputVar.forecastValue != null && inputVar.overrideValue == ""){
-                this.environment.setInputVariables(inputVar.inputVariableName,
-                    inputVar.forecastValue);
+             //this.environment.setInputVariables(inputVar.inputVariableName,inputVar.forecastValue);
+             this.environment.setInputVariableComponent(inputVar.inputVarId, inputVar.forecastValue)
             }
 
             else{
-                this.environment.setInputVariables(inputVar.inputVariableName,
-                    inputVar.overrideValue);
+            //this.environment.setInputVariables(inputVar.inputVariableName,inputVar.overrideValue);
+            this.environment.setInputVariableComponent(inputVar.inputVarId, inputVar.overrideValue);
             }
         }
         let o = this.environment.runSim();
@@ -301,7 +287,9 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
             for (let interf of interfaces){
                 outputString+=interf.displayName + ": \n" ;
                 outputString += "tps: " + interf.load.loadValues.tps + " \n";
-                outputString += "latency: " + interf.getStats().val["lat"] + " \n";          
+                if (comp instanceof CptMicroserviceComponent){
+                    outputString += "latency: " + interf.getStats().val["lat"] + " \n";       
+                }   
             }
         }
         return outputString;

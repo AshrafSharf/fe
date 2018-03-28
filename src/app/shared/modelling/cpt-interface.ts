@@ -61,6 +61,7 @@ export class CptInterface extends CptHookableObject implements CptSimulationLife
 
     public inputLoadVariable?: string;
     public outputs: CptInterfaceOutput[] = [];
+    public componentId:string;
 
     public load: CptLoad = new CptLoad();
     constructor(obj?: CptInterface) {
@@ -138,6 +139,11 @@ export class CptInterface extends CptHookableObject implements CptSimulationLife
         this.populateHooks();
         if (this.inputLoadVariable) {
             this.load = CptEnvironment.get().getLoad(this.inputLoadVariable);
+        }
+
+        if (this.getClassId() =="InputVariableInterface"){
+            console.log(this.componentId);
+            this.load= CptEnvironment.get().getLoadComponentValue(this.componentId);
         }
 
     }

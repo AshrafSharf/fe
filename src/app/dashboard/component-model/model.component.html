@@ -97,8 +97,26 @@
                                 <div class="col-md-3">Name:</div>
                                 <div class="col-md-9"><input type="text" class="component_name" [(ngModel)]="selectedTemplate.name" ></div>
                             </div>
+
+                            <div style="padding: 10px;">
+                                <div class="row">
+                                    <div>
+                                        <span class="heading">Properties</span>
+                                        <fa name="plus" (click)="onAddComponentProperty(i)" class="link pull-right"></fa>
+                                    </div>
+
+                                    <div class="row component_property" *ngFor="let prop of selectedTemplate.modelComponentPropertiesList; let propertyIndex = index">
+                                        <div class="col-md-3"><input type="text" [(ngModel)]="prop.name" class="component_name" ></div>
+                                        <div class="col-md-9">
+                                            <input type="text" [(ngModel)]="prop.value" class="component_name" >
+                                            <fa name="times" (click)="onDeleteComponentProperty(i,  propertyIndex)" class="link pull-right"></fa>
+                                        </div>
+                                    </div> 
+                                </div>
+                            </div> 
+                            
             
-                            <div class="row" style="margin: 10px;">
+                            <div class="row" style="margin: 5px;">
                                 <button class="btn btn-success" (click)="addInterface()" >Add Interface</button>
                             </div>
 
@@ -108,7 +126,6 @@
                                     <fa name="times" (click)="onDelete(i)" class="link pull-right"></fa>
                                 </div>
                                 <div class="panel-body">
-
                                     <div style="padding: 10px;">
                                         <div class="row">
                                             <div>

@@ -194,6 +194,7 @@ export class GenericMicroServiceTemplate extends Template {
         obj.identifier = this.identifier;
         obj.name = this.name;
         obj.interfaces = this.interfaces;
+        obj.modelComponentPropertiesList = this.modelComponentPropertiesList;
         return obj;
     }
 

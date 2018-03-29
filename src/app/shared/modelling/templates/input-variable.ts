@@ -10,14 +10,20 @@ export class InputVariableInterface extends CptInterface {
     public tps: number = 0;
     public latency: number = 0;
     public componentId:string;
-
+    public properties: { [k: string]: number } = {};
 
     constructor(obj?: InputVariableInterface) {
         super(obj);
-        this.load.loadValues["tps"] = this.tps;
+       // this.load.loadValues["tps"] = this.tps;
     }
     public getClassId() {
         return InputVariableInterface.name;
+    }
+
+    addProperty(key, value){
+        this.properties[key] = value;
+        console.log(this.properties);
+        this.load.loadValues[key] = this.properties[key];
     }
 
     public getStats(): CptStats {
@@ -43,7 +49,9 @@ export class InputVariableInterface extends CptInterface {
 
     public getOutput() {
         let o = new CptOutput();
-        o.addVal("tps", this.load.loadValues["tps"]);
+        for (let key in this.load.loadValues ){
+            o.addVal(key, this.load.loadValues[key]);
+       }
         return o;
     }
 

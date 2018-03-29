@@ -100,7 +100,11 @@ export class CptEnvironment {
         let valueNum = Number(value);
         let inputVar =  this.getComponent(id) as InputVariable
         let interf =inputVar.ifs[0] as InputVariableInterface
-        interf.tps = valueNum;
+        //interf.tps = valueNum;
+        let properties = interf.load.loadValues;
+        for (let key in properties){
+            interf.load.loadValues[key] = valueNum;
+        }
     }
 
     public addInputVariable(inputVariable:InputVariable): InputVariable{
@@ -149,7 +153,11 @@ export class CptEnvironment {
         console.log(inputVar);
         console.log(inputVar.ifs);
         let interf =inputVar.ifs[0];
-        l.loadValues["tps"] = interf.tps
+       // l.loadValues["tps"] = interf.tps
+       let properties = interf.load.loadValues;
+       for (let key in properties){
+           l.loadValues[key] =properties[key];
+       }
         return l;
     }
 

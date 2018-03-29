@@ -66,6 +66,7 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
 
     // list of templatea
     public templates: Array<Template> = new Array<Template>();
+    public selectedTemplate:Template;
     
      // drawing area
      public width = 750;
@@ -144,6 +145,7 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
             cptComp.order = component.order;
             cptComp.id = component.id;
             cptComp.setName(component.title);
+            console.log(cptComp.order, cptComp.displayName);
             
             for (let interf of component.modelComponentInterfaceList){
                 let cptInt = cptComp.addInterface(interf.title);
@@ -175,9 +177,6 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
             let interf = this.environment.getInterface(connection.inputModelInterfaceId);
             let cptOutput = interf.addOutput() as CptInterfaceOutput;
             cptOutput.downstreamInterfaceId = connection.outputModelInterfaceId;
-            
-            console.log("connected "+ interf.displayName 
-            + "to " + this.environment.getInterface(connection.outputModelInterfaceId).displayName);
         }
 
     }
@@ -393,4 +392,35 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
         this.stage = this.stageComponent.getStage();
         this.layer = this.stage.getChildren()[0];
     }
+
+    public templateClicked(template: any) {
+        if (this.selectedTemplate != null && this.selectedTemplate.identifier != template.identifier) {
+            let template = this.getSelectedTemplate();
+            template.deselectTemplate();
+        }
+        this.selectedTemplate = template.clone();
+        console.log(this.selectedTemplate.name);
+        this.layer.draw();        
+    }
+
+    private getSelectedTemplate() {
+        if (this.selectedTemplate != null) {
+            return this.getTemplateById(this.selectedTemplate.identifier);
+        }
+
+        return null;
+    }
+
+    private getTemplateById(id) {
+        for (let index = 0; index < this.templates.length; index++) {
+            var template = this.templates[index];
+            if (template.identifier == id) {
+                return template;
+            }
+        }
+
+        return null;
+    }
+
+
 }

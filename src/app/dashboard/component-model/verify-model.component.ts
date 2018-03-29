@@ -152,8 +152,11 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
                 cptInt.id = interf.id;
                 cptInt.componentId = component.id;
                 cptInt.latency = Number(interf.latency);
-               // cptInt.properties = interf.modelInterfacePropertiesList;
-                cptInt.addProperty( interf.modelInterfacePropertiesList[0].key,  interf.modelInterfacePropertiesList[0].value);
+                
+                //add custom properties
+                for (let property of interf.modelInterfacePropertiesList){
+                    cptInt.addProperty( property.key,  property.value);
+                }
             }
             
             this.environment.registerComponent(cptComp);
@@ -244,13 +247,11 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
             }
            
             if (inputVar.forecastValue != null && inputVar.overrideValue == ""){
-             //this.environment.setInputVariables(inputVar.inputVariableName,inputVar.forecastValue);
-             this.environment.setInputVariableComponent(inputVar.inputVarId, inputVar.forecastValue)
+                this.environment.setInputVariableComponent(inputVar.inputVarId, inputVar.forecastValue);
             }
 
             else{
-            //this.environment.setInputVariables(inputVar.inputVariableName,inputVar.overrideValue);
-            this.environment.setInputVariableComponent(inputVar.inputVarId, inputVar.overrideValue);
+                this.environment.setInputVariableComponent(inputVar.inputVarId, inputVar.overrideValue);
             }
         }
         let o = this.environment.runSim();

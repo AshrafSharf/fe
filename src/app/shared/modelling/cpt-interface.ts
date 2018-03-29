@@ -31,7 +31,8 @@ export class CptInterfaceOutput extends CptObject {
     sendLoad(l: CptLoad) {
         let target = CptEnvironment.get().getInterface(this.downstreamInterfaceId);
         if (target !== null)
-            target.receiveLoad(l.multiply(this.multiplier));
+            console.log ("sending load ", l ,"to " , target);
+            target.receiveLoad(l);
     
     }
 
@@ -75,6 +76,11 @@ export class CptInterface extends CptHookableObject implements CptSimulationLife
         return CptInterface.name;
     }
 
+    addProperty(key, value){
+        //this.properties[key] = value;
+        //console.log(this.properties);
+        this.load.loadValues[key] = value;
+    }
 
     public toJSON(): { [k: string]: any } {
         let o = super.toJSON();
@@ -99,7 +105,9 @@ export class CptInterface extends CptHookableObject implements CptSimulationLife
      * @param l the load to be recieved
      */
     public receiveLoad(l: CptLoad) {
-        this.load = this.load.add(l);
+        //this.load = this.load.add(l);
+        console.log("about to log load...", l)
+        this.load = this.load.addLoad(l);
     }
 
     /**
@@ -150,6 +158,7 @@ export class CptInterface extends CptHookableObject implements CptSimulationLife
     public simulationRun() {
         console.log("simulationRun ", this.displayName);
         if (this.load)
+            console.log("this load" ,this.load);
             this.sendLoadToOutputs(this.load);
 
     }

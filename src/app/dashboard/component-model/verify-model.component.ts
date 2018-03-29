@@ -145,13 +145,15 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
             cptComp.order = component.order;
             cptComp.id = component.id;
             cptComp.setName(component.title);
-            console.log(cptComp.order, cptComp.displayName);
+            console.log(cptComp.order, cptComp.displayName)
             
             for (let interf of component.modelComponentInterfaceList){
                 let cptInt = cptComp.addInterface(interf.title);
                 cptInt.id = interf.id;
                 cptInt.componentId = component.id;
                 cptInt.latency = Number(interf.latency);
+               // cptInt.properties = interf.modelInterfacePropertiesList;
+                cptInt.addProperty( interf.modelInterfacePropertiesList[0].key,  interf.modelInterfacePropertiesList[0].value);
             }
             
             this.environment.registerComponent(cptComp);
@@ -285,7 +287,10 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
             let interfaces = comp.getInterfaces();
             for (let interf of interfaces){
                 outputString+=interf.displayName + ": \n" ;
-                outputString += "tps: " + interf.load.loadValues.tps + " \n";
+                //outputString += "tps: " + interf.load.loadValues.tps + " \n";
+                for (let key in interf.load.loadValues){
+                    outputString += key+ ":" + interf.load.loadValues[key] + " \n";
+                }
                 if (comp instanceof CptMicroserviceComponent){
                     outputString += "latency: " + interf.getStats().val["lat"] + " \n";       
                 }   

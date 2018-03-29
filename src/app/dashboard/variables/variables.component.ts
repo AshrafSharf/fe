@@ -81,6 +81,7 @@ export class VariablesComponent implements OnInit {
     subvariablePercentage: string = '';
 
     subvariableList: Subvariable[];
+    subvariableListPercentage = [];
     compositVariableIds: { id: String }[] = Array<{ id: String }>();
 
     @Input() startDate: any;
@@ -130,8 +131,8 @@ export class VariablesComponent implements OnInit {
         console.log('edit : ', index);
 
         this.editSubvariableIndex = index;
-        this.subvariableName = this.subvariableList[index].name.toString();
-        this.subvariableValue = this.subvariableList[index].value.toString();
+        this.subvariableName = this.subvariableListPercentage[index].name.toString();
+        this.subvariableValue = this.subvariableListPercentage[index].value.toString();
         if (this.variableType == 'discrete') {
             this.subvariablePercentage = this.subvariableList[index].probability.toString();
         }
@@ -149,7 +150,9 @@ export class VariablesComponent implements OnInit {
                 this.subvariableList[this.editSubvariableIndex].probability = this.subvariablePercentage;
             }
             this.subvariableList[this.editSubvariableIndex].name = this.subvariableName;
-            this.subvariableList[this.editSubvariableIndex].value = this.subvariableValue;
+            var decimal = parseInt(this.subvariableValue)/100;
+            this.subvariableList[this.editSubvariableIndex].value = decimal.toString();
+            this.subvariableListPercentage[this.editSubvariableIndex].value = this.subvariableValue;
         } else {
             console.log('adding');
 
@@ -162,13 +165,27 @@ export class VariablesComponent implements OnInit {
                         return;
                     }
                 }
-            }
 
-            this.subvariableList.push({
-                name: this.subvariableName,
-                value: this.subvariableValue,
-                probability: this.subvariablePercentage
-            });
+                var decimal = parseInt(this.subvariableValue)/100;
+                this.subvariableList.push({
+                    name: this.subvariableName,
+                    value: decimal.toString(),
+                    probability: this.subvariablePercentage
+                });
+
+                this.subvariableListPercentage.push({
+                    name: this.subvariableName,
+                    value: this.subvariableValue,
+                    probability: this.subvariablePercentage
+                });
+            }
+            else {
+                this.subvariableList.push({
+                    name: this.subvariableName,
+                    value: this.subvariableValue,
+                    probability: this.subvariablePercentage
+                });
+            }
         }
 
         this.clearVariable();
@@ -183,6 +200,7 @@ export class VariablesComponent implements OnInit {
         // }
 
         this.subvariableList.splice(i, 1);
+        this.subvariableListPercentage.splice(i, 1);
     }
 
     formatXAxisValue(colIndex: number) {
@@ -405,6 +423,7 @@ export class VariablesComponent implements OnInit {
     }
 
     selectVariable(variable: Variable) {
+        this.subvariableListPercentage = [];
         this.isOwner = false;
         this.title = variable.title;
         this.privateVariable = variable.isPrivate;
@@ -464,6 +483,17 @@ export class VariablesComponent implements OnInit {
         this.compositVariableIds = variable.compositeVariables;
         this.timeSegments.splice(0, this.timeSegments.length);
         this.compositType = variable.compositeType.toString();
+
+        if (this.subvariableList != null) {
+            this.subvariableList.forEach(subVar => {
+                var percent = parseFloat(subVar.value.toString())*100;
+                this.subvariableListPercentage.push({
+                    name: subVar.name,
+                    value: percent.toString(),
+                    probability: subVar.probability
+                });
+            })
+        }
 
         if (this.compositType.length > 0) {
             this.loadCompositeVariables(this.compositType);
@@ -797,21 +827,17 @@ export class VariablesComponent implements OnInit {
 
     onSave(event) {
         let negative = false;
-        let finalValue = 0, finalPercentage = 0, value = 0, decimalSize = 0;
+        let finalValue = 0, finalPercentage = 0, value = 0;
+
         if (this.subvariableList != undefined) {
             this.subvariableList.forEach((variable) => {
-                decimalSize = variable.value.length - 2;
-                value += parseFloat(variable.value.toString());
+                value = parseFloat(variable.value.toString())*100;
+
                 if (parseFloat(variable.value.toString()) < 0) {
                     negative = true;
                 }
-                if (value > 1) {
-                    finalValue = value;
-                }
-                else {
-                    finalValue = parseFloat(value.toPrecision(decimalSize));
-                }
-
+                finalValue += value;
+                
                 /*if (this.valueType == 'discrete') {
                     finalPercentage += parseFloat(variable.probability.toString());
                     if (parseFloat(variable.probability.toString()) < 0) {
@@ -819,6 +845,7 @@ export class VariablesComponent implements OnInit {
                     }
                 }*/
             });
+            finalValue = finalValue / 100;
         }
 
         if (this.variableName.length == 0) {
@@ -832,9 +859,9 @@ export class VariablesComponent implements OnInit {
         } else if (this.ownerId.length == 0) {
             this.modal.showError('Owner Id is mandatory');
         } else if (this.variableType == 'breakdown' && finalValue != 1.0) {
-            this.modal.showError('All the subvariables value must add upto 1.0');
+            this.modal.showError('All the subvariables value must add up to 100%');
         } else if (this.variableType == 'discrete' && finalPercentage != 100.0) {
-            this.modal.showError('All the subvariables value must add upto 100%');
+            this.modal.showError('All the subvariables value must add up to 100%');
         } else if ((this.variableType == 'breakdown' || this.variableType == 'discrete') && (this.timeSegmentWidgets == undefined || this.timeSegmentWidgets.length == 0)) {
             this.modal.showError(this.variableType + ' requires at lease one time segment');
         } else {
@@ -1032,6 +1059,9 @@ export class VariablesComponent implements OnInit {
     onVariableTypeChanged() {
         if (this.subvariableList != undefined) {
             this.subvariableList.splice(0, this.subvariableList.length);
+        }
+        if (this.subvariableListPercentage != undefined) {
+            this.subvariableListPercentage.splice(0, this.subvariableListPercentage.length);
         }
     }
 

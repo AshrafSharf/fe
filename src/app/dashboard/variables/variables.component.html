@@ -61,8 +61,8 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="">Value</label>
-                                        <input type="text" [(ngModel)]="subvariableValue" class="form-control" placeholder="subvariable value">
+                                        <label for="">Percentage</label>
+                                        <input type="text" [(ngModel)]="subvariableValue" class="form-control" placeholder="subvariable percentage">
                                     </div>
 
                                     <button class="btn btn-success" (click)="addVariable()">Save</button>
@@ -75,12 +75,12 @@
                                         <thead>
                                             <tr>
                                                 <th>Title</th>
-                                                <th>Value</th>
+                                                <th>Percentage</th>
                                                 <th></th>
                                             </tr>
-                                            <tr *ngFor="let s of subvariableList; let i = index">
+                                            <tr *ngFor="let s of subvariableListPercentage; let i = index">
                                                 <td>{{s.name}}</td>
-                                                <td>{{s.value}}</td>
+                                                <td>{{s.value}}%</td>
                                                 <td>
                                                     <fa name="trash" class="trash" (click)="deleteVariable(i)"></fa>
                                                     <fa name="pencil" class="edit" (click)="editVariable(i)"></fa>

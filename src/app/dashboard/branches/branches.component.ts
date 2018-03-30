@@ -93,7 +93,7 @@ export class BranchesComponent implements OnInit {
         this.userService
             .getOwners((users => {
                 this.users = users;
-                if (this.users.length > 0) {
+                if (this.ownerId == "") {
                     this.ownerId = Utils.getUserId();
                 }
             }));

@@ -2,6 +2,7 @@
 
 # compiled output
 /dist
+/QA.zip
 /dist.zip
 /staging.zip
 /prod.zip

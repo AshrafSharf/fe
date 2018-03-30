@@ -249,7 +249,7 @@ export class VariablesComponent implements OnInit {
         this.userService
             .getOwners((users) => {
                 this.users = users;
-                this.ownerId = (this.users.length > 0) ? Utils.getUserId() : '';
+                this.ownerId = (this.ownerId == "") ? Utils.getUserId() : '';
                 if (this.ownerId == Utils.getUserId()) {
                     this.isOwner = true;
                 }

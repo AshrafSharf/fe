@@ -124,6 +124,8 @@ export class BranchesComponent implements OnInit {
         this.timeUnit = 'month';
 
          if (this.createdBranch != null){
+             Utils.selectProject(this.createdBranch.projectId);
+             Utils.selectBranch(this.createdBranch.projectId, this.createdBranch.id);
             this.router.navigate(['/home/variable-list'], { queryParams: {
                 projectId: this.createdBranch.projectId,
                 branchId: this.createdBranch.id

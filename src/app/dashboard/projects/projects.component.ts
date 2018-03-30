@@ -128,6 +128,7 @@ export class ProjectsComponent implements OnInit {
         this.owner = '';
         this.selectedProject = null;
          if (this.createdProject != null){
+             Utils.selectProject(this.createdProject.id);
             this.router.navigate(['/home/branches-list'], { queryParams: {
                 projectId: this.createdProject.id
             }});

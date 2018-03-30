@@ -300,6 +300,16 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
         return outputString;
     }
 
+    public showComponentOutput(componentId:string){
+        let comp = this.environment.getComponent(componentId);
+        for(let interf of comp.getInterfaces()){
+            let output = interf.getOutput();
+            for (let property in output.getVal()){
+                console.log(property, output.getVal()[property]);
+            }
+        }
+
+    }
     public onEdit(){
         this.location.back();
     }
@@ -360,12 +370,6 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
                                     templateInterface.properties.push({ name: property.key, value: property.value});
                                 }
 
-                                // get downstream interfaces
-                              /*  for (let dInterfaceIndex = 0; dInterfaceIndex < tempInterface.modelInterfaceEndPointsList.length; dInterfaceIndex ++) {
-                                    let dInterface = tempInterface.modelInterfaceEndPointsList[dInterfaceIndex];
-                                    templateInterface.downstreamInterfaces.push( { component: dInterface.outputModelInterfaceId, connectedInterface: dInterface.inputModelInterfaceId });
-                                }*/
-
                                 template.interfaces.push(templateInterface);
                             }
 
@@ -405,15 +409,14 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
             template.deselectTemplate();
         }
         this.selectedTemplate = template.clone();
-        console.log(this.selectedTemplate.name);
+        this.showComponentOutput(template.identifier);
         this.layer.draw();        
     }
 
     private getSelectedTemplate() {
-        if (this.selectedTemplate != null) {
+        if (this.selectedTemplate != null) {      
             return this.getTemplateById(this.selectedTemplate.identifier);
         }
-
         return null;
     }
 

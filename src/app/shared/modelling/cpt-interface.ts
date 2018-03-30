@@ -146,7 +146,13 @@ export class CptInterface extends CptHookableObject implements CptSimulationLife
 
         if (this.getClassId() =="InputVariableInterface"){
             console.log(this.componentId);
-            this.load= CptEnvironment.get().getLoadComponentValue(this.componentId);
+           // this.load= CptEnvironment.get().getLoadComponentValue(this.componentId);
+            for (let output of this.outputs){
+                let dsInterface = CptEnvironment.get().getInterface(output.downstreamInterfaceId);
+                for (let key in dsInterface.load.loadValues){
+                    dsInterface.load.loadValues[key] = CptEnvironment.get().getLoadComponentValue(this.componentId);
+                }
+            }
         }
        
     }

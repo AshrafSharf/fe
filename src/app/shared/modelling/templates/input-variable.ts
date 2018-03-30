@@ -7,51 +7,25 @@ import { CptOutput } from '../cpt-output';
 
 
 export class InputVariableInterface extends CptInterface {
-    public tps: number = 0;
-    public latency: number = 0;
+    
     public componentId:string;
-    public properties: { [k: string]: number } = {};
+    public inputLoad:number;
+    public tps:number;
 
     constructor(obj?: InputVariableInterface) {
         super(obj);
-       // this.load.loadValues["tps"] = this.tps;
+        //this.load.loadValues["tps"] = this.tps;
     }
     public getClassId() {
         return InputVariableInterface.name;
     }
 
-    addProperty(key, value){
-        this.properties[key] = value;
-        console.log(this.properties);
-        this.load.loadValues[key] = this.properties[key];
-    }
-
-    public getStats(): CptStats {
-        let s = new CptStats();
-        s.val["lat"] = this.latency;
-        return s;
-    }
-
-    public simulationStop() {
-      /*  if (this.adjustLatencyToLoad) {
-            this.latency = this.adjustLatencyToLoad(this.load, this.latency);
-        }
-        let stats = this.collectDownstreamStats();
-        for (var i = 0; i < stats.length; ++i) {
-            let s = stats[i];
-            if (s.val.hasOwnProperty("lat")) {
-                this.latency += s.val.lat;
-            }
-        }
-        console.log("latency on " + this.displayName, ":", this.latency);
-        */
-    }
-
     public getOutput() {
         let o = new CptOutput();
-        for (let key in this.load.loadValues ){
+      /*  for (let key in this.load.loadValues ){
             o.addVal(key, this.load.loadValues[key]);
-       }
+       }*/
+       o.addVal("inputLoad", this.inputLoad);
         return o;
     }
 

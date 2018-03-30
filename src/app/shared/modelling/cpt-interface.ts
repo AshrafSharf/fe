@@ -31,9 +31,7 @@ export class CptInterfaceOutput extends CptObject {
     sendLoad(l: CptLoad) {
         let target = CptEnvironment.get().getInterface(this.downstreamInterfaceId);
         if (target !== null)
-            console.log ("sending load ", l ,"to " , target);
             target.receiveLoad(l);
-    
     }
 
     public getDownstreamStats(): CptStats {
@@ -77,8 +75,6 @@ export class CptInterface extends CptHookableObject implements CptSimulationLife
     }
 
     addProperty(key, value){
-        //this.properties[key] = value;
-        //console.log(this.properties);
         this.load.loadValues[key] = value;
     }
 
@@ -106,7 +102,6 @@ export class CptInterface extends CptHookableObject implements CptSimulationLife
      */
     public receiveLoad(l: CptLoad) {
         //this.load = this.load.add(l);
-        console.log("about to log load...", l)
         this.load = this.load.addLoad(l);
     }
 
@@ -153,7 +148,7 @@ export class CptInterface extends CptHookableObject implements CptSimulationLife
             console.log(this.componentId);
             this.load= CptEnvironment.get().getLoadComponentValue(this.componentId);
         }
-
+       
     }
     public simulationRun() {
         console.log("simulationRun ", this.displayName);
@@ -172,7 +167,6 @@ export class CptInterface extends CptHookableObject implements CptSimulationLife
 
     public getOutput(): CptOutput {
         let o = new CptOutput();
-
         return o;
     }
 

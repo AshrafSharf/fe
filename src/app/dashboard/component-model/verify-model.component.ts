@@ -288,7 +288,7 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
             let interfaces = comp.getInterfaces();
             for (let interf of interfaces){
                 outputString+=interf.displayName + ": \n" ;
-                //outputString += "tps: " + interf.load.loadValues.tps + " \n";
+                console.log(interf.getOutput());
                 for (let key in interf.load.loadValues){
                     outputString += key+ ":" + interf.load.loadValues[key] + " \n";
                 }

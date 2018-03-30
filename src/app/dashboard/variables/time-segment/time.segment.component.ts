@@ -27,6 +27,7 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
     @Input('time-segment') timeSegment: TimeSegment = null;
     @Input('composit-variable-type-list') compositVariableTypeList: Subvariable[];
     variableTypeList: Subvariable[] = Array<Subvariable>();
+    variableTypeListPercentage = [];
     
     @ViewChild(VariableConstantComponent) variableConstant: VariableConstantComponent;
     @ViewChild(VariableExpressionComponent) variableExpression: VariableExpressionComponent;
@@ -80,7 +81,13 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
             if (this.compositVariableTypeList != undefined) {
                 this.compositVariableTypeList.forEach(type => {
                     if (!this.isSubvariableAdded(type.name)) {
-                        this.variableTypeList.push({name: type.name, value: type.value, probability: type.probability});
+                        if (this.variableType == 'breakdown') {
+                            this.variableTypeList.push({name: type.name, value: type.value, probability: type.probability});
+                            this.variableTypeListPercentage.push({name: type.name, value: (parseFloat(type.value.toString())*100).toString(), probability: type.probability});
+                        }
+                        else {
+                            this.variableTypeList.push({name: type.name, value: type.value, probability: type.probability});
+                        }
                     }
                 });
 
@@ -88,6 +95,7 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
                 for (var index = 0; index < this.variableTypeList.length; index++) {
                     if (this.isSubvariableRemoved(this.variableTypeList[index].name)) {
                         this.variableTypeList.splice(index, 1);
+                        this.variableTypeListPercentage.splice(index, 1);
                     }
                 }
             }
@@ -166,6 +174,7 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
                 this.timeSegment.subVariables.forEach(type => {
                     if (!this.isSubvariableAdded(type.name)) {
                         this.variableTypeList.push({name: type.name, value: type.value, probability: type.probability});
+                        this.variableTypeListPercentage.push({name: type.name, value: (parseFloat(type.value.toString())*100).toString(), probability: type.probability});
                     }
                 });
             }
@@ -176,26 +185,21 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
         var result: ValidationResult = { result:true, reason: '' };
         if ((this.variableType == 'breakdown') || (this.valueType == 'discrete')) {
 
-            let finalValue = 0, finalPercentage = 0, value = 0, decimalSize = 0;
-            this.variableTypeList.forEach((variable) => {
+            let finalValue = 0, finalPercentage = 0, value = 0;
+            this.variableTypeListPercentage.forEach((variable) => {
                 if (this.variableType == 'breakdown') {
-                    decimalSize = variable.value.length - 2;
-                    value += parseFloat(variable.value.toString());
-                    if (value > 1) {
-                        finalValue = value;
-                    }
-                    else {
-                        finalValue = parseFloat(value.toPrecision(decimalSize));
-                    }
+                    value = parseFloat(variable.value.toString());
+
+                    finalValue += value;
                 }
                 if (this.valueType == 'discrete') {
                     finalPercentage += parseFloat(variable.probability.toString());
                 }
             });
-
+            finalValue = finalValue / 100;
             if (this.variableType == 'breakdown' && finalValue != 1) {
                 result.result = false;
-                result.reason = "All the subvariable value must add up to 1.0"
+                result.reason = "All the subvariable value must add up to 100%"
             } else if (this.valueType == 'discrete' && finalPercentage != 100) {
                 result.result = false;
                 result.reason = "All the subvariable value must add up to 100%"
@@ -203,6 +207,10 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
                 let input:any = {};
                 if (typeof(this.startDate) != "string") {
                     this.startDate = this.startDate.format(Config.getDateFormat());
+                }
+
+                for (var index = 0; index < this.variableTypeListPercentage.length; index ++) {
+                    this.variableTypeList[index].value = (parseFloat(this.variableTypeListPercentage[index].value.toString())/100).toString();
                 }
 
                 input['startTime'] = this.startDate;

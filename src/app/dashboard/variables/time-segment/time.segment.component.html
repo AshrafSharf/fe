@@ -49,12 +49,12 @@
                             <table class="table input-group table-bordered">
                                 <tr>
                                     <th class="active">Title</th>
-                                    <th *ngFor="let subVar of variableTypeList">{{subVar.name}}</th>
+                                    <th *ngFor="let subVar of variableTypeListPercentage">{{subVar.name}}</th>
                                 </tr>
                                 <tr>
-                                    <th class="active">Value</th>
-                                    <td *ngFor="let subVar of variableTypeList">
-                                        <input class="table_input" type="text" placeholder="value" [(ngModel)]="subVar.value">
+                                    <th class="active">Percentage</th>
+                                    <td *ngFor="let subVar of variableTypeListPercentage">
+                                        <input class="table_input" type="text" placeholder="percentage" [(ngModel)]="subVar.value">
                                     </td>
                                 </tr>
                             </table>

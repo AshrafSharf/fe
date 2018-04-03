@@ -248,6 +248,7 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
             }
            
             if (inputVar.forecastValue != null && inputVar.overrideValue == ""){
+                console.log("setting input var with id: " + inputVar.inputVarId + "to " +  inputVar.forecastValue);
                 this.environment.setInputVariableComponent(inputVar.inputVarId, inputVar.forecastValue);
             }
 
@@ -255,7 +256,9 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
                 this.environment.setInputVariableComponent(inputVar.inputVarId, inputVar.overrideValue);
             }
         }
+        console.log(this.environment);
         let o = this.environment.runSim();
+        console.log(this.environment);
         console.log(o);
         this.simOutput =  this.displayOutput();
     } 

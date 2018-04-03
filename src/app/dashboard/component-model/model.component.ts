@@ -177,7 +177,7 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
 
                                     for (let connection of connectionList){
                                         if (connection.inputModelInterfaceId == tempInterface.id){
-                                            templateInterface.downstreamInterfaces.push( { component: connection.outputModelInterfaceName, connectedInterface: connection.inputModelInterfaceName });
+                                            templateInterface.downstreamInterfaces.push( { component: connection.outputComponentName, interface:connection.outputInterfaceName, connectedComponent:connection.inputComponentName, connectedInterface:connection.inputInterfaceName });
                                         }
                                     }
 
@@ -421,7 +421,7 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
 
     public onAddDownstreamInterface(index) {
         let intf = this.selectedTemplate.interfaces[index];
-        intf.downstreamInterfaces.push({ component: '', connectedInterface: '' })
+        intf.downstreamInterfaces.push({ component: '', interface: '', connectedComponent:'', connectedInterface: '' })
     }
 
     public onDeleteProperty(index, propertyIndex) {
@@ -466,8 +466,10 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                 // get all component downstream interfaces
                 for (let intIndex = 0; intIndex < intf.downstreamInterfaces.length; intIndex++) {
                     var intObject = {
-                        inputModelInterfaceName:  template.name +"_"+ intf.name,
-                        outputModelInterfaceName: intf.downstreamInterfaces[intIndex].component
+                        inputComponentName: template.name,
+                        inputInterfaceName:  intf.name,
+                        outputComponentName: intf.downstreamInterfaces[intIndex].component,
+                        outputInterfaceName: intf.downstreamInterfaces[intIndex].interface
                     }
                     dinterfaces.push(intObject);
                     connections.push(intObject);

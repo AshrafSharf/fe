@@ -35,7 +35,6 @@ import { TriangleShape } from './shapes/triangle.shape';
 import { CptInputVariable } from '../../shared/modelling/cpt-input-variable';
 import { InputVariable } from '../../shared/modelling/templates/input-variable';
 
-
 @Component({
     selector: 'verify-model',
     templateUrl: './verify-model.component.html',
@@ -62,6 +61,7 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
     selectedModelId:string = null;
     systemModel:SystemModel = null;
     selectedModel = null;
+    selectedComponent:CptComponent = null;
     modelTitle:string = "";
 
     // list of templatea
@@ -194,6 +194,7 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
            for (let interf of component.modelComponentInterfaceList){
                let cptIf = this.environment.getInterface(interf.id) as CptMicroserviceInterface;
                cptIf.latency = Number(interf.latency);
+               cptIf.load.loadValues["tps"] = 0;
                for (let property of interf.modelInterfacePropertiesList){
                    if(cptIf.load.loadValues.hasOwnProperty(property.key)){
                         cptIf.load.loadValues[property.key] = 0;
@@ -284,30 +285,35 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
         let outputString = "";
         let comps = this.environment.envComponents;
         for (let comp of comps){
-            outputString+= comp.displayName+": \n";
-            let interfaces = comp.getInterfaces();
-            for (let interf of interfaces){
-                outputString+=interf.displayName + ": \n" ;
-                console.log(interf.getOutput());
-                for (let key in interf.load.loadValues){
-                    outputString += key+ ":" + interf.load.loadValues[key] + " \n";
+            if (!(comp instanceof InputVariable)){
+                outputString+= comp.displayName+": \n";
+                let interfaces = comp.getInterfaces();
+                for (let interf of interfaces){
+                    outputString+=interf.displayName + ": \n" ;
+                    for (let key in interf.load.loadValues){
+                        outputString += key+ ":" + interf.load.loadValues[key] + " \n";
+                    }
+                    if (comp instanceof CptMicroserviceComponent){
+                        outputString += "latency: " + interf.getStats().val["lat"] + " \n";       
+                    }   
                 }
-                if (comp instanceof CptMicroserviceComponent){
-                    outputString += "latency: " + interf.getStats().val["lat"] + " \n";       
-                }   
             }
+            
         }
         return outputString;
     }
 
     public showComponentOutput(componentId:string){
         let comp = this.environment.getComponent(componentId);
+        console.log(comp.getOutput());
+       // this.selectedTemplateOutput = comp.getOutput();
         for(let interf of comp.getInterfaces()){
             let output = interf.getOutput();
             for (let property in output.getVal()){
                 console.log(property, output.getVal()[property]);
             }
         }
+        console.log(comp.toJSON());
 
     }
     public onEdit(){
@@ -407,10 +413,13 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
         if (this.selectedTemplate != null && this.selectedTemplate.identifier != template.identifier) {
             let template = this.getSelectedTemplate();
             template.deselectTemplate();
+            
         }
         this.selectedTemplate = template.clone();
+        this.selectedComponent = this.environment.getComponent(template.identifier);
+        console.log(this.selectedComponent.displayName);
         this.showComponentOutput(template.identifier);
-        this.layer.draw();        
+        this.layer.draw(); 
     }
 
     private getSelectedTemplate() {

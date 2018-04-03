@@ -8,6 +8,8 @@ export interface TemplateInterfaceProperty {
 
 export interface DownstreamInterface {
     component:String;
+    interface:String;
+    connectedComponent:String;
     connectedInterface:String;
 }
 

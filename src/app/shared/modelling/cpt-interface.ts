@@ -157,15 +157,11 @@ export class CptInterface extends CptHookableObject implements CptSimulationLife
        
     }
     public simulationRun() {
-        console.log("simulationRun ", this.displayName);
         if (this.load)
-            console.log("this load" ,this.load);
             this.sendLoadToOutputs(this.load);
-
     }
     public simulationStop() {
         console.log("simulationStop ", this.displayName);
-
     }
     public simulationPostProcess() {
 

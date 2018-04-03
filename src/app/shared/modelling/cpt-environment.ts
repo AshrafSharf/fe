@@ -150,16 +150,7 @@ export class CptEnvironment {
     getLoadComponentValue(id:string){
         let l = new CptLoad();
         let inputVar =  this.getComponent(id) as InputVariable
-        console.log(this.getComponent(id));
-        console.log(inputVar);
-        console.log(inputVar.ifs);
         let interf =inputVar.ifs[0];
-       // l.loadValues["tps"] = interf.tps
-       /*let properties = interf.load.loadValues;
-       for (let key in properties){
-           l.loadValues[key] =properties[key];
-       }
-        return l;*/
         return interf.inputLoad;
     }
 

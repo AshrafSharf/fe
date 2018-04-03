@@ -165,6 +165,7 @@
                                             <div class="row component_property" *ngFor="let compIntf of intf.downstreamInterfaces; let propertyIndex = index">
                                                 <div class="col-md-12">
                                                     <input type="text" [(ngModel)]="compIntf.component" class="component_name" >
+                                                    <input type="text" [(ngModel)]="compIntf.interface" class="component_name" >
                                                     <fa name="times" (click)="onDeleteDownstreamInterface(i,  propertyIndex)" class="link pull-right"></fa>
                                                 </div>
                                             </div>

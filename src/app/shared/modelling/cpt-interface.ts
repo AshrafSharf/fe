@@ -31,9 +31,7 @@ export class CptInterfaceOutput extends CptObject {
     sendLoad(l: CptLoad) {
         let target = CptEnvironment.get().getInterface(this.downstreamInterfaceId);
         if (target !== null)
-            console.log ("sending load ", l ,"to " , target);
             target.receiveLoad(l);
-    
     }
 
     public getDownstreamStats(): CptStats {
@@ -77,8 +75,6 @@ export class CptInterface extends CptHookableObject implements CptSimulationLife
     }
 
     addProperty(key, value){
-        //this.properties[key] = value;
-        //console.log(this.properties);
         this.load.loadValues[key] = value;
     }
 
@@ -106,7 +102,6 @@ export class CptInterface extends CptHookableObject implements CptSimulationLife
      */
     public receiveLoad(l: CptLoad) {
         //this.load = this.load.add(l);
-        console.log("about to log load...", l)
         this.load = this.load.addLoad(l);
     }
 
@@ -151,20 +146,22 @@ export class CptInterface extends CptHookableObject implements CptSimulationLife
 
         if (this.getClassId() =="InputVariableInterface"){
             console.log(this.componentId);
-            this.load= CptEnvironment.get().getLoadComponentValue(this.componentId);
+           // this.load= CptEnvironment.get().getLoadComponentValue(this.componentId);
+            for (let output of this.outputs){
+                let dsInterface = CptEnvironment.get().getInterface(output.downstreamInterfaceId);
+                for (let key in dsInterface.load.loadValues){
+                    dsInterface.load.loadValues[key] = CptEnvironment.get().getLoadComponentValue(this.componentId);
+                }
+            }
         }
-
+       
     }
     public simulationRun() {
-        console.log("simulationRun ", this.displayName);
         if (this.load)
-            console.log("this load" ,this.load);
             this.sendLoadToOutputs(this.load);
-
     }
     public simulationStop() {
         console.log("simulationStop ", this.displayName);
-
     }
     public simulationPostProcess() {
 
@@ -172,7 +169,6 @@ export class CptInterface extends CptHookableObject implements CptSimulationLife
 
     public getOutput(): CptOutput {
         let o = new CptOutput();
-
         return o;
     }
 

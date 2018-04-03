@@ -7,6 +7,9 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { ForecastVariableValue } from "../../shared/interfaces/forecast-variable-value";
 import { CptInputVariable } from "../../shared/modelling/cpt-input-variable";
 import { InputVariable } from "../../shared/modelling/templates/input-variable";
+import { Variable } from "../../shared/interfaces/variables";
+import { Moment } from 'moment';
+import * as moment from 'moment';
 
 @Component({
     selector: 'match-table',
@@ -20,8 +23,8 @@ export class MatchTableComponenet implements OnInit, OnChanges {
    // @Input("vars") inputVariables:CptInputVariable[];
    @Input("vars") inputVariables:InputVariable[];
 
-    forecastVariables: ForecastVariableValue[] = [];
-   inputVariableMatchings:InputVariableMatching[] = [];
+    forecastVariables: Variable[] = [];
+    inputVariableMatchings:InputVariableMatching[] = [];
 
 
     constructor(
@@ -60,17 +63,27 @@ export class MatchTableComponenet implements OnInit, OnChanges {
             let match = false;
             let forecastValue = null;
             let forecastVarId = null;
+            let formattedDate = moment(date, "MM-YYYY").format("YYYY-MM");
+            console.log(formattedDate);
             for (let forecastVar of this.forecastVariables){
                 console.log(forecastVar.title);
                 if (this.inputVariables[index].displayName == forecastVar.title){
                     match = true;
-                    forecastValue= forecastVar.baseCalValue;
+                    let calculatedValues = forecastVar.allTimesegmentsResultList[0].data;
+                    for (let monthValue of calculatedValues){
+                        if (monthValue.title == formattedDate){
+                            
+                            forecastValue= monthValue.value;
+                            break;
+                        }
+                    }
                     forecastVarId= forecastVar.id;
                     break;
                 }
             } 
             this.inputVariableMatchings.push({
                 inputVarId: this.inputVariables[index].id,
+                inputVariableDisplayName: this.inputVariables[index].displayName,
                 inputVariableName: this.inputVariables[index].displayName,
                 hasForecastMatch: match,
                 forecastValue: forecastValue,

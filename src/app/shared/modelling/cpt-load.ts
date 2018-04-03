@@ -36,11 +36,13 @@ export class CptLoad {
             if (this.loadValues.hasOwnProperty(key) && l.loadValues.hasOwnProperty(key)) {
                 o.loadValues[key] = this.loadValues[key] + (l.loadValues[key]);
             }    
-            else{
-                o.loadValues[key] = 0;
+           
+        }    
+        for (let key in this.loadValues){
+            if (!l.loadValues.hasOwnProperty(key)){
+                o.loadValues[key] = this.loadValues[key];
             }
         }
-       
         return o;
     }
 

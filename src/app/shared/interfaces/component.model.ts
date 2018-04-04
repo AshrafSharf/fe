@@ -25,6 +25,8 @@ export interface ComponentModelInterfaceEndPoint {
     outputModelInterfaceId: String;
     inputModelInterfaceName:String;
     outputModelInterfaceName:String;
+    inputComponentName: String;
+    outputComponentName: String;
 }
 
 export interface ComponentModelInterface {

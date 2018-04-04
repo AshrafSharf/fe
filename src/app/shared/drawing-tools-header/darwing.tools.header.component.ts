@@ -23,10 +23,15 @@ export class DrawingToolsHeaderComponent implements OnInit {
     @Output('save') saveEvent = new EventEmitter();
     @Output('cancel') cancelEvent = new EventEmitter();
     @Output('verify') verifyEvent = new EventEmitter();
+    @Output('input-value') inputTemplate = new EventEmitter();
 
     constructor() { }
 
     ngOnInit() { }
+
+    public drawInputTemplate() {
+        this.inputTemplate.emit();
+    }
 
     public save() {
         this.saveEvent.emit();

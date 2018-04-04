@@ -16,6 +16,7 @@ import { CircleShape } from './shapes/circle.shape';
 import { TriangleShape } from './shapes/triangle.shape';
 import { SquareShape } from './shapes/square.shape';
 import { DiamondShape } from './shapes/diamond.shape';
+import { InputTemplate } from './templates/input.template';
 
 
 @Component({
@@ -46,10 +47,9 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
     // default font size
     private fontSize = 15;
 
-
     // model to edit
     private selectedModel: ComponentModel = null;
-    public selectedId:String =null;
+    public selectedId:String = null;
 
     // collapse
     public isVisualPropertiesSectionClosed = false;
@@ -59,6 +59,9 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
     private startArrow: boolean = false;
     private lastPointerPosition;
     private arrowTargetTemplate: Template = null;
+    public showConnectionsDialog = false;
+    public connectionSourceInterface: string = '';
+    public connectionTargetInterface: string = '';
 
     // connections
     private connections:Connection[] = new Array<Connection>();
@@ -74,6 +77,14 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
 
     public toggleComponentProperties() {
         this.isComponentPropertiesSectionClosed = !this.isComponentPropertiesSectionClosed;
+    }
+
+    public canAddInterface() {
+        let template = this.getSelectedTemplate();
+        if (template != null) {
+            return template.canAddInterface();
+        }
+        return false;
     }
 
     public getComponentX() {
@@ -148,6 +159,8 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                                     template = new StaticTemplate(this);
                                 } else if (tempTemplate.templateName == 'SingleInterfaceTemplate') {
                                     template = new SingleInterfaceTemplate(this);
+                                } else if (tempTemplate.templateName == 'InputTemplate') {
+                                    template = new InputTemplate(this);
                                 } else if (tempTemplate.templateName == 'Circle') {
                                     template = new CircleShape(this);
                                 } else if (tempTemplate.templateName == 'Diamond') {
@@ -198,7 +211,6 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                                     }
                                 }
                                 
-
                                 // save template
                                 this.templates.push(template);
 
@@ -212,13 +224,32 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                                 var group = template.createUI(x, y);
                                 this.addGroup(group);
                             }
+
+                            // create connections
+                            for (let index = 0; index < this.selectedModel.modelInterfaceEndPointsList.length; index++) {
+                                let tempConnection = this.selectedModel.modelInterfaceEndPointsList[index];
+
+                                let source = this.getTemplateByName(tempConnection.inputComponentName);
+                                let target = this.getTemplateByName(tempConnection.outputComponentName);
+
+                                var connection = new Connection();
+                                connection.inputComponentName = source.identifier.toString();
+                                connection.outputComponentName = target.identifier.toString();
+                                connection.inputInterfaceName = this.connectionSourceInterface;
+                                connection.outputInterfaceName =  this.connectionTargetInterface;
+
+                                this.connections.push(connection);
+                            }
+
+                            this.drawConnections();
+
                         }
                         console.log(result);
                     });
             });
     }
 
-    private drawConnections() {
+    public drawConnections() {
         for (var index = 0; index < this.connections.length; index++) {
             var connection = this.connections[index];
 
@@ -261,38 +292,16 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
 
         this.stage.on('contentMouseup.proto', () => {
             this.startArrow = false;
-            if (this.arrowTargetTemplate == null) return;
+            if (tempArrow) {
+                tempArrow.remove();
+                this.layer.draw();
+            }
 
-            let source = this.getSelectedTemplate();
-            let target = this.arrowTargetTemplate;
+            if (this.arrowTargetTemplate == null) {
+                return;
+            }
 
-            // let sourceConnector = source.getConnectorPosition(ConnectorType.RIGHT);
-            // let targetConnector = target.getConnectorPosition(ConnectorType.LEFT);
-
-            var connection = new Connection();
-            connection.inputComponentName = source.identifier.toString();
-            connection.outputComponentName = target.identifier.toString();
-            this.connections.push(connection);
-
-            //connection.inputInterfaceName = 
-
-            // let arrow = new Arrow({
-            //     x: sourceConnector.x,
-            //     y: sourceConnector.y,
-            //     points: [0, 0, targetConnector.x - sourceConnector.x, targetConnector.y - sourceConnector.y],
-            //     pointerLength: 10,
-            //     pointerWidth : 10,
-            //     fill: 'black',
-            //     stroke: 'black',
-            //     strokeWidth: 4
-            // });
-            // this.layer.add(arrow);
-            // this.layer.draw();
-
-            this.drawConnections();
-            
-            this.arrowTargetTemplate.hideConnectors();
-            this.arrowTargetTemplate = null;
+            this.showConnectionsDialog = true;
         });
 
         this.stage.on('contentMousemove.proto', (e) => {
@@ -325,6 +334,7 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                     this.arrowTargetTemplate = template;
                     console.log('found found found: ', template.name);
                     template.showConnectors();
+                    break;
                 } else {
                     this.arrowTargetTemplate = null;
                     template.hideConnectors();
@@ -337,12 +347,13 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                 x: this.lastPointerPosition.x,
                 y: this.lastPointerPosition.y,
                 points: [0, 0, x, y],
-                pointerLength: 10,
-                pointerWidth : 10,
+                pointerLength: 5,
+                pointerWidth : 5,
                 fill: 'black',
                 stroke: 'black',
-                strokeWidth: 4
+                strokeWidth: 2
             });
+
             this.layer.add(tempArrow);
             this.layer.draw();
 
@@ -350,8 +361,44 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
         });
     }
 
+    public makeConnection() {
+
+        let source = this.getSelectedTemplate();
+        let target = this.arrowTargetTemplate;
+
+        // let sourceConnector = source.getConnectorPosition(ConnectorType.RIGHT);
+        // let targetConnector = target.getConnectorPosition(ConnectorType.LEFT);
+
+        var connection = new Connection();
+        connection.inputComponentName = source.identifier.toString();
+        connection.outputComponentName = target.identifier.toString();
+        connection.inputInterfaceName = this.connectionSourceInterface;
+        connection.outputInterfaceName =  this.connectionTargetInterface;
+
+        this.connections.push(connection);
+
+        this.drawConnections();
+
+        this.arrowTargetTemplate.hideConnectors();
+        this.arrowTargetTemplate = null;
+        this.selectedTemplate.hideConnectors();
+
+        this.layer.draw();
+        this.showConnectionsDialog = false;
+    }
+
+    public cancelConnection() {
+        this.arrowTargetTemplate.hideConnectors();
+        this.arrowTargetTemplate = null;
+        this.selectedTemplate.hideConnectors();
+
+        this.layer.draw();
+        this.showConnectionsDialog = false;
+    }
+
     haveIntersection(r1, r2) {
-        return ((r1.x > (r2.x - 10)) && (r1.x < (r2.x + r2.width + 10)));
+        return (((r1.x > (r2.x - 10)) && (r1.x < (r2.x + r2.width + 10))) &&
+               ((r1.y > (r2.y)) && (r1.y < (r2.y + r2.height + 10))));
     }
 
     drawArrow(connector) {
@@ -452,6 +499,12 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
 
     public addJavaMicroService() {
         let t = new JavaMicroServiceTemplate(this);
+        this.templates.push(t);
+        this.addGroup(t.createUI());
+    }
+
+    public addInputTemplate(){
+        let t = new InputTemplate(this);
         this.templates.push(t);
         this.addGroup(t.createUI());
     }
@@ -599,23 +652,23 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                     properties.push(propObject);
                 }
 
-                var dinterfaces = [];
+                //var dinterfaces = [];
                 // get all component downstream interfaces
                 for (let intIndex = 0; intIndex < intf.downstreamInterfaces.length; intIndex++) {
                     var intObject = {
                         inputModelInterfaceName:  template.name +"_"+ intf.name,
                         outputModelInterfaceName: intf.downstreamInterfaces[intIndex].component
                     }
-                    dinterfaces.push(intObject);
-                    connections.push(intObject);
+                    //dinterfaces.push(intObject);
+                    //connections.push(intObject);
                 }
                
 
                 var intfObj = {
                     title: intf.name,
                     latency: intf.latency,
-                    modelInterfacePropertiesList: properties,
-                    modelInterfaceEndPointsList: dinterfaces
+                    modelInterfacePropertiesList: properties
+                    //modelInterfaceEndPointsList: dinterfaces
                 }
 
                 interfaces.push(intfObj);
@@ -652,6 +705,21 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
             }
 
             components.push(component);
+        }
+
+        for (var index = 0; index < this.connections.length; index++) {
+            var connection = this.connections[index];
+            let source = this.getTemplateById(connection.inputComponentName);
+            let target = this.getTemplateById(connection.outputComponentName);
+
+            var interfaceObj = {
+                inputComponentName: source.name,
+                inputInterfaceName: connection.inputInterfaceName,
+                outputComponentName: target.name,
+                outputInterfaceName: connection.outputInterfaceName
+            }
+
+            connections.push(interfaceObj);
         }
 
         var body = {            
@@ -698,6 +766,17 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
         for (let index = 0; index < this.templates.length; index++) {
             var template = this.templates[index];
             if (template.identifier == id) {
+                return template;
+            }
+        }
+
+        return null;
+    }
+
+    private getTemplateByName(name) {
+        for (let index = 0; index < this.templates.length; index++) {
+            var template = this.templates[index];
+            if (template.name == name) {
                 return template;
             }
         }

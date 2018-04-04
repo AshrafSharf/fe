@@ -63,10 +63,10 @@ export class GenericMicroServiceTemplate extends Template {
     }
 
     public hideConnectors() {
-        this.connectors.topConnector.hide();
-        this.connectors.leftConnector.hide();
-        this.connectors.rightConnector.hide();
-        this.connectors.bottomConnector.hide();
+        if (this.connectors.topConnector) this.connectors.topConnector.hide();
+        if (this.connectors.leftConnector) this.connectors.leftConnector.hide();
+        if (this.connectors.rightConnector) this.connectors.rightConnector.hide();
+        if (this.connectors.bottomConnector) this.connectors.bottomConnector.hide();
     }
 
     public showConnectors() {

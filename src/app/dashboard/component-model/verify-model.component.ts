@@ -18,7 +18,7 @@ import 'rxjs/add/observable/of';
 import { Moment } from 'moment';
 import { AppVariableService } from '../../services/variable.services';
 import { GenericMicroServiceTemplate } from '../component-model/templates/generic.micro.service.template';
-import { TemplateInterface, Template } from '../component-model/templates/templates';
+import { TemplateInterface, Template, Connection, ConnectorType } from '../component-model/templates/templates';
 import { CptComponent } from '../../shared/modelling/cpt-component';
 import { SystemModel } from '../../shared/interfaces/system-model';
 import { CptInterface, CptInterfaceOutput } from '../../shared/modelling/cpt-interface';
@@ -34,6 +34,7 @@ import { SquareShape } from './shapes/square.shape';
 import { TriangleShape } from './shapes/triangle.shape';
 import { CptInputVariable } from '../../shared/modelling/cpt-input-variable';
 import { InputVariable } from '../../shared/modelling/templates/input-variable';
+import { InputTemplate } from './templates/input.template';
 
 @Component({
     selector: 'verify-model',
@@ -69,10 +70,15 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
     public selectedTemplate:Template;
     
      // drawing area
-     // drawing area
     public width = 4000;
     public height = 4000;
      private fontSize = 15;
+
+    //graphical arrow info
+    public connectionSourceInterface: string = '';
+    public connectionTargetInterface: string = '';
+    private connections:Connection[] = new Array<Connection>();
+
 
      public configStage = Observable.of({
         width: this.width,
@@ -91,7 +97,7 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() { 
-        //TODO: Use selected Project ID
+        //TODO: Use selected Project ID. Currently models are not being associated with projects or branches
         this.reloadBranches("5aa31b14d49fee0db47f67c3");
         this.getSelectedModel();
 
@@ -114,7 +120,7 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
     }
 
     /**
-     * Retrieves the system model from db
+     * Retrieves the system model from db 
      */
     loadSelectedModel(){
         console.log (this.selectedModelId);
@@ -122,7 +128,6 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
         .subscribe(result =>{
             this.systemModel = result.data as SystemModel
             this.modelTitle = this.systemModel.title;
-            console.log(this.modelTitle);
             this.drawDiagram(this.selectedModelId);
             this.clearEnvironment();
             this.setupEnvironment();
@@ -140,7 +145,7 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
             if (component.templateName == "GenericMicroServiceTemplate"){
                 cptComp = new CptMicroserviceComponent();
             }
-            else if (component.templateName == "Circle" || component.templateName == "Diamond" ){
+            else if (component.templateName == "InputTemplate" ){
               cptComp = new InputVariable();
               this.environment.addInputVariable(cptComp);
             }
@@ -167,7 +172,7 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
         }
        
         this.connectInterfaces();
-       
+       console.log(this.environment.envComponents);
       
 
         // let hookCode = "if (load.loadValues['tps'] < 700 ){ return latency; } " +
@@ -178,10 +183,9 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
     }
 
     /** 
-     * Connect any Interfaces which have an output pointing to a Downstream Interface.
+     * Connect Interfaces to their downstream interfaces
     */
     connectInterfaces(){
-        
         for (let connection of this.systemModel.modelInterfaceEndPointsList){
             let interf = this.environment.getInterface(connection.inputModelInterfaceId);
             let cptOutput = interf.addOutput() as CptInterfaceOutput;
@@ -230,17 +234,17 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
     onRunSimulation(){
         this.resetEnvironment();
 
-            //dont run simulation if a forecast has not been inported
-            if (this.matchTable.inputVariableMatchings.length == 0){
-                this.modal.alert()
-                .title("Cannot Run Simulation")
-                .body("Forecast variables need to be imported first")
-                .open();
-                return;
-            }
-        
+        //dont run simulation if a forecast branch has not been inported
+        if (this.matchTable.inputVariableMatchings.length == 0){
+            this.modal.alert()
+            .title("Cannot Run Simulation")
+            .body("Forecast variables need to be imported first")
+            .open();
+            return;
+        }
+
+        //show warning if no value defined for an input variable
         for (let inputVar of this.matchTable.inputVariableMatchings){
-            //show warning if no value defined for an input variable
             if (inputVar.hasForecastMatch == false
             && inputVar.overrideValue == ""){
                 this.modal.alert()
@@ -251,26 +255,26 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
                  return;
             }
            
+            //set input variable load to the value of the matching forecast variable value
             if (inputVar.forecastValue != null && inputVar.overrideValue == ""){
                 console.log("setting input var with id: " + inputVar.inputVarId + "to " +  inputVar.forecastValue);
                 this.environment.setInputVariableComponent(inputVar.inputVarId, inputVar.forecastValue);
             }
 
+            //set input variable load to the override value
             else{
                 this.environment.setInputVariableComponent(inputVar.inputVarId, inputVar.overrideValue);
             }
         }
-        console.log(this.environment);
+    
         let o = this.environment.runSim();
-        console.log(this.environment);
         console.log(o);
         this.simOutput =  this.displayOutput();
     } 
 
     reloadBranches(projectId:String = null, forceReload = false) {
         var id = projectId;
-        console.log("project id: " + id);
-        
+
         if (id != null) {
             this.branchService
                 .getBranches(id)
@@ -280,7 +284,6 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
                         if (this.selectedForecastBranchId != null) {
                             this.selectedForecastBranch = this.selectedForecastBranchId;
                         } else if (this.branches.length > 0) {
-                            //this.forecastBranchId = this.branches[0].id;
                             this.selectedForecastBranch = this.branches[0].id;
                         }
                         console.log("SelectedBranch", this.selectedForecastBranch);
@@ -331,78 +334,117 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
         this.router.navigate(['home/component_model-list']);
     }
 
+
+/*TODO create a seperate component for the model diagram functionaly 
+so that the the drawing functions below can be removed*/
     drawDiagram(id:string){
-            this.modelService
-                .getModel(id)
-                .subscribe(result => {
-                    if (result.status == 'OK') {
-
-                        this.selectedModel = result.data as ComponentModel;
-                        
-                        this.modelTitle = this.selectedModel.title.toString();
-                        
-                        // create templates
-                        for (let index = 0; index < this.selectedModel.modelComponentList.length; index++) {
-
-                            // create template
-                            let tempTemplate = this.selectedModel.modelComponentList[index];
-                            var template: Template;
-                            if (tempTemplate.templateName == 'GenericMicroServiceTemplate') {
-                                template = new GenericMicroServiceTemplate(this);
-                            } else if (tempTemplate.templateName == 'JavaMicroServiceTemplate') {
-                                template = new JavaMicroServiceTemplate(this);
-                            } else if (tempTemplate.templateName == 'StaticTemplate') {
-                                template = new StaticTemplate(this);
-                            } else if (tempTemplate.templateName == 'SingleInterfaceTemplate') {
-                                template = new SingleInterfaceTemplate(this);
-                            } else if (tempTemplate.templateName == 'Circle') {
-                                template = new CircleShape(this);
-                            } else if (tempTemplate.templateName == 'Diamond') {
-                                template = new DiamondShape(this);
-                            } else if (tempTemplate.templateName == 'Square') {
-                                template = new SquareShape(this);
-                            } else if (tempTemplate.templateName == 'Triangle') {
-                                template = new TriangleShape(this);
-                            }
-
-                            template.identifier = tempTemplate.id;
-                            template.name = tempTemplate.title;
-
-                            // get interfaces from template
-                            for (let interfaceIndex = 0;interfaceIndex < tempTemplate.modelComponentInterfaceList.length; interfaceIndex++) {
-                                let tempInterface = tempTemplate.modelComponentInterfaceList[interfaceIndex];
-
-                                var templateInterface = new TemplateInterface();
-                                templateInterface.name = tempInterface.title;
-                                templateInterface.latency = tempInterface.latency;
+        this.route
+            .queryParams
+            .subscribe(params => {
+                var id = params["id"];
+                if (id == undefined) return;
+                    this.modelService
+                        .getModel(id)
+                        .subscribe(result => {
+                            if (result.status == 'OK') {
+                                this.selectedModel = result.data as ComponentModel;                     
+                                this.modelTitle = this.selectedModel.title.toString();
+                                let connectionList = this.selectedModel.modelInterfaceEndPointsList;
                                 
-
-                                // get properties of interface
-                                for (let propertyIndex = 0; propertyIndex < tempInterface.modelInterfacePropertiesList.length; propertyIndex ++) {
-                                    let property = tempInterface.modelInterfacePropertiesList[propertyIndex];
-                                    templateInterface.properties.push({ name: property.key, value: property.value});
+                                // create templates
+                                for (let index = 0; index < this.selectedModel.modelComponentList.length; index++) {
+    
+                                    // create template
+                                    let tempTemplate = this.selectedModel.modelComponentList[index];
+                                    var template: Template;
+                                    if (tempTemplate.templateName == 'GenericMicroServiceTemplate') {
+                                        template = new GenericMicroServiceTemplate(this);
+                                    } else if (tempTemplate.templateName == 'JavaMicroServiceTemplate') {
+                                        template = new JavaMicroServiceTemplate(this);
+                                    } else if (tempTemplate.templateName == 'StaticTemplate') {
+                                        template = new StaticTemplate(this);
+                                    } else if (tempTemplate.templateName == 'SingleInterfaceTemplate') {
+                                        template = new SingleInterfaceTemplate(this);
+                                    } else if (tempTemplate.templateName == 'InputTemplate') {
+                                        template = new InputTemplate(this);
+                                    } else if (tempTemplate.templateName == 'Circle') {
+                                        template = new CircleShape(this);
+                                    } else if (tempTemplate.templateName == 'Diamond') {
+                                        template = new DiamondShape(this);
+                                    } else if (tempTemplate.templateName == 'Square') {
+                                        template = new SquareShape(this);
+                                    } else if (tempTemplate.templateName == 'Triangle') {
+                                        template = new TriangleShape(this);
+                                    }
+                                    
+                                    template.name = tempTemplate.title;
+    
+                                    // get interfaces from template
+                                    for (let interfaceIndex = 0;interfaceIndex < tempTemplate.modelComponentInterfaceList.length; interfaceIndex++) {
+                                        let tempInterface = tempTemplate.modelComponentInterfaceList[interfaceIndex];
+                                        var templateInterface = new TemplateInterface();
+                                        templateInterface.name = tempInterface.title;
+                                        templateInterface.latency = tempInterface.latency;       
+    
+                                        // get properties of interface
+                                        for (let propertyIndex = 0; propertyIndex < tempInterface.modelInterfacePropertiesList.length; propertyIndex ++) {
+                                            let property = tempInterface.modelInterfacePropertiesList[propertyIndex];
+                                            templateInterface.properties.push({ name: property.key, value: property.value});
+                                        }
+    
+                                        for (let connection of connectionList){
+                                            if (connection.inputModelInterfaceId == tempInterface.id){
+                                                templateInterface.downstreamInterfaces.push( { component: connection.outputComponentName, interface:connection.outputModelInterfaceName, connectedComponent:connection.inputComponentName, connectedInterface:connection.inputModelInterfaceName });
+                                            }
+                                        }
+    
+                                        template.interfaces.push(templateInterface);
+                                    }
+    
+                                    // get properties of component
+                                    if (tempTemplate.modelComponentPropertiesList !=null){
+                                        for (let propertyIndex = 0; propertyIndex < tempTemplate.modelComponentPropertiesList.length; propertyIndex ++) {
+                                            let property = tempTemplate.modelComponentPropertiesList[propertyIndex];
+                                            template.modelComponentPropertiesList.push({ name: property.key, value: property.value});
+                                        }
+                                    }
+                                    
+                                    // save template
+                                    this.templates.push(template);
+    
+                                    // draw template
+                                    let x = 0; let y;
+                                    if (tempTemplate.modelComponentVisualProperties != null) {
+                                        x = parseFloat(tempTemplate.modelComponentVisualProperties.xPosition.toString());
+                                        y = parseFloat(tempTemplate.modelComponentVisualProperties.yPosition.toString());
+                                    }
+    
+                                    var group = template.createUI(x, y,false);
+                                    this.addGroup(group);
                                 }
-
-                                template.interfaces.push(templateInterface);
+    
+                                // create connections
+                                for (let index = 0; index < this.selectedModel.modelInterfaceEndPointsList.length; index++) {
+                                    let tempConnection = this.selectedModel.modelInterfaceEndPointsList[index];
+    
+                                    let source = this.getTemplateByName(tempConnection.inputComponentName);
+                                    let target = this.getTemplateByName(tempConnection.outputComponentName);
+    
+                                    var connection = new Connection();
+                                    connection.inputComponentName = source.identifier.toString();
+                                    connection.outputComponentName = target.identifier.toString();
+                                    connection.inputInterfaceName = this.connectionSourceInterface;
+                                    connection.outputInterfaceName =  this.connectionTargetInterface;
+    
+                                    this.connections.push(connection);
+                                }
+    
+                                this.drawConnections();
+    
                             }
-
-                            // save template
-                            this.templates.push(template);
-
-                            // draw template
-                            let x=0;
-                            let y;
-                            if (tempTemplate.modelComponentVisualProperties != null) {
-                                 x =  parseFloat(tempTemplate.modelComponentVisualProperties.xPosition.toString());
-                                 y = parseFloat(tempTemplate.modelComponentVisualProperties.yPosition.toString());
-                            }
-                            var group = template.createUI(x,y, false);
-                            group.x = template
-                            this.addGroup(group);
-                        }
-                    }
-                    console.log(result);
-                });
+                            console.log(result);
+                    });
+            });
     }
 
     private addGroup(group) {
@@ -424,8 +466,7 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
         }
         this.selectedTemplate = template.clone();
         this.selectedComponent = this.environment.getComponent(template.identifier);
-        console.log(this.selectedComponent.displayName);
-        this.showComponentOutput(template.identifier);
+       // this.showComponentOutput(template.identifier);
         this.layer.draw(); 
     }
 
@@ -473,6 +514,49 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
         this.stage.setHeight(this.height);
 
         this.stage.batchDraw();
+    }
+
+    public drawConnections() {
+        for (var index = 0; index < this.connections.length; index++) {
+            var connection = this.connections[index];
+
+            if (connection.arrow) connection.arrow.remove();
+
+            // get source and target to get the  latest positions
+            let source = this.getTemplateById(connection.inputComponentName);
+            let target = this.getTemplateById(connection.outputComponentName);
+
+            let sourceConnector = source.getConnectorPosition(ConnectorType.RIGHT);
+            let targetConnector = target.getConnectorPosition(ConnectorType.LEFT);
+            connection.arrow = new Arrow({
+                // x: connection.visualProperties.sourceX,
+                // y: connection.visualProperties.sourceY,
+                // points: [0, 0, connection.visualProperties.targetX - connection.visualProperties.sourceX, 
+                //                connection.visualProperties.targetY - connection.visualProperties.sourceY],
+                x: sourceConnector.x,
+                y: sourceConnector.y,
+                points: [0, 0, targetConnector.x - sourceConnector.x, targetConnector.y - sourceConnector.y],
+                pointerLength: 5,
+                pointerWidth : 5,
+                fill: 'black',
+                stroke: 'black',
+                strokeWidth: 2
+            });
+            this.layer.add(connection.arrow);
+        }
+        
+        this.layer.draw();
+    }
+
+    private getTemplateByName(name) {
+        for (let index = 0; index < this.templates.length; index++) {
+            var template = this.templates[index];
+            if (template.name == name) {
+                return template;
+            }
+        }
+
+        return null;
     }
 
 

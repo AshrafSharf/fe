@@ -85,6 +85,10 @@ export abstract class Template {
         return this.createUI(x, y);
     }
 
+    public canAddInterface() {
+        return true;
+    }
+
     public select() {
         let children = this.uiGroup.getChildren();
         if (children.length > 0) {

@@ -225,7 +225,7 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
      */
     onRunSimulation(){
         this.resetEnvironment();
-        {
+
             
             if (this.matchTable.inputVariableMatchings.length == 0){
                 this.modal.alert()
@@ -234,7 +234,7 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
                 .open();
                 return;
             }
-        }
+        
         for (let inputVar of this.matchTable.inputVariableMatchings){
             //show warning if no value defined for an input variable
             if (inputVar.hasForecastMatch == false

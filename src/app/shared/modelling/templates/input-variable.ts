@@ -14,6 +14,7 @@ export class InputVariableInterface extends CptInterface {
 
     constructor(obj?: InputVariableInterface) {
         super(obj);
+        this.interfaceTemplate = "InputVariableInterface";
         //this.load.loadValues["tps"] = this.tps;
     }
     public getClassId() {

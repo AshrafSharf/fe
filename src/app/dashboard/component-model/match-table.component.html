@@ -14,12 +14,12 @@
                         <tr *ngFor="let inputVar of inputVariableMatchings">
                             <td>{{inputVar.inputVariableName}}</td>
                             <td class="text-center">
-                                <p *ngIf="inputVar.hasForecastMatch==true">{{inputVar.forecastValue}}</p>
+                                <p *ngIf="(inputVar.hasForecastMatch) && (allowOverride)">{{inputVar.forecastValue}}</p>
                                 <button *ngIf="inputVar.hasForecastMatch==false" 
                                         (click)="onAddForecastVariable()" 
                                         class="btn btn-link" 
                                         style="text-decoration:underline">?</button>
-                                <p *ngIf="inputVar.hasForecastMatch==true"
+                                <p *ngIf="(inputVar.hasForecastMatch) && (!allowOverride)"
                                    class="glyphicon glyphicon-ok"
                                    style="color:green"></p>
                             </td>

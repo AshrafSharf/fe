@@ -134,11 +134,11 @@ export class VariableListComponent implements OnInit {
     reloadVariables() {
         Utils.selectBranch(this.selectedProject, this.selectedBranch);
         this.variableService
-            .getVariables(this.selectedBranch)
+            .getUserAccessVariables(this.selectedBranch, Utils.getUserId())
             .subscribe(response => {
                 console.log(response);
                 this.variables = response.data as Array<Variable>;
-
+        
                 this.rows = new Array<TableViewRow>();
                 this.variables.forEach(variable => {
                     var row = new TableViewRow(variable.id);
@@ -149,7 +149,24 @@ export class VariableListComponent implements OnInit {
                     row.addColumn(new TableViewColumn("timesegment", variable.timeSegment.length.toString()));
                     this.rows.push(row);
                 });
-            })
+            });
+        // this.variableService
+        //     .getVariables(this.selectedBranch)
+        //     .subscribe(response => {
+        //         console.log(response);
+        //         this.variables = response.data as Array<Variable>;
+        //
+        //         this.rows = new Array<TableViewRow>();
+        //         this.variables.forEach(variable => {
+        //             var row = new TableViewRow(variable.id);
+        //             row.addColumn(new TableViewColumn("name", variable.title));
+        //             row.addColumn(new TableViewColumn("owner", variable.ownerName));
+        //             row.addColumn(new TableViewColumn("varType", variable.variableType));
+        //             row.addColumn(new TableViewColumn("valueType", variable.valueType));
+        //             row.addColumn(new TableViewColumn("timesegment", variable.timeSegment.length.toString()));
+        //             this.rows.push(row);
+        //         });
+        //     })
     }
 
     reloadProjects(forceReload = true) {

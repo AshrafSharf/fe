@@ -28,7 +28,12 @@ import { JavaMicroServiceTemplate } from './templates/java.micro.service.templat
 import { StaticTemplate } from './templates/static.template';
 import { SingleInterfaceTemplate } from './templates/single.interface.template';
 import { ModelService } from '../../services/model.service';
-
+import { CircleShape } from './shapes/circle.shape';
+import { DiamondShape } from './shapes/diamond.shape';
+import { SquareShape } from './shapes/square.shape';
+import { TriangleShape } from './shapes/triangle.shape';
+import { CptInputVariable } from '../../shared/modelling/cpt-input-variable';
+import { InputVariable } from '../../shared/modelling/templates/input-variable';
 
 @Component({
     selector: 'verify-model',
@@ -56,10 +61,12 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
     selectedModelId:string = null;
     systemModel:SystemModel = null;
     selectedModel = null;
+    selectedComponent:CptComponent = null;
     modelTitle:string = "";
 
     // list of templatea
     public templates: Array<Template> = new Array<Template>();
+    public selectedTemplate:Template;
     
      // drawing area
      public width = 750;
@@ -129,40 +136,32 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
             if (component.templateName == "GenericMicroServiceTemplate"){
                 cptComp = new CptMicroserviceComponent();
             }
+            else if (component.templateName == "Circle" || component.templateName == "Diamond" ){
+              cptComp = new InputVariable();
+              this.environment.addInputVariable(cptComp);
+            }
             //TODO: add more if cases with for other templates
 
             cptComp.order = component.order;
+            cptComp.id = component.id;
             cptComp.setName(component.title);
+            console.log(cptComp.order, cptComp.displayName)
             
             for (let interf of component.modelComponentInterfaceList){
                 let cptInt = cptComp.addInterface(interf.title);
                 cptInt.id = interf.id;
+                cptInt.componentId = component.id;
                 cptInt.latency = Number(interf.latency);
-            
-
-                //add input variables
-                if (interf.modelInputVariableList != null && interf.modelInputVariableList.length>0){
-                    cptInt.inputLoadVariable = interf.modelInputVariableList[0].title;
-                   // this.inputVariables.push(interf.modelInputVariableList[0].title);
-                    this.environment.addInputVariable(interf.modelInputVariableList[0].title);
+                
+                //add custom properties
+                for (let property of interf.modelInterfacePropertiesList){
+                    cptInt.addProperty( property.key,  property.value);
                 }
-
-                //add outputs
-                if (interf.modelInterfaceEndPointsList.length>0){
-                    for (let output of interf.modelInterfaceEndPointsList){
-                        let cptOutput = cptInt.addOutput() as CptInterfaceOutput;
-                        if (component.title == "Comp1" && output.outputModelInterfaceId =="5aaa5dead49fee15886c5b90"){
-                            cptOutput.multiplier = 0.5;
-                        } 
-                        cptOutput.downstreamInterfaceId = output.outputModelInterfaceId;
-                    }    
-                }
-
             }
+            
             this.environment.registerComponent(cptComp);
         }
-        
-       // console.log(this.inputVariables);
+        console.log(this.systemModel);
         this.connectInterfaces();
         console.log(this.environment.envComponents);
         console.log(this.environment.inputVars);
@@ -178,17 +177,13 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
      * Connect any Interfaces which have an output pointing to a Downstream Interface
     */
     connectInterfaces(){
-        for (let component of this.environment.envComponents){
-            for (let interf of component.getInterfaces()){
-                for (let output of interf.outputs){
-                    if (output.downstreamInterfaceId != null){
-                        output.connect(this.environment.getInterface(output.downstreamInterfaceId));
-                        console.log("connected "+ component.displayName + ":" + interf.displayName 
-                        + "to " + this.environment.getInterface(output.downstreamInterfaceId).displayName);
-                    }
-                }
-            }
+        console.log(this.systemModel)
+        for (let connection of this.systemModel.modelInterfaceEndPointsList){
+            let interf = this.environment.getInterface(connection.inputModelInterfaceId);
+            let cptOutput = interf.addOutput() as CptInterfaceOutput;
+            cptOutput.downstreamInterfaceId = connection.outputModelInterfaceId;
         }
+
     }
 
     /** 
@@ -199,6 +194,7 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
            for (let interf of component.modelComponentInterfaceList){
                let cptIf = this.environment.getInterface(interf.id) as CptMicroserviceInterface;
                cptIf.latency = Number(interf.latency);
+               cptIf.load.loadValues["tps"] = 0;
                for (let property of interf.modelInterfacePropertiesList){
                    if(cptIf.load.loadValues.hasOwnProperty(property.key)){
                         cptIf.load.loadValues[property.key] = 0;
@@ -229,7 +225,7 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
      */
     onRunSimulation(){
         this.resetEnvironment();
-        {
+
             
             if (this.matchTable.inputVariableMatchings.length == 0){
                 this.modal.alert()
@@ -238,7 +234,7 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
                 .open();
                 return;
             }
-        }
+        
         for (let inputVar of this.matchTable.inputVariableMatchings){
             //show warning if no value defined for an input variable
             if (inputVar.hasForecastMatch == false
@@ -252,16 +248,17 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
             }
            
             if (inputVar.forecastValue != null && inputVar.overrideValue == ""){
-                this.environment.setInputVariables(inputVar.inputVariableName,
-                    inputVar.forecastValue);
+                console.log("setting input var with id: " + inputVar.inputVarId + "to " +  inputVar.forecastValue);
+                this.environment.setInputVariableComponent(inputVar.inputVarId, inputVar.forecastValue);
             }
 
             else{
-                this.environment.setInputVariables(inputVar.inputVariableName,
-                    inputVar.overrideValue);
+                this.environment.setInputVariableComponent(inputVar.inputVarId, inputVar.overrideValue);
             }
         }
+        console.log(this.environment);
         let o = this.environment.runSim();
+        console.log(this.environment);
         console.log(o);
         this.simOutput =  this.displayOutput();
     } 
@@ -291,17 +288,37 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
         let outputString = "";
         let comps = this.environment.envComponents;
         for (let comp of comps){
-            outputString+= comp.displayName+": \n";
-            let interfaces = comp.getInterfaces();
-            for (let interf of interfaces){
-                outputString+=interf.displayName + ": \n" ;
-                outputString += "tps: " + interf.load.loadValues.tps + " \n";
-                outputString += "latency: " + interf.getStats().val["lat"] + " \n";          
+            if (!(comp instanceof InputVariable)){
+                outputString+= comp.displayName+": \n";
+                let interfaces = comp.getInterfaces();
+                for (let interf of interfaces){
+                    outputString+=interf.displayName + ": \n" ;
+                    for (let key in interf.load.loadValues){
+                        outputString += key+ ":" + interf.load.loadValues[key] + " \n";
+                    }
+                    if (comp instanceof CptMicroserviceComponent){
+                        outputString += "latency: " + interf.getStats().val["lat"] + " \n";       
+                    }   
+                }
             }
+            
         }
         return outputString;
     }
 
+    public showComponentOutput(componentId:string){
+        let comp = this.environment.getComponent(componentId);
+        console.log(comp.getOutput());
+       // this.selectedTemplateOutput = comp.getOutput();
+        for(let interf of comp.getInterfaces()){
+            let output = interf.getOutput();
+            for (let property in output.getVal()){
+                console.log(property, output.getVal()[property]);
+            }
+        }
+        console.log(comp.toJSON());
+
+    }
     public onEdit(){
         this.location.back();
     }
@@ -334,6 +351,14 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
                                 template = new StaticTemplate(this);
                             } else if (tempTemplate.templateName == 'SingleInterfaceTemplate') {
                                 template = new SingleInterfaceTemplate(this);
+                            } else if (tempTemplate.templateName == 'Circle') {
+                                template = new CircleShape(this);
+                            } else if (tempTemplate.templateName == 'Diamond') {
+                                template = new DiamondShape(this);
+                            } else if (tempTemplate.templateName == 'Square') {
+                                template = new SquareShape(this);
+                            } else if (tempTemplate.templateName == 'Triangle') {
+                                template = new TriangleShape(this);
                             }
 
                             template.identifier = tempTemplate.id;
@@ -352,12 +377,6 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
                                 for (let propertyIndex = 0; propertyIndex < tempInterface.modelInterfacePropertiesList.length; propertyIndex ++) {
                                     let property = tempInterface.modelInterfacePropertiesList[propertyIndex];
                                     templateInterface.properties.push({ name: property.key, value: property.value});
-                                }
-
-                                // get downstream interfaces
-                                for (let dInterfaceIndex = 0; dInterfaceIndex < tempInterface.modelInterfaceEndPointsList.length; dInterfaceIndex ++) {
-                                    let dInterface = tempInterface.modelInterfaceEndPointsList[dInterfaceIndex];
-                                    templateInterface.downstreamInterfaces.push( { component: dInterface.outputModelInterfaceId, connectedInterface: dInterface.inputModelInterfaceId });
                                 }
 
                                 template.interfaces.push(templateInterface);
@@ -392,4 +411,37 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
         this.stage = this.stageComponent.getStage();
         this.layer = this.stage.getChildren()[0];
     }
+
+    public templateClicked(template: any) {
+        if (this.selectedTemplate != null && this.selectedTemplate.identifier != template.identifier) {
+            let template = this.getSelectedTemplate();
+            template.deselectTemplate();
+            
+        }
+        this.selectedTemplate = template.clone();
+        this.selectedComponent = this.environment.getComponent(template.identifier);
+        console.log(this.selectedComponent.displayName);
+        this.showComponentOutput(template.identifier);
+        this.layer.draw(); 
+    }
+
+    private getSelectedTemplate() {
+        if (this.selectedTemplate != null) {      
+            return this.getTemplateById(this.selectedTemplate.identifier);
+        }
+        return null;
+    }
+
+    private getTemplateById(id) {
+        for (let index = 0; index < this.templates.length; index++) {
+            var template = this.templates[index];
+            if (template.identifier == id) {
+                return template;
+            }
+        }
+
+        return null;
+    }
+
+
 }

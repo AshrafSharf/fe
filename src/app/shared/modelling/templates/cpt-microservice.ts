@@ -9,10 +9,24 @@ import { CptOutput } from '../cpt-output';
 export class CptMicroserviceInterface extends CptInterface {
     public tps: number = 0;
     public latency: number = 0;
+    public properties: { [k: string]: number } = {};
+  
+    public 
 
     constructor(obj?: CptMicroserviceInterface) {
         super(obj);
+        for (let key in this.properties){
+            console.log("key", key);
+            this.load.loadValues[key] = this.properties[key];
+        }
         this.load.loadValues["tps"] = this.tps;
+    }
+
+    addProperty(key, value){
+        this.properties[key] = value;
+        console.log(this.properties);
+        this.load.loadValues[key] = this.properties[key];
+        console.log(this.load);
     }
     public getClassId() {
         return CptMicroserviceInterface.name;
@@ -42,10 +56,12 @@ export class CptMicroserviceInterface extends CptInterface {
     public getOutput() {
         let o = new CptOutput();
         o.addVal("tps", this.load.loadValues["tps"]);
+       for (let key in this.load.loadValues ){
+            o.addVal(key, this.load.loadValues[key]);
+       }
         o.addVal("lat", this.latency);
         return o;
     }
-
 
     @CptHook("load", "latency")
     public adjustLatencyToLoad?: Function;

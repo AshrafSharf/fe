@@ -31,8 +31,7 @@ export class CptInterfaceOutput extends CptObject {
     sendLoad(l: CptLoad) {
         let target = CptEnvironment.get().getInterface(this.downstreamInterfaceId);
         if (target !== null)
-            target.receiveLoad(l.multiply(this.multiplier));
-    
+            target.receiveLoad(l);
     }
 
     public getDownstreamStats(): CptStats {
@@ -61,6 +60,8 @@ export class CptInterface extends CptHookableObject implements CptSimulationLife
 
     public inputLoadVariable?: string;
     public outputs: CptInterfaceOutput[] = [];
+    public componentId:string;
+    public interfaceTemplate:string = "";
 
     public load: CptLoad = new CptLoad();
     constructor(obj?: CptInterface) {
@@ -74,6 +75,9 @@ export class CptInterface extends CptHookableObject implements CptSimulationLife
         return CptInterface.name;
     }
 
+    addProperty(key, value){
+        this.load.loadValues[key] = value;
+    }
 
     public toJSON(): { [k: string]: any } {
         let o = super.toJSON();
@@ -98,7 +102,8 @@ export class CptInterface extends CptHookableObject implements CptSimulationLife
      * @param l the load to be recieved
      */
     public receiveLoad(l: CptLoad) {
-        this.load = this.load.add(l);
+        //this.load = this.load.add(l);
+        this.load = this.load.addLoad(l);
     }
 
     /**
@@ -140,16 +145,24 @@ export class CptInterface extends CptHookableObject implements CptSimulationLife
             this.load = CptEnvironment.get().getLoad(this.inputLoadVariable);
         }
 
+        if (this.interfaceTemplate =="InputVariableInterface"){
+            console.log(this.componentId);
+           // this.load= CptEnvironment.get().getLoadComponentValue(this.componentId);
+            for (let output of this.outputs){
+                let dsInterface = CptEnvironment.get().getInterface(output.downstreamInterfaceId);
+                for (let key in dsInterface.load.loadValues){
+                    dsInterface.load.loadValues[key] = CptEnvironment.get().getLoadComponentValue(this.componentId);
+                }
+            }
+        }
+       
     }
     public simulationRun() {
-        console.log("simulationRun ", this.displayName);
         if (this.load)
             this.sendLoadToOutputs(this.load);
-
     }
     public simulationStop() {
         console.log("simulationStop ", this.displayName);
-
     }
     public simulationPostProcess() {
 
@@ -157,7 +170,6 @@ export class CptInterface extends CptHookableObject implements CptSimulationLife
 
     public getOutput(): CptOutput {
         let o = new CptOutput();
-
         return o;
     }
 

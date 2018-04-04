@@ -8,6 +8,10 @@ import { ForecastVariableValue } from "../../shared/interfaces/forecast-variable
 import { CptInputVariable } from "../../shared/modelling/cpt-input-variable";
 import { ModelService } from "../../services/model.service";
 import { SystemModel } from "../../shared/interfaces/system-model";
+import { InputVariable } from "../../shared/modelling/templates/input-variable";
+import { Variable } from "../../shared/interfaces/variables";
+import { Moment } from 'moment';
+import * as moment from 'moment';
 
 @Component({
     selector: 'match-table',
@@ -17,16 +21,14 @@ import { SystemModel } from "../../shared/interfaces/system-model";
 
 export class MatchTableComponenet implements OnInit, OnChanges {
     @Input('forecastBranchId') forecastBranchID: string;
-    @Input("vars") inputVariables:CptInputVariable[];
     @Input('modelId') modelId:string;
     @Input("showForecastNames") showForecastNames:boolean = false;
     @Input("allowOverride") allowOverride:boolean = true;
+    @Input("vars") inputVariables:InputVariable[];
 
-
-    forecastVariables: ForecastVariableValue[] = [];
+    forecastVariables: Variable[] = [];
     inputVariableMatchings:InputVariableMatching[] = [];
-
-
+    
     constructor(
         private variableService: AppVariableService,
         private modelService: ModelService,
@@ -78,20 +80,37 @@ export class MatchTableComponenet implements OnInit, OnChanges {
             let match = false;
             let forecastValue = null;
             let forecastName= null;
+            
+            let forecastVarId = null;
+            let formattedDate = moment(date, "MM-YYYY").format("YYYY-MM");
+            console.log(formattedDate);
             for (let forecastVar of this.forecastVariables){
-                if (this.inputVariables[index].title == forecastVar.title){
+                console.log(forecastVar.title);
+                if (this.inputVariables[index].displayName == forecastVar.title){
                     match = true;
-                    forecastValue= forecastVar.baseCalValue;
                     forecastName=forecastVar.title;
+                    let calculatedValues = forecastVar.allTimesegmentsResultList[0].data;
+                    for (let monthValue of calculatedValues){
+                        if (monthValue.title == formattedDate){
+                            
+                            forecastValue= monthValue.value;
+                            break;
+                        }
+                    }
+                    forecastVarId= forecastVar.id;
                     break;
                 }
             } 
             this.inputVariableMatchings.push({
-                inputVariableName: this.inputVariables[index].title,
+                inputVarId: this.inputVariables[index].id,
+                inputVariableDisplayName: this.inputVariables[index].displayName,
+                inputVariableName: this.inputVariables[index].displayName,
                 hasForecastMatch: match,
                 forecastValue: forecastValue,
                 forecastVarName: forecastName,
+                forecastVarId: forecastVarId,
                 overrideValue:""
+                
             });        
         }
         console.log(this.inputVariableMatchings);

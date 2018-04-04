@@ -155,7 +155,7 @@ export class ForecastTabularComponent implements OnInit {
 
         if (id != null) {
             this.variableService
-                .getVariables(id)
+                .getUserAccessVariables(id, Utils.getUserId())
                 .subscribe(result => {
                     if (result.status == "OK") {
                         console.log(result);
@@ -170,6 +170,22 @@ export class ForecastTabularComponent implements OnInit {
                         this.processVarables();
                     }
                 });
+            // this.variableService
+            //     .getVariables(id)
+            //     .subscribe(result => {
+            //         if (result.status == "OK") {
+            //             console.log(result);
+            //             this.variables = result.data as Array<Variable>;
+            //             this.originalVariables = new Array<Variable>();
+            //             this.variables.forEach(variable => {
+            //                 this.originalVariables.push(variable);
+            //             });
+            //
+            //             this.initDates();
+            //             this.findMinimumStartDate();
+            //             this.processVarables();
+            //         }
+            //     });
         }
     }
 
@@ -409,7 +425,29 @@ export class ForecastTabularComponent implements OnInit {
                     this.endDate.format(Config.getDateFormat()))
                 .subscribe(result => {
                     console.log(result);
-                    this.variables = result.data as Array<Variable>;
+                    var extendedVars = result.data as Array<Variable>;
+                    var finalVars = result.data as Array<Variable>;
+                    var position = [];
+                    
+                    extendedVars.forEach(exVar => {
+                        var match = false;
+                        for (var index = 0; index < this.variables.length; index++) {
+                            if (exVar.title == this.variables[index].title) {
+                                match = true;
+                                break;
+                            }
+                        }
+                        if (!match) {
+                            position.push(extendedVars.indexOf(exVar));
+                        }
+                    });
+
+                    if (position.length != 0) {
+                        for (var index = position.length-1; index >= 0; index--) {
+                            finalVars.splice(position[index], 1);
+                        }
+                    }
+                    this.variables = finalVars;
                     this.originalVariables = new Array<Variable>();
                     this.variables.forEach(variable => {
                         this.originalVariables.push(variable);

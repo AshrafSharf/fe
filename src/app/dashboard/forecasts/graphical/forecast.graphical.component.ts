@@ -352,7 +352,7 @@ export class ForecastGraphicalComponent implements OnInit {
 
         if (id != null) {
             this.variableService
-                .getVariables(id)
+                .getUserAccessVariables(id, Utils.getUserId())
                 .subscribe(result => {
                     if (result.status == "OK") {
                         this.variables = result.data as Array<Variable>;
@@ -361,6 +361,16 @@ export class ForecastGraphicalComponent implements OnInit {
                         this.processVariableData();
                     }
                 });
+            // this.variableService
+            //     .getVariables(id)
+            //     .subscribe(result => {
+            //         if (result.status == "OK") {
+            //             this.variables = result.data as Array<Variable>;
+            //             this.initDates();
+            //             this.findMinimumStartDate();
+            //             this.processVariableData();
+            //         }
+            //     });
         }
     }
 
@@ -675,8 +685,29 @@ export class ForecastGraphicalComponent implements OnInit {
                     this.endDate.format(Config.getDateFormat()))
                 .subscribe(result => {
                     console.log(result);
-                    this.variables = result.data as Array<Variable>;
-                    //this.processVariableData();
+                    var extendedVars = result.data as Array<Variable>;
+                    var finalVars = result.data as Array<Variable>;
+                    var position = [];
+
+                    extendedVars.forEach(exVar => {
+                        var match = false;
+                        for (var index = 0; index < this.variables.length; index++) {
+                            if (exVar.title == this.variables[index].title) {
+                                match = true;
+                                break;
+                            }
+                        }
+                        if (!match) {
+                            position.push(extendedVars.indexOf(exVar));
+                        }
+                    });
+
+                    if (position.length != 0) {
+                        for (var index = position.length-1; index >= 0; index--) {
+                            finalVars.splice(position[index], 1);
+                        }
+                    }
+                    this.variables = finalVars;
                     setTimeout(() => {this.renderChart();}, 100);
                 });
         }

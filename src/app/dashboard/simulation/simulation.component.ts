@@ -15,10 +15,9 @@ import { SystemModel } from '../../shared/interfaces/system-model';
 import { ModelBranch } from '../../shared/interfaces/model-branch';
 import { SimulationService } from '../../services/simulation.service';
 import { InputVariableMatching } from '../../shared/interfaces/input-variable-matching';
+import { InputVariable } from "../../shared/modelling/templates/input-variable";
 import { Simulation } from '../../shared/interfaces/simulation';
 import * as moment from 'moment';
-
-
 
 @Component({
     selector: 'simulation',
@@ -39,7 +38,6 @@ export class SimulationComponent implements OnInit{
     endDate:Moment;
     iterations:string;
 
-
     selectedProjectTitle:string;
     selectedProjectId:string;
     selectedSimulation:Simulation;
@@ -49,9 +47,7 @@ export class SimulationComponent implements OnInit{
     forecastBranches: Branch[] = Array<Branch>();
     modelBranches:ModelBranch[] = Array<ModelBranch>();
 
-    
-
-    inputVariables:ModelVariable[] = []; 
+    inputVariables:InputVariable[] = [];
     variableMatchings:InputVariableMatching[] = [];
 
      //dd-MM-yyyy hh:mm
@@ -70,6 +66,7 @@ export class SimulationComponent implements OnInit{
 
     ngOnInit(){
         this.startDate = moment();
+        this.endDate = moment();
          // get the project and branch Id from route params
          this.route.queryParams.subscribe(params => {
             this.selectedProjectId = params['projectId'];
@@ -86,7 +83,7 @@ export class SimulationComponent implements OnInit{
                     this.description = this.selectedSimulation.description;
                     this.ownerId = this.selectedSimulation.ownerId;
                     this.startDate = moment(this.selectedSimulation.startDate, "MM-YYYY");
-                  //  this.endDate = this.selectedSimulation.endDate;
+                    this.endDate = moment(this.selectedSimulation.endDate, "MM-YYYY");
                     this.iterations = this.selectedSimulation.iterations
                 });
         });
@@ -157,12 +154,17 @@ export class SimulationComponent implements OnInit{
        for (let template of model.modelComponentList){
             if (template.templateName != "GenericMicroServiceTemplate"){
                 console.log(template);
-                let inputVar = {
-                    forecastVariableValue:"",
-                    id: template.id,
-                    overridedValue: "",
-                    title: template.title} as ModelVariable
-                    this.inputVariables.push(inputVar);
+                let cptComp = new InputVariable();
+                cptComp.order = template.order;
+                cptComp.id = template.id;
+                cptComp.setName(template.title);
+                for (let interf of template.modelComponentInterfaceList){
+                    let cptInt = cptComp.addInterface(interf.title);
+                    cptInt.id = interf.id;
+                    cptInt.componentId = template.id;
+                }
+                    this.inputVariables.push(cptComp);
+
             }
         }
         this.getForecastVariables();
@@ -196,13 +198,14 @@ export class SimulationComponent implements OnInit{
                title:this.title,
                description:this.description,
                startDate: this.startDate.format(Config.getDateFormat()),
-               // endDate:this.endDate.format(Config.getDateFormat()),
+               endDate:this.endDate.format(Config.getDateFormat()),
                ownerId:this.ownerId,
                ownerName:this.ownerName,
                forecastBranchId:this.forecastBranchId,
                modelBranchId:this.modelBranchId,
-               iterations:this.iterations
-           }
+               iterations:this.iterations,
+               inputVariableMatchings:this.variableMatchings
+           };
 
            if (this.selectedSimulation != null) {
                // update existing

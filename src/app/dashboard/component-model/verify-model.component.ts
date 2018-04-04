@@ -443,5 +443,33 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
         return null;
     }
 
+    public zoomMinus() {
+        var scaleBy = 1.02;
+        var oldScale = this.stage.scaleX();
+
+        var newScale = oldScale / scaleBy;
+        this.stage.scale({ x: newScale, y: newScale });
+        this.width -= 50;
+        this.stage.setWidth(this.width);
+        this.height -= 50;
+        this.stage.setHeight(this.height);
+        this.stage.batchDraw();
+    }
+
+    public zoomPlus() {
+        var scaleBy = 1.02;
+        var oldScale = this.stage.scaleX();
+
+        var newScale = oldScale * scaleBy;
+        this.stage.scale({ x: newScale, y: newScale });
+        this.width += 50;
+        this.stage.setWidth(this.width);
+
+        this.height += 50;
+        this.stage.setHeight(this.height);
+
+        this.stage.batchDraw();
+    }
+
 
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output,Input, EventEmitter } from '@angular/core';
 
 
 @Component({
@@ -23,6 +23,8 @@ export class DrawingToolsHeaderComponent implements OnInit {
     @Output('save') saveEvent = new EventEmitter();
     @Output('cancel') cancelEvent = new EventEmitter();
     @Output('verify') verifyEvent = new EventEmitter();
+
+    @Input('showModifyButtons') showModifyButtons = true;
 
     constructor() { }
 

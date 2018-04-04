@@ -2,6 +2,14 @@
         <div class="row">
             <app-header title="Verify System Model"></app-header>
         </div>
+        <div class="row" style="padding:15px">
+                <app-drawing-tools-header
+                    (zoom-in)="zoomPlus()"
+                    (zoom-out)="zoomMinus()"
+                    (cancel)="cancelModel()"
+                    (verify)="onEdit()"
+                    [showModifyButtons]="false"></app-drawing-tools-header>
+        </div>
         <div class="row">
           <div class="col-md-3">
             <div class="panel panel-default">
@@ -52,15 +60,13 @@
           </div>
           <div class="col-md-7" >
                 <label>Title: {{modelTitle}}</label>
-          <div class="col-md-12" id="stage-parent">      
-               <ko-stage [config]="configStage">
-                    <ko-layer>             
-                    </ko-layer>
-                </ko-stage>    
-          </div>
-          <div class="col-md-12" style="margin-top: 20px;margin-bottom: 10px;">
-                <button class="btn btn-primary" (click)="onEdit()">Edit</button>
-                <button class="btn btn-danger" (click)="cancelModel()">Cancel</button>
+          <div class="col-md-12" id="container" >   
+                <div class="box drawing-area" >   
+                    <ko-stage [config]="configStage">
+                        <ko-layer>             
+                        </ko-layer>
+                    </ko-stage>  
+                </div>  
           </div>
           </div>
             <div class="col-md-2">

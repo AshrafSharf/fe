@@ -2,8 +2,9 @@
     width:100%;
    
 }
+
 .box {
-        border: solid 1px black;
+    border: solid 1px black;
 }
 
 #stage-parent{
@@ -12,4 +13,12 @@
     overflow: hidden;
     background-color: #F0F0F0;
     border: 1px solid grey;
+}
+
+.drawing-area {
+    background-image: -webkit-repeating-radial-gradient(center center, rgba(0,0,0,.2), rgba(0,0,0,.2) 1px, transparent 1px, transparent 100%);
+    background-image: repeating-radial-gradient(center center, rgba(0,0,0,.2), rgba(0,0,0,.2) 1px, transparent 1px, transparent 100%);
+    background-size: 8px 8px;
+    max-height: 500px;
+    overflow: scroll;
 }

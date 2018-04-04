@@ -7,7 +7,7 @@
                             <th>Input variable</th>
                             <th>Match</th>
                             <th *ngIf="showForecastNames==true">Forecast Variable</th>
-                            <th>Override</th>
+                            <th *ngIf="allowOverride==true">Override</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -19,11 +19,14 @@
                                         (click)="onAddForecastVariable()" 
                                         class="btn btn-link" 
                                         style="text-decoration:underline">?</button>
+                                <p *ngIf="inputVar.hasForecastMatch==true"
+                                   class="glyphicon glyphicon-ok"
+                                   style="color:green"></p>
                             </td>
                             <td *ngIf="showForecastNames==true">
                                 {{inputVar.forecastVarName}}
                             </td>
-                            <td>
+                            <td *ngIf="allowOverride==true">
                                 <input type="text"  
                                         class="form-control"
                                         [(ngModel)]="inputVar.overrideValue">

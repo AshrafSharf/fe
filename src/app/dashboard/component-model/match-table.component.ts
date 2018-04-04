@@ -20,7 +20,7 @@ export class MatchTableComponenet implements OnInit, OnChanges {
     @Input("vars") inputVariables:CptInputVariable[];
     @Input('modelId') modelId:string;
     @Input("showForecastNames") showForecastNames:boolean = false;
-    @Input("allowOverride") allowOverride:boolean =false;
+    @Input("allowOverride") allowOverride:boolean = true;
 
 
     forecastVariables: ForecastVariableValue[] = [];

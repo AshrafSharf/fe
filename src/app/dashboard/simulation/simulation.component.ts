@@ -8,6 +8,7 @@ import { Branch } from '../../shared/interfaces/branch';
 import { Config } from '../../shared/config';
 import { Moment, unix } from 'moment';
 import { MatchTableComponenet } from '../component-model/match-table.component';
+import { Modal } from 'ngx-modialog/plugins/bootstrap';
 import { ModelVariable } from '../../shared/interfaces/model-variable';
 import { ModelService } from '../../services/model.service';
 import { SystemModel } from '../../shared/interfaces/system-model';
@@ -29,10 +30,10 @@ export class SimulationComponent implements OnInit{
     @ViewChild(MatchTableComponenet) matchTable:MatchTableComponenet;
 
     title:string;
-    ownerId:string;
+    ownerId:string = "";
     ownerName:string;
     description:string;
-     modelBranchId:string;
+    modelBranchId:string;
     forecastBranchId:string;
     startDate:Moment;
     endDate:Moment;
@@ -61,12 +62,14 @@ export class SimulationComponent implements OnInit{
         private router: Router,
         private userService: UserService,
         private forecastBranchService:BranchService,
+        private modal:Modal,
         private modelService:ModelService,
         private simulationService:SimulationService) {
 
     }
 
     ngOnInit(){
+        this.startDate = moment();
          // get the project and branch Id from route params
          this.route.queryParams.subscribe(params => {
             this.selectedProjectId = params['projectId'];
@@ -82,11 +85,21 @@ export class SimulationComponent implements OnInit{
                     this.title = this.selectedSimulation.title;
                     this.description = this.selectedSimulation.description;
                     this.ownerId = this.selectedSimulation.ownerId;
-                    this.startDate = moment(this.selectedSimulation.startDate, "MM-YYYY")
+                    this.startDate = moment(this.selectedSimulation.startDate, "MM-YYYY");
                   //  this.endDate = this.selectedSimulation.endDate;
                     this.iterations = this.selectedSimulation.iterations
                 });
         });
+
+        // get all the users
+        this.userService
+            .getOwners(users => {
+                this.users = users;
+                if (this.ownerId == "") {
+                    this.ownerId = Utils.getUserId();
+                    //this.ownerName = Utils.getUserName();
+                }
+            });
         
         //TODO: Use APIs rather hard coding model branches
         let modelA = {title:"ModelBranch", id: "test-branch"} as ModelBranch;
@@ -107,16 +120,6 @@ export class SimulationComponent implements OnInit{
             this.selectedProjectTitle = params['title'];
         });
 
-         // get all the users
-         this.userService
-         .getOwners(users => {
-             this.users = users;
-             if (this.users.length > 0) {
-                 this.ownerId = Utils.getUserId();
-                 //this.ownerName = Utils.getUserName();
-             }
-         });
-
          //get forecast branches
          this.forecastBranchService.getBranches(this.selectedProjectId)
          .subscribe(result =>{
@@ -124,9 +127,7 @@ export class SimulationComponent implements OnInit{
              this.forecastBranchId = result.data[0].id;
               //get matchings
                 this.getInputVariables();
-         
             });
-        
     }
 
     /** 
@@ -164,43 +165,65 @@ export class SimulationComponent implements OnInit{
                     this.inputVariables.push(inputVar);
             }
         }
+        this.getForecastVariables();
     });
 
    }
 
    onSave(){
-    let body = {
-        modelProjectId:this.selectedProjectId,
-        title:this.title,
-        description:this.description,
-        startDate: this.startDate.format(Config.getDateFormat()),
-       // endDate:this.endDate.format(Config.getDateFormat()),
-        ownerId:this.ownerId,
-        ownerName:this.ownerName,
-        forecastBranchId:this.forecastBranchId,
-        modelBranchId:this.modelBranchId,
-        iterations:this.iterations
-    }
+       this.users.forEach(user => {
+           if (user.id == this.ownerId) {
+               this.ownerName = (user.userName).toString();
+           }
+       });
 
-    if (this.selectedSimulation != null) {
-        // update existing
-        this.simulationService
-            .updateSimulation(body, this.selectedSimulationId)
-            .subscribe(result => {
-                console.log(result);
-                this.clearInputs();
-                
-            });
-    } else {
-        //create new
-         this.simulationService
-                .createSimulation(body)
-                .subscribe(result => {
-                      console.log(result);
-                      this.clearInputs();        
-                });
-        }
-    }
+       var match = true;
+       this.matchTable.inputVariableMatchings.forEach(inputVar => {
+           if(inputVar.hasForecastMatch == false) {
+               match = false;
+           }
+       });
+
+       if(!match) {
+           this.modal.alert()
+               .title("Warning")
+               .body("There must be at least 1 matching input variable")
+               .open();
+       }
+       else {
+           let body = {
+               modelProjectId:this.selectedProjectId,
+               title:this.title,
+               description:this.description,
+               startDate: this.startDate.format(Config.getDateFormat()),
+               // endDate:this.endDate.format(Config.getDateFormat()),
+               ownerId:this.ownerId,
+               ownerName:this.ownerName,
+               forecastBranchId:this.forecastBranchId,
+               modelBranchId:this.modelBranchId,
+               iterations:this.iterations
+           }
+
+           if (this.selectedSimulation != null) {
+               // update existing
+               this.simulationService
+                   .updateSimulation(body, this.selectedSimulationId)
+                   .subscribe(result => {
+                       console.log(result);
+                       this.clearInputs();
+
+                   });
+           } else {
+               //create new
+               this.simulationService
+                   .createSimulation(body)
+                   .subscribe(result => {
+                       console.log(result);
+                       this.clearInputs();
+                   });
+           }
+       }
+   }
 
 
      // clear inputs

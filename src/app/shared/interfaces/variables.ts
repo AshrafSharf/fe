@@ -1,4 +1,5 @@
 import { SelectedWord } from "./auto-complete-input";
+import { User } from "./user";
 
 export interface ValidationResult {
     result: boolean;
@@ -16,6 +17,8 @@ export interface Variable {
     title: String;
     ownerId: String;
     ownerName: String;
+    isPrivate: Boolean;
+    usersWithAccess: Array<User>;
     timeSegment: Array<TimeSegment>;
     variableType: String;
     valueType: String;

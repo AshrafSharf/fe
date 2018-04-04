@@ -18,7 +18,8 @@ export class ProjectsComponent implements OnInit {
 
     title: String = '';
     description: String = '';
-    owner: String = '';
+    ownerId: String = '';
+    ownerName: String = '';
     users: User[] = Array<User>();
 
     selectedProject: Project = null;
@@ -45,21 +46,27 @@ export class ProjectsComponent implements OnInit {
                         this.selectedProject = result.data as Project;
                         this.title = this.selectedProject.title;
                         this.description = this.selectedProject.description;
-                        this.owner = this.selectedProject.ownerId;
+                        this.ownerId = this.selectedProject.ownerId;
                     });
             });
 
         this.userService
             .getOwners((users => {
                 this.users = users;
-                if (this.users.length > 0) {
-                    this.owner = Utils.getUserId();
+                if (this.ownerId == "") {
+                    this.ownerId = Utils.getUserId();
                 }
             }));
     }
 
     // create project
     onSave() {
+        this.users.forEach(user => {
+            if (user.id == this.ownerId) {
+                this.ownerName = user.userName;
+            }
+        });
+
         if (this.title.length == 0) {
             this.modal.alert()
                 .title('Warning')
@@ -73,7 +80,7 @@ export class ProjectsComponent implements OnInit {
               .body('Names can only include Alphanumerical characters, underscores and hyphens')
               .open();
 
-        }else if (this.owner.length == 0) {
+        }else if (this.ownerId.length == 0) {
             this.modal.alert()
                 .title('Warning')
                 .body('Please select project owner')
@@ -82,7 +89,7 @@ export class ProjectsComponent implements OnInit {
             if (this.selectedProject != null) {
                 // update existing
                 this.projectService
-                    .updateProject(this.selectedProject.id, this.title, this.description, this.owner)
+                    .updateProject(this.selectedProject.id, this.title, this.description, this.ownerId)
                     .subscribe(result => {
                         console.log('result', result);
                         if (result.status == "UNPROCESSABLE_ENTITY"){
@@ -98,7 +105,7 @@ export class ProjectsComponent implements OnInit {
             } else {
                 // create new
                 this.projectService
-                    .createProject(this.title, this.description, this.owner)
+                    .createProject(this.title, this.description, this.ownerId, this.ownerName)
                     .subscribe(result => {
                         console.log('result',result);
 
@@ -125,9 +132,10 @@ export class ProjectsComponent implements OnInit {
     clearInputs() {
         this.title = '';
         this.description = '';
-        this.owner = '';
+        this.ownerId = '';
         this.selectedProject = null;
          if (this.createdProject != null){
+             Utils.selectProject(this.createdProject.id);
             this.router.navigate(['/home/branches-list'], { queryParams: {
                 projectId: this.createdProject.id
             }});

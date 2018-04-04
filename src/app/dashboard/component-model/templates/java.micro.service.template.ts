@@ -18,6 +18,7 @@ export class JavaMicroServiceTemplate extends GenericMicroServiceTemplate {
         obj.name = this.name;
         obj.interfaces = this.interfaces;
         obj.modelComponentPropertiesList = this.modelComponentPropertiesList;
+        obj.connectors = this.connectors;
         return obj;
     }
 

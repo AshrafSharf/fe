@@ -60,6 +60,18 @@ export class AppVariableService {
                     return response.json()
                 });
     }
+    
+    public getUserAccessVariables(branchId, userId) {
+        this.loaderService.show();
+        let url = Utils.createUrl(Utils.routeVariable) + "/" + branchId + "/user/" + userId;
+        console.log(url);
+        return this.http
+            .get(url, Utils.getRequestOptions())
+            .map(response => {
+                this.loaderService.hide();
+                return response.json()
+            });
+    }
 
     public getVariableByName(branchId, varName){
         this.loaderService.show();

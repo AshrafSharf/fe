@@ -26,10 +26,10 @@ export class ProjectService {
     }
 
     // create a new project
-    createProject(title:String, description:String, owner:String) {
+    createProject(title:String, description:String, ownerId:String, ownerName:String) {
         this.loaderService.show();
         let url = Utils.createUrl(Utils.routeProject);
-        let body = { title: title, description: description, ownerId: owner, ownerName: owner };
+        let body = { title: title, description: description, ownerId: ownerId, ownerName: ownerName };
 
         return this.http
                 .post(url, body, Utils.getRequestOptions())

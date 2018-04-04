@@ -1,88 +1,160 @@
 <div class="container-fluid">
-    <div class="row">
-        <app-header title="Component Model"></app-header>
+    <div class="row" style="padding:15px">
+        <app-drawing-tools-header
+            (static-template)="addStatic()"
+            (single-inheritance-template)="addSingleInterface()"
+            (generic-micro-service-template)="addGenericMicroService()"
+            (java-micro-service-template)="addJavaMicroService()"
+            (shape-circle)="addCircle()"
+            (shape-diamond)="addDiamond()"
+            (shape-triangle)="addTriangle()"
+            (shape-square)="addSquare()"
+            (shape-label)="addLabel()"
+            (zoom-in)="zoomPlus()"
+            (zoom-out)="zoomMinus()"
+            (save)="saveModel()"
+            (cancel)="cancelModel()"
+            (verify)="onVerify()"></app-drawing-tools-header>
     </div>
+
     <div class="row">
-        <div class="col-md-2">
 
-            <div class="row">
-                <h4>Component Template</h4>
-
-                <div class="row">
-                    <button class="button_shape" (click)="addStatic()">Static</button>
-                    <button class="button_shape" (click)="addSingleInterface()">Single Interface</button>
-                    <button class="button_shape" (click)="addGenericMicroService()">Generic Micro Service</button>
-                    <button class="button_shape" (click)="addJavaMicroService()">Java Micro Service</button>
-                </div>
-            </div>
-
-            <div class="row">
-                <h4>Drawing</h4>
-
-                <div class="row">
-                    <button class="button_shape" (click)="addCircle()">Circle</button>
-                    <button class="button_shape" (click)="addDiamond()">Diamond</button>
-                    <button class="button_shape" (click)="addTriangle()">Triangle</button>
-                    <button class="button_shape" (click)="addSquare()">Square</button>
-                    <button class="button_shape" (click)="addLabel()">Label</button>                    
-                </div>
-            </div>
-        </div>
-
-        <div id="container" class="col-md-7" >
-            <div>
-                <div class="form-group">
-                    <label for="">Title</label>
-                    <input type="text" [(ngModel)]="modelTitle" class="form-control" placeholder="title">
-                </div>
-            </div>
-            <div class="box" style="background-color: lightgray;">
+        <div id="container" class="col-md-9" >
+            <div class="box drawing-area" >
                 <ko-stage [config]="configStage">
                     <ko-layer>
                     </ko-layer>
                 </ko-stage>
             </div>
-            <div style="margin-top: 10px;margin-bottom: 10px;">
-                <button class="btn btn-success" (click)="saveModel()">Save</button>
-                <button class="btn btn-danger" (click)="cancelModel()">Cancel</button>
-                <button [disabled]="selectedId==null" class="btn btn-primary" (click)="onVerify()">Verify</button>
-            </div>
         </div>
 
-        
-        <div class="col-md-3">
+        <div class="col-md-3">                                
+            <table class="table table-bordered">
+                <tr class="section_title">
+                    <td colspan="2">Model Properties</td>
+                </tr>
+                <tr>
+                    <td>Title</td>
+                    <td><input type="text" class="property_value"  [(ngModel)]="modelTitle"></td>
+                </tr>
+            </table>
 
-            <div style="padding: 5px;" *ngIf="selectedTemplate != null">
-                <div class="panel panel-default">
-                    <div class="panel-heading" (click)="toggleVisualProperties()">Visual Properties</div>
-                    <div [class.collapse]="isVisualPropertiesSectionClosed" class="panel-collapse">
-                        <div class="panel-body">
-                            <div class="row component_property">
-                                <div class="col-md-3">X:</div>
-                                <div class="col-md-9">{{getComponentX()}}</div>
-                            </div>
-                            <div class="row component_property">
-                                <div class="col-md-3">Y:</div>
-                                <div class="col-md-9">{{getComponentY()}}</div>
-                            </div>
-                            <div class="row component_property">
-                                <div class="col-md-3">Width:</div>
-                                <div class="col-md-9">{{getComponentWidth()}}</div>
-                            </div>
-                            <div class="row component_property">
-                                <div class="col-md-3">Height:</div>
-                                <div class="col-md-9">{{getComponentHeight()}}</div>
-                            </div>
-                            <div class="row component_property">
-                                <div class="col-md-3">Color:</div>
-                                <div class="col-md-9">{{getComponentColor()}}</div>
-                            </div>
+            <div class="properties_box" *ngIf="selectedTemplate != null">
+
+                <ul class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" href="#component_properties">Component</a></li>
+                    <li><a data-toggle="tab" href="#interfaces">Interfaces &nbsp;<fa name="plus" data-toggle="modal" data-target="#myModal" class="add_button pull-right" (click)="addInterface()"></fa></a></li>
+                    <li><a data-toggle="tab" href="#visual_properties">Visual</a></li>
+                </ul>
+                <div class="tab-content">
+
+                    <!-- component properties -->
+                    <div id="component_properties" class="tab-pane fade in active">
+                        <table class="table table-bordered">                
+                            <tr class="section_title">
+                                <td colspan="2">Component Properties<fa name="plus" class="add_button pull-right" (click)="onAddComponentProperty()"></fa></td>
+                            </tr>
+                            <tr>
+                                <td class="table_column">Template</td>
+                                <td class="table_column">{{selectedTemplate.getType()}}</td>
+                            </tr>
+                            <tr>
+                                <td class="table_column">Name</td>
+                                <td class="table_column"><input type="text" class="property_value" [(ngModel)]="selectedTemplate.name"></td>
+                            </tr>
+
+                            <tr *ngFor="let prop of selectedTemplate.modelComponentPropertiesList; let propertyIndex = index">
+                                <td class="table_column"><input type="text" class="property_value" [(ngModel)]="prop.name" ></td>
+                                <td class="table_column">
+                                    <input type="text" class="custom_property_value" [(ngModel)]="prop.value" >
+                                    <fa name="times" (click)="onDeleteComponentProperty(i,  propertyIndex)" class="delete_property"></fa>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </div>
+
+                    <!-- interfaces -->
+                    <div id="interfaces" class="tab-pane fade">
+                        <div class="no-interfaces-message" *ngIf="selectedTemplate.interfaces.length == 0">
+                            No Interfaces added
                         </div>
+                        <table class="table table-bordered" *ngFor="let intf of selectedTemplate.interfaces; let i = index">                
+
+                            <tr class="section_title">
+                                <td colspan="2">
+                                    Interface - {{intf.name}} 
+                                    <div class="pull-right">
+                                        <fa name="plus" class="add_button" (click)="onAddProperty(i)"></fa>&nbsp;&nbsp;
+                                        <fa name="times" class="add_button" (click)="onDelete(i)"></fa>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="2">
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <td class="table_column">Name:</td>
+                                            <td class="table_column"><input type="text" class="property_value" [(ngModel)]="intf.name" ></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="table_column">Latency:</td>
+                                            <td class="table_column"><input type="text" class="property_value" [(ngModel)]="intf.latency" ></td>
+                                        </tr>
+                                        <tr *ngFor="let prop of intf.properties; let propertyIndex = index">
+                                            <td class="table_column"><input type="text" class="property_value" [(ngModel)]="prop.name" ></td>
+                                            <td class="table_column">
+                                                <input type="text" class="custom_property_value" [(ngModel)]="prop.value" >
+                                                <fa name="times" (click)="onDeleteProperty(i,  propertyIndex)" class="delete_property"></fa>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+
+                    <!-- visaul properties -->
+                    <div id="visual_properties" class="table tab-pane fade">
+                        <table  class="table table-bordered">
+                            <tr class="section_title">
+                                <td colspan="2">Visual Properties</td>
+                            </tr>
+                            <tr>
+                                <td>x</td>
+                                <td>{{getComponentX()}}</td>
+                            </tr>
+                            <tr>
+                                <td>y</td>
+                                <td>{{getComponentY()}}</td>
+                            </tr>
+                            <tr>
+                                <td>width</td>
+                                <td>{{getComponentWidth()}} px</td>
+                            </tr>
+                            <tr>
+                                <td>height</td>
+                                <td>{{getComponentHeight()}} px</td>
+                            </tr>
+                            <tr>
+                                <td>color</td>
+                                <td>{{getComponentColor()}}</td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
-            </div>
 
-            <div style="padding: 5px;" *ngIf="selectedTemplate != null">
+                <div>
+                    <button class="btn btn-success" (click)="savePropertyChanges()">Save</button>
+                    <button class="btn btn-danger" (click)="cancelPropertyChanges()">Cancel</button>
+                    <button class="btn btn-danger" (click)="deleteShape()">Delete</button>
+                </div>
+            </div>
+            
+          
+            <div style="padding: 5px;" *ngIf="false">
                 <div class="panel panel-default">
                     <div class="panel-heading" (click)="toggleComponentProperties()">Component Properties</div>
                     <div [class.collapse]="isComponentPropertiesSectionClosed" class="panel-collapse">

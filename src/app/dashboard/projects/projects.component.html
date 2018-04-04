@@ -20,7 +20,7 @@
                 
                 <div class="form-group">
                     <label for="">Owner</label>
-                    <select placeholder="select owner" class="form-control" [(ngModel)]="owner">
+                    <select placeholder="select owner" class="form-control" [(ngModel)]="ownerId">
                         <option *ngFor="let user of users" [value]="user.id">{{user.userName}}</option>
                     </select>
                 </div>

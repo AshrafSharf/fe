@@ -218,7 +218,7 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
             });
     }
 
-    private drawConnections() {
+    public drawConnections() {
         for (var index = 0; index < this.connections.length; index++) {
             var connection = this.connections[index];
 

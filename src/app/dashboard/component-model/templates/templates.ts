@@ -69,7 +69,7 @@ export abstract class Template {
         this.identifier = Guid.newGuid().toString();
     }
 
-    public abstract createUI(x, y): any;
+    public abstract createUI(x, y, draggable?): any;
     public abstract getType(): String;
     public abstract getHeaderColor(): String;
 

@@ -392,7 +392,7 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
                                  x =  parseFloat(tempTemplate.modelComponentVisualProperties.xPosition.toString());
                                  y = parseFloat(tempTemplate.modelComponentVisualProperties.yPosition.toString());
                             }
-                            var group = template.createUI(x,y);
+                            var group = template.createUI(x,y, false);
                             group.x = template
                             this.addGroup(group);
                         }

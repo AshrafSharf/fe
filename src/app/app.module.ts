@@ -67,6 +67,8 @@ import { KonvaModule } from 'ng2-konva';
 import { VerifyModelComponent } from './dashboard/component-model/verify-model.component';
 import { ModelService } from './services/model.service';
 import { ComponentModelListComponent } from './dashboard/component-model/model.list.component';
+import { SimulationListComponent } from './dashboard/simulation/simulation-list.component';
+import { SimulationService } from './services/simulation.service';
 
 
 @NgModule({
@@ -83,6 +85,7 @@ import { ComponentModelListComponent } from './dashboard/component-model/model.l
     ForecastTabularComponent,
     ForecastGraphicalComponent,
     SimulationComponent,
+    SimulationListComponent,
     MatchTableComponenet,
     ComponentModelComponent,
     VerifyModelComponent,
@@ -143,7 +146,8 @@ import { ComponentModelListComponent } from './dashboard/component-model/model.l
     D3Service,
     SettingsService,
     LoaderService,
-    ModelService
+    ModelService,
+    SimulationService
 
   ],
   bootstrap: [AppComponent]

@@ -23,6 +23,7 @@ import { SettingsComponent } from '../dashboard/settings/settings.component';
 import { UsersComponent } from '../dashboard/users/users.component';
 import { VerifyModelComponent } from '../dashboard/component-model/verify-model.component';
 import { ComponentModelListComponent } from '../dashboard/component-model/model.list.component';
+import { SimulationListComponent } from '../dashboard/simulation/simulation-list.component';
 export const routes: Routes = [
     { path:'login', component: LoginComponent },
     { 
@@ -42,12 +43,13 @@ export const routes: Routes = [
             { path:'create-component-model', component: ComponentModelComponent, canActivate:[UserService] },
             { path:'data_flow', component: DataFlowComponent, canActivate:[UserService] },
             { path:'login', component: LoginComponent },
-            { path:'simulation', component: SimulationComponent, canActivate:[UserService] },
+            { path:'simulation-list', component: SimulationListComponent, canActivate:[UserService] },
             { path:'variable-type-list', component: VariableTypeListComponent, canActivate: [UserService]},
             { path:'create-variable-type', component: VariableTypeComponent, canActivate: [UserService]},
             { path: 'settings', component: SettingsComponent, canActivate: [UserService]},
-            {path: "users", component:UsersComponent, canActivate: [UserService]},
-            {path:'verify-model', component:VerifyModelComponent, canActivate: [UserService] }
+            { path: "users", component:UsersComponent, canActivate: [UserService]},
+            { path:'verify-model', component:VerifyModelComponent, canActivate: [UserService] },
+            { path:'create-simulation', component:SimulationComponent, canActivate: [UserService]}
         ] 
     },
 

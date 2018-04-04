@@ -6,6 +6,8 @@ import { InputVariableMatching } from "../../shared/interfaces/input-variable-ma
 import { ActivatedRoute, Router } from "@angular/router";
 import { ForecastVariableValue } from "../../shared/interfaces/forecast-variable-value";
 import { CptInputVariable } from "../../shared/modelling/cpt-input-variable";
+import { ModelService } from "../../services/model.service";
+import { SystemModel } from "../../shared/interfaces/system-model";
 
 @Component({
     selector: 'match-table',
@@ -14,17 +16,20 @@ import { CptInputVariable } from "../../shared/modelling/cpt-input-variable";
 })
 
 export class MatchTableComponenet implements OnInit, OnChanges {
-    //TODO: use API to get Input Variables instead
     @Input('forecastBranchId') forecastBranchID: string;
     @Input("vars") inputVariables:CptInputVariable[];
+    @Input('modelId') modelId:string;
+    @Input("showForecastNames") showForecastNames:boolean = false;
+    @Input("allowOverride") allowOverride:boolean =false;
 
 
     forecastVariables: ForecastVariableValue[] = [];
-   inputVariableMatchings:InputVariableMatching[] = [];
+    inputVariableMatchings:InputVariableMatching[] = [];
 
 
     constructor(
         private variableService: AppVariableService,
+        private modelService: ModelService,
         private route: ActivatedRoute,
         private router: Router
     ) {}
@@ -35,6 +40,8 @@ export class MatchTableComponenet implements OnInit, OnChanges {
 
     ngOnChanges(changes: SimpleChanges){
         this.inputVariableMatchings.splice(0, this.inputVariableMatchings.length);
+        //this.getInputVariables(this.modelId);
+       
     }
 
     getForecastVariables(forecastBranchId: String, date:string){
@@ -48,6 +55,18 @@ export class MatchTableComponenet implements OnInit, OnChanges {
 
     }
 
+    /**
+     * 
+     * @param modelId the ID of the selectedModel
+     */
+    getInputVariables(modelId:string){
+        this.modelService.getModel(modelId)
+            .subscribe(result=>{
+                let model = result.data as SystemModel;
+                console.log(model.modelVariableInputList);
+            });
+    }
+
 
     /** 
      * Checks each input variable to see if it has a matching forecast variable
@@ -58,11 +77,12 @@ export class MatchTableComponenet implements OnInit, OnChanges {
         for (let index=0; index<this.inputVariables.length; index++){
             let match = false;
             let forecastValue = null;
+            let forecastName= null;
             for (let forecastVar of this.forecastVariables){
-                console.log(forecastVar.title);
                 if (this.inputVariables[index].title == forecastVar.title){
                     match = true;
                     forecastValue= forecastVar.baseCalValue;
+                    forecastName=forecastVar.title;
                     break;
                 }
             } 
@@ -70,6 +90,7 @@ export class MatchTableComponenet implements OnInit, OnChanges {
                 inputVariableName: this.inputVariables[index].title,
                 hasForecastMatch: match,
                 forecastValue: forecastValue,
+                forecastVarName: forecastName,
                 overrideValue:""
             });        
         }

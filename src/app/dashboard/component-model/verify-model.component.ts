@@ -138,13 +138,7 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
                 let cptInt = cptComp.addInterface(interf.title);
                 cptInt.id = interf.id;
                 cptInt.latency = Number(interf.latency);
-                //add properties
-                /*for (let property of interf.modelInterfacePropertiesList){
-                    if (property.key == "latency"){
-                        cptInt.latency = Number(property.value);
-                        break;
-                    } 
-                }*/
+            
 
                 //add input variables
                 if (interf.modelInputVariableList != null && interf.modelInputVariableList.length>0){

@@ -1,10 +1,118 @@
 <div class="container-fluid">
         <div class="row">
-            <app-header title="Simulation"></app-header>
+            <app-header title="Manage Simulation"></app-header>
         </div>
     
         <div class="row">
-          Coming Soon
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4>{{selectedSimulation == null ? 'Add Simulation' : 'Update ' + this.title}}</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="">Simulation Name</label>
+                                <input
+                                [(ngModel)]="title"
+                                type="text"
+                                class="form-control"
+                                placeholder="simulation name">
+                            </div>
+                        </div>
+                                
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="">Owner</label>
+                                <select [(ngModel)]="ownerId"  class="form-control">
+                                    <option *ngFor="let user of users" [value]="user.id">{{user.userName}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Description</label>
+                        <textarea
+                            [(ngModel)]="description"
+                            class="form-control sim-description"
+                            name="description"
+                            placeholder="description"></textarea>
+                    </div>
+               
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <span class="panel-title">Forecast Model Matching </span>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="">Start Date</label>
+                                                <div class='date inputText' >
+                                                    <dp-date-picker
+                                                    [config]="datePickerConfig"
+                                                    [(ngModel)]="startDate"
+                                                    mode="month"
+                                                    (close)="getForecastVariables()"
+                                                    [theme]="'dp-material dp-main'"></dp-date-picker>
+                                                </div>
+                                            </div>
+                                        </div> 
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="">End Date</label>
+                                                <div class='date inputText' >
+                                                    <dp-date-picker
+                                                    [config]="datePickerConfig"
+                                                    [disabled]="true"
+                                                     mode="month"
+                                                    [theme]="'dp-material dp-main'"></dp-date-picker>
+                                                </div>
+                                            </div>
+                                        </div> 
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="iteration">Monte Carlo Iteration</label>
+                                                <input type="number" class="form-control" [(ngModel)]="iterations">
+                                            </div>
+                                        </div>
+                                    </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="">Model Branch</label>
+                                        <select  [(ngModel)]="modelBranchId" class="form-control" (change)="getInputVariables()" style="width:50%"  >
+                                            <option *ngFor="let modelBranch of modelBranches" [value]="modelBranch.id">{{modelBranch.title}}</option>
+                                        </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="">Forecast Branch</label>
+                                        <select [(ngModel)]="forecastBranchId" class="form-control" style="width:50%" (change)="getForecastVariables()">
+                                            <option *ngFor="let branch of forecastBranches" [value]="branch.id">{{branch.title}}</option>
+                                        </select>
+                                 </div> 
+                            </div>
+                            <br>                                           
+                            <div class="row">
+                                    <div class="col-md-12">
+                                        <match-table
+                                        [showForecastNames]="true"
+                                        [vars]="inputVariables"
+                                        [modelId]="modelId"
+                                        [forecastBranchId]="forecastBranchId"></match-table>       
+                                    </div>
+                                </div> 
+                            
+                        </div>       
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <button class="btn btn-success" (click)="onSave($event)">Save</button>
+                    <button class="btn btn-danger" (click)="clearInputs()">Cancel</button>
+                </div>
+            </div>
         </div>
-    
     </div>

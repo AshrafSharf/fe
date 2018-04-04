@@ -4,10 +4,10 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { StageComponent } from 'ng2-konva';
-import { Layer, Stage, Node, Shape, Rect, Transform, Circle, Star, RegularPolygon, Label, Tag, Text, Group } from 'konva';
+import { Layer, Stage, Node, Shape, Rect, Transform, Circle, Star, RegularPolygon, Label, Tag, Text, Group, Arrow } from 'konva';
 import { ActivatedRoute, Router } from "@angular/router";
 import { GenericMicroServiceTemplate } from './templates/generic.micro.service.template';
-import { Template, TemplateEventsCallback, TemplateInterface } from './templates/templates';
+import { Template, TemplateEventsCallback, TemplateInterface, ConnectorType, Connection } from './templates/templates';
 import { StaticTemplate } from './templates/static.template';
 import { SingleInterfaceTemplate } from './templates/single.interface.template';
 import { JavaMicroServiceTemplate } from './templates/java.micro.service.template';
@@ -37,12 +37,13 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
     public selectedTemplate:Template = null;
 
     // drawing area
-    public width = 800;
-    public height = 600;
+    public width = 4000;
+    public height = 4000;
 
     // model title
     public modelTitle = '';
 
+    // default font size
     private fontSize = 15;
 
 
@@ -54,11 +55,18 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
     public isVisualPropertiesSectionClosed = false;
     public isComponentPropertiesSectionClosed = false;
 
+    // drawing arrow
+    private startArrow: boolean = false;
+    private lastPointerPosition;
+    private arrowTargetTemplate: Template = null;
+
+    // connections
+    private connections:Connection[] = new Array<Connection>();
+
     constructor(
         private route: ActivatedRoute,
         private router: Router,
         private service:ModelService) { }
-
 
     public toggleVisualProperties() {
         this.isVisualPropertiesSectionClosed = !this.isVisualPropertiesSectionClosed;
@@ -108,9 +116,7 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
         return '-';
     }
 
-    ngOnInit() { 
-        //this.addDrawingEditor();
-
+    ngOnInit() {
         this.route
             .queryParams
             .subscribe(params => {
@@ -212,41 +218,172 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
             });
     }
 
+    private drawConnections() {
+        for (var index = 0; index < this.connections.length; index++) {
+            var connection = this.connections[index];
+
+            if (connection.arrow) connection.arrow.remove();
+
+            // get source and target to get the  latest positions
+            let source = this.getTemplateById(connection.inputComponentName);
+            let target = this.getTemplateById(connection.outputComponentName);
+
+            let sourceConnector = source.getConnectorPosition(ConnectorType.RIGHT);
+            let targetConnector = target.getConnectorPosition(ConnectorType.LEFT);
+            connection.arrow = new Arrow({
+                // x: connection.visualProperties.sourceX,
+                // y: connection.visualProperties.sourceY,
+                // points: [0, 0, connection.visualProperties.targetX - connection.visualProperties.sourceX, 
+                //                connection.visualProperties.targetY - connection.visualProperties.sourceY],
+                x: sourceConnector.x,
+                y: sourceConnector.y,
+                points: [0, 0, targetConnector.x - sourceConnector.x, targetConnector.y - sourceConnector.y],
+                pointerLength: 5,
+                pointerWidth : 5,
+                fill: 'black',
+                stroke: 'black',
+                strokeWidth: 2
+            });
+            this.layer.add(connection.arrow);
+        }
+        
+        this.layer.draw();
+    }
+
     private addEditorEventHandler() {
         this.stage = this.stageComponent.getStage();
         this.layer = this.stage.getChildren()[0];
-    }
 
-    private addDrawingEditor() {
-        this.stage = new Stage({
-            container: 'container',
-            width: this.width,
-            height: this.height
+        var tempArrow: Arrow = null;
+        this.stage.on('contentMousedown.proto', () => {
+            this.lastPointerPosition = this.stage.getPointerPosition();
         });
 
-        this.layer = new Layer();
-        this.stage.add(this.layer);
+        this.stage.on('contentMouseup.proto', () => {
+            this.startArrow = false;
+            if (this.arrowTargetTemplate == null) return;
 
-        // var scaleBy = 1.01;
-        // window.addEventListener('wheel', (e) => {
-        //     e.preventDefault();
-        //     var oldScale = this.stage.scaleX();
+            let source = this.getSelectedTemplate();
+            let target = this.arrowTargetTemplate;
 
-        //     var mousePointTo = {
-        //         x: this.stage.getPointerPosition().x / oldScale - this.stage.x() / oldScale,
-        //         y: this.stage.getPointerPosition().y / oldScale - this.stage.y() / oldScale,
-        //     };
+            // let sourceConnector = source.getConnectorPosition(ConnectorType.RIGHT);
+            // let targetConnector = target.getConnectorPosition(ConnectorType.LEFT);
 
-        //     var newScale = e.deltaY > 0 ? oldScale * scaleBy : oldScale / scaleBy;
-        //     this.stage.scale({ x: newScale, y: newScale });
+            var connection = new Connection();
+            connection.inputComponentName = source.identifier.toString();
+            connection.outputComponentName = target.identifier.toString();
+            this.connections.push(connection);
 
-        //     var newPos = {
-        //         x: -(mousePointTo.x - this.stage.getPointerPosition().x / newScale) * newScale,
-        //         y: -(mousePointTo.y - this.stage.getPointerPosition().y / newScale) * newScale
-        //     };
-        //     this.stage.position(newPos);
-        //     this.stage.batchDraw();
-        // });
+            //connection.inputInterfaceName = 
+
+            // let arrow = new Arrow({
+            //     x: sourceConnector.x,
+            //     y: sourceConnector.y,
+            //     points: [0, 0, targetConnector.x - sourceConnector.x, targetConnector.y - sourceConnector.y],
+            //     pointerLength: 10,
+            //     pointerWidth : 10,
+            //     fill: 'black',
+            //     stroke: 'black',
+            //     strokeWidth: 4
+            // });
+            // this.layer.add(arrow);
+            // this.layer.draw();
+
+            this.drawConnections();
+            
+            this.arrowTargetTemplate.hideConnectors();
+            this.arrowTargetTemplate = null;
+        });
+
+        this.stage.on('contentMousemove.proto', (e) => {
+            if (!this.startArrow) return;
+
+            let currentPoint = this.stage.getPointerPosition();
+            let x = currentPoint.x - this.lastPointerPosition.x;
+            let y = currentPoint.y - this.lastPointerPosition.y;
+
+            let currentBox = {
+                x: currentPoint.x,
+                y: currentPoint.y, 
+                width: 10, 
+                height: 10
+            }
+
+            let found = false;
+            for (let index = 0; index < this.templates.length; index++) {
+                let template = this.templates[index];
+                if (template.identifier == this.selectedTemplate.identifier) continue;
+
+                let box = {
+                    x: template.getX(),
+                    y: template.getY(),
+                    width: template.getWidth(),
+                    height: template.getHeight()
+                }
+
+                if (this.haveIntersection(currentBox, box)) {
+                    this.arrowTargetTemplate = template;
+                    console.log('found found found: ', template.name);
+                    template.showConnectors();
+                } else {
+                    this.arrowTargetTemplate = null;
+                    template.hideConnectors();
+                }
+            }
+
+            if (tempArrow) { tempArrow.remove(); }
+
+            tempArrow = new Arrow({
+                x: this.lastPointerPosition.x,
+                y: this.lastPointerPosition.y,
+                points: [0, 0, x, y],
+                pointerLength: 10,
+                pointerWidth : 10,
+                fill: 'black',
+                stroke: 'black',
+                strokeWidth: 4
+            });
+            this.layer.add(tempArrow);
+            this.layer.draw();
+
+            tempArrow.remove();
+        });
+    }
+
+    haveIntersection(r1, r2) {
+        return ((r1.x > (r2.x - 10)) && (r1.x < (r2.x + r2.width + 10)));
+    }
+
+    drawArrow(connector) {
+        this.startArrow = true;
+    }
+
+    public zoomMinus() {
+        var scaleBy = 1.02;
+        var oldScale = this.stage.scaleX();
+
+        var newScale = oldScale / scaleBy;
+        this.stage.scale({ x: newScale, y: newScale });
+        this.width -= 50;
+        this.stage.setWidth(this.width);
+        this.height -= 50;
+        this.stage.setHeight(this.height);
+        this.stage.batchDraw();
+    }
+
+    public zoomPlus() {
+        var scaleBy = 1.02;
+        var oldScale = this.stage.scaleX();
+
+        var newScale = oldScale * scaleBy;
+        this.stage.scale({ x: newScale, y: newScale });
+        this.width += 50;
+        this.stage.setWidth(this.width);
+
+        this.height += 50;
+        this.stage.setHeight(this.height);
+
+        this.stage.batchDraw();
     }
 
     public configStage = Observable.of({
@@ -390,7 +527,6 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
         }
     }
 
-
     public onVerify(){
         this.router.navigate(["home/verify-model"], { queryParams: {
             id: this.selectedModel.id
@@ -403,19 +539,21 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
             tmp.deselectTemplate();
             this.layer.draw();
         });
-
     }
 
+    // delete interface
     public onDelete(index) {
         this.selectedTemplate.interfaces.splice(index, 1);
     }
 
+    // add property to interface
     public onAddProperty(index) {
         let intf = this.selectedTemplate.interfaces[index];
         intf.properties.push({ name: '', value: ''});
     }
 
-    public onAddComponentProperty(index) {
+    // add property to component
+    public onAddComponentProperty() {
         this.selectedTemplate.modelComponentPropertiesList.push({ name: '', value: ''});
     }
 
@@ -436,7 +574,6 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
     public onDeleteDownstreamInterface(index, propertyIndex) {
         let intf = this.selectedTemplate.interfaces[index];
         intf.downstreamInterfaces.splice(propertyIndex, 1);
-
     }
 
     public saveModel() {

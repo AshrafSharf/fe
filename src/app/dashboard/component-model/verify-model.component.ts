@@ -69,8 +69,9 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
     public selectedTemplate:Template;
     
      // drawing area
-     public width = 750;
-     public height = 520;
+     // drawing area
+    public width = 4000;
+    public height = 4000;
      private fontSize = 15;
 
      public configStage = Observable.of({
@@ -112,6 +113,9 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
         });  
     }
 
+    /**
+     * Retrieves the system model from db
+     */
     loadSelectedModel(){
         console.log (this.selectedModelId);
         this.modelService.getModel(this.selectedModelId)
@@ -145,8 +149,8 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
             cptComp.order = component.order;
             cptComp.id = component.id;
             cptComp.setName(component.title);
-            console.log(cptComp.order, cptComp.displayName)
             
+            //set up interfaces
             for (let interf of component.modelComponentInterfaceList){
                 let cptInt = cptComp.addInterface(interf.title);
                 cptInt.id = interf.id;
@@ -161,10 +165,10 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
             
             this.environment.registerComponent(cptComp);
         }
-        console.log(this.systemModel);
+       
         this.connectInterfaces();
-        console.log(this.environment.envComponents);
-        console.log(this.environment.inputVars);
+       
+      
 
         // let hookCode = "if (load.loadValues['tps'] < 700 ){ return latency; } " +
         //     "else{ return latency*2; } ";
@@ -174,10 +178,10 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
     }
 
     /** 
-     * Connect any Interfaces which have an output pointing to a Downstream Interface
+     * Connect any Interfaces which have an output pointing to a Downstream Interface.
     */
     connectInterfaces(){
-        console.log(this.systemModel)
+        
         for (let connection of this.systemModel.modelInterfaceEndPointsList){
             let interf = this.environment.getInterface(connection.inputModelInterfaceId);
             let cptOutput = interf.addOutput() as CptInterfaceOutput;
@@ -226,7 +230,7 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
     onRunSimulation(){
         this.resetEnvironment();
 
-            
+            //dont run simulation if a forecast has not been inported
             if (this.matchTable.inputVariableMatchings.length == 0){
                 this.modal.alert()
                 .title("Cannot Run Simulation")

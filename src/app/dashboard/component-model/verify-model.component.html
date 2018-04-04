@@ -11,16 +11,14 @@
                     [showModifyButtons]="false"></app-drawing-tools-header>
         </div>
         <div class="row">
-        
-         
-          <div class="col-md-9" id="container" >   
-                <div class="box drawing-area" >   
-                    <ko-stage [config]="configStage">
-                        <ko-layer>             
-                        </ko-layer>
-                    </ko-stage>  
-                </div>  
-          </div>
+                <div id="container" class="col-md-9" >
+                        <div class="box drawing-area" >
+                            <ko-stage [config]="configStage">
+                                <ko-layer>
+                                </ko-layer>
+                            </ko-stage>
+                        </div>
+                    </div>
           <div class="col-md-3">
                 <div class="panel panel-default">
                     <div class="panel-heading">Input Variables</div>

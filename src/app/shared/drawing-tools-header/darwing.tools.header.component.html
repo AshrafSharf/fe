@@ -21,7 +21,8 @@
     <div class="btn-group pull-right" role="group" aria-label="shapes">
         <button *ngIf="showModifyButtons==true" (click)="save()" type="button" class="btn btn-default"><img src="assets/images/save.png" alt=""></button>
         <button (click)="cancel()" type="button" class="btn btn-default"><img src="assets/images/cancel.png" alt=""></button>
-        <button (click)="verify()" type="button" class="btn btn-default"><img src="assets/images/verify.png" alt=""></button>
+        <button *ngIf="showModifyButtons==true" (click)="verify()" type="button" class="btn btn-default"><img src="assets/images/verify.png" alt=""></button>
+        <button *ngIf="showModifyButtons==false" (click)="verify()" type="button" class="btn btn-default"><img src="assets/images/edit.png" alt=""></button>
     </div>
 
     <!--

@@ -196,7 +196,7 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
 
                                     for (let connection of connectionList){
                                         if (connection.inputModelInterfaceId == tempInterface.id){
-                                            templateInterface.downstreamInterfaces.push( { component: connection.outputComponentName, interface:connection.outputModelInterfaceName, connectedComponent:connection.inputComponentName, connectedInterface:connection.inputModelInterfaceName });
+                                            templateInterface.downstreamInterfaces.push( { component: connection.outputComponentName, interface:connection.outputInterfaceName, connectedComponent:connection.inputComponentName, connectedInterface:connection.inputInterfaceName });
                                         }
                                     }
 

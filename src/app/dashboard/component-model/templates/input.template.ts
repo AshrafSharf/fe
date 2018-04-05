@@ -7,6 +7,12 @@ export class InputTemplate extends GenericMicroServiceTemplate {
         super(callback)
         this.name = 'Input Template';
         this.type = 'InputTemplate';
+
+        this.interfaces = new Array<TemplateInterface>();
+        var templateInterface = new TemplateInterface();
+        templateInterface.name = 'internal_interface';
+        templateInterface.latency = '0';
+        this.interfaces.push(templateInterface);
     }
 
     public getType(): String {

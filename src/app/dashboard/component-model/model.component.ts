@@ -235,8 +235,8 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                                 var connection = new Connection();
                                 connection.inputComponentName = source.identifier.toString();
                                 connection.outputComponentName = target.identifier.toString();
-                                connection.inputInterfaceName = this.connectionSourceInterface;
-                                connection.outputInterfaceName =  this.connectionTargetInterface;
+                                connection.inputInterfaceName = tempConnection.inputInterfaceName.toString();
+                                connection.outputInterfaceName =  tempConnection.outputInterfaceName.toString();
 
                                 this.connections.push(connection);
                             }

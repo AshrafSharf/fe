@@ -23,8 +23,8 @@ export interface ComponentModelInterfaceEndPoint {
     id: String;
     inputModelInterfaceId: String;
     outputModelInterfaceId: String;
-    inputModelInterfaceName:String;
-    outputModelInterfaceName:String;
+    inputInterfaceName:String;
+    outputInterfaceName:String;
     inputComponentName: String;
     outputComponentName: String;
 }

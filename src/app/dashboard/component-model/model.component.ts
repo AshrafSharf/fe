@@ -17,6 +17,7 @@ import { TriangleShape } from './shapes/triangle.shape';
 import { SquareShape } from './shapes/square.shape';
 import { DiamondShape } from './shapes/diamond.shape';
 import { InputTemplate } from './templates/input.template';
+import { Modal } from 'ngx-modialog/plugins/bootstrap';
 
 
 @Component({
@@ -69,7 +70,8 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        private service:ModelService) { }
+        private service:ModelService,
+        public modal:Modal) { }
 
     public toggleVisualProperties() {
         this.isVisualPropertiesSectionClosed = !this.isVisualPropertiesSectionClosed;
@@ -139,7 +141,7 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                     .subscribe(result => {
                         if (result.status == 'OK') {
 
-                            this.selectedModel = result.data as ComponentModel;
+                             this.selectedModel = result.data as ComponentModel;
                             this.selectedId = this.selectedModel.id;
                             this.modelTitle = this.selectedModel.title.toString();
 
@@ -196,7 +198,7 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
 
                                     for (let connection of connectionList){
                                         if (connection.inputModelInterfaceId == tempInterface.id){
-                                            templateInterface.downstreamInterfaces.push( { component: connection.outputModelInterfaceName, connectedInterface: connection.inputModelInterfaceName });
+                                            templateInterface.downstreamInterfaces.push( { component: connection.outputInterfaceName, connectedInterface: connection.inputInterfaceName });
                                         }
                                     }
 
@@ -505,6 +507,12 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
 
     public addInputTemplate(){
         let t = new InputTemplate(this);
+        t.interfaces = new Array<TemplateInterface>();
+        var templateInterface = new TemplateInterface();
+        templateInterface.name = 'internal_interface';
+        templateInterface.latency = '0';
+        t.interfaces.push(templateInterface);
+
         this.templates.push(t);
         this.addGroup(t.createUI());
     }
@@ -630,123 +638,131 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
     }
 
     public saveModel() {
-        var components = [];
-        var connections = [];
-
-        // get components
-        for (let index = 0; index < this.templates.length; index++) {
-            var template = this.templates[index];
-           
-            var interfaces = [];
-            // get all interfaces
-            for (let intfIndex = 0; intfIndex < template.interfaces.length; intfIndex++) {
-                var intf = template.interfaces[intfIndex];
-                
-                var properties = [];
-                // get all component properties
-                for (let propIndex = 0; propIndex < intf.properties.length; propIndex++) {
-                    var propObject = {
-                        key: intf.properties[propIndex].name,
-                        value: intf.properties[propIndex].value,
-                    }
-                    properties.push(propObject);
-                }
-
-                //var dinterfaces = [];
-                // get all component downstream interfaces
-                for (let intIndex = 0; intIndex < intf.downstreamInterfaces.length; intIndex++) {
-                    var intObject = {
-                        inputModelInterfaceName:  template.name +"_"+ intf.name,
-                        outputModelInterfaceName: intf.downstreamInterfaces[intIndex].component
-                    }
-                    //dinterfaces.push(intObject);
-                    //connections.push(intObject);
-                }
-               
-
-                var intfObj = {
-                    title: intf.name,
-                    latency: intf.latency,
-                    modelInterfacePropertiesList: properties
-                    //modelInterfaceEndPointsList: dinterfaces
-                }
-
-                interfaces.push(intfObj);
-            }
-
-            var visualProperties = {
-                color: template.getHeaderColor(),
-                height: '' + template.getHeight(),
-                id: '',
-                shape: '',
-                width: '' + template.getWidth(),
-                xPosition: '' + template.uiGroup.getAttrs().x,
-                yPosition: '' + template.uiGroup.getAttrs().y
-            }
-
-            var modelComponentPropertiesList = [];
-            for (let propIndex = 0; propIndex < template.modelComponentPropertiesList.length; propIndex ++) {
-                let prop = template.modelComponentPropertiesList[propIndex];
-                var propObject = {
-                    key: prop.name,
-                    value: prop.value,
-                }
-
-                modelComponentPropertiesList.push(propObject);
-            }
-
-            var component = {
-                title: template.name,
-                templateName: template.type,
-                modelComponentPropertiesList: modelComponentPropertiesList,
-                modelComponentInterfaceList: interfaces,
-                modelComponentVisualProperties: visualProperties
-                
-            }
-
-            components.push(component);
-        }
-
-        for (var index = 0; index < this.connections.length; index++) {
-            var connection = this.connections[index];
-            let source = this.getTemplateById(connection.inputComponentName);
-            let target = this.getTemplateById(connection.outputComponentName);
-
-            var interfaceObj = {
-                inputComponentName: source.name,
-                inputInterfaceName: connection.inputInterfaceName,
-                outputComponentName: target.name,
-                outputInterfaceName: connection.outputInterfaceName
-            }
-
-            connections.push(interfaceObj);
-        }
-
-        var body = {            
-            modelBranchId: "test-branch",
-            modelComponentList: components,
-            modelInterfaceEndPointsList:connections,
-
-            title: this.modelTitle
-        }
-
-        if (this.selectedModel == null) {
-            // create a model
-            console.log(body);
-            this.service
-                .createModel(body)
-                .subscribe(result => {
-                    console.log(result)
-                    this.router.navigate(['home/component_model-list']);
-                });
+        if (this.modelTitle.length == 0) {
+            this.modal.alert()
+                .title('Warning')
+                .body('Please enter model title')
+                .open();
         } else {
-            // update the model
-            this.service
-                .updateModel(this.selectedModel.id, body)
-                .subscribe(result => {
-                    console.log(result)
-                    this.router.navigate(['home/component_model-list']);
-                });
+
+            var components = [];
+            var connections = [];
+
+            // get components
+            for (let index = 0; index < this.templates.length; index++) {
+                var template = this.templates[index];
+            
+                var interfaces = [];
+                // get all interfaces
+                for (let intfIndex = 0; intfIndex < template.interfaces.length; intfIndex++) {
+                    var intf = template.interfaces[intfIndex];
+                    
+                    var properties = [];
+                    // get all component properties
+                    for (let propIndex = 0; propIndex < intf.properties.length; propIndex++) {
+                        var propObject = {
+                            key: intf.properties[propIndex].name,
+                            value: intf.properties[propIndex].value,
+                        }
+                        properties.push(propObject);
+                    }
+
+                    //var dinterfaces = [];
+                    // get all component downstream interfaces
+                    for (let intIndex = 0; intIndex < intf.downstreamInterfaces.length; intIndex++) {
+                        var intObject = {
+                            inputModelInterfaceName:  template.name +"_"+ intf.name,
+                            outputModelInterfaceName: intf.downstreamInterfaces[intIndex].component
+                        }
+                        //dinterfaces.push(intObject);
+                        //connections.push(intObject);
+                    }
+                
+
+                    var intfObj = {
+                        title: intf.name,
+                        latency: intf.latency,
+                        modelInterfacePropertiesList: properties
+                        //modelInterfaceEndPointsList: dinterfaces
+                    }
+
+                    interfaces.push(intfObj);
+                }
+
+                var visualProperties = {
+                    color: template.getHeaderColor(),
+                    height: '' + template.getHeight(),
+                    id: '',
+                    shape: '',
+                    width: '' + template.getWidth(),
+                    xPosition: '' + template.uiGroup.getAttrs().x,
+                    yPosition: '' + template.uiGroup.getAttrs().y
+                }
+
+                var modelComponentPropertiesList = [];
+                for (let propIndex = 0; propIndex < template.modelComponentPropertiesList.length; propIndex ++) {
+                    let prop = template.modelComponentPropertiesList[propIndex];
+                    var propObject = {
+                        key: prop.name,
+                        value: prop.value,
+                    }
+
+                    modelComponentPropertiesList.push(propObject);
+                }
+
+                var component = {
+                    title: template.name,
+                    templateName: template.type,
+                    modelComponentPropertiesList: modelComponentPropertiesList,
+                    modelComponentInterfaceList: interfaces,
+                    modelComponentVisualProperties: visualProperties
+                    
+                }
+
+                components.push(component);
+            }
+
+            for (var index = 0; index < this.connections.length; index++) {
+                var connection = this.connections[index];
+                let source = this.getTemplateById(connection.inputComponentName);
+                let target = this.getTemplateById(connection.outputComponentName);
+
+                var interfaceObj = {
+                    inputComponentName: source.name,
+                    inputInterfaceName: connection.inputInterfaceName,
+                    outputComponentName: target.name,
+                    outputInterfaceName: connection.outputInterfaceName
+                }
+
+                connections.push(interfaceObj);
+            }
+
+            var body = {            
+                modelBranchId: "test-branch",
+                modelComponentList: components,
+                modelInterfaceEndPointsList:connections,
+
+                title: this.modelTitle
+            }
+
+            if (this.selectedModel == null) {
+                // create a model
+                console.log(body);
+                this.service
+                    .createModel(body)
+                    .subscribe(result => {
+                        console.log(result)
+                        this.router.navigate(['home/component_model-list']);
+                    });
+            } else {
+                // update the model
+                this.service
+                    .updateModel(this.selectedModel.id, body)
+                    .subscribe(result => {
+                        console.log(result)
+                        this.router.navigate(['home/component_model-list']);
+                    });
+            }
         }
     }
 

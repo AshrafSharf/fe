@@ -68,6 +68,8 @@ import { VerifyModelComponent } from './dashboard/component-model/verify-model.c
 import { ModelService } from './services/model.service';
 import { ComponentModelListComponent } from './dashboard/component-model/model.list.component';
 import { DrawingToolsHeaderComponent } from './shared/drawing-tools-header/darwing.tools.header.component';
+import { SimulationListComponent } from './dashboard/simulation/simulation-list.component';
+import { SimulationService } from './services/simulation.service';
 
 
 @NgModule({
@@ -84,6 +86,7 @@ import { DrawingToolsHeaderComponent } from './shared/drawing-tools-header/darwi
     ForecastTabularComponent,
     ForecastGraphicalComponent,
     SimulationComponent,
+    SimulationListComponent,
     MatchTableComponenet,
     ComponentModelComponent,
     VerifyModelComponent,
@@ -146,7 +149,8 @@ import { DrawingToolsHeaderComponent } from './shared/drawing-tools-header/darwi
     D3Service,
     SettingsService,
     LoaderService,
-    ModelService
+    ModelService,
+    SimulationService
 
   ],
   bootstrap: [AppComponent]

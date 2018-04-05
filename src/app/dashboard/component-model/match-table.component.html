@@ -1,4 +1,4 @@
-<div class="row" *ngIf="forecastBranchID!=null">
+<div class="row" >
         <div class="col-md-12">
             <div class="pre-scrollable">    
             <table class="table table-bordered table-striped">
@@ -6,20 +6,27 @@
                          <tr>
                             <th>Input variable</th>
                             <th>Match</th>
-                            <th>Override</th>
+                            <th *ngIf="showForecastNames==true">Forecast Variable</th>
+                            <th *ngIf="allowOverride==true">Override</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr *ngFor="let inputVar of inputVariableMatchings">
                             <td>{{inputVar.inputVariableName}}</td>
                             <td class="text-center">
-                                <p *ngIf="inputVar.hasForecastMatch==true">{{inputVar.forecastValue}}</p>
+                                <p *ngIf="(inputVar.hasForecastMatch) && (allowOverride)">{{inputVar.forecastValue}}</p>
                                 <button *ngIf="inputVar.hasForecastMatch==false" 
                                         (click)="onAddForecastVariable()" 
                                         class="btn btn-link" 
                                         style="text-decoration:underline">?</button>
+                                <p *ngIf="(inputVar.hasForecastMatch) && (!allowOverride)"
+                                   class="glyphicon glyphicon-ok"
+                                   style="color:green"></p>
                             </td>
-                            <td>
+                            <td *ngIf="showForecastNames==true">
+                                {{inputVar.forecastVarName}}
+                            </td>
+                            <td *ngIf="allowOverride==true">
                                 <input type="text"  
                                         class="form-control"
                                         [(ngModel)]="inputVar.overrideValue">

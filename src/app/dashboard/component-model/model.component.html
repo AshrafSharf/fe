@@ -267,20 +267,32 @@
                 </div>
             </div>
 
-            <div class="box connection_maker" *ngIf="showConnectionsDialog" >
-                <div class="form connection_dialog">
+            <div class="connection_maker" *ngIf="showConnectionsDialog" >
+                <div class="form connection_dialog col-md-3">
                     <div class="form-group">
-                        <label for="">Source Interface</label>
+                        <label for="">{{selectedTemplate.name}}</label>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Select Interface</label>
                         <select [(ngModel)]="connectionSourceInterface" class="form-control">
                             <option [value]="intf.name" *ngFor="let intf of selectedTemplate.interfaces">{{intf.name}}</option>
                         </select>
                     </div>
+
+                    <hr/>
+
                     <div class="form-group">
-                        <label for="">Target Interface</label>
+                        <label for="">{{arrowTargetTemplate.name}}</label>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Select Interface</label>
                         <select [(ngModel)]="connectionTargetInterface" class="form-control">
                             <option [value]="intf.name" *ngFor="let intf of arrowTargetTemplate.interfaces">{{intf.name}}</option>
                         </select>
                     </div>
+                    
+                    <hr/>
+                    
                     <div class="form-group">
                         <button (click)="makeConnection()" class="btn btn-success">Connect</button>
                         <button (click)="cancelConnection()" class="btn btn-danger">Cancel</button>

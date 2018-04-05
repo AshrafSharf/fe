@@ -13,80 +13,143 @@ export class GenericMicroServiceTemplate extends Template {
         this.type = 'GenericMicroServiceTemplate';
     }
 
-
-    public getX() {
-        return this.uiGroup.getAttr('x');
-    }
-
-    public getY() {
-        return this.uiGroup.getAttr('y');
-    }
-
-    public getWidth() {
-        let children = this.uiGroup.getChildren();
-        if (children.length > 0) {
-            let child = children[0] as Rect;
-            return child.getAttr('width');
+    public createUI(x = Math.random() * 300, y = Math.random() * 300, isDraggable?, fontSize = 13) {
+        if (isDraggable != null){
+            this.uiGroup = new Group({
+                x : x,
+                y : y,
+                draggable: isDraggable
+            })
         }
-
-        return '-';
-    }
-
-    public getHeight() {
-        let children = this.uiGroup.getChildren();
-        if (children.length > 0) {
-            let child = children[0] as Rect;
-            return child.getAttr('height');
+        else{
+            this.uiGroup = new Group({
+                x : x,
+                y : y,
+                draggable: true
+            })    
         }
-
-        return '-';
-    }
-
-    public deselectTemplate() {
-        console.log('deselecting...');
-        let children = this.uiGroup.getChildren();
-        if (children.length > 0) {
-            let child = children[0] as Rect;
-            child.setAttr('stroke', 'black');
-            child.setAttr('strokeWidth', '1');
-            child.dash([]);
-        }
-
-    }
-
-    public createUI(x = Math.random() * 600, y = Math.random() * 600, isDraggable?, fontSize = 13) {
-            if (isDraggable !=null){
-                this.uiGroup = new Group({
-                    x : x,
-                    y : y,
-                    draggable: isDraggable
-                })
-            }
-            else{
-                this.uiGroup = new Group({
-                    x : x,
-                    y : y,
-                    draggable: true
-                })
-            }
-
-
+       
         this.uiGroup.add(this.createContainer());
         this.uiGroup.add(this.createTitle());
         this.uiGroup.add(this.createInterfaceContainer(fontSize));
+        this.uiGroup.add(this.createConnectors());
 
         this.uiGroup.on('click', (event) => {
             this.onMouseButton(event);
         });
-     
-        this.uiGroup.on('mouseover', function() {
+
+        this.uiGroup.on('mouseover', () => {
             document.body.style.cursor = 'pointer';
+            this.showConnectors();
         });
-        this.uiGroup.on('mouseout', function() {
+        this.uiGroup.on('mouseout', () => {
             document.body.style.cursor = 'default';
+            this.hideConnectors();
+        });
+
+        this.uiGroup.on('dragend', () => {
+            console.log('dragend');
+        });
+
+        this.uiGroup.on('dragstart', () => {
+            console.log('dragstart');
+        });
+        this.uiGroup.on('dragmove', () => {
+            console.log('dragmove');
+            this.callback.drawConnections();
         });
         
         return this.uiGroup;
+    }
+
+    public hideConnectors() {
+        if (this.connectors.topConnector) this.connectors.topConnector.hide();
+        if (this.connectors.leftConnector) this.connectors.leftConnector.hide();
+        if (this.connectors.rightConnector) this.connectors.rightConnector.hide();
+        if (this.connectors.bottomConnector) this.connectors.bottomConnector.hide();
+    }
+
+    public showConnectors() {
+        this.connectors.topConnector.show();
+        this.connectors.leftConnector.show();
+        this.connectors.rightConnector.show();
+        this.connectors.bottomConnector.show();
+    }
+    
+    private createConnectors() {
+        let group = new Group({ x: 0, y: 40 });
+
+        let count = this.interfaces.length == 0 ?  1 : this.interfaces.length;
+        let height = this.interfaceContainerHeight * this.interfaces.length;
+        let y = (height / 2) - (this.interfaceContainerHeight / 2);
+
+        this.connectors.topConnector = new RegularPolygon({
+            x : this.getWidth() / 2,
+            y : -50,
+            sides: 3,
+            radius: 10,
+            fill: 'blue'
+        });
+
+        this.connectors.leftConnector = new RegularPolygon({
+            x : -10,
+            y : y,
+            sides: 3,
+            radius: 10,
+            fill: 'blue'
+        });
+        this.connectors.leftConnector.rotate(-90);
+
+        this.connectors.bottomConnector = new RegularPolygon({
+            x : this.getWidth() / 2,
+            y : height + 10,
+            sides: 3,
+            radius: 10,
+            fill: 'blue'
+        });
+        this.connectors.bottomConnector.rotate(180);
+
+        this.connectors.rightConnector = new RegularPolygon({
+            x : this.containerWidth + 10,
+            y : y,
+            sides: 3,
+            radius: 10,
+            fill: 'blue'
+        });
+        this.connectors.rightConnector.rotate(90);
+
+        group.add(this.connectors.topConnector);
+        group.add(this.connectors.leftConnector);
+        group.add(this.connectors.bottomConnector);
+        group.add(this.connectors.rightConnector);
+
+        // add click handler
+        this.connectors.topConnector.on('mousedown', (e) => {
+            e.cancelBubble = true;
+            this.startArrow(this.connectors.topConnector);
+        });
+        this.connectors.bottomConnector.on('mousedown', (e) => {
+            e.cancelBubble = true;
+            this.startArrow(this.connectors.bottomConnector);
+        });
+        this.connectors.leftConnector.on('mousedown', (e) => {
+            e.cancelBubble = true;
+            this.startArrow(this.connectors.leftConnector);
+        });
+        this.connectors.rightConnector.on('mousedown', (e) => {
+            e.cancelBubble = true;
+            this.startArrow(this.connectors.rightConnector);
+        });
+        
+
+        // hide by default
+        this.hideConnectors();
+
+        return group;
+    }
+
+    private startArrow(connector) {
+        this.callback.drawArrow(connector);
     }
 
     private createTitle(fontSize = 13) {

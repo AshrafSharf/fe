@@ -12,21 +12,12 @@ export abstract class ModelShape extends Template {
 
     public abstract createShape();
 
-    public createUI(x = Math.random() * 600, y = Math.random() * 600, isDraggable?, fontSize = 13) {
-        if (isDraggable !=null){
-            this.uiGroup = new Group({
-                x : x,
-                y : y,
-                draggable: isDraggable
-            })
-        }
-        else{
-            this.uiGroup = new Group({
-                x : x,
-                y : y,
-                draggable: true
-            })
-        }
+    public createUI(x = Math.random() * 600, y = Math.random() * 600, fontSize = 13) {
+        this.uiGroup = new Group({
+            x : x,
+            y : y,
+            draggable: true
+        })
 
         this.uiGroup.add(this.createShape());
         this.uiGroup.add(this.createTitle());

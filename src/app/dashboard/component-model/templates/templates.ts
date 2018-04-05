@@ -1,5 +1,27 @@
 import { Guid } from '../../../shared/guid';
-import { Group, Rect } from 'konva';
+import { Group, Rect, RegularPolygon, Arrow } from 'konva';
+
+export class ConnectionVisualProperties {
+    public color: string;
+    public height: number;
+    public width: number;
+    public sourceX: number;
+    public sourceY: number;
+    public targetX: number;
+    public targetY: number;
+    public shape: string;
+}
+
+export class Connection {
+    public inputComponentName: string;
+    public inputInterfaceName: string;
+    public inputModelInterfaceId: string;
+    public outputComponentName: string;
+    public outputInterfaceName: string;
+    public outputModelInterfaceId: string;
+    public arrow: Arrow;
+    public visualProperties: ConnectionVisualProperties;
+}
 
 export interface TemplateInterfaceProperty {
     name:String;
@@ -21,6 +43,17 @@ export class TemplateInterface {
     public downstreamInterfaces: DownstreamInterface[] = new Array<DownstreamInterface>();
 }
 
+export class Connectors {
+    public topConnector: RegularPolygon;
+    public leftConnector: RegularPolygon;
+    public rightConnector: RegularPolygon;
+    public bottomConnector: RegularPolygon;
+}
+
+export enum ConnectorType {
+    TOP, RIGHT, BOTTOM, LEFT
+}
+
 export abstract class Template {
     public identifier: String = '';
     public name: String = '';
@@ -29,14 +62,14 @@ export abstract class Template {
     public interfaces: TemplateInterface[] = Array<TemplateInterface>();
     protected callback: TemplateEventsCallback;
     public uiGroup:Group = null;
+    public connectors:Connectors = new Connectors();
 
     constructor (callback) {
         this.callback = callback;
         this.identifier = Guid.newGuid().toString();
     }
 
-    public abstract createUI( x, y, isDraggable?:boolean): any;
-  //  public abstract createUI(x, y): any;
+    public abstract createUI(x, y, draggable?): any;
     public abstract getType(): String;
     public abstract getHeaderColor(): String;
 
@@ -50,6 +83,10 @@ export abstract class Template {
 
         // rebuild the ui
         return this.createUI(x, y);
+    }
+
+    public canAddInterface() {
+        return true;
     }
 
     public select() {
@@ -107,8 +144,50 @@ export abstract class Template {
         }
 
     }
+
+    public showConnectors() {
+        console.log('nothing..');
+    }
+
+    public hideConnectors() {
+        console.log('nothing..');
+    }
+
+    public getConnectors(): Connectors {
+        return this.connectors;
+    }
+
+    public getConnectorPosition(connectorType: ConnectorType) : {x: number, y: number} {
+        let connector: RegularPolygon = null;
+        let x: number = 0;
+        let y: number = 0;
+
+        switch(connectorType) {
+            case ConnectorType.TOP:
+                connector = this.connectors.topConnector;
+                break;
+            case ConnectorType.BOTTOM:
+                connector = this.connectors.bottomConnector;
+                break;
+            case ConnectorType.LEFT:
+                connector = this.connectors.leftConnector;
+                x = this.getX();
+                y = this.getY() + connector.getAttr('y') + 40;
+                break;
+            case ConnectorType.RIGHT:
+                connector = this.connectors.rightConnector;
+                x = this.getX() + this.getWidth();
+                y = this.getY() + connector.getAttr('y') + 40;
+                break;
+        }
+
+
+        return {x:x, y: y};
+    }
 }
 
 export interface TemplateEventsCallback {
     templateClicked(template);
+    drawArrow(connector);
+    drawConnections();
 }

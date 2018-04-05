@@ -67,6 +67,7 @@ import { KonvaModule } from 'ng2-konva';
 import { VerifyModelComponent } from './dashboard/component-model/verify-model.component';
 import { ModelService } from './services/model.service';
 import { ComponentModelListComponent } from './dashboard/component-model/model.list.component';
+import { DrawingToolsHeaderComponent } from './shared/drawing-tools-header/darwing.tools.header.component';
 import { SimulationListComponent } from './dashboard/simulation/simulation-list.component';
 import { SimulationService } from './services/simulation.service';
 
@@ -115,7 +116,9 @@ import { SimulationService } from './services/simulation.service';
     CompletedWordComponent,
 
     SettingsComponent,
-    LoaderComponent
+    LoaderComponent,
+
+    DrawingToolsHeaderComponent
   ],
   imports: [
     ChartsModule,

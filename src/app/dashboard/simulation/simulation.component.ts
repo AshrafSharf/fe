@@ -37,6 +37,7 @@ export class SimulationComponent implements OnInit{
     startDate:Moment;
     endDate:Moment;
     iterations:string;
+    modelId:string = "";
 
     selectedProjectTitle:string;
     selectedProjectId:string;

@@ -1,28 +1,32 @@
 import { GenericMicroServiceTemplate } from "./generic.micro.service.template";
+import { TemplateInterface } from "./templates";
 
-export class JavaMicroServiceTemplate extends GenericMicroServiceTemplate {
+export class InputTemplate extends GenericMicroServiceTemplate {
 
     public constructor(callback) {
         super(callback)
-        this.name = 'Java Micro Service';
-        this.type = 'JavaMicroServiceTemplate';
+        this.name = 'Input Template';
+        this.type = 'InputTemplate';
     }
 
     public getType(): String {
-        return 'Java Micro Service Template';
+        return 'Input Template';
+    }
+
+    public canAddInterface() {
+        return false;
     }
 
     public clone() {
-        let obj = new JavaMicroServiceTemplate(this.callback);
+        let obj = new InputTemplate(this.callback);
         obj.identifier = this.identifier;
         obj.name = this.name;
         obj.interfaces = this.interfaces;
         obj.modelComponentPropertiesList = this.modelComponentPropertiesList;
-        obj.connectors = this.connectors;
         return obj;
     }
 
     public getHeaderColor(): String {
-        return 'lightblue';
+        return 'lightgreen';
     }
 }

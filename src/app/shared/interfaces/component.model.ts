@@ -20,14 +20,13 @@ export interface ComponentModelInterfaceProperty {
 }
 
 export interface ComponentModelInterfaceEndPoint {
-    inputModelInterfaceId:string;
-    outputModelInterfaceId:string;
-    inputComponentName: string;
-    outputComponentName: string;
-    inputInterfaceName: string;
-    outputInterfaceName: string;
-    modelId: string;
-    id:string;
+    id: String;
+    inputModelInterfaceId: String;
+    outputModelInterfaceId: String;
+    inputInterfaceName:String;
+    outputInterfaceName:String;
+    inputComponentName: String;
+    outputComponentName: String;
 }
 
 export interface ComponentModelInterface {

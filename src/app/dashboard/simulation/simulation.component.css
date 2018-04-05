@@ -1,1 +1,8 @@
+.sim-description {
+    height: 100px;
+    resize: none;
+}
 
+#iteration{
+    width:50%;
+}

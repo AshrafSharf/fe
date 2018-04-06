@@ -508,10 +508,16 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
     public addInputTemplate(){
         let t = new InputTemplate(this);
         t.interfaces = new Array<TemplateInterface>();
+
         var templateInterface = new TemplateInterface();
         templateInterface.name = 'internal_interface';
         templateInterface.latency = '0';
         t.interfaces.push(templateInterface);
+
+        t.modelComponentPropertiesList.push({
+            name: 'Display Name',
+            value: ''
+        });
 
         this.templates.push(t);
         this.addGroup(t.createUI());

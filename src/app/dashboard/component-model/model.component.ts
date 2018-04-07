@@ -18,6 +18,7 @@ import { SquareShape } from './shapes/square.shape';
 import { DiamondShape } from './shapes/diamond.shape';
 import { InputTemplate } from './templates/input.template';
 import { Modal } from 'ngx-modialog/plugins/bootstrap';
+import { ModelShape } from './shapes/model.shape';
 
 
 @Component({
@@ -141,13 +142,13 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                     .subscribe(result => {
                         if (result.status == 'OK') {
 
-                             this.selectedModel = result.data as ComponentModel;
+                            this.selectedModel = result.data as ComponentModel;
                             this.selectedId = this.selectedModel.id;
                             this.modelTitle = this.selectedModel.title.toString();
 
                             let connectionList = this.selectedModel.modelInterfaceEndPointsList;
                             
-                            // create templates
+                            // create component templates
                             for (let index = 0; index < this.selectedModel.modelComponentList.length; index++) {
 
                                 // create template
@@ -163,16 +164,7 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                                     template = new SingleInterfaceTemplate(this);
                                 } else if (tempTemplate.templateName == 'InputTemplate') {
                                     template = new InputTemplate(this);
-                                } else if (tempTemplate.templateName == 'Circle') {
-                                    template = new CircleShape(this);
-                                } else if (tempTemplate.templateName == 'Diamond') {
-                                    template = new DiamondShape(this);
-                                } else if (tempTemplate.templateName == 'Square') {
-                                    template = new SquareShape(this);
-                                } else if (tempTemplate.templateName == 'Triangle') {
-                                    template = new TriangleShape(this);
                                 }
-                                
                                 template.name = tempTemplate.title;
 
                                 // get interfaces from template
@@ -247,6 +239,8 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                             }
 
                             this.drawConnections();
+
+                           //TODO: create shapes
 
                         }
                         console.log(result);
@@ -640,7 +634,7 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
         intf.downstreamInterfaces.splice(propertyIndex, 1);
     }
 
-    public saveModel() {
+    public saveModel(event) {
         if (this.modelTitle.length == 0) {
             this.modal.alert()
                 .title('Warning')
@@ -650,91 +644,85 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
 
             var components = [];
             var connections = [];
+            var shapes = [];
 
             // get components
             for (let index = 0; index < this.templates.length; index++) {
                 var template = this.templates[index];
-            
-                var interfaces = [];
-                // get all interfaces
-                for (let intfIndex = 0; intfIndex < template.interfaces.length; intfIndex++) {
-                    var intf = template.interfaces[intfIndex];
+                if((template instanceof ModelShape)){
+                    shapes.push(template);
+                }
+                if(!(template instanceof ModelShape)){
+                    var interfaces = [];
+                    // get all interfaces
+                    for (let intfIndex = 0; intfIndex < template.interfaces.length; intfIndex++) {
+                        var intf = template.interfaces[intfIndex];
+                        
+                        var properties = [];
+                        // get all component properties
+                        for (let propIndex = 0; propIndex < intf.properties.length; propIndex++) {
+                            var propObject = {
+                                key: intf.properties[propIndex].name,
+                                value: intf.properties[propIndex].value,
+                            }
+                            properties.push(propObject);
+                        }
+
+                        // get all component downstream interfaces
+                        for (let intIndex = 0; intIndex < intf.downstreamInterfaces.length; intIndex++) {
+                            var intObject = {
+                                inputModelInterfaceName:  template.name +"_"+ intf.name,
+                                outputModelInterfaceName: intf.downstreamInterfaces[intIndex].component
+                            }
+                            //dinterfaces.push(intObject);
+                            //connections.push(intObject);
+                        }
                     
-                    var properties = [];
-                    // get all component properties
-                    for (let propIndex = 0; propIndex < intf.properties.length; propIndex++) {
+
+                        var intfObj = {
+                            title: intf.name,
+                            latency: intf.latency,
+                            modelInterfacePropertiesList: properties
+                            //modelInterfaceEndPointsList: dinterfaces
+                        }
+
+                        interfaces.push(intfObj);
+                    }
+
+                    var visualProperties = {
+                        color: template.getHeaderColor(),
+                        height: '' + template.getHeight(),
+                        id: '',
+                        shape: '',
+                        width: '' + template.getWidth(),
+                        xPosition: '' + template.uiGroup.getAttrs().x,
+                        yPosition: '' + template.uiGroup.getAttrs().y
+                    }
+
+                    var modelComponentPropertiesList = [];
+                    for (let propIndex = 0; propIndex < template.modelComponentPropertiesList.length; propIndex ++) {
+                        let prop = template.modelComponentPropertiesList[propIndex];
                         var propObject = {
-                            key: intf.properties[propIndex].name,
-                            value: intf.properties[propIndex].value,
+                            key: prop.name,
+                            value: prop.value,
                         }
-                        properties.push(propObject);
+
+                        modelComponentPropertiesList.push(propObject);
                     }
 
-/*
-                //var dinterfaces = [];
-                // get all component downstream interfaces
-                for (let intIndex = 0; intIndex < intf.downstreamInterfaces.length; intIndex++) {
-                    var intObject = {
-                        inputComponentName: template.name,
-                        inputInterfaceName:  intf.name,
-                        outputComponentName: intf.downstreamInterfaces[intIndex].component,
-                        outputInterfaceName: intf.downstreamInterfaces[intIndex].interface*/
-
-                    //var dinterfaces = [];
-                    // get all component downstream interfaces
-                    for (let intIndex = 0; intIndex < intf.downstreamInterfaces.length; intIndex++) {
-                        var intObject = {
-                            inputModelInterfaceName:  template.name +"_"+ intf.name,
-                            outputModelInterfaceName: intf.downstreamInterfaces[intIndex].component
-                        }
-                        //dinterfaces.push(intObject);
-                        //connections.push(intObject);
-                    }
-                
-
-                    var intfObj = {
-                        title: intf.name,
-                        latency: intf.latency,
-                        modelInterfacePropertiesList: properties
-                        //modelInterfaceEndPointsList: dinterfaces
+                    var component = {
+                        title: template.name,
+                        templateName: template.type,
+                        modelComponentPropertiesList: modelComponentPropertiesList,
+                        modelComponentInterfaceList: interfaces,
+                        modelComponentVisualProperties: visualProperties
+                        
                     }
 
-                    interfaces.push(intfObj);
+                    components.push(component);
                 }
 
-                var visualProperties = {
-                    color: template.getHeaderColor(),
-                    height: '' + template.getHeight(),
-                    id: '',
-                    shape: '',
-                    width: '' + template.getWidth(),
-                    xPosition: '' + template.uiGroup.getAttrs().x,
-                    yPosition: '' + template.uiGroup.getAttrs().y
-                }
-
-                var modelComponentPropertiesList = [];
-                for (let propIndex = 0; propIndex < template.modelComponentPropertiesList.length; propIndex ++) {
-                    let prop = template.modelComponentPropertiesList[propIndex];
-                    var propObject = {
-                        key: prop.name,
-                        value: prop.value,
-                    }
-
-                    modelComponentPropertiesList.push(propObject);
-                }
-
-                var component = {
-                    title: template.name,
-                    templateName: template.type,
-                    modelComponentPropertiesList: modelComponentPropertiesList,
-                    modelComponentInterfaceList: interfaces,
-                    modelComponentVisualProperties: visualProperties
-                    
-                }
-
-                components.push(component);
             }
-
             for (var index = 0; index < this.connections.length; index++) {
                 var connection = this.connections[index];
                 let source = this.getTemplateById(connection.inputComponentName);
@@ -749,7 +737,7 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
 
                 connections.push(interfaceObj);
             }
-
+            console.log(shapes);
             var body = {            
                 modelBranchId: "test-branch",
                 modelComponentList: components,
@@ -765,7 +753,12 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                     .createModel(body)
                     .subscribe(result => {
                         console.log(result)
-                        this.router.navigate(['home/component_model-list']);
+                        if (event.srcElement.id == "verify") {
+                            this.onVerify();
+                        }
+                        else{
+                            this.router.navigate(['home/component_model-list']);
+                        }
                     });
             } else {
                 // update the model
@@ -773,7 +766,13 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                     .updateModel(this.selectedModel.id, body)
                     .subscribe(result => {
                         console.log(result)
-                        this.router.navigate(['home/component_model-list']);
+                        console.log(event);
+                        if (event.srcElement.id == "verify") {
+                            this.onVerify();
+                        }
+                        else{
+                            this.router.navigate(['home/component_model-list']);
+                        }
                     });
             }
         }

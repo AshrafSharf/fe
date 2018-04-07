@@ -63,6 +63,10 @@ export abstract class ModelShape extends Template {
         return "Circle"
     }
 
+    public canAddInterface() {
+        return false;
+    }
+
     public getHeaderColor(): String {
         return 'red';
     }

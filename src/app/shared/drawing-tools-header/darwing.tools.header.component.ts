@@ -24,6 +24,7 @@ export class DrawingToolsHeaderComponent implements OnInit {
     @Output('cancel') cancelEvent = new EventEmitter();
     @Output('verify') verifyEvent = new EventEmitter();
     @Output('input-value') inputTemplate = new EventEmitter();
+    @Output('aws-micro-service-template') awsMicroServiceTemplate = new EventEmitter();
 
     @Input('showModifyButtons') showModifyButtons = true;
 
@@ -62,7 +63,10 @@ export class DrawingToolsHeaderComponent implements OnInit {
     public drawJavaMicroService() {
         this.javaMicroServiceTemplate.emit();
     }
-
+    
+    public drawAWSTemplate(){
+        this.awsMicroServiceTemplate.emit();
+    }
     public drawCircle() {
         this.shapeCircle.emit();
     }

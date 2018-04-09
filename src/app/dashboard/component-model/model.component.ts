@@ -18,6 +18,7 @@ import { SquareShape } from './shapes/square.shape';
 import { DiamondShape } from './shapes/diamond.shape';
 import { InputTemplate } from './templates/input.template';
 import { Modal } from 'ngx-modialog/plugins/bootstrap';
+import { AwsMicroServiceTemplate } from './templates/aws.micro.service.template';
 
 
 @Component({
@@ -508,6 +509,12 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
         this.addGroup(t.createUI());
     }
 
+    public addAwsMicroService(){
+        let t = new AwsMicroServiceTemplate(this);
+        this.templates.push(t);
+        this.addGroup(t.createUI());
+    }
+
     public addInputTemplate(){
         let t = new InputTemplate(this);
         t.interfaces = new Array<TemplateInterface>();
@@ -532,6 +539,7 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
             template.deselectTemplate();
         }
         this.selectedTemplate = template.clone();
+        console.log(this.selectedTemplate.type);
         this.layer.draw();        
     }
 

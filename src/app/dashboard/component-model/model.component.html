@@ -5,6 +5,7 @@
             (single-inheritance-template)="addSingleInterface()"
             (generic-micro-service-template)="addGenericMicroService()"
             (java-micro-service-template)="addJavaMicroService()"
+            (aws-micro-service-template)="addAwsMicroService()"
             (input-value)="addInputTemplate()"
             (shape-circle)="addCircle()"
             (shape-diamond)="addDiamond()"
@@ -70,6 +71,14 @@
                                     <td class="table_column">Name</td>
                                     <td class="table_column"><input type="text" class="property_value" [(ngModel)]="selectedTemplate.name"></td>
                                 </tr>
+                                <tr *ngIf="selectedTemplate.type == 'AwsMicroServiceTemplate'">
+                                    <td class="table_column">Volume per Pod</td>
+                                    <td class="table_column"><input type="text" class="property_value" [(ngModel)]="selectedTemplate.volumePerPod"></td>
+                                </tr>
+                                <tr *ngIf="selectedTemplate.type == 'AwsMicroServiceTemplate'">
+                                    <td class="table_column"># Pods/Instance</td>
+                                    <td class="table_column"><input type="text" class="property_value" [(ngModel)]="selectedTemplate.numPods"></td>
+                                </tr>  
 
                                 <tr *ngFor="let prop of selectedTemplate.modelComponentPropertiesList; let propertyIndex = index">
                                     <td class="table_column"><input type="text" class="property_value" [(ngModel)]="prop.name" ></td>

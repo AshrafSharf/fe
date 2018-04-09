@@ -223,7 +223,6 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
 
                                 var group = template.createUI(x, y);
                                 this.addGroup(group);
-                                this.addLabel(x,y, "hello");
                             }
 
                             // create connections
@@ -244,7 +243,42 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
 
                             this.drawConnections();
 
-                           //TODO: create shapes
+                             // create shape templates
+                             for (let shape of this.selectedModel.shapesList) {
+                                
+                                // create shape
+                                var template: Template;
+                               
+                                 if (shape.templateName == 'Circle') {
+                                    template = new CircleShape(this);
+                                } else if (shape.templateName == 'Diamond') {
+                                    template = new DiamondShape(this);
+                                } else if (shape.templateName == 'Square') {
+                                    template = new SquareShape(this);
+                                } else if (shape.templateName == 'Triangle') {
+                                     template = new TriangleShape(this);
+                                }
+                                template.name = shape.title;
+
+                                // save shape
+                                this.templates.push(template);
+
+                                // draw template
+                                let x = 0; let y;
+                                if (shape.modelComponentVisualProperties != null) {
+                                    x = parseFloat(shape.modelComponentVisualProperties.xPosition.toString());
+                                    y = parseFloat(shape.modelComponentVisualProperties.yPosition.toString());
+                                }
+
+                                var group = template.createUI(x, y);
+                                this.addGroup(group);
+                            }
+
+
+                            //create labels
+                            for (let label of this.selectedModel.labelList){
+                                this.addLabel(Number(label.xposition), Number(label.yposition), label.text);
+                            }
 
                         }
                         console.log(result);
@@ -463,7 +497,8 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
         var st:Stage = this.stage.getStage();
         var layer:Layer = st.getChildren()[0];
         let label;
-        if(x && y && text){
+        if(x !=null && y !=null && text!=null){
+            console.log("hello");
             label = new Text({
                 x : x,
                 y : y,
@@ -703,13 +738,46 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
             var components = [];
             var connections = [];
             var shapes = [];
+            var labels = [];
 
+            for (let label of this.labels){
+                 let storedLabel = {
+                    text: label.text(),
+                    color: "black",
+                    height: '' + label.getHeight(),
+                    width: '' + label.getWidth(),
+                    xposition: '' + label.position().x,
+                    yposition: '' + label.position().y
+                }
+                labels.push(storedLabel);
+            }
+            
+            
             // get components
             for (let index = 0; index < this.templates.length; index++) {
                 var template = this.templates[index];
                 if((template instanceof ModelShape)){
-                    shapes.push(template);
+                
+                    var visualProperties = {
+                        color: template.getHeaderColor(),
+                        height: '' + template.getHeight(),
+                        id: '',
+                        shape: '',
+                        width: '' + template.getWidth(),
+                        xPosition: '' + template.uiGroup.getAttrs().x,
+                        yPosition: '' + template.uiGroup.getAttrs().y
+                    }
+                    var shape = {
+                        title: template.name,
+                        templateName: template.type,
+                        modelComponentPropertiesList: [],
+                        modelComponentInterfaceList: [],
+                        modelComponentVisualProperties: visualProperties
+                    }
+
+                    shapes.push(shape);
                 }
+
                 if(!(template instanceof ModelShape)){
                     var interfaces = [];
                     // get all interfaces
@@ -801,7 +869,8 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                 modelBranchId: "test-branch",
                 modelComponentList: components,
                 modelInterfaceEndPointsList:connections,
-
+                shapesList: shapes,
+                labelList: labels,
                 title: this.modelTitle
             }
 

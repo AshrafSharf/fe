@@ -56,6 +56,8 @@ export interface ComponentModel {
     description: String;
     ownerName: String;
     ownerId: String;
+    labelList;
+    shapesList:Array<ComponentModelComponent>;
     modelComponentList:Array<ComponentModelComponent>;
     modelInterfaceEndPointsList:Array<ComponentModelInterfaceEndPoint>;
 }

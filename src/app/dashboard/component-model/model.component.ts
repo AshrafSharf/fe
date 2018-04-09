@@ -36,6 +36,9 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
     // list of templatea
     public templates: Array<Template> = new Array<Template>();
 
+    //list of labels
+    public labels: Array<Text> = new Array<Text>();
+
     // selected template
     public selectedTemplate:Template = null;
 
@@ -220,6 +223,7 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
 
                                 var group = template.createUI(x, y);
                                 this.addGroup(group);
+                                this.addLabel(x,y, "hello");
                             }
 
                             // create connections
@@ -455,22 +459,76 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
         this.addGroup(t.createUI());
     }
 
-    public addLabel() {
+    public addLabel(x?,y?, text?) {
         var st:Stage = this.stage.getStage();
         var layer:Layer = st.getChildren()[0];
-
-        let label = new Text({
-            x : Math.random() * 800,
-            y : Math.random() * 800,
-            text:'this is a label',
-            fontSize: this.fontSize,
-            draggable: true
-        });
+        let label;
+        if(x && y && text){
+            label = new Text({
+                x : x,
+                y : y,
+                text: text,
+                fontSize: this.fontSize,
+                draggable: true
+            });
+        }
+        else{
+            label = new Text({
+                x : Math.random() * 800,
+                y : Math.random() * 800,
+                text:'this is a label',
+                fontSize: this.fontSize,
+                draggable: true
+            });
+        }
 
         layer.add(label);
 
         layer.draw();
+
+        label.on('dblclick', () => {
+           console.log(label);
+            
+            // first we need to find its positon
+            var textPosition = label.getAbsolutePosition();
+            var stageBox = st.container().getBoundingClientRect();
+
+            var areaPosition = {
+                x: textPosition.x + stageBox.left,
+                y: textPosition.y + stageBox.top
+            };
+
+            // create textarea and style it
+            var textarea = document.createElement('textarea');
+            document.body.appendChild(textarea);
+
+            textarea.value = label.text();
+            textarea.style.position = 'absolute';
+            textarea.style.top = areaPosition.y + 'px';
+            textarea.style.left = areaPosition.x + 'px';
+            textarea.style.width = String(label.width());
+
+            textarea.focus();
+
+
+            textarea.addEventListener('keydown', function (e) {
+                // hide on enter
+                if (e.keyCode === 13) {
+                    label.text(textarea.value);
+                    layer.draw();
+                    document.body.removeChild(textarea);
+                }
+            });
+        });
+
+        this.labels.push(label);
     }
+
+    public onDoubleClick(event) {
+        
+        event.cancelBubble = true;
+    }
+
 
     public addDiamond() {
         let t = new DiamondShape(this);
@@ -738,6 +796,7 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                 connections.push(interfaceObj);
             }
             console.log(shapes);
+            console.log(this.labels);
             var body = {            
                 modelBranchId: "test-branch",
                 modelComponentList: components,

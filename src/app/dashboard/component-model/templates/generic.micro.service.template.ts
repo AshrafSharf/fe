@@ -13,6 +13,10 @@ export class GenericMicroServiceTemplate extends Template {
         this.type = 'GenericMicroServiceTemplate';
     }
 
+    public getTitle():string {
+        return this.name.toString();
+    }
+
     public createUI(x = Math.random() * 300, y = Math.random() * 300, fontSize = 13) {
 
         this.uiGroup = new Group({
@@ -161,7 +165,7 @@ export class GenericMicroServiceTemplate extends Template {
             y : 10,
             width: this.containerWidth,
             align: 'center',
-            text: this.name.toString(),
+            text: this.getTitle(),
             fontSize: fontSize,
             fontStyle: 'bold',
             fill: 'black'

@@ -58,4 +58,5 @@ export interface ComponentModel {
     ownerId: String;
     modelComponentList:Array<ComponentModelComponent>;
     modelInterfaceEndPointsList:Array<ComponentModelInterfaceEndPoint>;
+    fixedProperties: Array<ComponentModelInterfaceProperty>;
 }

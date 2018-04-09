@@ -141,7 +141,7 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                     .subscribe(result => {
                         if (result.status == 'OK') {
 
-                             this.selectedModel = result.data as ComponentModel;
+                            this.selectedModel = result.data as ComponentModel;
                             this.selectedId = this.selectedModel.id;
                             this.modelTitle = this.selectedModel.title.toString();
 
@@ -514,7 +514,7 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
         templateInterface.latency = '0';
         t.interfaces.push(templateInterface);
 
-        t.modelComponentPropertiesList.push({
+        t.fixedProperties.push({
             name: 'Display Name',
             value: ''
         });

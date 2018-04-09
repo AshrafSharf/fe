@@ -23,7 +23,22 @@ export class InputTemplate extends GenericMicroServiceTemplate {
         obj.name = this.name;
         obj.interfaces = this.interfaces;
         obj.modelComponentPropertiesList = this.modelComponentPropertiesList;
+        obj.fixedProperties = this.fixedProperties;
         return obj;
+    }
+
+    public getTitle():string {
+        for (var index = 0; index < this.fixedProperties.length; index++) {
+            let prop = this.fixedProperties[index];
+            if (prop.name == 'Display Name') {
+                if (prop.value.length > 0) {
+                    return prop.value.toString();
+                } else {
+                    break;
+                }
+            }
+        }
+        return this.name.toString();
     }
 
     public getHeaderColor(): String {

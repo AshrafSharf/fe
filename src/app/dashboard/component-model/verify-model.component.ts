@@ -127,6 +127,7 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
         this.modelService.getModel(this.selectedModelId)
         .subscribe(result =>{
             this.systemModel = result.data as SystemModel
+            console.log(this.systemModel);
             this.modelTitle = this.systemModel.title;
             this.drawDiagram(this.selectedModelId);
             this.clearEnvironment();
@@ -144,16 +145,20 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
             let cptComp;
             if (component.templateName == "GenericMicroServiceTemplate"){
                 cptComp = new CptMicroserviceComponent();
+                cptComp.setName(component.title);
             }
             else if (component.templateName == "InputTemplate" ){
-              cptComp = new InputVariable();
-              this.environment.addInputVariable(cptComp);
+                //give input variables name for matching, along with a display name      
+                cptComp = new InputVariable();
+                cptComp.setName( component.displayName);  
+                cptComp.name = component.title;          
+                this.environment.addInputVariable(cptComp);        
             }
             //TODO: add more if cases with for other templates
 
             cptComp.order = component.order;
             cptComp.id = component.id;
-            cptComp.setName(component.title);
+            
             
             //set up interfaces
             for (let interf of component.modelComponentInterfaceList){

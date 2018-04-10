@@ -24,6 +24,9 @@
     transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 }
 
+dp-date-picker.dp-material .dp-picker-input {
+    max-width: 120px !important;
+}
 
 .dashed {
     stroke-dasharray: 10,10;

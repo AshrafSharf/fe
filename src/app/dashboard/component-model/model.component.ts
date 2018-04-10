@@ -18,7 +18,7 @@ import { SquareShape } from './shapes/square.shape';
 import { DiamondShape } from './shapes/diamond.shape';
 import { InputTemplate } from './templates/input.template';
 import { Modal } from 'ngx-modialog/plugins/bootstrap';
-import { AwsMicroServiceTemplate } from './templates/aws.micro.service.template';
+import { Ec2MicroServiceTemplate } from './templates/ec2.micro.service.template';
 
 
 @Component({
@@ -509,8 +509,8 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
         this.addGroup(t.createUI());
     }
 
-    public addAwsMicroService(){
-        let t = new AwsMicroServiceTemplate(this);
+    public addEc2MicroService(){
+        let t = new Ec2MicroServiceTemplate(this);
         this.templates.push(t);
         this.addGroup(t.createUI());
     }

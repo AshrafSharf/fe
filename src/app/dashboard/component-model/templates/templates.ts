@@ -60,6 +60,7 @@ export abstract class Template {
     public type: String  = '';
     public modelComponentPropertiesList: TemplateInterfaceProperty[] = new Array<TemplateInterfaceProperty>();
     public interfaces: TemplateInterface[] = Array<TemplateInterface>();
+    public fixedProperties: TemplateInterfaceProperty[]= new Array<TemplateInterfaceProperty>();
     protected callback: TemplateEventsCallback;
     public uiGroup:Group = null;
     public connectors:Connectors = new Connectors();
@@ -71,6 +72,7 @@ export abstract class Template {
 
     public abstract createUI(x, y, draggable?): any;
     public abstract getType(): String;
+    public abstract getTitle(): String;
     public abstract getHeaderColor(): String;
 
     public reloadUI() {

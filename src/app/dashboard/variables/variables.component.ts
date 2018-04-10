@@ -99,6 +99,72 @@ export class VariablesComponent implements OnInit {
     editSubvariableIndex = -1;
     myDataSets = null;
 
+    constructor(
+        private route: ActivatedRoute,
+        private router: Router,
+        private modalDialog: Modal,
+        private variableService: AppVariableService,
+        private variableTypeService: AppVariableTypeService,
+        private modal: ModalDialogService,
+        private userService: UserService,
+        private projectService: ProjectService,
+        private branchService: BranchService,
+        private settingsService: SettingsService,
+        element: ElementRef,
+        private ngZone: NgZone) {
+
+        this.parentNativeElement = element.nativeElement;
+    }
+
+    ngOnInit() {
+        this.loggedInUser = Utils.getUserId();
+        this.userService
+            .getOwners((users) => {
+                this.users = users;
+                this.ownerId = (this.ownerId == "") ? Utils.getUserId() : '';
+                if (this.ownerId == Utils.getUserId()) {
+                    this.isOwner = true;
+                }
+            });
+
+        this.route.queryParams.subscribe(params => {
+            console.log(params);
+            this.projectId = params['projectId'];
+            this.branchId = params['branchId'];
+            var varId = params['variableId'];
+
+            this.projectService
+                .getDetails(this.projectId)
+                .subscribe(result => {
+                    //this.selectedProject = result.data as Project;
+
+                    this.projectTitle = result.data.title;
+                });
+
+            this.branchService
+                .getDetails(this.branchId)
+                .subscribe(result => {
+                    //this.selectedProject = result.data as Project;
+
+                    this.branchTitle = result.data.title;
+                });
+
+            this.variableService
+                .getVariables(this.branchId)
+                .subscribe(response => {
+                    console.log(response);
+                    this.variables = response.data;
+                    for (var index = 0; index < this.variables.length; index++) {
+                        var variable = this.variables[index];
+                        if (variable.id == varId) {
+                            this.selectVariable(variable);
+                            break;
+                        }
+                    }
+                })
+        });
+    }
+
     ngOnChanges(changes: SimpleChanges): void {
         console.log(changes);
         this.createTable();
@@ -144,8 +210,8 @@ export class VariablesComponent implements OnInit {
         }
 
         if (this.editSubvariableIndex != -1) {
-           // this.subvariableList[this.editSubvariableIndex].name = this.subvariableName;
-           // this.subvariableList[this.editSubvariableIndex].value = this.subvariableValue;
+            // this.subvariableList[this.editSubvariableIndex].name = this.subvariableName;
+            // this.subvariableList[this.editSubvariableIndex].value = this.subvariableValue;
             if (this.valueType == 'discrete') {
                 this.subvariableList[this.editSubvariableIndex].probability = this.subvariablePercentage;
             }
@@ -223,23 +289,6 @@ export class VariablesComponent implements OnInit {
         }
     }
 
-    constructor(
-        private route: ActivatedRoute,
-        private router: Router,
-        private modalDialog: Modal,
-        private variableService: AppVariableService,
-        private variableTypeService: AppVariableTypeService,
-        private modal: ModalDialogService,
-        private userService: UserService,
-        private projectService: ProjectService,
-        private branchService: BranchService,
-        private settingsService: SettingsService,
-        element: ElementRef,
-        private ngZone: NgZone) {
-
-        this.parentNativeElement = element.nativeElement;
-    }
-
     isTypeSelected(id) {
         for (var index = 0; index < this.compositeVariableList.length; index++) {
             if (this.compositeVariableList[index].id == id) {
@@ -260,55 +309,6 @@ export class VariablesComponent implements OnInit {
                 break;
             }
         }
-    }
-
-    ngOnInit() {
-        this.loggedInUser = Utils.getUserId();
-        this.userService
-            .getOwners((users) => {
-                this.users = users;
-                this.ownerId = (this.ownerId == "") ? Utils.getUserId() : '';
-                if (this.ownerId == Utils.getUserId()) {
-                    this.isOwner = true;
-                }
-            });
-
-        this.route.queryParams.subscribe(params => {
-            console.log(params);
-            this.projectId = params['projectId'];
-            this.branchId = params['branchId'];
-            var varId = params['variableId'];
-
-            this.projectService
-                .getDetails(this.projectId)
-                .subscribe(result => {
-                    //this.selectedProject = result.data as Project;
-
-                    this.projectTitle = result.data.title;
-                });
-
-            this.branchService
-                .getDetails(this.branchId)
-                .subscribe(result => {
-                    //this.selectedProject = result.data as Project;
-
-                    this.branchTitle = result.data.title;
-                });
-
-            this.variableService
-                .getVariables(this.branchId)
-                .subscribe(response => {
-                    console.log(response);
-                    var variables = response.data as Array<Variable>;
-                    for (var index = 0; index < variables.length; index++) {
-                        var variable = variables[index];
-                        if (variable.id == varId) {
-                            this.selectVariable(variable);
-                            break;
-                        }
-                    }
-                })
-        });
     }
 
     getXTitle(titleIndex) {
@@ -837,7 +837,7 @@ export class VariablesComponent implements OnInit {
                     negative = true;
                 }
                 finalValue += value;
-                
+
                 /*if (this.valueType == 'discrete') {
                     finalPercentage += parseFloat(variable.probability.toString());
                     if (parseFloat(variable.probability.toString()) < 0) {
@@ -910,6 +910,31 @@ export class VariablesComponent implements OnInit {
                         negative = true;
                     }
                 }
+
+                // Checking if any variables used within the expression string are private variables
+                if (segment.expression != null) {
+                    let privateExpressionSubvariables = new Array<Variable>();
+                    segment.completedWordsArray.forEach(word => {
+                        if (word.id != "") {
+                            this.variables.forEach(variable => {
+                                if (word.id == variable.id) {
+                                    if (variable.isPrivate) {
+                                        if (!this.privateVariable) {
+                                            this.privateVariable = true;
+                                            this.users.forEach(user => {
+                                                if(user.id == Utils.getUserId()) {
+                                                    this.usersWithAccess.push(user);
+                                                }
+                                            });
+                                        }
+                                        privateExpressionSubvariables.push(variable);
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    this.determineAccessUsersForExpression(privateExpressionSubvariables);
+                }
             });
 
             if (negative) {
@@ -955,7 +980,7 @@ export class VariablesComponent implements OnInit {
                         completedWordsArray: [],
                         subVariables: [],
                         query: this.queryText
-                    }
+                    };
 
                     let body = {
                         description: this.description,
@@ -972,7 +997,7 @@ export class VariablesComponent implements OnInit {
                         compositeType: this.compositType,
                         hasActual: this.shouldDefineActualValues,
                         actualTimeSegment: actualTimeSegment
-                    }
+                    };
 
                     if (this.selectedVariable == null) {
                         this.variableService
@@ -1018,6 +1043,51 @@ export class VariablesComponent implements OnInit {
                 }
             }
         }
+    }
+
+    determineAccessUsersForExpression(privateVariables) {
+        let privateVarUserArrays = [];
+        let usersWithAccess = [];
+        let counter = 0;
+        privateVariables.forEach(variable => {
+            privateVarUserArrays.push(variable.usersWithAccess);
+        });
+
+        let users = [];
+        privateVarUserArrays.forEach(arrayOfUsers => {
+            arrayOfUsers.forEach(user => {
+                if (users.length != 0) {
+                    users.forEach(u => {
+                        if (user.userName == u.userName) {
+                            var index = users.indexOf(u);
+                            users.splice(index, 1);
+                        }
+                    });
+                    users.push(user);
+                }
+                else {
+                    users.push(user);
+                }
+            });
+        });
+
+        usersWithAccess = Object.assign([], users);
+        users.forEach(user => {
+            privateVarUserArrays.forEach(arrayOfUsers => {
+                arrayOfUsers.forEach(u => {
+                    if(user.userName == u.userName) {
+                        counter++;
+                    }
+                });
+            });
+            if (counter != privateVariables.length) {
+                var index = usersWithAccess.indexOf(user);
+                usersWithAccess.splice(index, 1);
+            }
+            counter = 0;
+        });
+        console.log(usersWithAccess);
+        this.usersWithAccess = usersWithAccess;
     }
 
     onDelete() {

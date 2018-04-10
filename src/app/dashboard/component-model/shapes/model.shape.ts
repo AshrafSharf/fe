@@ -10,6 +10,10 @@ export abstract class ModelShape extends Template {
         super(callback);
     }
 
+    public getTitle():string {
+        return this.name.toString();
+    }
+
     public abstract createShape();
 
     public createUI(x = Math.random() * 600, y = Math.random() * 600, fontSize = 13) {

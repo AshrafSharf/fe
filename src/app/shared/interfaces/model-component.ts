@@ -5,6 +5,7 @@ export interface ModelComponent{
     id:string;
     modelId:string;
     title:string;
+    displayName:string;
     order:number;
     templateName:string;
     modelComponentPropertiesList:ModelProperty[];

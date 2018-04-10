@@ -71,6 +71,13 @@
                                     <td class="table_column"><input type="text" class="property_value" [(ngModel)]="selectedTemplate.name"></td>
                                 </tr>
 
+                                <tr *ngFor="let prop of selectedTemplate.fixedProperties; let propertyIndex = index">
+                                    <td class="table_column">{{prop.name}}</td>
+                                    <td class="table_column">
+                                        <input type="text" class="property_value" [(ngModel)]="prop.value" >
+                                    </td>
+                                </tr>
+
                                 <tr *ngFor="let prop of selectedTemplate.modelComponentPropertiesList; let propertyIndex = index">
                                     <td class="table_column"><input type="text" class="property_value" [(ngModel)]="prop.name" ></td>
                                     <td class="table_column">

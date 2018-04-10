@@ -38,6 +38,7 @@ export class InputVariableInterface extends CptInterface {
 
 export class InputVariable extends CptComponent {
     public ifs: InputVariableInterface[] = [];
+    public name:String;
     constructor(obj?: InputVariable) {
         super(obj);
 

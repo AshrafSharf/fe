@@ -127,6 +127,7 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
         this.modelService.getModel(this.selectedModelId)
         .subscribe(result =>{
             this.systemModel = result.data as SystemModel
+            console.log(this.systemModel);
             this.modelTitle = this.systemModel.title;
             this.drawDiagram(this.selectedModelId);
             this.clearEnvironment();
@@ -144,16 +145,20 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
             let cptComp;
             if (component.templateName == "GenericMicroServiceTemplate"){
                 cptComp = new CptMicroserviceComponent();
+                cptComp.setName(component.title);
             }
             else if (component.templateName == "InputTemplate" ){
-              cptComp = new InputVariable();
-              this.environment.addInputVariable(cptComp);
+                //give input variables name for matching, along with a display name      
+                cptComp = new InputVariable();
+                cptComp.setName( component.displayName);  
+                cptComp.name = component.title;          
+                this.environment.addInputVariable(cptComp);        
             }
             //TODO: add more if cases with for other templates
 
             cptComp.order = component.order;
             cptComp.id = component.id;
-            cptComp.setName(component.title);
+            
             
             //set up interfaces
             for (let interf of component.modelComponentInterfaceList){
@@ -343,106 +348,131 @@ so that the the drawing functions below can be removed*/
             .subscribe(params => {
                 var id = params["id"];
                 if (id == undefined) return;
-                    this.modelService
-                        .getModel(id)
-                        .subscribe(result => {
-                            if (result.status == 'OK') {
-                                this.selectedModel = result.data as ComponentModel;                     
-                                this.modelTitle = this.selectedModel.title.toString();
-                                let connectionList = this.selectedModel.modelInterfaceEndPointsList;
+
+                this.modelService
+                    .getModel(id)
+                    .subscribe(result => {
+                        if (result.status == 'OK') {
+
+                            this.selectedModel = result.data as ComponentModel;
+                           // this.selectedId = this.selectedModel.id;
+                            this.modelTitle = this.selectedModel.title.toString();
+
+                            let connectionList = this.selectedModel.modelInterfaceEndPointsList;
+                            
+                            // create templates
+                            for (let index = 0; index < this.selectedModel.modelComponentList.length; index++) {
+
+                                // create template
+                                let tempTemplate = this.selectedModel.modelComponentList[index];
+                                var template: Template;
+                                if (tempTemplate.templateName == 'GenericMicroServiceTemplate') {
+                                    template = new GenericMicroServiceTemplate(this);
+                                } else if (tempTemplate.templateName == 'JavaMicroServiceTemplate') {
+                                    template = new JavaMicroServiceTemplate(this);
+                                } else if (tempTemplate.templateName == 'StaticTemplate') {
+                                    template = new StaticTemplate(this);
+                                } else if (tempTemplate.templateName == 'SingleInterfaceTemplate') {
+                                    template = new SingleInterfaceTemplate(this);
+                                } else if (tempTemplate.templateName == 'InputTemplate') {
+                                    template = new InputTemplate(this);
+                                } else if (tempTemplate.templateName == 'Circle') {
+                                    template = new CircleShape(this);
+                                } else if (tempTemplate.templateName == 'Diamond') {
+                                    template = new DiamondShape(this);
+                                } else if (tempTemplate.templateName == 'Square') {
+                                    template = new SquareShape(this);
+                                } else if (tempTemplate.templateName == 'Triangle') {
+                                    template = new TriangleShape(this);
+                                }
                                 
-                                // create templates
-                                for (let index = 0; index < this.selectedModel.modelComponentList.length; index++) {
-    
-                                    // create template
-                                    let tempTemplate = this.selectedModel.modelComponentList[index];
-                                    var template: Template;
-                                    if (tempTemplate.templateName == 'GenericMicroServiceTemplate') {
-                                        template = new GenericMicroServiceTemplate(this);
-                                    } else if (tempTemplate.templateName == 'JavaMicroServiceTemplate') {
-                                        template = new JavaMicroServiceTemplate(this);
-                                    } else if (tempTemplate.templateName == 'StaticTemplate') {
-                                        template = new StaticTemplate(this);
-                                    } else if (tempTemplate.templateName == 'SingleInterfaceTemplate') {
-                                        template = new SingleInterfaceTemplate(this);
-                                    } else if (tempTemplate.templateName == 'InputTemplate') {
-                                        template = new InputTemplate(this);
-                                    } else if (tempTemplate.templateName == 'Circle') {
-                                        template = new CircleShape(this);
-                                    } else if (tempTemplate.templateName == 'Diamond') {
-                                        template = new DiamondShape(this);
-                                    } else if (tempTemplate.templateName == 'Square') {
-                                        template = new SquareShape(this);
-                                    } else if (tempTemplate.templateName == 'Triangle') {
-                                        template = new TriangleShape(this);
-                                    }
+                                template.name = tempTemplate.title;
+
+                                // get interfaces from template
+                                for (let interfaceIndex = 0;interfaceIndex < tempTemplate.modelComponentInterfaceList.length; interfaceIndex++) {
+                                    let tempInterface = tempTemplate.modelComponentInterfaceList[interfaceIndex];
+
+                                    var templateInterface = new TemplateInterface();
+                                    templateInterface.name = tempInterface.title;
+                                    templateInterface.latency = tempInterface.latency;
                                     
-                                    template.name = tempTemplate.title;
-    
-                                    // get interfaces from template
-                                    for (let interfaceIndex = 0;interfaceIndex < tempTemplate.modelComponentInterfaceList.length; interfaceIndex++) {
-                                        let tempInterface = tempTemplate.modelComponentInterfaceList[interfaceIndex];
-                                        var templateInterface = new TemplateInterface();
-                                        templateInterface.name = tempInterface.title;
-                                        templateInterface.latency = tempInterface.latency;       
-    
-                                        // get properties of interface
-                                        for (let propertyIndex = 0; propertyIndex < tempInterface.modelInterfacePropertiesList.length; propertyIndex ++) {
-                                            let property = tempInterface.modelInterfacePropertiesList[propertyIndex];
-                                            templateInterface.properties.push({ name: property.key, value: property.value});
-                                        }
-    
-                                        for (let connection of connectionList){
-                                            if (connection.inputModelInterfaceId == tempInterface.id){
-                                                templateInterface.downstreamInterfaces.push( { component: connection.outputComponentName, interface:connection.outputModelInterfaceName, connectedComponent:connection.inputComponentName, connectedInterface:connection.inputModelInterfaceName });
-                                            }
-                                        }
-    
-                                        template.interfaces.push(templateInterface);
+
+                                    // get properties of interface
+                                    for (let propertyIndex = 0; propertyIndex < tempInterface.modelInterfacePropertiesList.length; propertyIndex ++) {
+                                        let property = tempInterface.modelInterfacePropertiesList[propertyIndex];
+                                        templateInterface.properties.push({ name: property.key, value: property.value});
                                     }
-    
-                                    // get properties of component
-                                    if (tempTemplate.modelComponentPropertiesList !=null){
-                                        for (let propertyIndex = 0; propertyIndex < tempTemplate.modelComponentPropertiesList.length; propertyIndex ++) {
-                                            let property = tempTemplate.modelComponentPropertiesList[propertyIndex];
-                                            template.modelComponentPropertiesList.push({ name: property.key, value: property.value});
+
+                                    // get downstream interfaces
+                                   /* for (let dInterfaceIndex = 0; dInterfaceIndex < tempInterface.modelInterfaceEndPointsList.length; dInterfaceIndex ++) {
+                                        let dInterface = tempInterface.modelInterfaceEndPointsList[dInterfaceIndex];
+                                        templateInterface.downstreamInterfaces.push( { component: dInterface.outputModelInterfaceId, connectedInterface: dInterface.inputModelInterfaceId });
+                                    }*/
+
+                                    for (let connection of connectionList){
+                                        if (connection.inputModelInterfaceId == tempInterface.id){
+
+                                            templateInterface.downstreamInterfaces.push( { component: connection.outputComponentName, interface:connection.outputInterfaceName, connectedComponent:connection.inputComponentName, connectedInterface:connection.inputInterfaceName });
+                                          //  templateInterface.downstreamInterfaces.push( { component: connection.outputInterfaceName, connectedInterface: connection.inputInterfaceName });
+
                                         }
                                     }
-                                    
-                                    // save template
-                                    this.templates.push(template);
-    
-                                    // draw template
-                                    let x = 0; let y;
-                                    if (tempTemplate.modelComponentVisualProperties != null) {
-                                        x = parseFloat(tempTemplate.modelComponentVisualProperties.xPosition.toString());
-                                        y = parseFloat(tempTemplate.modelComponentVisualProperties.yPosition.toString());
-                                    }
-    
-                                    var group = template.createUI(x, y,false);
-                                    this.addGroup(group);
+
+                                    template.interfaces.push(templateInterface);
                                 }
-    
-                                // create connections
-                                for (let index = 0; index < this.selectedModel.modelInterfaceEndPointsList.length; index++) {
-                                    let tempConnection = this.selectedModel.modelInterfaceEndPointsList[index];
-    
-                                    let source = this.getTemplateByName(tempConnection.inputComponentName);
-                                    let target = this.getTemplateByName(tempConnection.outputComponentName);
-    
-                                    var connection = new Connection();
-                                    connection.inputComponentName = source.identifier.toString();
-                                    connection.outputComponentName = target.identifier.toString();
-                                    connection.inputInterfaceName = this.connectionSourceInterface;
-                                    connection.outputInterfaceName =  this.connectionTargetInterface;
-    
-                                    this.connections.push(connection);
+
+                                // get properties of component
+                                if (tempTemplate.modelComponentPropertiesList !=null){
+                                    for (let propertyIndex = 0; propertyIndex < tempTemplate.modelComponentPropertiesList.length; propertyIndex ++) {
+                                        let property = tempTemplate.modelComponentPropertiesList[propertyIndex];
+                                        template.modelComponentPropertiesList.push({ name: property.key, value: property.value});
+                                    }
                                 }
-    
-                                this.drawConnections();
-    
+
+                                //get fixed properties of component
+                                if (tempTemplate.fixedProperties !=null){
+                                    for (let propertyIndex = 0; propertyIndex < tempTemplate.fixedProperties.length; propertyIndex ++) {
+                                        let property = tempTemplate.fixedProperties[propertyIndex];
+                                        console.log(property);
+                                        template.fixedProperties.push({ name: property.key, value: property.value});
+                                    }
+                                    console.log(template.fixedProperties);
+                                }
+                                
+                                // save template
+                                this.templates.push(template);
+
+                                // draw template
+                                let x = 0; let y;
+                                if (tempTemplate.modelComponentVisualProperties != null) {
+                                    x = parseFloat(tempTemplate.modelComponentVisualProperties.xPosition.toString());
+                                    y = parseFloat(tempTemplate.modelComponentVisualProperties.yPosition.toString());
+                                }
+
+                                var group = template.createUI(x, y, false);
+                                this.addGroup(group);
                             }
-                            console.log(result);
+
+                            // create connections
+                            for (let index = 0; index < this.selectedModel.modelInterfaceEndPointsList.length; index++) {
+                                let tempConnection = this.selectedModel.modelInterfaceEndPointsList[index];
+
+                                let source = this.getTemplateByName(tempConnection.inputComponentName);
+                                let target = this.getTemplateByName(tempConnection.outputComponentName);
+
+                                var connection = new Connection();
+                                connection.inputComponentName = source.identifier.toString();
+                                connection.outputComponentName = target.identifier.toString();
+                                connection.inputInterfaceName = tempConnection.inputInterfaceName.toString();
+                                connection.outputInterfaceName =  tempConnection.outputInterfaceName.toString();
+
+                                this.connections.push(connection);
+                            }
+
+                            this.drawConnections();
+
+                        }
+                        console.log(result);
                     });
             });
     }

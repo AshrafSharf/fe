@@ -146,19 +146,17 @@ export class SimulationComponent implements OnInit{
     console.log(this.modelBranchId);
     this.modelService.getModels(this.modelBranchId)
     .subscribe(result=>{
-        let model = result.data[1] as SystemModel;
+        //TODO rmove hardcoded model retrieval
+        let model = result.data[12] as SystemModel;
         console.log(result);
-       /* if ( model.modelVariableInputList !=undefined){
-            this.inputVariables = model.modelVariableInputList;
-            this.getForecastVariables();
-        }*/
        for (let template of model.modelComponentList){
-            if (template.templateName != "GenericMicroServiceTemplate"){
+            if (template.templateName == "InputTemplate"){
                 console.log(template);
                 let cptComp = new InputVariable();
                 cptComp.order = template.order;
                 cptComp.id = template.id;
-                cptComp.setName(template.title);
+                cptComp.name = template.title;
+                cptComp.setName(template.displayName);
                 for (let interf of template.modelComponentInterfaceList){
                     let cptInt = cptComp.addInterface(interf.title);
                     cptInt.id = interf.id;

@@ -3,6 +3,8 @@ import { TableViewHeader } from '../interfaces/tableview-header';
 import { TableViewRow } from '../interfaces/tableview-row';
 import { UserService } from '../../services/user.service';
 import { RoleService } from '../../services/roles.service';
+import { User } from '../../shared/interfaces/user';
+import { Utils } from '../../shared/utils';
 
 @Component({
     selector: 'table-view',
@@ -17,19 +19,18 @@ export class TableViewComponent implements OnInit {
     @Output('row-selected') rowSelected = new EventEmitter();
     @Output('row-edited') rowEdited = new EventEmitter();
     @Output('row-deleted') rowDeleted = new EventEmitter();
-
-	@Input('extra-buttons') extraButtons = []
+	@Input('extra-buttons') extraButtons = [];
+    @Input('rows') set rows(rows: TableViewRow[]) {
+        this.originalRows = rows;
+        this.filteredRows = rows;
+    }
     
     // for filtering
     originalRows:TableViewRow[];
     filteredRows:TableViewRow[];
     filterCols = [];
     userRole:String;
-
-    @Input('rows') set rows(rows: TableViewRow[]) {
-        this.originalRows = rows;
-        this.filteredRows = rows;
-    }
+    usersWithAccess = [];
 
     constructor(private roleService: RoleService,
                 private userService: UserService) { }
@@ -96,5 +97,15 @@ export class TableViewComponent implements OnInit {
 
     onEditRow(id) {
         this.rowEdited.emit(id);        
+    }
+    
+    getUserAccess(users) {
+        let hasAccess = false;
+        users.forEach(user => {
+            if (Utils.getUserId() == user.id) {
+                hasAccess = true;
+            }
+        });
+        return hasAccess;
     }
 }

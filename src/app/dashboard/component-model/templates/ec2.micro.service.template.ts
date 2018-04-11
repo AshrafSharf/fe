@@ -1,8 +1,8 @@
 import { GenericMicroServiceTemplate } from "./generic.micro.service.template";
 
 export class Ec2MicroServiceTemplate extends GenericMicroServiceTemplate{
-    public volumePerPod:number = 0;
-    public numPods:number = 0;
+   //default instance type
+    public instanceType = "t2.small";
 
     public constructor(callback) {
         super(callback);
@@ -11,7 +11,7 @@ export class Ec2MicroServiceTemplate extends GenericMicroServiceTemplate{
     }
 
     public getHeaderColor(): String {
-        return 'red';
+        return 'lightcoral';
     }
 
     public getType(): String {
@@ -22,8 +22,10 @@ export class Ec2MicroServiceTemplate extends GenericMicroServiceTemplate{
         let obj = new Ec2MicroServiceTemplate(this.callback);
         obj.identifier = this.identifier;
         obj.name = this.name;
+        obj.instanceType = this.instanceType;
         obj.interfaces = this.interfaces;
         obj.modelComponentPropertiesList = this.modelComponentPropertiesList;
+        obj.fixedProperties = this.fixedProperties;
         obj.connectors = this.connectors;
         return obj;
     }

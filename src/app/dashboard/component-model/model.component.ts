@@ -30,6 +30,9 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
 
     @ViewChild(StageComponent) stageComponent:StageComponent;
     
+    public instanceTypes:string[] = ["t2.small","t2.medium","t2.large", "m5.large",
+                                        "m5.xlarge", "m5.2xlarge"];
+
     private layer: Layer;
     private stage: Stage;
 
@@ -521,7 +524,20 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
 
     public addEc2MicroService(){
         let t = new Ec2MicroServiceTemplate(this);
+
+        //add EC2/Pod Properties
+        t.fixedProperties.push({
+                name: 'Volume per Pod',
+                value: "0"
+            },
+            {
+                name: '# Pods per Instance',
+                value: "0"
+            },
+        );
+
         this.templates.push(t);
+        console.log(t);
         this.addGroup(t.createUI());
     }
 
@@ -555,7 +571,6 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
             template.deselectTemplate();
         }
         this.selectedTemplate = template.clone();
-        console.log(this.selectedTemplate.type);
         this.layer.draw();        
     }
 
@@ -576,8 +591,11 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
             var template = this.templates[index];
             if (template.identifier == this.selectedTemplate.identifier) {
                 // found the one to update
-
                 template.name = this.selectedTemplate.name;
+                //save instanceType if applicable
+                if(this.selectedTemplate instanceof Ec2MicroServiceTemplate && template instanceof Ec2MicroServiceTemplate){
+                    template.instanceType = this.selectedTemplate.instanceType;
+                }
                 template.interfaces = this.selectedTemplate.interfaces;
                 template.modelComponentPropertiesList = this.selectedTemplate.modelComponentPropertiesList;
 

@@ -72,14 +72,13 @@
                                     <td class="table_column"><input type="text" class="property_value" [(ngModel)]="selectedTemplate.name"></td>
                                 </tr>
                                 <tr *ngIf="selectedTemplate.type == 'Ec2MicroServiceTemplate'">
-                                    <td class="table_column">Volume per Pod</td>
-                                    <td class="table_column"><input type="text" class="property_value" [(ngModel)]="selectedTemplate.volumePerPod"></td>
+                                    <td class="table_column">Instance Type</td>
+                                    <td class="table_column"> 
+                                        <select  class="app-select" [(ngModel)]="selectedTemplate.instanceType" style="width:100%">
+                                            <option *ngFor="let type of instanceTypes" [value]="type"> {{type}} </option>
+                                        </select>
+                                    </td>
                                 </tr>
-                                <tr *ngIf="selectedTemplate.type == 'Ec2MicroServiceTemplate'">
-                                    <td class="table_column"># Pods/Instance</td>
-                                    <td class="table_column"><input type="text" class="property_value" [(ngModel)]="selectedTemplate.numPods"></td>
-                                </tr>  
-
                                 <tr *ngFor="let prop of selectedTemplate.fixedProperties; let propertyIndex = index">
                                     <td class="table_column">{{prop.name}}</td>
                                     <td class="table_column">

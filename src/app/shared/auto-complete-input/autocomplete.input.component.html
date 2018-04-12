@@ -1,17 +1,17 @@
 <div>
-    <completed-word 
-        (deleted)="onDelete($event)" 
+    <completed-word
+        (deleted)="onDelete($event)"
         [is-operator]="word.type == 'operator'"
         [is-const-value]="word.type == 'const'"
-        *ngFor="let word of completedWords" 
+        *ngFor="let word of completedWords"
         [title]="word.title"></completed-word>
 
-    <input 
+    <input
         #input
         (focusout)="onFocus($event)"
         (keydown)="onKeydown($event)"
-        type="text" 
-        (keyup)="onKeyup($event)" 
+        type="text"
+        (keyup)="onKeyup($event)"
         placeholder="start here">
     <div>Please use space as delimiter</div>
     <div class="text-danger" *ngIf="isError">incorrect value</div>

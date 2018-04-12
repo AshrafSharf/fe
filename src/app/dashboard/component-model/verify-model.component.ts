@@ -486,6 +486,43 @@ so that the the drawing functions below can be removed*/
 
                             this.drawConnections();
 
+                               // create shape templates
+                               for (let shape of this.selectedModel.shapesList) {
+                                
+                                // create shape
+                                var template: Template;
+                               
+                                 if (shape.templateName == 'Circle') {
+                                    template = new CircleShape(this);
+                                } else if (shape.templateName == 'Diamond') {
+                                    template = new DiamondShape(this);
+                                } else if (shape.templateName == 'Square') {
+                                    template = new SquareShape(this);
+                                } else if (shape.templateName == 'Triangle') {
+                                     template = new TriangleShape(this);
+                                }
+                                template.name = shape.title;
+
+                                // save shape
+                                this.templates.push(template);
+
+                                // draw template
+                                let x = 0; let y;
+                                if (shape.modelComponentVisualProperties != null) {
+                                    x = parseFloat(shape.modelComponentVisualProperties.xPosition.toString());
+                                    y = parseFloat(shape.modelComponentVisualProperties.yPosition.toString());
+                                }
+
+                                var group = template.createUI(x, y, false);
+                                this.addGroup(group);
+                            }
+
+
+                            //create labels
+                            for (let label of this.selectedModel.labelList){
+                                this.addLabel(Number(label.xposition), Number(label.yposition), label.text);
+                            }
+
                         }
                         console.log(result);
                     });
@@ -496,6 +533,25 @@ so that the the drawing functions below can be removed*/
         this.addEditorEventHandler();
         this.layer.add(group);
         this.layer.draw();
+    }
+
+    public addLabel(x?,y?, text?) {
+        var st:Stage = this.stage.getStage();
+        var layer:Layer = st.getChildren()[0];
+        let label;
+        if(x !=null && y !=null && text!=null){
+            console.log("hello");
+            label = new Text({
+                x : x,
+                y : y,
+                text: text,
+                fontSize: this.fontSize,
+                draggable: true
+            });
+        }
+        layer.add(label);
+
+        layer.draw();
     }
 
     private addEditorEventHandler() {

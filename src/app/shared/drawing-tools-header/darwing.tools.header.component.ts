@@ -37,16 +37,16 @@ export class DrawingToolsHeaderComponent implements OnInit {
         this.inputTemplate.emit();
     }
 
-    public save() {
-        this.saveEvent.emit();
+    public save(event) {
+        this.saveEvent.emit(event);
     }
 
     public cancel() {
         this.cancelEvent.emit();        
     }
 
-    public verify() {
-        this.verifyEvent.emit();        
+    public verify(event) {
+        this.verifyEvent.emit(event);        
     }
 
     public drawStaticTemplate() {

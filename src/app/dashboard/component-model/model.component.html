@@ -15,9 +15,9 @@
             (shape-label)="addLabel()"
             (zoom-in)="zoomPlus()"
             (zoom-out)="zoomMinus()"
-            (save)="saveModel()"
+            (save)="saveModel($event)"
             (cancel)="cancelModel()"
-            (verify)="onVerify()"></app-drawing-tools-header>
+            (verify)="saveModel($event)"></app-drawing-tools-header>
     </div>
 
     <div class="row">

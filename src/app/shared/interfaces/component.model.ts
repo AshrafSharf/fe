@@ -42,9 +42,11 @@ export interface ComponentModelInterface {
 export interface ComponentModelComponent {
     id: String;
     title: String;
+    displayName:String;
     modelId: String;
     order: String;
     templateName: String;
+    fixedProperties;
     modelComponentInterfaceList: Array<ComponentModelInterface>;
     modelComponentPropertiesList;
     modelComponentVisualProperties: ComponentModelInterfaceVisualProperties;
@@ -60,4 +62,5 @@ export interface ComponentModel {
     shapesList:Array<ComponentModelComponent>;
     modelComponentList:Array<ComponentModelComponent>;
     modelInterfaceEndPointsList:Array<ComponentModelInterfaceEndPoint>;
+    fixedProperties: Array<ComponentModelInterfaceProperty>;
 }

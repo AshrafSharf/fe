@@ -86,7 +86,7 @@ export class MatchTableComponenet implements OnInit, OnChanges {
             console.log(formattedDate);
             for (let forecastVar of this.forecastVariables){
                 console.log(forecastVar.title);
-                if (this.inputVariables[index].displayName == forecastVar.title){
+                if (this.inputVariables[index].name == forecastVar.title){
                     match = true;
                     forecastName=forecastVar.title;
                     let calculatedValues = forecastVar.allTimesegmentsResultList[0].data;
@@ -104,7 +104,7 @@ export class MatchTableComponenet implements OnInit, OnChanges {
             this.inputVariableMatchings.push({
                 inputVarId: this.inputVariables[index].id,
                 inputVariableDisplayName: this.inputVariables[index].displayName,
-                inputVariableName: this.inputVariables[index].displayName,
+                inputVariableName: this.inputVariables[index].name,
                 hasForecastMatch: match,
                 forecastValue: forecastValue,
                 forecastVarName: forecastName,

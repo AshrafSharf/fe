@@ -3,6 +3,7 @@ import { VariableComponentBehavior, ValidationResult, KeyValuePair, TimeSegment 
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { AppVariableService } from '../../../services/variable.services';
 import { VariableDistributionComponent } from '../distribution/distribution.variable.component';
+import {Utils} from "../../../shared/utils";
 
 @Component({
     selector: 'variable-expression',
@@ -24,7 +25,7 @@ export class VariableExpressionComponent implements OnInit, VariableComponentBeh
     ngOnInit() {
         console.log(this.branchId);
         this.variableService
-            .getVariablesForSuggestions(this.branchId)
+            .getUserAccessVariables(this.branchId, Utils.getUserId())
             .subscribe(response => {
                 console.log(response);
                 this.variables = response.data as Array<KeyValuePair>;

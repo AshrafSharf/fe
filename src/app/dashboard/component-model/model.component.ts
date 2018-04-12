@@ -210,6 +210,16 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                                         template.modelComponentPropertiesList.push({ name: property.key, value: property.value});
                                     }
                                 }
+
+                                //get fixed properties of component
+                                if (tempTemplate.fixedProperties !=null){
+                                    for (let propertyIndex = 0; propertyIndex < tempTemplate.fixedProperties.length; propertyIndex ++) {
+                                        let property = tempTemplate.fixedProperties[propertyIndex];
+                                        console.log(property);
+                                        template.fixedProperties.push({ name: property.key, value: property.value});
+                                    }
+                                    console.log(template.fixedProperties);
+                                }
                                 
                                 // save template
                                 this.templates.push(template);
@@ -598,10 +608,16 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
     public addInputTemplate(){
         let t = new InputTemplate(this);
         t.interfaces = new Array<TemplateInterface>();
+
         var templateInterface = new TemplateInterface();
         templateInterface.name = 'internal_interface';
         templateInterface.latency = '0';
         t.interfaces.push(templateInterface);
+
+        t.fixedProperties.push({
+            name: 'Display Name',
+            value: ''
+        });
 
         this.templates.push(t);
         this.addGroup(t.createUI());
@@ -755,6 +771,7 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
             
             // get components
             for (let index = 0; index < this.templates.length; index++) {
+                var displayName;
                 var template = this.templates[index];
                 if((template instanceof ModelShape)){
                 
@@ -832,22 +849,37 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                             key: prop.name,
                             value: prop.value,
                         }
-
                         modelComponentPropertiesList.push(propObject);
+                    }
+
+                    var fixedPropertiesList = [];
+
+                    if (template.fixedProperties != null){
+                        for (let prop of template.fixedProperties){
+                             var propObj = {
+                                key: prop.name,
+                                value:prop.value
+                            }
+                        }
+                        fixedPropertiesList.push(propObj);
+                    }
+
+                    if (template instanceof InputTemplate){
+                        displayName = template.getTitle();
+                        console.log(displayName);
                     }
 
                     var component = {
                         title: template.name,
+                        displayName: displayName,
+                        fixedProperties: fixedPropertiesList,
                         templateName: template.type,
                         modelComponentPropertiesList: modelComponentPropertiesList,
                         modelComponentInterfaceList: interfaces,
                         modelComponentVisualProperties: visualProperties
-                        
                     }
-
                     components.push(component);
                 }
-
             }
             for (var index = 0; index < this.connections.length; index++) {
                 var connection = this.connections[index];

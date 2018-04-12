@@ -100,6 +100,7 @@ export class VariableListComponent implements OnInit {
         this.columns.push(new TableViewHeader("varType", "Variable Type", "col-md-2", "", ""));
         this.columns.push(new TableViewHeader("valueType", "Value Type", "col-md-2", "", ""));
         this.columns.push(new TableViewHeader("timesegment", "#Segments", "col-md-1", "", ""));
+        this.columns.push(new TableViewHeader("private", "Private", "col-md-1", "", ""));
     }
 
     addNewVariable() {
@@ -133,25 +134,8 @@ export class VariableListComponent implements OnInit {
 
     reloadVariables() {
         Utils.selectBranch(this.selectedProject, this.selectedBranch);
-        this.variableService
-            .getUserAccessVariables(this.selectedBranch, Utils.getUserId())
-            .subscribe(response => {
-                console.log(response);
-                this.variables = response.data as Array<Variable>;
-        
-                this.rows = new Array<TableViewRow>();
-                this.variables.forEach(variable => {
-                    var row = new TableViewRow(variable.id);
-                    row.addColumn(new TableViewColumn("name", variable.title));
-                    row.addColumn(new TableViewColumn("owner", variable.ownerName));
-                    row.addColumn(new TableViewColumn("varType", variable.variableType));
-                    row.addColumn(new TableViewColumn("valueType", variable.valueType));
-                    row.addColumn(new TableViewColumn("timesegment", variable.timeSegment.length.toString()));
-                    this.rows.push(row);
-                });
-            });
         // this.variableService
-        //     .getVariables(this.selectedBranch)
+        //     .getUserAccessVariables(this.selectedBranch, Utils.getUserId())
         //     .subscribe(response => {
         //         console.log(response);
         //         this.variables = response.data as Array<Variable>;
@@ -159,14 +143,37 @@ export class VariableListComponent implements OnInit {
         //         this.rows = new Array<TableViewRow>();
         //         this.variables.forEach(variable => {
         //             var row = new TableViewRow(variable.id);
+        //             row.setPrivate(variable.isPrivate);
         //             row.addColumn(new TableViewColumn("name", variable.title));
         //             row.addColumn(new TableViewColumn("owner", variable.ownerName));
         //             row.addColumn(new TableViewColumn("varType", variable.variableType));
         //             row.addColumn(new TableViewColumn("valueType", variable.valueType));
         //             row.addColumn(new TableViewColumn("timesegment", variable.timeSegment.length.toString()));
+        //             row.addColumn(new TableViewColumn("private", variable.isPrivate.toString()));
         //             this.rows.push(row);
         //         });
-        //     })
+        //     });
+
+        this.variableService
+            .getVariables(this.selectedBranch)
+            .subscribe(response => {
+                console.log(response);
+                this.variables = response.data as Array<Variable>;
+
+                this.rows = new Array<TableViewRow>();
+                this.variables.forEach(variable => {
+                    var row = new TableViewRow(variable.id);
+                    row.setPrivate(variable.isPrivate);
+                    row.setUsersWithAccess(variable.usersWithAccess);
+                    row.addColumn(new TableViewColumn("name", variable.title));
+                    row.addColumn(new TableViewColumn("owner", variable.ownerName));
+                    row.addColumn(new TableViewColumn("varType", variable.variableType));
+                    row.addColumn(new TableViewColumn("valueType", variable.valueType));
+                    row.addColumn(new TableViewColumn("timesegment", variable.timeSegment.length.toString()));
+                    row.addColumn(new TableViewColumn("private", variable.isPrivate.toString()));
+                    this.rows.push(row);
+                });
+            })
     }
 
     reloadProjects(forceReload = true) {
@@ -179,16 +186,12 @@ export class VariableListComponent implements OnInit {
             .subscribe(result => {
                 if (result.status == "OK") {
                     this.projects = result.data;
-                    console.log(this.projects);
-
                     this.selectedProject = '';
                     if (this.selectedProjectId != null) {
                         this.selectedProject = this.selectedProjectId;
                     } else if (this.projects.length > 0) {
                         this.selectedProject = this.projects[0].id;
                     }
-
-                    console.log("project id: " + this.selectedProject);
                     this.reloadBranches(this.selectedProject);
                 }
             });
@@ -207,8 +210,7 @@ export class VariableListComponent implements OnInit {
                 id = this.projects[0].id;
             }
         }
-        console.log("project id: " + id);
-        
+
         if (id != null) {
             this.branchService
                 .getBranches(id)

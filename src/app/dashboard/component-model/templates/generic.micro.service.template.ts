@@ -13,6 +13,10 @@ export class GenericMicroServiceTemplate extends Template {
         this.type = 'GenericMicroServiceTemplate';
     }
 
+    public getTitle():string {
+        return this.name.toString();
+    }
+
     public createUI(x = Math.random() * 300, y = Math.random() * 300, isDraggable?, fontSize = 13) {
         if (isDraggable != null){
             this.uiGroup = new Group({
@@ -29,6 +33,7 @@ export class GenericMicroServiceTemplate extends Template {
             })    
         }
        
+
         this.uiGroup.add(this.createContainer());
         this.uiGroup.add(this.createTitle());
         this.uiGroup.add(this.createInterfaceContainer(fontSize));
@@ -169,7 +174,7 @@ export class GenericMicroServiceTemplate extends Template {
             y : 10,
             width: this.containerWidth,
             align: 'center',
-            text: this.name.toString(),
+            text: this.getTitle(),
             fontSize: fontSize,
             fontStyle: 'bold',
             fill: 'black'

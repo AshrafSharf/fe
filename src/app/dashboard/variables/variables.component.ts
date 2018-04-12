@@ -216,6 +216,7 @@ export class VariablesComponent implements OnInit {
                 this.subvariableList[this.editSubvariableIndex].probability = this.subvariablePercentage;
             }
             this.subvariableList[this.editSubvariableIndex].name = this.subvariableName;
+            this.subvariableListPercentage[this.editSubvariableIndex].name = this.subvariableName;
             var decimal = parseInt(this.subvariableValue)/100;
             this.subvariableList[this.editSubvariableIndex].value = decimal.toString();
             this.subvariableListPercentage[this.editSubvariableIndex].value = this.subvariableValue;

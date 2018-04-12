@@ -18,6 +18,8 @@ import { SquareShape } from './shapes/square.shape';
 import { DiamondShape } from './shapes/diamond.shape';
 import { InputTemplate } from './templates/input.template';
 import { Modal } from 'ngx-modialog/plugins/bootstrap';
+import { Ec2MicroServiceTemplate } from './templates/ec2.micro.service.template';
+import { Ec2ComponentTemplate } from './templates/ec2.component.template';
 
 
 @Component({
@@ -29,6 +31,9 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
 
     @ViewChild(StageComponent) stageComponent:StageComponent;
     
+    public instanceTypes:string[] = ["t2.small","t2.medium","t2.large", "m5.large",
+                                        "m5.xlarge", "m5.2xlarge"];
+
     private layer: Layer;
     private stage: Stage;
 
@@ -155,6 +160,8 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                                 var template: Template;
                                 if (tempTemplate.templateName == 'GenericMicroServiceTemplate') {
                                     template = new GenericMicroServiceTemplate(this);
+                                } else if (tempTemplate.templateName == 'Ec2ComponentTemplate') {
+                                    template = new Ec2ComponentTemplate(this);
                                 } else if (tempTemplate.templateName == 'JavaMicroServiceTemplate') {
                                     template = new JavaMicroServiceTemplate(this);
                                 } else if (tempTemplate.templateName == 'StaticTemplate') {
@@ -163,6 +170,8 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                                     template = new SingleInterfaceTemplate(this);
                                 } else if (tempTemplate.templateName == 'InputTemplate') {
                                     template = new InputTemplate(this);
+                                } else if (tempTemplate.templateName == 'Ec2MicroServiceTemplate') {
+                                    template = new Ec2MicroServiceTemplate(this);
                                 } else if (tempTemplate.templateName == 'Circle') {
                                     template = new CircleShape(this);
                                 } else if (tempTemplate.templateName == 'Diamond') {
@@ -174,6 +183,10 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                                 }
                                 
                                 template.name = tempTemplate.title;
+
+                                if (template instanceof Ec2MicroServiceTemplate || template instanceof Ec2ComponentTemplate){
+                                    template.instanceType = tempTemplate.instanceType;
+                                }
 
                                 // get interfaces from template
                                 for (let interfaceIndex = 0;interfaceIndex < tempTemplate.modelComponentInterfaceList.length; interfaceIndex++) {
@@ -518,6 +531,38 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
         this.addGroup(t.createUI());
     }
 
+    public addEc2Component(){
+        let t = new Ec2ComponentTemplate(this);
+         //add EC2 property
+         t.fixedProperties.push({
+            name: 'Volume per instance',
+            value: "0"
+        });
+        this.templates.push(t);
+        console.log(t);
+        this.addGroup(t.createUI());
+    }
+
+    public addEc2MicroService(){
+        let t = new Ec2MicroServiceTemplate(this);
+
+        //add EC2/Pod Properties
+        t.fixedProperties.push({
+                name: 'Volume per Pod (tps)',
+                value: "0"
+            }
+        );
+
+        t.fixedProperties.push( {
+            name: '# Pods per Instance',
+            value: "0"
+        });
+
+        this.templates.push(t);
+        console.log(t);
+        this.addGroup(t.createUI());
+    }
+
     public addInputTemplate(){
         let t = new InputTemplate(this);
         t.interfaces = new Array<TemplateInterface>();
@@ -568,8 +613,13 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
             var template = this.templates[index];
             if (template.identifier == this.selectedTemplate.identifier) {
                 // found the one to update
-
                 template.name = this.selectedTemplate.name;
+                //save instanceType if applicable
+                if(this.selectedTemplate instanceof Ec2MicroServiceTemplate && template instanceof Ec2MicroServiceTemplate){
+                    template.instanceType = this.selectedTemplate.instanceType;
+                }else if (this.selectedTemplate instanceof Ec2ComponentTemplate && template instanceof Ec2ComponentTemplate){
+                        template.instanceType = this.selectedTemplate.instanceType;
+                }
                 template.interfaces = this.selectedTemplate.interfaces;
                 template.modelComponentPropertiesList = this.selectedTemplate.modelComponentPropertiesList;
 
@@ -670,6 +720,7 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
             // get components
             for (let index = 0; index < this.templates.length; index++) {
                 var displayName;
+                var instanceType;
                 var template = this.templates[index];
             
                 var interfaces = [];
@@ -748,18 +799,23 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                             key: prop.name,
                             value:prop.value
                         }
+                        fixedPropertiesList.push(propObj);
                     }
-                    fixedPropertiesList.push(propObj);
                 }
 
                 if (template instanceof InputTemplate){
                     displayName = template.getTitle();
-                    console.log(displayName);
+                    
+                }
+
+                if (template instanceof Ec2MicroServiceTemplate || template instanceof Ec2ComponentTemplate){
+                    instanceType = template.instanceType;
                 }
 
                 var component = {
                     title: template.name,
                     displayName: displayName,
+                    instanceType: instanceType,
                     fixedProperties: fixedPropertiesList,
                     templateName: template.type,
                     modelComponentPropertiesList: modelComponentPropertiesList,

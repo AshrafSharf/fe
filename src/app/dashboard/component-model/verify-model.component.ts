@@ -36,6 +36,7 @@ import { CptInputVariable } from '../../shared/modelling/cpt-input-variable';
 import { InputVariable } from '../../shared/modelling/templates/input-variable';
 import { InputTemplate } from './templates/input.template';
 import { Ec2MicroServiceTemplate } from './templates/ec2.micro.service.template';
+import { Ec2ComponentTemplate } from './templates/ec2.component.template';
 
 @Component({
     selector: 'verify-model',
@@ -373,6 +374,8 @@ so that the the drawing functions below can be removed*/
                                 var template: Template;
                                 if (tempTemplate.templateName == 'GenericMicroServiceTemplate') {
                                     template = new GenericMicroServiceTemplate(this);
+                                } else if (tempTemplate.templateName == 'Ec2ComponentTemplate') {
+                                    template = new Ec2ComponentTemplate(this);
                                 } else if (tempTemplate.templateName == 'JavaMicroServiceTemplate') {
                                     template = new JavaMicroServiceTemplate(this);
                                 } else if (tempTemplate.templateName == 'StaticTemplate') {
@@ -395,7 +398,7 @@ so that the the drawing functions below can be removed*/
                                 
                                 template.name = tempTemplate.title;
 
-                                if (template instanceof Ec2MicroServiceTemplate){
+                                if (template instanceof Ec2MicroServiceTemplate || template instanceof Ec2ComponentTemplate){
                                     template.instanceType = tempTemplate.instanceType;
                                 }
 

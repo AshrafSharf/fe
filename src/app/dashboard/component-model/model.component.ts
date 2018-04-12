@@ -548,7 +548,7 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
 
         //add EC2/Pod Properties
         t.fixedProperties.push({
-                name: 'Volume per Pod',
+                name: 'Volume per Pod (tps)',
                 value: "0"
             }
         );

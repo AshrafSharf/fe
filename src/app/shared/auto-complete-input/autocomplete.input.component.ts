@@ -10,7 +10,7 @@ import { KeyValuePair, VariableComponentBehavior } from '../interfaces/variables
 })
 
 export class AutocompleteInputComponent implements OnInit, VariableComponentBehavior {
-    
+
     @ViewChild('input') input:any;
 
     mathExpressions = [
@@ -35,7 +35,7 @@ export class AutocompleteInputComponent implements OnInit, VariableComponentBeha
     ngOnInit() { }
 
     onDelete(title) {
-        this.completedWords.splice(this.completedWords.indexOf(title), 1);
+        this.completedWords.splice(this.completedWords.findIndex(x => x.title==title), 1);
     }
 
     onFocus(event) {

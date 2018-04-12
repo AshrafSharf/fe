@@ -35,6 +35,8 @@ import { TriangleShape } from './shapes/triangle.shape';
 import { CptInputVariable } from '../../shared/modelling/cpt-input-variable';
 import { InputVariable } from '../../shared/modelling/templates/input-variable';
 import { InputTemplate } from './templates/input.template';
+import { Ec2MicroServiceTemplate } from './templates/ec2.micro.service.template';
+import { Ec2ComponentTemplate } from './templates/ec2.component.template';
 
 @Component({
     selector: 'verify-model',
@@ -144,6 +146,10 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
         for (let component of this.systemModel.modelComponentList){
             let cptComp;
             if (component.templateName == "GenericMicroServiceTemplate"){
+                cptComp = new CptMicroserviceComponent();
+                cptComp.setName(component.title);
+            }
+            if (component.templateName == "Ec2MicroServiceTemplate"){
                 cptComp = new CptMicroserviceComponent();
                 cptComp.setName(component.title);
             }
@@ -368,12 +374,16 @@ so that the the drawing functions below can be removed*/
                                 var template: Template;
                                 if (tempTemplate.templateName == 'GenericMicroServiceTemplate') {
                                     template = new GenericMicroServiceTemplate(this);
+                                } else if (tempTemplate.templateName == 'Ec2ComponentTemplate') {
+                                    template = new Ec2ComponentTemplate(this);
                                 } else if (tempTemplate.templateName == 'JavaMicroServiceTemplate') {
                                     template = new JavaMicroServiceTemplate(this);
                                 } else if (tempTemplate.templateName == 'StaticTemplate') {
                                     template = new StaticTemplate(this);
                                 } else if (tempTemplate.templateName == 'SingleInterfaceTemplate') {
                                     template = new SingleInterfaceTemplate(this);
+                                } else if (tempTemplate.templateName == 'Ec2MicroServiceTemplate') {
+                                    template = new Ec2MicroServiceTemplate(this);
                                 } else if (tempTemplate.templateName == 'InputTemplate') {
                                     template = new InputTemplate(this);
                                 } else if (tempTemplate.templateName == 'Circle') {
@@ -387,6 +397,11 @@ so that the the drawing functions below can be removed*/
                                 }
                                 
                                 template.name = tempTemplate.title;
+
+                                if (template instanceof Ec2MicroServiceTemplate || template instanceof Ec2ComponentTemplate){
+                                    template.instanceType = tempTemplate.instanceType;
+                                }
+
 
                                 // get interfaces from template
                                 for (let interfaceIndex = 0;interfaceIndex < tempTemplate.modelComponentInterfaceList.length; interfaceIndex++) {

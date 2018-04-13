@@ -1,12 +1,8 @@
 import { Component, OnInit, AfterViewInit, ViewChild, Output } from '@angular/core';
-import { CptEnvironment } from '../../shared/modelling/cpt-environment';
-import { CptMicroserviceComponent, CptMicroserviceInterface } from '../../shared/modelling/templates/cpt-microservice';
-import { CptOutput } from '../../shared/modelling/cpt-output';
 import { Branch } from '../../shared/interfaces/branch';
 import { BranchService } from '../../services/branch.service';
 import { MatchTableComponenet } from './match-table.component';
 import { Modal } from 'ngx-modialog/plugins/bootstrap';
-import { CptLoad } from '../../shared/modelling/cpt-load';
 import { ActivatedRoute, Router } from "@angular/router";
 import {Location} from "@angular/common";
 
@@ -19,9 +15,7 @@ import { Moment } from 'moment';
 import { AppVariableService } from '../../services/variable.services';
 import { GenericMicroServiceTemplate } from '../component-model/templates/generic.micro.service.template';
 import { TemplateInterface, Template, Connection, ConnectorType } from '../component-model/templates/templates';
-import { CptComponent } from '../../shared/modelling/cpt-component';
 import { SystemModel } from '../../shared/interfaces/system-model';
-import { CptInterface, CptInterfaceOutput } from '../../shared/modelling/cpt-interface';
 import { Config } from '../../shared/config';
 import { ComponentModel } from '../../shared/interfaces/component.model';
 import { JavaMicroServiceTemplate } from './templates/java.micro.service.template';
@@ -32,8 +26,6 @@ import { CircleShape } from './shapes/circle.shape';
 import { DiamondShape } from './shapes/diamond.shape';
 import { SquareShape } from './shapes/square.shape';
 import { TriangleShape } from './shapes/triangle.shape';
-import { CptInputVariable } from '../../shared/modelling/cpt-input-variable';
-import { InputVariable } from '../../shared/modelling/templates/input-variable';
 import { InputTemplate } from './templates/input.template';
 import { Ec2MicroServiceTemplate } from './templates/ec2.micro.service.template';
 import { Ec2ComponentTemplate } from './templates/ec2.component.template';
@@ -55,7 +47,6 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
     
     branches:Branch[] = Array<Branch>();
     models:SystemModel[] = Array<SystemModel>();
-    environment:CptEnvironment =  CptEnvironment.get();
     simOutput:string;
     forecastBranchId:String=null;
     
@@ -66,7 +57,6 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
     selectedModelId:string = null;
     systemModel:SystemModel = null;
     selectedModel = null;
-    selectedComponent:CptComponent = null;
     modelTitle:string = "";
 
     // list of templatea
@@ -230,41 +220,6 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
         }
     }
 
-    displayOutput(){
-        let outputString = "";
-        let comps = this.environment.envComponents;
-        for (let comp of comps){
-            if (!(comp instanceof InputVariable)){
-                outputString+= comp.displayName+": \n";
-                let interfaces = comp.getInterfaces();
-                for (let interf of interfaces){
-                    outputString+=interf.displayName + ": \n" ;
-                    for (let key in interf.load.loadValues){
-                        outputString += key+ ":" + interf.load.loadValues[key] + " \n";
-                    }
-                    if (comp instanceof CptMicroserviceComponent){
-                        outputString += "latency: " + interf.getStats().val["lat"] + " \n";       
-                    }   
-                }
-            }
-            
-        }
-        return outputString;
-    }
-
-    public showComponentOutput(componentId:string){
-        let comp = this.environment.getComponent(componentId);
-        console.log(comp.getOutput());
-       // this.selectedTemplateOutput = comp.getOutput();
-        for(let interf of comp.getInterfaces()){
-            let output = interf.getOutput();
-            for (let property in output.getVal()){
-                console.log(property, output.getVal()[property]);
-            }
-        }
-        console.log(comp.toJSON());
-
-    }
     public onEdit(){
         this.location.back();
     }
@@ -494,7 +449,6 @@ so that the the drawing functions below can be removed*/
             
         }
         this.selectedTemplate = template.clone();
-        this.selectedComponent = this.environment.getComponent(template.identifier);
        // this.showComponentOutput(template.identifier);
         this.layer.draw(); 
     }

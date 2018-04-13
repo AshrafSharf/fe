@@ -15,9 +15,10 @@ import { SystemModel } from '../../shared/interfaces/system-model';
 import { ModelBranch } from '../../shared/interfaces/model-branch';
 import { SimulationService } from '../../services/simulation.service';
 import { InputVariableMatching } from '../../shared/interfaces/input-variable-matching';
-import { InputVariable } from "../../shared/modelling/templates/input-variable";
 import { Simulation } from '../../shared/interfaces/simulation';
 import * as moment from 'moment';
+import { ComponentModel } from '../../shared/interfaces/component.model';
+import { ModelComponent } from '../../shared/interfaces/model-component';
 
 @Component({
     selector: 'simulation',
@@ -48,7 +49,7 @@ export class SimulationComponent implements OnInit{
     forecastBranches: Branch[] = Array<Branch>();
     modelBranches:ModelBranch[] = Array<ModelBranch>();
 
-    inputVariables:InputVariable[] = [];
+    inputVariables:ModelComponent[] = [];
     variableMatchings:InputVariableMatching[] = [];
 
      //dd-MM-yyyy hh:mm
@@ -151,19 +152,8 @@ export class SimulationComponent implements OnInit{
         console.log(result);
        for (let template of model.modelComponentList){
             if (template.templateName == "InputTemplate"){
-                console.log(template);
-                let cptComp = new InputVariable();
-                cptComp.order = template.order;
-                cptComp.id = template.id;
-                cptComp.name = template.title;
-                cptComp.setName(template.displayName);
-                for (let interf of template.modelComponentInterfaceList){
-                    let cptInt = cptComp.addInterface(interf.title);
-                    cptInt.id = interf.id;
-                    cptInt.componentId = template.id;
-                }
-                    this.inputVariables.push(cptComp);
-
+                console.log(template);        
+                this.inputVariables.push(template);
             }
         }
         this.getForecastVariables();

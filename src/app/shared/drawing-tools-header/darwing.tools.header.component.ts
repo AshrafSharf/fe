@@ -24,6 +24,8 @@ export class DrawingToolsHeaderComponent implements OnInit {
     @Output('cancel') cancelEvent = new EventEmitter();
     @Output('verify') verifyEvent = new EventEmitter();
     @Output('input-value') inputTemplate = new EventEmitter();
+    @Output('ec2-micro-service-template') ec2MicroServiceTemplate = new EventEmitter();
+    @Output('ec2-component-template') ec2ComponentTemplate = new EventEmitter();
 
     @Input('showModifyButtons') showModifyButtons = true;
 
@@ -35,16 +37,16 @@ export class DrawingToolsHeaderComponent implements OnInit {
         this.inputTemplate.emit();
     }
 
-    public save() {
-        this.saveEvent.emit();
+    public save(event) {
+        this.saveEvent.emit(event);
     }
 
     public cancel() {
         this.cancelEvent.emit();        
     }
 
-    public verify() {
-        this.verifyEvent.emit();        
+    public verify(event) {
+        this.verifyEvent.emit(event);        
     }
 
     public drawStaticTemplate() {
@@ -62,7 +64,14 @@ export class DrawingToolsHeaderComponent implements OnInit {
     public drawJavaMicroService() {
         this.javaMicroServiceTemplate.emit();
     }
+    
+    public drawEc2MicroServiceTemplate(){
+        this.ec2MicroServiceTemplate.emit();
+    }
 
+    public drawEc2ComponentTemplate(){
+        this.ec2ComponentTemplate.emit();
+    }
     public drawCircle() {
         this.shapeCircle.emit();
     }

@@ -35,6 +35,8 @@ import { TriangleShape } from './shapes/triangle.shape';
 import { CptInputVariable } from '../../shared/modelling/cpt-input-variable';
 import { InputVariable } from '../../shared/modelling/templates/input-variable';
 import { InputTemplate } from './templates/input.template';
+import { Ec2MicroServiceTemplate } from './templates/ec2.micro.service.template';
+import { Ec2ComponentTemplate } from './templates/ec2.component.template';
 
 @Component({
     selector: 'verify-model',
@@ -144,6 +146,10 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
         for (let component of this.systemModel.modelComponentList){
             let cptComp;
             if (component.templateName == "GenericMicroServiceTemplate"){
+                cptComp = new CptMicroserviceComponent();
+                cptComp.setName(component.title);
+            }
+            if (component.templateName == "Ec2MicroServiceTemplate"){
                 cptComp = new CptMicroserviceComponent();
                 cptComp.setName(component.title);
             }
@@ -368,12 +374,16 @@ so that the the drawing functions below can be removed*/
                                 var template: Template;
                                 if (tempTemplate.templateName == 'GenericMicroServiceTemplate') {
                                     template = new GenericMicroServiceTemplate(this);
+                                } else if (tempTemplate.templateName == 'Ec2ComponentTemplate') {
+                                    template = new Ec2ComponentTemplate(this);
                                 } else if (tempTemplate.templateName == 'JavaMicroServiceTemplate') {
                                     template = new JavaMicroServiceTemplate(this);
                                 } else if (tempTemplate.templateName == 'StaticTemplate') {
                                     template = new StaticTemplate(this);
                                 } else if (tempTemplate.templateName == 'SingleInterfaceTemplate') {
                                     template = new SingleInterfaceTemplate(this);
+                                } else if (tempTemplate.templateName == 'Ec2MicroServiceTemplate') {
+                                    template = new Ec2MicroServiceTemplate(this);
                                 } else if (tempTemplate.templateName == 'InputTemplate') {
                                     template = new InputTemplate(this);
                                 } else if (tempTemplate.templateName == 'Circle') {
@@ -387,6 +397,11 @@ so that the the drawing functions below can be removed*/
                                 }
                                 
                                 template.name = tempTemplate.title;
+
+                                if (template instanceof Ec2MicroServiceTemplate || template instanceof Ec2ComponentTemplate){
+                                    template.instanceType = tempTemplate.instanceType;
+                                }
+
 
                                 // get interfaces from template
                                 for (let interfaceIndex = 0;interfaceIndex < tempTemplate.modelComponentInterfaceList.length; interfaceIndex++) {
@@ -471,6 +486,43 @@ so that the the drawing functions below can be removed*/
 
                             this.drawConnections();
 
+                               // create shape templates
+                               for (let shape of this.selectedModel.shapesList) {
+                                
+                                // create shape
+                                var template: Template;
+                               
+                                 if (shape.templateName == 'Circle') {
+                                    template = new CircleShape(this);
+                                } else if (shape.templateName == 'Diamond') {
+                                    template = new DiamondShape(this);
+                                } else if (shape.templateName == 'Square') {
+                                    template = new SquareShape(this);
+                                } else if (shape.templateName == 'Triangle') {
+                                     template = new TriangleShape(this);
+                                }
+                                template.name = shape.title;
+
+                                // save shape
+                                this.templates.push(template);
+
+                                // draw template
+                                let x = 0; let y;
+                                if (shape.modelComponentVisualProperties != null) {
+                                    x = parseFloat(shape.modelComponentVisualProperties.xPosition.toString());
+                                    y = parseFloat(shape.modelComponentVisualProperties.yPosition.toString());
+                                }
+
+                                var group = template.createUI(x, y, false);
+                                this.addGroup(group);
+                            }
+
+
+                            //create labels
+                            for (let label of this.selectedModel.labelList){
+                                this.addLabel(Number(label.xposition), Number(label.yposition), label.text);
+                            }
+
                         }
                         console.log(result);
                     });
@@ -481,6 +533,25 @@ so that the the drawing functions below can be removed*/
         this.addEditorEventHandler();
         this.layer.add(group);
         this.layer.draw();
+    }
+
+    public addLabel(x?,y?, text?) {
+        var st:Stage = this.stage.getStage();
+        var layer:Layer = st.getChildren()[0];
+        let label;
+        if(x !=null && y !=null && text!=null){
+            console.log("hello");
+            label = new Text({
+                x : x,
+                y : y,
+                text: text,
+                fontSize: this.fontSize,
+                draggable: true
+            });
+        }
+        layer.add(label);
+
+        layer.draw();
     }
 
     private addEditorEventHandler() {

@@ -18,6 +18,10 @@ import { SquareShape } from './shapes/square.shape';
 import { DiamondShape } from './shapes/diamond.shape';
 import { InputTemplate } from './templates/input.template';
 import { Modal } from 'ngx-modialog/plugins/bootstrap';
+import { ModelShape } from './shapes/model.shape';
+import { Ec2MicroServiceTemplate } from './templates/ec2.micro.service.template';
+import { Ec2ComponentTemplate } from './templates/ec2.component.template';
+
 
 
 @Component({
@@ -29,11 +33,17 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
 
     @ViewChild(StageComponent) stageComponent:StageComponent;
     
+    public instanceTypes:string[] = ["t2.small","t2.medium","t2.large", "m5.large",
+                                        "m5.xlarge", "m5.2xlarge"];
+
     private layer: Layer;
     private stage: Stage;
 
     // list of templatea
     public templates: Array<Template> = new Array<Template>();
+
+    //list of labels
+    public labels: Array<Text> = new Array<Text>();
 
     // selected template
     public selectedTemplate:Template = null;
@@ -147,7 +157,7 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
 
                             let connectionList = this.selectedModel.modelInterfaceEndPointsList;
                             
-                            // create templates
+                            // create component templates
                             for (let index = 0; index < this.selectedModel.modelComponentList.length; index++) {
 
                                 // create template
@@ -155,6 +165,8 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                                 var template: Template;
                                 if (tempTemplate.templateName == 'GenericMicroServiceTemplate') {
                                     template = new GenericMicroServiceTemplate(this);
+                                } else if (tempTemplate.templateName == 'Ec2ComponentTemplate') {
+                                    template = new Ec2ComponentTemplate(this);
                                 } else if (tempTemplate.templateName == 'JavaMicroServiceTemplate') {
                                     template = new JavaMicroServiceTemplate(this);
                                 } else if (tempTemplate.templateName == 'StaticTemplate') {
@@ -163,17 +175,15 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                                     template = new SingleInterfaceTemplate(this);
                                 } else if (tempTemplate.templateName == 'InputTemplate') {
                                     template = new InputTemplate(this);
-                                } else if (tempTemplate.templateName == 'Circle') {
-                                    template = new CircleShape(this);
-                                } else if (tempTemplate.templateName == 'Diamond') {
-                                    template = new DiamondShape(this);
-                                } else if (tempTemplate.templateName == 'Square') {
-                                    template = new SquareShape(this);
-                                } else if (tempTemplate.templateName == 'Triangle') {
-                                    template = new TriangleShape(this);
+                                } else if (tempTemplate.templateName == 'Ec2MicroServiceTemplate') {
+                                    template = new Ec2MicroServiceTemplate(this);
                                 }
-                                
+
                                 template.name = tempTemplate.title;
+
+                                if (template instanceof Ec2MicroServiceTemplate || template instanceof Ec2ComponentTemplate){
+                                    template.instanceType = tempTemplate.instanceType;
+                                }
 
                                 // get interfaces from template
                                 for (let interfaceIndex = 0;interfaceIndex < tempTemplate.modelComponentInterfaceList.length; interfaceIndex++) {
@@ -257,6 +267,43 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                             }
 
                             this.drawConnections();
+
+                             // create shape templates
+                             for (let shape of this.selectedModel.shapesList) {
+                                
+                                // create shape
+                                var template: Template;
+                               
+                                 if (shape.templateName == 'Circle') {
+                                    template = new CircleShape(this);
+                                } else if (shape.templateName == 'Diamond') {
+                                    template = new DiamondShape(this);
+                                } else if (shape.templateName == 'Square') {
+                                    template = new SquareShape(this);
+                                } else if (shape.templateName == 'Triangle') {
+                                     template = new TriangleShape(this);
+                                }
+                                template.name = shape.title;
+
+                                // save shape
+                                this.templates.push(template);
+
+                                // draw template
+                                let x = 0; let y;
+                                if (shape.modelComponentVisualProperties != null) {
+                                    x = parseFloat(shape.modelComponentVisualProperties.xPosition.toString());
+                                    y = parseFloat(shape.modelComponentVisualProperties.yPosition.toString());
+                                }
+
+                                var group = template.createUI(x, y);
+                                this.addGroup(group);
+                            }
+
+
+                            //create labels
+                            for (let label of this.selectedModel.labelList){
+                                this.addLabel(Number(label.xposition), Number(label.yposition), label.text);
+                            }
 
                         }
                         console.log(result);
@@ -471,22 +518,77 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
         this.addGroup(t.createUI());
     }
 
-    public addLabel() {
+    public addLabel(x?,y?, text?) {
         var st:Stage = this.stage.getStage();
         var layer:Layer = st.getChildren()[0];
-
-        let label = new Text({
-            x : Math.random() * 800,
-            y : Math.random() * 800,
-            text:'this is a label',
-            fontSize: this.fontSize,
-            draggable: true
-        });
+        let label;
+        if(x !=null && y !=null && text!=null){
+            console.log("hello");
+            label = new Text({
+                x : x,
+                y : y,
+                text: text,
+                fontSize: this.fontSize,
+                draggable: true
+            });
+        }
+        else{
+            label = new Text({
+                x : Math.random() * 800,
+                y : Math.random() * 800,
+                text:'this is a label',
+                fontSize: this.fontSize,
+                draggable: true
+            });
+        }
 
         layer.add(label);
 
         layer.draw();
+
+        label.on('dblclick', () => {
+           console.log(label);
+            
+            // first we need to find its positon
+            var textPosition = label.getAbsolutePosition();
+            var stageBox = st.container().getBoundingClientRect();
+
+            var areaPosition = {
+                x: textPosition.x + stageBox.left,
+                y: textPosition.y + stageBox.top
+            };
+
+            // create textarea and style it
+            var textarea = document.createElement('textarea');
+            document.body.appendChild(textarea);
+
+            textarea.value = label.text();
+            textarea.style.position = 'absolute';
+            textarea.style.top = areaPosition.y + 'px';
+            textarea.style.left = areaPosition.x + 'px';
+            textarea.style.width = String(label.width());
+
+            textarea.focus();
+
+
+            textarea.addEventListener('keydown', function (e) {
+                // hide on enter
+                if (e.keyCode === 13) {
+                    label.text(textarea.value);
+                    layer.draw();
+                    document.body.removeChild(textarea);
+                }
+            });
+        });
+
+        this.labels.push(label);
     }
+
+    public onDoubleClick(event) {
+        
+        event.cancelBubble = true;
+    }
+
 
     public addDiamond() {
         let t = new DiamondShape(this);
@@ -515,6 +617,38 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
     public addJavaMicroService() {
         let t = new JavaMicroServiceTemplate(this);
         this.templates.push(t);
+        this.addGroup(t.createUI());
+    }
+
+    public addEc2Component(){
+        let t = new Ec2ComponentTemplate(this);
+         //add EC2 property
+         t.fixedProperties.push({
+            name: 'Volume per instance',
+            value: "0"
+        });
+        this.templates.push(t);
+        console.log(t);
+        this.addGroup(t.createUI());
+    }
+
+    public addEc2MicroService(){
+        let t = new Ec2MicroServiceTemplate(this);
+
+        //add EC2/Pod Properties
+        t.fixedProperties.push({
+                name: 'Volume per Pod (tps)',
+                value: "0"
+            }
+        );
+
+        t.fixedProperties.push( {
+            name: '# Pods per Instance',
+            value: "0"
+        });
+
+        this.templates.push(t);
+        console.log(t);
         this.addGroup(t.createUI());
     }
 
@@ -568,8 +702,13 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
             var template = this.templates[index];
             if (template.identifier == this.selectedTemplate.identifier) {
                 // found the one to update
-
                 template.name = this.selectedTemplate.name;
+                //save instanceType if applicable
+                if(this.selectedTemplate instanceof Ec2MicroServiceTemplate && template instanceof Ec2MicroServiceTemplate){
+                    template.instanceType = this.selectedTemplate.instanceType;
+                }else if (this.selectedTemplate instanceof Ec2ComponentTemplate && template instanceof Ec2ComponentTemplate){
+                        template.instanceType = this.selectedTemplate.instanceType;
+                }
                 template.interfaces = this.selectedTemplate.interfaces;
                 template.modelComponentPropertiesList = this.selectedTemplate.modelComponentPropertiesList;
 
@@ -656,7 +795,7 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
         intf.downstreamInterfaces.splice(propertyIndex, 1);
     }
 
-    public saveModel() {
+    public saveModel(event) {
         if (this.modelTitle.length == 0) {
             this.modal.alert()
                 .title('Warning')
@@ -666,111 +805,141 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
 
             var components = [];
             var connections = [];
+            var shapes = [];
+            var labels = [];
 
+            for (let label of this.labels){
+                 let storedLabel = {
+                    text: label.text(),
+                    color: "black",
+                    height: '' + label.getHeight(),
+                    width: '' + label.getWidth(),
+                    xposition: '' + label.position().x,
+                    yposition: '' + label.position().y
+                }
+                labels.push(storedLabel);
+            }
+            
+            
             // get components
             for (let index = 0; index < this.templates.length; index++) {
                 var displayName;
+                var instanceType;
                 var template = this.templates[index];
-            
-                var interfaces = [];
-                // get all interfaces
-                for (let intfIndex = 0; intfIndex < template.interfaces.length; intfIndex++) {
-                    var intf = template.interfaces[intfIndex];
-                    
-                    var properties = [];
-                    // get all component properties
-                    for (let propIndex = 0; propIndex < intf.properties.length; propIndex++) {
-                        var propObject = {
-                            key: intf.properties[propIndex].name,
-                            value: intf.properties[propIndex].value,
-                        }
-                        properties.push(propObject);
-                    }
-
-/*
-                //var dinterfaces = [];
-                // get all component downstream interfaces
-                for (let intIndex = 0; intIndex < intf.downstreamInterfaces.length; intIndex++) {
-                    var intObject = {
-                        inputComponentName: template.name,
-                        inputInterfaceName:  intf.name,
-                        outputComponentName: intf.downstreamInterfaces[intIndex].component,
-                        outputInterfaceName: intf.downstreamInterfaces[intIndex].interface*/
-
-                    //var dinterfaces = [];
-                    // get all component downstream interfaces
-                    for (let intIndex = 0; intIndex < intf.downstreamInterfaces.length; intIndex++) {
-                        var intObject = {
-                            inputModelInterfaceName:  template.name +"_"+ intf.name,
-                            outputModelInterfaceName: intf.downstreamInterfaces[intIndex].component
-                        }
-                        //dinterfaces.push(intObject);
-                        //connections.push(intObject);
-                    }
+                if((template instanceof ModelShape)){
                 
-
-                    var intfObj = {
-                        title: intf.name,
-                        latency: intf.latency,
-                        modelInterfacePropertiesList: properties
-                        //modelInterfaceEndPointsList: dinterfaces
+                    var visualProperties = {
+                        color: template.getHeaderColor(),
+                        height: '' + template.getHeight(),
+                        id: '',
+                        shape: '',
+                        width: '' + template.getWidth(),
+                        xPosition: '' + template.uiGroup.getAttrs().x,
+                        yPosition: '' + template.uiGroup.getAttrs().y
+                    }
+                    var shape = {
+                        title: template.name,
+                        templateName: template.type,
+                        modelComponentPropertiesList: [],
+                        modelComponentInterfaceList: [],
+                        modelComponentVisualProperties: visualProperties
                     }
 
-                    interfaces.push(intfObj);
+                    shapes.push(shape);
                 }
 
-                var visualProperties = {
-                    color: template.getHeaderColor(),
-                    height: '' + template.getHeight(),
-                    id: '',
-                    shape: '',
-                    width: '' + template.getWidth(),
-                    xPosition: '' + template.uiGroup.getAttrs().x,
-                    yPosition: '' + template.uiGroup.getAttrs().y
-                }
-
-                var modelComponentPropertiesList = [];
-                for (let propIndex = 0; propIndex < template.modelComponentPropertiesList.length; propIndex ++) {
-                    let prop = template.modelComponentPropertiesList[propIndex];
-                    var propObject = {
-                        key: prop.name,
-                        value: prop.value,
-                    }
-
-                    modelComponentPropertiesList.push(propObject);
-                }
-
-                var fixedPropertiesList = [];
-
-                if (template.fixedProperties != null){
-                    for (let prop of template.fixedProperties){
-                         var propObj = {
-                            key: prop.name,
-                            value:prop.value
+                if(!(template instanceof ModelShape)){
+                    var interfaces = [];
+                    // get all interfaces
+                    for (let intfIndex = 0; intfIndex < template.interfaces.length; intfIndex++) {
+                        var intf = template.interfaces[intfIndex];
+                        
+                        var properties = [];
+                        // get all component properties
+                        for (let propIndex = 0; propIndex < intf.properties.length; propIndex++) {
+                            var propObject = {
+                                key: intf.properties[propIndex].name,
+                                value: intf.properties[propIndex].value,
+                            }
+                            properties.push(propObject);
                         }
-                    }
-                    fixedPropertiesList.push(propObj);
-                }
 
-                if (template instanceof InputTemplate){
-                    displayName = template.getTitle();
-                    console.log(displayName);
-                }
-
-                var component = {
-                    title: template.name,
-                    displayName: displayName,
-                    fixedProperties: fixedPropertiesList,
-                    templateName: template.type,
-                    modelComponentPropertiesList: modelComponentPropertiesList,
-                    modelComponentInterfaceList: interfaces,
-                    modelComponentVisualProperties: visualProperties
+                        // get all component downstream interfaces
+                        for (let intIndex = 0; intIndex < intf.downstreamInterfaces.length; intIndex++) {
+                            var intObject = {
+                                inputModelInterfaceName:  template.name +"_"+ intf.name,
+                                outputModelInterfaceName: intf.downstreamInterfaces[intIndex].component
+                            }
+                            //dinterfaces.push(intObject);
+                            //connections.push(intObject);
+                        }
                     
+
+                        var intfObj = {
+                            title: intf.name,
+                            latency: intf.latency,
+                            modelInterfacePropertiesList: properties
+                            //modelInterfaceEndPointsList: dinterfaces
+                        }
+
+                        interfaces.push(intfObj);
+                    }
+
+                    var visualProperties = {
+                        color: template.getHeaderColor(),
+                        height: '' + template.getHeight(),
+                        id: '',
+                        shape: '',
+                        width: '' + template.getWidth(),
+                        xPosition: '' + template.uiGroup.getAttrs().x,
+                        yPosition: '' + template.uiGroup.getAttrs().y
+                    }
+
+                    var modelComponentPropertiesList = [];
+                    for (let propIndex = 0; propIndex < template.modelComponentPropertiesList.length; propIndex ++) {
+                        let prop = template.modelComponentPropertiesList[propIndex];
+                        var propObject = {
+                            key: prop.name,
+                            value: prop.value,
+                        }
+                        modelComponentPropertiesList.push(propObject);
+                    }
+
+                    var fixedPropertiesList = [];
+
+                    if (template.fixedProperties != null){
+                        for (let prop of template.fixedProperties){
+                             var propObj = {
+                                key: prop.name,
+                                value:prop.value
+                            }
+                        }
+                        fixedPropertiesList.push(propObj);
+                    }
+
+                    if (template instanceof InputTemplate){
+                        displayName = template.getTitle();
+                    
+                    }
+
+                    if (template instanceof Ec2MicroServiceTemplate || template instanceof Ec2ComponentTemplate){
+                        instanceType = template.instanceType;
+                    }
+
+                    var component = {
+                        title: template.name,
+                        displayName: displayName,
+                        instanceType: instanceType,
+                        fixedProperties: fixedPropertiesList,
+                        templateName: template.type,
+                        modelComponentPropertiesList: modelComponentPropertiesList,
+                        modelComponentInterfaceList: interfaces,
+                        modelComponentVisualProperties: visualProperties
+                        
+                    }
+                    components.push(component);
                 }
-
-                components.push(component);
             }
-
             for (var index = 0; index < this.connections.length; index++) {
                 var connection = this.connections[index];
                 let source = this.getTemplateById(connection.inputComponentName);
@@ -785,12 +954,14 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
 
                 connections.push(interfaceObj);
             }
-
+            console.log(shapes);
+            console.log(this.labels);
             var body = {            
                 modelBranchId: "test-branch",
                 modelComponentList: components,
                 modelInterfaceEndPointsList:connections,
-
+                shapesList: shapes,
+                labelList: labels,
                 title: this.modelTitle
             }
 
@@ -801,7 +972,12 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                     .createModel(body)
                     .subscribe(result => {
                         console.log(result)
-                        this.router.navigate(['home/component_model-list']);
+                        if (event.srcElement.id == "verify") {
+                            this.onVerify();
+                        }
+                        else{
+                            this.router.navigate(['home/component_model-list']);
+                        }
                     });
             } else {
                 // update the model
@@ -809,7 +985,13 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                     .updateModel(this.selectedModel.id, body)
                     .subscribe(result => {
                         console.log(result)
-                        this.router.navigate(['home/component_model-list']);
+                        console.log(event);
+                        if (event.srcElement.id == "verify") {
+                            this.onVerify();
+                        }
+                        else{
+                            this.router.navigate(['home/component_model-list']);
+                        }
                     });
             }
         }

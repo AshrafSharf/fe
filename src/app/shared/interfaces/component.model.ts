@@ -45,6 +45,7 @@ export interface ComponentModelComponent {
     displayName:String;
     modelId: String;
     order: String;
+    instanceType:string;
     templateName: String;
     fixedProperties;
     modelComponentInterfaceList: Array<ComponentModelInterface>;
@@ -58,6 +59,8 @@ export interface ComponentModel {
     description: String;
     ownerName: String;
     ownerId: String;
+    labelList;
+    shapesList:Array<ComponentModelComponent>;
     modelComponentList:Array<ComponentModelComponent>;
     modelInterfaceEndPointsList:Array<ComponentModelInterfaceEndPoint>;
     fixedProperties: Array<ComponentModelInterfaceProperty>;

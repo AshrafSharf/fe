@@ -12,6 +12,7 @@ import { InputVariable } from "../../shared/modelling/templates/input-variable";
 import { Variable } from "../../shared/interfaces/variables";
 import { Moment } from 'moment';
 import * as moment from 'moment';
+import { ModelComponent } from "../../shared/interfaces/model-component";
 
 @Component({
     selector: 'match-table',
@@ -24,8 +25,8 @@ export class MatchTableComponenet implements OnInit, OnChanges {
     @Input('modelId') modelId:string;
     @Input("showForecastNames") showForecastNames:boolean = false;
     @Input("allowOverride") allowOverride:boolean = true;
-    @Input("vars") inputVariables:InputVariable[];
-
+  // @Input("vars") inputVariables:InputVariable[];
+    @Input("vars") inputVariables:ModelComponent[];
     forecastVariables: Variable[] = [];
     inputVariableMatchings:InputVariableMatching[] = [];
     
@@ -86,7 +87,7 @@ export class MatchTableComponenet implements OnInit, OnChanges {
             console.log(formattedDate);
             for (let forecastVar of this.forecastVariables){
                 console.log(forecastVar.title);
-                if (this.inputVariables[index].name == forecastVar.title){
+                if (this.inputVariables[index].title== forecastVar.title){
                     match = true;
                     forecastName=forecastVar.title;
                     let calculatedValues = forecastVar.allTimesegmentsResultList[0].data;
@@ -104,7 +105,7 @@ export class MatchTableComponenet implements OnInit, OnChanges {
             this.inputVariableMatchings.push({
                 inputVarId: this.inputVariables[index].id,
                 inputVariableDisplayName: this.inputVariables[index].displayName,
-                inputVariableName: this.inputVariables[index].name,
+                inputVariableName: this.inputVariables[index].title,
                 hasForecastMatch: match,
                 forecastValue: forecastValue,
                 forecastVarName: forecastName,

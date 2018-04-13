@@ -1,10 +1,10 @@
 export interface InputVariableMatching{
     inputVarId:string
     inputVariableDisplayName:String;
-    inputVariableName:String;
+    inputVariableName:string;
     hasForecastMatch:boolean;
     forecastValue:String;
-    forecastVarName:String;
+    forecastVarName:string;
     forecastVarId:String;
     overrideValue:String;
 

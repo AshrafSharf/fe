@@ -64,8 +64,6 @@ export class SimulationService {
     updateSimulation(body, id) {
         this.loaderService.show();
         let url = Utils.createModelUrl(Utils.routeSimulation) + "/" + id;
-
-        console.log(body);
         
         return this.http
                 .put(url, body, Utils.getRequestOptions())
@@ -73,5 +71,18 @@ export class SimulationService {
                     this.loaderService.hide()
                     return result.json();
                 });
+    }
+
+    //run the simulation 
+    runSimulation(id){
+        this.loaderService.show();
+        let url = Utils.createModelUrl(Utils.routeSimulation) + "/run/" + id;
+        return this.http
+        .get(url, Utils.getRequestOptions())
+        .map(result => {
+            this.loaderService.hide()
+            console.log(result);
+            return result.json();
+        });
     }
 }

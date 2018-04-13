@@ -37,6 +37,8 @@ import { InputVariable } from '../../shared/modelling/templates/input-variable';
 import { InputTemplate } from './templates/input.template';
 import { Ec2MicroServiceTemplate } from './templates/ec2.micro.service.template';
 import { Ec2ComponentTemplate } from './templates/ec2.component.template';
+import { ModelComponent } from '../../shared/interfaces/model-component';
+import { SimulationService } from '../../services/simulation.service';
 
 @Component({
     selector: 'verify-model',
@@ -74,7 +76,9 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
      // drawing area
     public width = 4000;
     public height = 4000;
-     private fontSize = 15;
+    private fontSize = 15;
+
+    inputVars:ModelComponent[] = new Array<ModelComponent>();
 
     //graphical arrow info
     public connectionSourceInterface: string = '';
@@ -92,6 +96,7 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
         private modal:Modal,
         private variableService:AppVariableService,
         private modelService:ModelService,
+        private simService:SimulationService,
         private route:ActivatedRoute,
         private router:Router,
         private location: Location) {
@@ -132,100 +137,21 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
             console.log(this.systemModel);
             this.modelTitle = this.systemModel.title;
             this.drawDiagram(this.selectedModelId);
-            this.clearEnvironment();
-            this.setupEnvironment();
+            this.getInputVariables();
         });
     }
 
     /** 
      * Set up the System Model environment
     */
-    setupEnvironment(){
-        this.environment = CptEnvironment.get();
-
+    getInputVariables(){
         for (let component of this.systemModel.modelComponentList){
             let cptComp;
-            if (component.templateName == "GenericMicroServiceTemplate"){
-                cptComp = new CptMicroserviceComponent();
-                cptComp.setName(component.title);
-            }
-            if (component.templateName == "Ec2MicroServiceTemplate"){
-                cptComp = new CptMicroserviceComponent();
-                cptComp.setName(component.title);
-            }
-            else if (component.templateName == "InputTemplate" ){
+            if (component.templateName == "InputTemplate" ){
                 //give input variables name for matching, along with a display name      
-                cptComp = new InputVariable();
-                cptComp.setName( component.displayName);  
-                cptComp.name = component.title;          
-                this.environment.addInputVariable(cptComp);        
+                this.inputVars.push(component);
             }
-            //TODO: add more if cases with for other templates
-
-            cptComp.order = component.order;
-            cptComp.id = component.id;
-            
-            
-            //set up interfaces
-            for (let interf of component.modelComponentInterfaceList){
-                let cptInt = cptComp.addInterface(interf.title);
-                cptInt.id = interf.id;
-                cptInt.componentId = component.id;
-                cptInt.latency = Number(interf.latency);
-                
-                //add custom properties
-                for (let property of interf.modelInterfacePropertiesList){
-                    cptInt.addProperty( property.key,  property.value);
-                }
-            }
-            
-            this.environment.registerComponent(cptComp);
         }
-       
-        this.connectInterfaces();
-       console.log(this.environment.envComponents);
-      
-
-        // let hookCode = "if (load.loadValues['tps'] < 700 ){ return latency; } " +
-        //     "else{ return latency*2; } ";
-       //c3if1.addHookCode("adjustLatencyToLoad", hookCode);
-
-      //  });
-    }
-
-    /** 
-     * Connect Interfaces to their downstream interfaces
-    */
-    connectInterfaces(){
-        for (let connection of this.systemModel.modelInterfaceEndPointsList){
-            let interf = this.environment.getInterface(connection.inputModelInterfaceId);
-            let cptOutput = interf.addOutput() as CptInterfaceOutput;
-            cptOutput.downstreamInterfaceId = connection.outputModelInterfaceId;
-        }
-
-    }
-
-    /** 
-     * Reset the attributes of each interface to their inital state
-    */
-    resetEnvironment(){
-       for (let component of this.systemModel.modelComponentList){
-           for (let interf of component.modelComponentInterfaceList){
-               let cptIf = this.environment.getInterface(interf.id) as CptMicroserviceInterface;
-               cptIf.latency = Number(interf.latency);
-               cptIf.load.loadValues["tps"] = 0;
-               for (let property of interf.modelInterfacePropertiesList){
-                   if(cptIf.load.loadValues.hasOwnProperty(property.key)){
-                        cptIf.load.loadValues[property.key] = 0;
-                    }
-               }
-           }
-       }
-    }
-
-    clearEnvironment(){
-        this.environment.envComponents = [];
-        this.environment.inputVars = [];
     }
 
     /** 
@@ -243,8 +169,6 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
      * Run the simulation on the environment
      */
     onRunSimulation(){
-        this.resetEnvironment();
-
         //dont run simulation if a forecast branch has not been inported
         if (this.matchTable.inputVariableMatchings.length == 0){
             this.modal.alert()
@@ -255,6 +179,7 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
         }
 
         //show warning if no value defined for an input variable
+        let inputVarValues:{[key:string]:number} = {};
         for (let inputVar of this.matchTable.inputVariableMatchings){
             if (inputVar.hasForecastMatch == false
             && inputVar.overrideValue == ""){
@@ -265,22 +190,25 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
                  .open();
                  return;
             }
-           
+  
             //set input variable load to the value of the matching forecast variable value
             if (inputVar.forecastValue != null && inputVar.overrideValue == ""){
-                console.log("setting input var with id: " + inputVar.inputVarId + "to " +  inputVar.forecastValue);
-                this.environment.setInputVariableComponent(inputVar.inputVarId, inputVar.forecastValue);
+                inputVarValues[inputVar.inputVariableName] = Number(inputVar.forecastValue);
             }
 
             //set input variable load to the override value
             else{
-                this.environment.setInputVariableComponent(inputVar.inputVarId, inputVar.overrideValue);
+                inputVarValues[inputVar.inputVariableName] = Number(inputVar.overrideValue);
             }
         }
-    
-        let o = this.environment.runSim();
-        console.log(o);
-        this.simOutput =  this.displayOutput();
+        console.log(inputVarValues);
+        this.simService.runSimulation(this.selectedModelId)
+            .subscribe(result =>{
+                console.log("hello");
+                this.simOutput = result.data;
+            });
+        //let o = this.environment.runSim();
+        //this.simOutput =  this.displayOutput();
     } 
 
     reloadBranches(projectId:String = null, forceReload = false) {

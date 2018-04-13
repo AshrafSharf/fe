@@ -125,8 +125,11 @@ export class VariablesComponent implements OnInit {
                 if (this.ownerId == Utils.getUserId()) {
                     this.isOwner = true;
                 }
+                this.runAdditionalServices();
             });
+    }
 
+    runAdditionalServices() {
         this.route.queryParams.subscribe(params => {
             console.log(params);
             this.projectId = params['projectId'];

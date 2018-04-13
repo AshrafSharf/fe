@@ -3,7 +3,17 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AppVariableService } from './../../services/variable.services';
 import { UserService } from './../../services/user.service';
 import { Project } from './../../shared/interfaces/project';
-import { Component, Input, OnInit, ViewChildren, ElementRef, NgZone, ViewChild, SimpleChanges } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    ViewChildren,
+    ElementRef,
+    NgZone,
+    ViewChild,
+    SimpleChanges,
+    OnChanges
+} from '@angular/core';
 import { ProjectService } from '../../services/project.service';
 import { Branch } from './../../shared/interfaces/branch';
 import { BranchService } from '../../services/branch.service';
@@ -26,7 +36,7 @@ import { Config } from '../../shared/config';
     styleUrls: ['./variables.component.css']
 })
 
-export class VariablesComponent implements OnInit {
+export class VariablesComponent implements OnChanges, OnInit {
     @ViewChildren(TimeSegmentComponent) timeSegmentWidgets: TimeSegmentComponent[];
 
     projects: Project[] = Array<Project>();

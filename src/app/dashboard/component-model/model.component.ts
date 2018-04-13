@@ -48,6 +48,9 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
     // selected template
     public selectedTemplate:Template = null;
 
+    // Selected tab
+    public selectedTab = 'componentProperties';
+
     // drawing area
     public width = 4000;
     public height = 4000;
@@ -311,6 +314,10 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
             });
     }
 
+    public changeTab(tab) {
+        this.selectedTab = tab;
+    }
+    
     public drawConnections() {
         for (var index = 0; index < this.connections.length; index++) {
             var connection = this.connections[index];

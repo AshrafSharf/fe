@@ -135,11 +135,8 @@ export class VariablesComponent implements OnChanges, OnInit {
                 if (this.ownerId == Utils.getUserId()) {
                     this.isOwner = true;
                 }
-                this.runAdditionalServices();
             });
-    }
 
-    runAdditionalServices() {
         this.route.queryParams.subscribe(params => {
             console.log(params);
             this.projectId = params['projectId'];
@@ -184,16 +181,27 @@ export class VariablesComponent implements OnChanges, OnInit {
     }
 
     createTable() {
-        this.columns.splice(0, this.columns.length);
         if (this.startDate != undefined && this.endDate != undefined) {
+            let obj = [];
+            this.columns.forEach( function (item) {
+                obj[item.key] = item.value;
+            });
+
+            this.columns.splice(0, this.columns.length);
+
             let date = this.startDate.clone();
             let endDate = this.endDate.clone();
-
             let count = endDate.diff(date, 'M') + 1;
-            for (var index = 0; index < count; index++) {
+
+            for (let index = 0; index < count; index++) {
                 let year = date.year();
                 let month = date.format('MMM');
-                this.columns.push({ key: month + " - " + year, value: '0' });
+                let oldValue = '0';
+                let _key = month + " - " + year;
+                if(_key in obj){
+                    oldValue = obj[_key];
+                }
+                this.columns.push({ key: _key, value: oldValue });
                 date.add(1, 'M');
             }
         }
@@ -229,7 +237,6 @@ export class VariablesComponent implements OnChanges, OnInit {
                 this.subvariableList[this.editSubvariableIndex].probability = this.subvariablePercentage;
             }
             this.subvariableList[this.editSubvariableIndex].name = this.subvariableName;
-            this.subvariableListPercentage[this.editSubvariableIndex].name = this.subvariableName;
             var decimal = parseInt(this.subvariableValue)/100;
             this.subvariableList[this.editSubvariableIndex].value = decimal.toString();
             this.subvariableListPercentage[this.editSubvariableIndex].value = this.subvariableValue;

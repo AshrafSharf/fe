@@ -436,6 +436,19 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
         connection.outputComponentName = target.identifier.toString();
         connection.inputInterfaceName = this.connectionSourceInterface;
         connection.outputInterfaceName =  this.connectionTargetInterface;
+        console.log(source.getType());
+        if (source.getType()=="JavaMicroServiceTemplate"){
+            connection.connectionProperties.push({
+                name:"sequence",
+                value:"-1"
+            });
+            connection.connectionProperties.push({
+                name:"multiplier",
+                value:"1"
+            });
+
+            console.log(connection.connectionProperties);
+        }
 
         this.connections.push(connection);
 
@@ -456,6 +469,16 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
 
         this.layer.draw();
         this.showConnectionsDialog = false;
+    }
+
+    public getDownstreamInterfaces( ifName:String){
+        let selectedIfConnections = [];
+        for (let connection of this.connections){
+            if ( connection.inputInterfaceName == ifName){
+                selectedIfConnections.push(connection);
+            }
+        }
+        return selectedIfConnections;
     }
 
     haveIntersection(r1, r2) {
@@ -1029,5 +1052,9 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
         }
 
         return null;
+    }
+
+    public handle(event){
+        event.preventDefault();
     }
 }

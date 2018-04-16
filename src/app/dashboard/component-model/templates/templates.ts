@@ -13,14 +13,15 @@ export class ConnectionVisualProperties {
 }
 
 export class Connection {
-    public inputComponentName: string;
+    public inputComponentName: String;
     public inputInterfaceName: string;
     public inputModelInterfaceId: string;
-    public outputComponentName: string;
+    public outputComponentName: String;
     public outputInterfaceName: string;
     public outputModelInterfaceId: string;
     public arrow: Arrow;
     public visualProperties: ConnectionVisualProperties;
+    public connectionProperties: TemplateInterfaceProperty[] = new Array<TemplateInterfaceProperty>();
 }
 
 export interface TemplateInterfaceProperty {

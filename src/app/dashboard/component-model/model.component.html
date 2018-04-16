@@ -134,6 +134,27 @@
                                                 </td>
                                             </tr>
                                         </table>
+                                        <h4 *ngIf="getDownstreamInterfaces(intf.name).length > 0">Downstream Interfaces:</h4>               
+                                        <div class="panel-group" id="accordion">
+                                                <div class="panel panel-default" *ngFor="let dsIf of getDownstreamInterfaces(intf.name); let i = index;">
+                                                  <div class="panel-heading">
+                                                    <h4 class="panel-title">
+                                                      <a data-toggle="collapse" data-parent="#accordion" [attr.href]="'#ds_' + i">
+                                                      {{dsIf.outputInterfaceName}}  </a>
+                                                    </h4>
+                                                  </div>
+                                                  <div [attr.id]="'ds_' + i" class="panel-collapse collapse">
+                                                    <div class="panel-body">
+                                                        <table class="table table-bordered">
+                                                            <tr *ngFor="let prop of dsIf.connectionProperties">
+                                                                <td class="table_column" >{{prop.name}}</td>
+                                                                <td class="table_column"><input type="text" class="property_value" [(ngModel)]="prop.value"></td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                        </div>
                                     </td>
                                 </tr>
                             </table>

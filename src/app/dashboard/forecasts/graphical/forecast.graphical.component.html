@@ -86,7 +86,7 @@
             </div>
             <div *ngFor="let v of filteredVariables" class="checkbox">
                 <label>
-                    <input type="checkbox" (click)="excludeVariable($event)" [value]="v.id"> {{v.title}}
+                    <input type="checkbox" (click)="excludeVariable($event)" [value]="v.id"> {{v.title | slice:0:30}}{{v.title.length > 30 ? '&hellip;' : ''}}
                 </label>
             </div>
         </div>

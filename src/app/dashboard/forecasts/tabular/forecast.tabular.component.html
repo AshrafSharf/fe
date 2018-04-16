@@ -78,8 +78,8 @@
                             <fa class="empty-space" [name]="openStatuses[j] == true ? 'minus': 'plus'" [style.display]="(variable.allTimesegmentsResultList.length > 1 && (i == 0)) ? 'inline-block' : 'none'"></fa>
                             <span class="empty-space" [style.display]="(variable.allTimesegmentsResultList.length > 1 && (i == 0)) ? 'none' : 'inline-block'"></span>
                             <span class="empty-space" [style.display]="(variable.allTimesegmentsResultList.length > 1 && (i > 0)) ? 'inline-block' : 'none'"></span>
-                            <span style="word-wrap: break-word;" [style.display]="(variable.allTimesegmentsResultList.length > 1 && (i == 0)) ? 'none' : 'inline-block'">{{result.title}}</span>
-                            <span style="word-wrap: break-word;" [style.display]="(variable.allTimesegmentsResultList.length > 1 && (i == 0)) ? 'inline-block' : 'none'">{{variable.title}}</span>
+                            <span style="word-wrap: break-word;" [style.display]="(variable.allTimesegmentsResultList.length > 1 && (i == 0)) ? 'none' : 'inline-block'">{{result.title | slice:0:20}}{{result.title.length > 20 ? '&hellip;' : ''}}</span>
+                            <span style="word-wrap: break-word;" [style.display]="(variable.allTimesegmentsResultList.length > 1 && (i == 0)) ? 'inline-block' : 'none'">{{variable.title | slice:0:20}}{{variable.title.length > 20 ? '&hellip;' : ''}}</span>
                         </td>
                         <td class="headcol-1">
                             <span style="word-wrap: break-word;">{{variable.variableType}}</span>

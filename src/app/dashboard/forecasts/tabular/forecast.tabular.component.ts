@@ -14,6 +14,7 @@ import { Variable, KeyValuePair, TableInputPair } from '../../../shared/interfac
 import { Moment, unix } from 'moment';
 import { Utils } from '../../../shared/utils';
 import { Config } from '../../../shared/config';
+import { SlicePipe } from '@angular/common';
 
 @Component({
     selector: 'forecast-tabular',
@@ -189,7 +190,7 @@ export class ForecastTabularComponent implements OnInit {
         }
     }
 
-    /** 
+    /**
     Find the minimum start date. Iterate over all the timesegments and find the smallest date
     */
     findMinimumStartDate() {
@@ -244,7 +245,7 @@ export class ForecastTabularComponent implements OnInit {
             }
         }
 
-        
+
         // check if the minimum date is before 6 months
         let date = unix(currentDate.getTime() / 1000).subtract(6, 'months');
         if (this.minStartDate.isBefore(date)) {
@@ -296,8 +297,8 @@ export class ForecastTabularComponent implements OnInit {
             }
 
             this.openStatuses.push(false);
-        }        
-        
+        }
+
         // needed for sorting
         keySet.forEach(key => {
             this.keys.push(key);
@@ -428,7 +429,7 @@ export class ForecastTabularComponent implements OnInit {
                     var extendedVars = result.data as Array<Variable>;
                     var finalVars = result.data as Array<Variable>;
                     var position = [];
-                    
+
                     extendedVars.forEach(exVar => {
                         var match = false;
                         for (var index = 0; index < this.variables.length; index++) {

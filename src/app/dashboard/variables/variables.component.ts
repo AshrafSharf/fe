@@ -184,7 +184,7 @@ export class VariablesComponent implements OnChanges, OnInit {
         if (this.startDate != undefined && this.endDate != undefined) {
             let obj = [];
             this.columns.forEach( function (item) {
-                obj[item.key] = item.value;
+                obj[item.key.toLowerCase()] = item.value;
             });
 
             this.columns.splice(0, this.columns.length);
@@ -198,8 +198,8 @@ export class VariablesComponent implements OnChanges, OnInit {
                 let month = date.format('MMM');
                 let oldValue = '0';
                 let _key = month + " - " + year;
-                if(_key in obj){
-                    oldValue = obj[_key];
+                if(_key.toLowerCase() in obj){
+                    oldValue = obj[_key.toLowerCase()];
                 }
                 this.columns.push({ key: _key, value: oldValue });
                 date.add(1, 'M');

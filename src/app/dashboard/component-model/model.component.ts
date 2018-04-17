@@ -655,6 +655,15 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
         this.showConnectionsDialog = false;
     }
 
+    public getDownstreamInterfaces( ifName:String){
+        let selectedIfConnections = [];
+        for (let connection of this.connections){
+            if ( connection.inputInterfaceName == ifName){
+                selectedIfConnections.push(connection);
+            }
+        }
+        return selectedIfConnections;
+    }
     private haveIntersection(r1, r2) {
 
         return (((r1.x > (r2.x - 10)) && (r1.x < (r2.x + r2.width + 10))) &&

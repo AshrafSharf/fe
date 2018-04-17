@@ -41,7 +41,7 @@
     margin-top: 10px;
 }
 
-.trash { 
+.trash {
     color: red;
     cursor: pointer;
 }
@@ -50,4 +50,10 @@
 .edit {
     color: black;
     cursor: pointer;
+}
+
+.warning-msg {
+    color: darkred;
+    font-size: small;
+    /*background: #9d9d9d;*/
 }

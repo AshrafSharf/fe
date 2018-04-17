@@ -1,5 +1,6 @@
 import { Guid } from '../../../shared/guid';
 import { Group, Rect, RegularPolygon, Arrow } from 'konva';
+import { ComponentModelInterfaceProperty } from '../../../shared/interfaces/component.model';
 
 export class ConnectionVisualProperties {
     public color: string;
@@ -13,14 +14,15 @@ export class ConnectionVisualProperties {
 }
 
 export class Connection {
-    public inputComponentName: string;
+    public inputComponentName: String;
     public inputInterfaceName: string;
     public inputModelInterfaceId: string;
-    public outputComponentName: string;
+    public outputComponentName: String;
     public outputInterfaceName: string;
     public outputModelInterfaceId: string;
     public arrow: Arrow;
     public visualProperties: ConnectionVisualProperties;
+    public connectionProperties: ComponentModelInterfaceProperty[] = new Array<ComponentModelInterfaceProperty>();
 }
 
 export interface TemplateInterfaceProperty {
@@ -74,7 +76,19 @@ export abstract class Template {
     public abstract getType(): String;
     public abstract getTitle(): String;
     public abstract getHeaderColor(): String;
+    public abstract clone(): Template;
 
+    public cloneWithoutId(): Template {
+        var template:Template = this.clone();
+        template.identifier = Guid.newGuid().toString();
+        return template;
+    }
+
+    public changeOrigin(x, y) {
+        this.uiGroup.setAttr('x', x);
+        this.uiGroup.setAttr('y', y);
+    }
+    
     public reloadUI() {
 
         let x = this.uiGroup.x();
@@ -192,4 +206,104 @@ export interface TemplateEventsCallback {
     templateClicked(template);
     drawArrow(connector);
     drawConnections();
+}
+
+export class TemplateGroup {
+    public group: Group = new Group({
+        draggable: true
+    });
+    public rect: Rect;
+    public identifer: string;
+
+    constructor() {
+        this.identifer = Guid.newGuid().toString();
+    }
+
+    private templates: Template[] = new Array<Template>();
+
+    public createGroup(x, y, width, height) {
+        this.group = new Group({
+            x: x, 
+            y: y,
+            width: width, 
+            height: height,
+            draggable: true
+        });
+
+        this.rect = new Rect({
+            x : 0,
+            y : 0,
+            width : width,
+            height : height
+        });
+        
+        this.group.on('click', (event) => {
+            
+        });
+
+        this.group.add(this.rect);
+    }
+
+    public getTemplates(): Template[] {
+        return this.templates;
+    }
+
+    public select() {
+        // this.rect.setAttr('stroke', '#006bb3');
+        // this.rect.setAttr('strokeWidth', '5');
+        // this.rect.dash([10, 5]);
+
+        for (var index = 0; index < this.templates.length; index++) {
+            this.templates[index].select();
+        }
+    }
+
+    public deleteGroup() {
+        for (var index = 0; index < this.templates.length; index++) {
+            this.templates[index].uiGroup.remove();
+        }
+    }
+
+    public deselect() {
+        // this.rect.setAttr('stroke', 'black');
+        // this.rect.setAttr('strokeWidth', '1');
+        // this.rect.dash([]);
+
+        for (var index = 0; index < this.templates.length; index++) {
+            this.templates[index].deselectTemplate();
+        }
+    }
+
+    public addTemplate(template:Template) {
+        this.group.add(template.uiGroup);
+        this.templates.push(template);
+    }
+
+    public addTemplates(templates:Template[]) {
+        var y = 0;
+        for (var index = 0; index < templates.length; index++ ){
+            var template = templates[index];
+            // template.changeOrigin(0, y * index);
+            this.templates.push(template);
+            //template.uiGroup.setAttr('draggable', false);
+            this.group.add(template.uiGroup);
+            y +=  template.getHeight() + 5;
+        }
+    }
+
+    public contains(id) {
+        for (var index = 0; index < this.templates.length; index++) {
+            if (this.templates[index].identifier == id) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public ungroup() {
+        // this.group.remove();
+        // this.group.removeChildren();
+        this.deselect();
+    }
 }

@@ -191,8 +191,8 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
                 inputVarValues[inputVar.inputVariableName] = Number(inputVar.overrideValue);
             }
         }
-        console.log(inputVarValues);
-        this.simService.runSimulation(this.selectedModelId)
+        console.log(this.matchTable.inputVariableMatchings);
+        this.simService.runSimulation(this.selectedModelId, this.matchTable.inputVariableMatchings)
             .subscribe(result =>{
                 console.log("hello");
                 this.simOutput = result.data;

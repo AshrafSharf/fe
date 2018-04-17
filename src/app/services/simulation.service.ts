@@ -74,11 +74,11 @@ export class SimulationService {
     }
 
     //run the simulation 
-    runSimulation(id){
+    runSimulation(id, body){
         this.loaderService.show();
-        let url = Utils.createModelUrl(Utils.routeSimulation) + "/run/" + id;
+        let url = Utils.createModelUrl(Utils.routeSimulation) + "/runmodel/" + id;
         return this.http
-        .get(url, Utils.getRequestOptions())
+        .post(url, body, Utils.getRequestOptions())
         .map(result => {
             this.loaderService.hide()
             console.log(result);

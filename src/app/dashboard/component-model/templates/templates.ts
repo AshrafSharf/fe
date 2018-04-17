@@ -1,5 +1,6 @@
 import { Guid } from '../../../shared/guid';
 import { Group, Rect, RegularPolygon, Arrow } from 'konva';
+import { ComponentModelInterfaceProperty } from '../../../shared/interfaces/component.model';
 
 export class ConnectionVisualProperties {
     public color: string;
@@ -21,7 +22,7 @@ export class Connection {
     public outputModelInterfaceId: string;
     public arrow: Arrow;
     public visualProperties: ConnectionVisualProperties;
-    public connectionProperties: TemplateInterfaceProperty[] = new Array<TemplateInterfaceProperty>();
+    public connectionProperties: ComponentModelInterfaceProperty[] = new Array<ComponentModelInterfaceProperty>();
 }
 
 export interface TemplateInterfaceProperty {

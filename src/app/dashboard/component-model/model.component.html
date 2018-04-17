@@ -145,9 +145,9 @@
                                                   </div>
                                                   <div [attr.id]="'ds_' + i" class="panel-collapse collapse">
                                                     <div class="panel-body">
-                                                        <table class="table table-bordered">
+                                                        <table class="table table-bordered" *ngIf="dsIf.connectionProperties.length >0 ">
                                                             <tr *ngFor="let prop of dsIf.connectionProperties">
-                                                                <td class="table_column" >{{prop.name}}</td>
+                                                                <td class="table_column">{{prop.key}}</td>
                                                                 <td class="table_column"><input type="text" class="property_value" [(ngModel)]="prop.value"></td>
                                                             </tr>
                                                         </table>

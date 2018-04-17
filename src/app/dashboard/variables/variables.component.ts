@@ -185,7 +185,7 @@ export class VariablesComponent implements OnChanges, OnInit {
 
     createTable() {
         if (this.startDate != undefined && this.endDate != undefined) {
-            let obj = [];
+            var obj = {};
             this.columns.forEach( function (item) {
                 obj[item.key.toLowerCase()] = item.value;
             });

@@ -16,8 +16,19 @@
             (zoom-in)="zoomPlus()"
             (zoom-out)="zoomMinus()"
             (save)="saveModel($event)"
+            (group)="groupTemplates()"
+
+            (ungroup)="ungroupTemplates()"
+            (copy-group)="copyGroup()"
+            (delete-group)="deleteGroup()"
+
+            (start-group-selection)="startGroupSelection()"
+            (stop-group-selection)="stopGroupSelection()"
             (cancel)="cancelModel()"
-            (verify)="saveModel($event)"></app-drawing-tools-header>
+            (verify)="saveModel($event)"
+            [ungroup-disabled]="selectedGroup == null"
+            [copy-group-disabled]="selectedGroup == null"
+            [delete-group-disabled]="selectedGroup == null"></app-drawing-tools-header>
     </div>
 
     <div class="row">

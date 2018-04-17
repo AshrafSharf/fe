@@ -150,11 +150,11 @@
                                                 <div class="panel panel-default" *ngFor="let dsIf of getDownstreamInterfaces(intf.name); let i = index;">
                                                   <div class="panel-heading">
                                                     <h4 class="panel-title">
-                                                      <a data-toggle="collapse" data-parent="#accordion" [attr.href]="'#ds_' + i">
+                                                      <a data-toggle="collapse" data-parent="#accordion" [attr.href]="'#ds_' + dsIf.outputInterfaceName + i">
                                                       {{dsIf.outputInterfaceName}}  </a>
                                                     </h4>
                                                   </div>
-                                                  <div [attr.id]="'ds_' + i" class="panel-collapse collapse">
+                                                  <div [attr.id]="'ds_'+ dsIf.outputInterfaceName + i" class="panel-collapse collapse">
                                                     <div class="panel-body">
                                                         <table class="table table-bordered" *ngIf="dsIf.connectionProperties.length >0 ">
                                                             <tr *ngFor="let prop of dsIf.connectionProperties">

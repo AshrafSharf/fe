@@ -260,9 +260,8 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
 
                                     for (let connection of connectionList){
                                         if (connection.inputModelInterfaceId == tempInterface.id){
-
                                             templateInterface.downstreamInterfaces.push( { component: connection.outputComponentName, interface:connection.outputInterfaceName, connectedComponent:connection.inputComponentName, connectedInterface:connection.inputInterfaceName });
-                                          //  templateInterface.downstreamInterfaces.push( { component: connection.outputInterfaceName, connectedInterface: connection.inputInterfaceName });
+                       
 
                                         }
                                     }
@@ -283,7 +282,9 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                                     for (let propertyIndex = 0; propertyIndex < tempTemplate.fixedProperties.length; propertyIndex ++) {
                                         let property = tempTemplate.fixedProperties[propertyIndex];
                                         console.log(property);
-                                        template.fixedProperties.push({ name: property.key, value: property.value});
+                                        if (property != null){
+                                            template.fixedProperties.push({ name: property.key, value: property.value});
+                                        }
                                     }
                                     console.log(template.fixedProperties);
                                 }
@@ -314,10 +315,11 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                                 connection.outputComponentName = target.identifier.toString();
                                 connection.inputInterfaceName = tempConnection.inputInterfaceName.toString();
                                 connection.outputInterfaceName =  tempConnection.outputInterfaceName.toString();
-
+                                connection.connectionProperties = tempConnection.outputProperties
                                 this.connections.push(connection);
+                                
                             }
-
+                            console.log(this.connections);
                             this.drawConnections();
 
                              // create shape templates
@@ -613,6 +615,24 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
         connection.outputComponentName = target.identifier.toString();
         connection.inputInterfaceName = this.connectionSourceInterface;
         connection.outputInterfaceName =  this.connectionTargetInterface;
+        console.log(source.getType());
+        if (source.getType()=="JavaMicroServiceTemplate"){
+            connection.connectionProperties.push({
+                key:"sequence #",
+                value:"-1"
+            });
+            connection.connectionProperties.push({
+                key:"multiplier",
+                value:"1"
+            });
+            
+            connection.connectionProperties.push({
+                key:"probability",
+                value:"1"
+            });
+
+            console.log(connection.connectionProperties);
+        }
 
         this.connections.push(connection);
 
@@ -635,7 +655,17 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
         this.showConnectionsDialog = false;
     }
 
+    public getDownstreamInterfaces( ifName:String){
+        let selectedIfConnections = [];
+        for (let connection of this.connections){
+            if ( connection.inputInterfaceName == ifName){
+                selectedIfConnections.push(connection);
+            }
+        }
+        return selectedIfConnections;
+    }
     private haveIntersection(r1, r2) {
+
         return (((r1.x > (r2.x - 10)) && (r1.x < (r2.x + r2.width + 10))) &&
                ((r1.y > (r2.y)) && (r1.y < (r2.y + r2.height + 10))));
     }
@@ -1197,11 +1227,13 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                 let source = this.getTemplateById(connection.inputComponentName);
                 let target = this.getTemplateById(connection.outputComponentName);
 
+                console.log( connection.connectionProperties);
                 var interfaceObj = {
                     inputComponentName: source.name,
                     inputInterfaceName: connection.inputInterfaceName,
                     outputComponentName: target.name,
-                    outputInterfaceName: connection.outputInterfaceName
+                    outputInterfaceName: connection.outputInterfaceName,
+                    outputProperties: connection.connectionProperties
                 }
 
                 connections.push(interfaceObj);
@@ -1281,5 +1313,9 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
         }
 
         return null;
+    }
+
+    public handle(event){
+        event.preventDefault();
     }
 }

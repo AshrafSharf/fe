@@ -1,3 +1,4 @@
+import { TemplateInterfaceProperty } from "../../dashboard/component-model/templates/templates";
 
 export interface ComponentModelInterfaceEndPointProperty {
 
@@ -14,7 +15,7 @@ export interface ComponentModelInterfaceVisualProperties {
 }
 
 export interface ComponentModelInterfaceProperty {
-    id: String;
+  //  id: String;
     key: String;
     value: String;
 }
@@ -27,6 +28,7 @@ export interface ComponentModelInterfaceEndPoint {
     outputInterfaceName:String;
     inputComponentName: String;
     outputComponentName: String;
+    outputProperties:ComponentModelInterfaceProperty[];
 }
 
 export interface ComponentModelInterface {

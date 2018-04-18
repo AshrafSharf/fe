@@ -13,6 +13,7 @@ import {Utils} from "../../../shared/utils";
 
 export class VariableExpressionComponent implements OnInit, VariableComponentBehavior {
     @Input('branch-id') branchId: String = '';
+    @Input('variable-name') variableName:String;
     @Input('time-segment') timeSegment:TimeSegment;
     @Input('input-method') inputMethod: String = '';
     @ViewChild(AutocompleteInputComponent) autoCompleteInput: AutocompleteInputComponent;
@@ -23,7 +24,6 @@ export class VariableExpressionComponent implements OnInit, VariableComponentBeh
         private variableService: AppVariableService) { }
 
     ngOnInit() {
-        console.log(this.branchId);
         this.variableService
             .getUserAccessVariables(this.branchId, Utils.getUserId())
             .subscribe(response => {

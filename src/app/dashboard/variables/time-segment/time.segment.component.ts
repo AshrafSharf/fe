@@ -17,8 +17,9 @@ import { Config } from '../../../shared/config';
     styleUrls: ['./time.segment.component.css']
 })
 export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
-    
+
     @Input('segment-id') segmentId:String;
+    @Input('variable-name') variableName:String;
     @Input('variable-type') variableType:String;
     @Input('value-type') valueType:String;
     @Output('delete') deleted = new EventEmitter();
@@ -28,7 +29,7 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
     @Input('composit-variable-type-list') compositVariableTypeList: Subvariable[];
     variableTypeList: Subvariable[] = Array<Subvariable>();
     variableTypeListPercentage = [];
-    
+
     @ViewChild(VariableConstantComponent) variableConstant: VariableConstantComponent;
     @ViewChild(VariableExpressionComponent) variableExpression: VariableExpressionComponent;
     @ViewChild(VariableTableComponent) variableTable: VariableTableComponent;
@@ -44,9 +45,9 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
 
     selectedInputMethod = "constant";
     comment = '';
-    
+
     datePickerConfig = { format : Config.getDateFormat() };
-    
+
     constructor(
         private modal: ModalDialogService
     ) { }
@@ -134,7 +135,7 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
         ];
 
         if (this.timeSegment != null) {
-            if (this.timeSegment.startTime != null) { 
+            if (this.timeSegment.startTime != null) {
                 if (typeof(this.timeSegment.startTime) == "string") {
                     let date:Date;
                     if (this.timeSegment.startTime.length == 0) {
@@ -147,7 +148,7 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
                         date = new Date(`${month}/01/${year}`);
                     }
                     this.startDate = unix(date.getTime() / 1000);
-                    
+
                     if (this.timeSegment.inputMethod == "table") {
                         let parts = this.timeSegment.endTime.split('-');
                         let month = parts[0];
@@ -159,13 +160,13 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
                         this.endDate = this.startDate;
                     }
 
-                
+
                 } else {
                     console.log("no");
                     this.startDate = this.timeSegment.startTime;
                     this.endDate = this.startDate;
                 }
-            } 
+            }
 
             if (this.timeSegment.inputMethod != null) { this.selectedInputMethod = this.timeSegment.inputMethod.toString(); }
             if (this.timeSegment.description != null) { this.comment = this.timeSegment.description.toString(); }
@@ -242,7 +243,7 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
                 method = this.variableBreakDown;
             }
 
-            if (result.result) {            
+            if (result.result) {
                 var input = method.getInput();
 
                 if (typeof(this.startDate) != "string") {
@@ -255,12 +256,12 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
 
                 input['description'] = this.comment;
                 input['inputMethod'] = this.selectedInputMethod;
-                
+
                 result.reason = input;
             }
         }
 
-        return result;        
+        return result;
     }
 
     changeDates(){
@@ -276,8 +277,8 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
         }
         else{
             this.startDate = unix(new Date().getTime() /1000);
-        } 
-        
+        }
+
     }
-    
+
 }

@@ -1,7 +1,7 @@
 <div class="form-group">
     <label for="">Expression</label>
     <div class="input-group">
-        <autocomplete-input [completedWords]="timeSegment != undefined ? timeSegment.completedWordsArray : []" [variables]="variables"></autocomplete-input>
+        <autocomplete-input [completedWords]="timeSegment != undefined ? timeSegment.completedWordsArray : []" [variables]="variables" [variable-name]="variableName"></autocomplete-input>
     </div>
 </div>
 <variable-distribution [time-segment]="timeSegment" [input-method]="inputMethod"></variable-distribution>

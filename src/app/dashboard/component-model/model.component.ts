@@ -49,7 +49,7 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
     public selectedTemplate:Template = null;
 
     // Selected tab
-    public selectedTab = 'componentProperties';
+    public selectedTab = 'component_properties';
 
     // drawing area
     public width = 4000;
@@ -684,6 +684,7 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
     }
 
     public templateClicked(template: any) {
+        this.selectedTab = 'component_properties';
         if (this.selectedTemplate != null && this.selectedTemplate.identifier != template.identifier) {
             let template = this.getSelectedTemplate();
             template.deselectTemplate();

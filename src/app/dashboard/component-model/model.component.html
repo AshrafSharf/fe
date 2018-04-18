@@ -52,15 +52,16 @@
                 <div class="properties_box" *ngIf="selectedTemplate != null">
 
                     <ul class="nav nav-tabs">
-                        <li class="active"><a data-toggle="tab" (click)="changeTab('componentProperties')">Component</a></li>
-                        <li><a data-toggle="tab" *ngIf="canAddInterface()" (click)="changeTab('interfaceProperties')">Interfaces &nbsp;<fa name="plus" data-toggle="modal" data-target="#myModal" class="add_button pull-right" (click)="addInterface()"></fa></a></li>
-                        <li><a data-toggle="tab" (click)="changeTab('visualProperties')">Visual</a></li>
+                        <li><a [class.active]="selectedTab=='component_properties'" (click)="changeTab('component_properties')">Component</a></li>
+                        <li><a [class.active]="selectedTab=='interface_properties'" *ngIf="canAddInterface()" (click)="changeTab('interface_properties')">Interfaces &nbsp;<fa name="plus" data-toggle="modal" data-target="#myModal" class="add_button pull-right" (click)="addInterface()"></fa></a></li>
+                        <li><a [class.active]="selectedTab=='visual_properties'" (click)="changeTab('visual_properties')">Visual</a></li>
                     </ul>
+                    <hr>
                     <div class="tab-content">
 
                         <!-- component properties -->
-                        <div *ngIf="selectedTab=='componentProperties'">
-                            <div id="component_properties" class="tab-pane fade in active">
+                        <div *ngIf="selectedTab=='component_properties'">
+                            <div id="component_properties">
                                 <table class="table table-bordered">
                                     <tr class="section_title">
                                         <td colspan="2">Component Properties<fa name="plus" class="add_button pull-right" (click)="onAddComponentProperty()"></fa></td>
@@ -101,8 +102,8 @@
                         </div>
 
                         <!-- interfaces -->
-                        <div  *ngIf="selectedTab == 'interfaceProperties'">
-                            <div class="tab-pane fade in active">
+                        <div  *ngIf="selectedTab == 'interface_properties'">
+                            <div id="interface_properties">
                                 <div class="no-interfaces-message" *ngIf="selectedTemplate.interfaces.length == 0">
                                     No Interfaces added
                                 </div>
@@ -144,8 +145,8 @@
                         </div>
 
                         <!-- visaul properties -->
-                        <div *ngIf="selectedTab=='visualProperties'">
-                            <div id="visual_properties" class="table tab-pane fade in active">
+                        <div *ngIf="selectedTab=='visual_properties'">
+                            <div id="visual_properties">
                                 <table  class="table table-bordered">
                                     <tr class="section_title">
                                         <td colspan="2">Visual Properties</td>

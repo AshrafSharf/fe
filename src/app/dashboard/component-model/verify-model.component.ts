@@ -170,6 +170,7 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
 
         //show warning if no value defined for an input variable
         let inputVarValues:{[key:string]:number} = {};
+        let matchings= [];
         for (let inputVar of this.matchTable.inputVariableMatchings){
             if (inputVar.hasForecastMatch == false
             && inputVar.overrideValue == ""){
@@ -181,7 +182,7 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
                  return;
             }
   
-            //set input variable load to the value of the matching forecast variable value
+            /*//set input variable load to the value of the matching forecast variable value
             if (inputVar.forecastValue != null && inputVar.overrideValue == ""){
                 inputVarValues[inputVar.inputVariableName] = Number(inputVar.forecastValue);
             }
@@ -189,12 +190,24 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
             //set input variable load to the override value
             else{
                 inputVarValues[inputVar.inputVariableName] = Number(inputVar.overrideValue);
+            }*/
+            let matching = {
+                "forecastVariableValue": inputVar.forecastValue,
+			    "forecastVariableId": inputVar.forecastVarId,
+			    "title": inputVar.inputVariableName,
+			    "id":inputVar.inputVarId,
+			    "modelId":this.selectedModelId
             }
+            matchings.push(matching);
+            
+            
         }
-        console.log(this.matchTable.inputVariableMatchings);
-        this.simService.runSimulation(this.selectedModelId, this.matchTable.inputVariableMatchings)
+        let body = {
+            "modelInputList": matchings
+        }
+        console.log(body);
+        this.simService.runSimulation(this.selectedModelId, body)
             .subscribe(result =>{
-                console.log("hello");
                 this.simOutput = result.data;
             });
         //let o = this.environment.runSim();
@@ -322,7 +335,7 @@ so that the the drawing functions below can be removed*/
                                 // get properties of component
                                 if (tempTemplate.modelComponentPropertiesList !=null){
                                     for (let propertyIndex = 0; propertyIndex < tempTemplate.modelComponentPropertiesList.length; propertyIndex ++) {
-                                        let property = tempTemplate.modelComponentPropertiesList[propertyIndex];
+                                        let property = tempTemplate.modelComponentPropertiesList[propertyIndex];  
                                         template.modelComponentPropertiesList.push({ name: property.key, value: property.value});
                                     }
                                 }
@@ -332,7 +345,9 @@ so that the the drawing functions below can be removed*/
                                     for (let propertyIndex = 0; propertyIndex < tempTemplate.fixedProperties.length; propertyIndex ++) {
                                         let property = tempTemplate.fixedProperties[propertyIndex];
                                         console.log(property);
-                                        template.fixedProperties.push({ name: property.key, value: property.value});
+                                        if (property !=null){
+                                            template.fixedProperties.push({ name: property.key, value: property.value});
+                                        }
                                     }
                                     console.log(template.fixedProperties);
                                 }

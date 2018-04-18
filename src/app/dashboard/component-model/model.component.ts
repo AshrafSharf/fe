@@ -48,6 +48,9 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
     // selected template
     public selectedTemplate:Template = null;
 
+    // Selected tab
+    public selectedTab = 'component_properties';
+
     // drawing area
     public width = 4000;
     public height = 4000;
@@ -367,6 +370,10 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
             });
     }
 
+    public changeTab(tab) {
+        this.selectedTab = tab;
+    }
+    
     public drawConnections() {
         for (var index = 0; index < this.connections.length; index++) {
             var connection = this.connections[index];
@@ -924,6 +931,7 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
     }
 
     public templateClicked(template: any) {
+        this.selectedTab = 'component_properties';
         if (this.selectedTemplate != null && this.selectedTemplate.identifier != template.identifier) {
             let template = this.getSelectedTemplate();
             template.deselectTemplate();

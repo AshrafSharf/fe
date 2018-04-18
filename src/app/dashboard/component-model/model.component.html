@@ -63,143 +63,147 @@
                 <div class="properties_box" *ngIf="selectedTemplate != null">
 
                     <ul class="nav nav-tabs">
-                        <li class="active"><a data-toggle="tab" href="#component_properties">Component</a></li>
-                        <li><a data-toggle="tab" href="#interfaces" *ngIf="canAddInterface()">Interfaces &nbsp;<fa name="plus" data-toggle="modal" data-target="#myModal" class="add_button pull-right" (click)="addInterface()"></fa></a></li>
-                        <li><a data-toggle="tab" href="#visual_properties">Visual</a></li>
+                        <li><a [class.active]="selectedTab=='component_properties'" (click)="changeTab('component_properties')">Component</a></li>
+                        <li><a [class.active]="selectedTab=='interface_properties'" *ngIf="canAddInterface()" (click)="changeTab('interface_properties')">Interfaces &nbsp;<fa name="plus" data-toggle="modal" data-target="#myModal" class="add_button pull-right" (click)="addInterface()"></fa></a></li>
+                        <li><a [class.active]="selectedTab=='visual_properties'" (click)="changeTab('visual_properties')">Visual</a></li>
                     </ul>
+                    <hr>
                     <div class="tab-content">
 
                         <!-- component properties -->
-                        <div id="component_properties" class="tab-pane fade in active">
-                            <table class="table table-bordered">                
-                                <tr class="section_title">
-                                    <td colspan="2">Component Properties<fa name="plus" class="add_button pull-right" (click)="onAddComponentProperty()"></fa></td>
-                                </tr>
-                                <tr>
-                                    <td class="table_column">Template</td>
-                                    <td class="table_column">{{selectedTemplate.getType()}}</td>
-                                </tr>
-                                <tr>
-                                    <td class="table_column">Name</td>
-                                    <td class="table_column"><input type="text" class="property_value" [(ngModel)]="selectedTemplate.name"></td>
-                                </tr>
-                                <tr *ngIf="selectedTemplate.type == 'JavaMicroServiceTemplate' || selectedTemplate.type == 'Ec2ComponentTemplate'">
-                                    <td class="table_column">Instance Type</td>
-                                    <td class="table_column"> 
-                                        <select  class="app-select" [(ngModel)]="selectedTemplate.instanceType" style="width:100%">
-                                            <option *ngFor="let type of instanceTypes" [value]="type"> {{type}} </option>
-                                        </select>
-                                    </td>
-                                </tr>
-                                <ng-container *ngIf="selectedTemplate.instanceType != 'none'">
-                                <tr *ngFor="let prop of selectedTemplate.fixedProperties; let propertyIndex = index">
-                                    <td class="table_column">{{prop.name}}</td>
-                                    <td class="table_column">
-                                        <input type="text" class="property_value" [(ngModel)]="prop.value" >
-                                    </td>
-                                </tr>
-                                </ng-container>
-                                <tr *ngFor="let prop of selectedTemplate.modelComponentPropertiesList; let propertyIndex = index">
-                                    <td class="table_column"><input type="text" class="property_value" [(ngModel)]="prop.name" ></td>
-                                    <td class="table_column">
-                                        <input type="text" class="custom_property_value" [(ngModel)]="prop.value" >
-                                        <fa name="times" (click)="onDeleteComponentProperty(i,  propertyIndex)" class="delete_property"></fa>
-                                    </td>
-                                </tr>
-                            </table>
-
+                        <div *ngIf="selectedTab=='component_properties'">
+                            <div id="component_properties">
+                                <table class="table table-bordered">                
+                                    <tr class="section_title">
+                                        <td colspan="2">Component Properties<fa name="plus" class="add_button pull-right" (click)="onAddComponentProperty()"></fa></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="table_column">Template</td>
+                                        <td class="table_column">{{selectedTemplate.getType()}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="table_column">Name</td>
+                                        <td class="table_column"><input type="text" class="property_value" [(ngModel)]="selectedTemplate.name"></td>
+                                    </tr>
+                                    <tr *ngIf="selectedTemplate.type == 'JavaMicroServiceTemplate' || selectedTemplate.type == 'Ec2ComponentTemplate'">
+                                        <td class="table_column">Instance Type</td>
+                                        <td class="table_column"> 
+                                            <select  class="app-select" [(ngModel)]="selectedTemplate.instanceType" style="width:100%">
+                                                <option *ngFor="let type of instanceTypes" [value]="type"> {{type}} </option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <ng-container *ngIf="selectedTemplate.instanceType != 'none'">
+                                    <tr *ngFor="let prop of selectedTemplate.fixedProperties; let propertyIndex = index">
+                                        <td class="table_column">{{prop.name}}</td>
+                                        <td class="table_column">
+                                            <input type="text" class="property_value" [(ngModel)]="prop.value" >
+                                        </td>
+                                    </tr>
+                                    </ng-container>
+                                    <tr *ngFor="let prop of selectedTemplate.modelComponentPropertiesList; let propertyIndex = index">
+                                        <td class="table_column"><input type="text" class="property_value" [(ngModel)]="prop.name" ></td>
+                                        <td class="table_column">
+                                            <input type="text" class="custom_property_value" [(ngModel)]="prop.value" >
+                                            <fa name="times" (click)="onDeleteComponentProperty(i,  propertyIndex)" class="delete_property"></fa>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
                         </div>
 
                         <!-- interfaces -->
-                        <div id="interfaces" class="tab-pane fade">
-                            <div class="no-interfaces-message" *ngIf="selectedTemplate.interfaces.length == 0">
-                                No Interfaces added
-                            </div>
-                            <table class="table table-bordered" *ngFor="let intf of selectedTemplate.interfaces; let i = index">                
+                        <div *ngIf="selectedTab == 'interface_properties'">
+                            <div id="interface_properties">
+                                <div class="no-interfaces-message" *ngIf="selectedTemplate.interfaces.length == 0">
+                                    No Interfaces added
+                                </div>
+                                <table class="table table-bordered" *ngFor="let intf of selectedTemplate.interfaces; let i = index">
 
-                                <tr class="section_title" data-toggle="collapse" >
-                                    <td colspan="2">
-                                        Interface - {{intf.name}} 
-                                        <div class="pull-right">
-                                            <fa name="plus" class="add_button" (click)="onAddProperty(i)"></fa>&nbsp;&nbsp;
-                                            <fa name="times" class="add_button" (click)="onDelete(i)"></fa>
-                                        </div>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td colspan="2">
-                                        <table class="table table-bordered">
-                                            <tr>
-                                                <td class="table_column">Name:</td>
-                                                <td class="table_column"><input type="text" class="property_value" [(ngModel)]="intf.name" ></td>
-                                            </tr>
-                                            <tr>
-                                                <td class="table_column">Latency:</td>
-                                                <td class="table_column"><input type="text" class="property_value" [(ngModel)]="intf.latency" ></td>
-                                            </tr>
-                                            <tr *ngFor="let prop of intf.properties; let propertyIndex = index">
-                                                <td class="table_column"><input type="text" class="property_value" [(ngModel)]="prop.name" ></td>
-                                                <td class="table_column">
-                                                    <input type="text" class="custom_property_value" [(ngModel)]="prop.value" >
-                                                    <fa name="times" (click)="onDeleteProperty(i,  propertyIndex)" class="delete_property"></fa>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                        <h4 *ngIf="getDownstreamInterfaces(intf.name).length > 0">Downstream Interfaces:</h4>               
-                                        <div class="panel-group" id="accordion">
-                                                <div class="panel panel-default" *ngFor="let dsIf of getDownstreamInterfaces(intf.name); let i = index;">
-                                                  <div class="panel-heading">
-                                                    <h4 class="panel-title">
-                                                      <a data-toggle="collapse" data-parent="#accordion" [attr.href]="'#ds_' + dsIf.outputInterfaceName + i">
-                                                      {{dsIf.outputInterfaceName}}  </a>
-                                                    </h4>
-                                                  </div>
-                                                  <div [attr.id]="'ds_'+ dsIf.outputInterfaceName + i" class="panel-collapse collapse">
-                                                    <div class="panel-body">
-                                                        <table class="table table-bordered" *ngIf="dsIf.connectionProperties.length >0 ">
-                                                            <tr *ngFor="let prop of dsIf.connectionProperties">
-                                                                <td class="table_column">{{prop.key}}</td>
-                                                                <td class="table_column"><input type="text" class="property_value" [(ngModel)]="prop.value"></td>
-                                                            </tr>
-                                                        </table>
+                                    <tr class="section_title">
+                                        <td colspan="2">
+                                            Interface - {{intf.name}}
+                                            <div class="pull-right">
+                                                <fa name="plus" class="add_button" (click)="onAddProperty(i)"></fa>&nbsp;&nbsp;
+                                                <fa name="times" class="add_button" (click)="onDelete(i)"></fa>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            <table class="table table-bordered">
+                                                <tr>
+                                                    <td class="table_column">Name:</td>
+                                                    <td class="table_column"><input type="text" class="property_value" [(ngModel)]="intf.name" ></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="table_column">Latency:</td>
+                                                    <td class="table_column"><input type="text" class="property_value" [(ngModel)]="intf.latency" ></td>
+                                                </tr>
+                                                <tr *ngFor="let prop of intf.properties; let propertyIndex = index">
+                                                    <td class="table_column"><input type="text" class="property_value" [(ngModel)]="prop.name" ></td>
+                                                    <td class="table_column">
+                                                        <input type="text" class="custom_property_value" [(ngModel)]="prop.value" >
+                                                        <fa name="times" (click)="onDeleteProperty(i,  propertyIndex)" class="delete_property"></fa>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            <h4 *ngIf="getDownstreamInterfaces(intf.name).length > 0">Downstream Interfaces:</h4>
+                                            <div class="panel-group" id="accordion">
+                                                    <div class="panel panel-default" *ngFor="let dsIf of getDownstreamInterfaces(intf.name); let i = index;">
+                                                      <div class="panel-heading">
+                                                        <h4 class="panel-title">
+                                                          <a data-toggle="collapse" data-parent="#accordion" [attr.href]="'#ds_' + dsIf.outputInterfaceName + i">
+                                                          {{dsIf.outputInterfaceName}}  </a>
+                                                        </h4>
+                                                      </div>
+                                                      <div [attr.id]="'ds_'+ dsIf.outputInterfaceName + i" class="panel-collapse collapse">
+                                                        <div class="panel-body">
+                                                            <table class="table table-bordered" *ngIf="dsIf.connectionProperties.length >0 ">
+                                                                <tr *ngFor="let prop of dsIf.connectionProperties">
+                                                                    <td class="table_column">{{prop.key}}</td>
+                                                                    <td class="table_column"><input type="text" class="property_value" [(ngModel)]="prop.value"></td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                      </div>
                                                     </div>
-                                                  </div>
-                                                </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </table>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
                         </div>
 
-
                         <!-- visaul properties -->
-                        <div id="visual_properties" class="table tab-pane fade">
-                            <table  class="table table-bordered">
-                                <tr class="section_title">
-                                    <td colspan="2">Visual Properties</td>
-                                </tr>
-                                <tr>
-                                    <td>x</td>
-                                    <td>{{getComponentX()}}</td>
-                                </tr>
-                                <tr>
-                                    <td>y</td>
-                                    <td>{{getComponentY()}}</td>
-                                </tr>
-                                <tr>
-                                    <td>width</td>
-                                    <td>{{getComponentWidth()}} px</td>
-                                </tr>
-                                <tr>
-                                    <td>height</td>
-                                    <td>{{getComponentHeight()}} px</td>
-                                </tr>
-                                <tr>
-                                    <td>color</td>
-                                    <td>{{getComponentColor()}}</td>
-                                </tr>
-                            </table>
+                        <div *ngIf="selectedTab == 'visual_properties'">
+                            <div id="visual_properties">
+                                <table  class="table table-bordered">
+                                    <tr class="section_title">
+                                        <td colspan="2">Visual Properties</td>
+                                    </tr>
+                                    <tr>
+                                        <td>x</td>
+                                        <td>{{getComponentX()}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>y</td>
+                                        <td>{{getComponentY()}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>width</td>
+                                        <td>{{getComponentWidth()}} px</td>
+                                    </tr>
+                                    <tr>
+                                        <td>height</td>
+                                        <td>{{getComponentHeight()}} px</td>
+                                    </tr>
+                                    <tr>
+                                        <td>color</td>
+                                        <td>{{getComponentColor()}}</td>
+                                    </tr>
+                                </table>
+                            </div>
                         </div>
                     </div>
 

@@ -33,7 +33,7 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
 
     @ViewChild(StageComponent) stageComponent:StageComponent;
     
-    public instanceTypes:string[] = ["t2.small","t2.medium","t2.large", "m5.large",
+    public instanceTypes:string[] = ["none", "t2.small","t2.medium","t2.large", "m5.large",
                                         "m5.xlarge", "m5.2xlarge"];
 
     private layer: Layer;
@@ -236,8 +236,10 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
 
                                 template.name = tempTemplate.title;
 
-                                if (template instanceof Ec2MicroServiceTemplate || template instanceof Ec2ComponentTemplate){
+                                if (template instanceof JavaMicroServiceTemplate || template instanceof Ec2ComponentTemplate){
+                                    console.log(tempTemplate.instanceType);
                                     template.instanceType = tempTemplate.instanceType;
+                                    console.log(template.instanceType);
                                 }
 
                                 // get interfaces from template
@@ -850,6 +852,16 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
 
     public addJavaMicroService() {
         let t = new JavaMicroServiceTemplate(this);
+         //add EC2/Pod Properties
+         t.fixedProperties.push({
+            name: 'Volume per Pod (tps)',
+            value: "0"
+        });
+
+        t.fixedProperties.push( {
+            name: '# Pods per Instance',
+            value: "0"
+        });
         this.templates.push(t);
         this.addGroup(t.createUI());
     }
@@ -970,6 +982,7 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
             }
             
             this.selectedTemplate = template.clone();
+            console.log(this.selectedTemplate);
         }
 
         this.layer.draw();        
@@ -994,7 +1007,7 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                 // found the one to update
                 template.name = this.selectedTemplate.name;
                 //save instanceType if applicable
-                if(this.selectedTemplate instanceof Ec2MicroServiceTemplate && template instanceof Ec2MicroServiceTemplate){
+                if(this.selectedTemplate instanceof JavaMicroServiceTemplate && template instanceof JavaMicroServiceTemplate){
                     template.instanceType = this.selectedTemplate.instanceType;
                 }else if (this.selectedTemplate instanceof Ec2ComponentTemplate && template instanceof Ec2ComponentTemplate){
                         template.instanceType = this.selectedTemplate.instanceType;
@@ -1203,8 +1216,8 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                                 key: prop.name,
                                 value:prop.value
                             }
+                            fixedPropertiesList.push(propObj);
                         }
-                        fixedPropertiesList.push(propObj);
                     }
 
                     if (template instanceof InputTemplate){
@@ -1212,7 +1225,7 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                     
                     }
 
-                    if (template instanceof Ec2MicroServiceTemplate || template instanceof Ec2ComponentTemplate){
+                    if (template instanceof JavaMicroServiceTemplate || template instanceof Ec2ComponentTemplate){
                         instanceType = template.instanceType;
                     }
 

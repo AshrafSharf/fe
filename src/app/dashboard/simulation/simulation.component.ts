@@ -36,6 +36,7 @@ export class SimulationComponent implements OnInit{
     forecastBranchId:string;
     startDate:Moment;
     endDate:Moment;
+    performMC:boolean;
     iterations:string;
     modelId:string = "";
 
@@ -43,6 +44,9 @@ export class SimulationComponent implements OnInit{
     selectedProjectId:string;
     selectedSimulation:Simulation;
     selectedSimulationId:string;
+
+    runFrequency:string ="once";
+    isContinuous:boolean =false;
     
     users: User[] = Array<User>();
     forecastBranches: Branch[] = Array<Branch>();
@@ -147,7 +151,7 @@ export class SimulationComponent implements OnInit{
     this.modelService.getModels(this.modelBranchId)
     .subscribe(result=>{
         //TODO rmove hardcoded model retrieval
-        let model = result.data[12] as SystemModel;
+        let model = result.data[4] as SystemModel;
         console.log(result);
        for (let template of model.modelComponentList){
             if (template.templateName == "InputTemplate"){

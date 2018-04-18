@@ -15,10 +15,10 @@
                                 <div class="form-group">
                                     <label for="">Starting Time</label>
                                     <div class=' date inputText' id='startDate'>
-                                        <dp-date-picker 
+                                        <dp-date-picker
                                             [config]="datePickerConfig"
-                                            [(ngModel)]="startDate" 
-                                            mode="month" 
+                                            [(ngModel)]="startDate"
+                                            mode="month"
                                             [theme]="'dp-material dp-main'"></dp-date-picker>
                                     </div>
                                 </div>
@@ -28,10 +28,10 @@
                                 <div class="form-group">
                                     <label for="">End Time</label>
                                     <div class=' date inputText' id='endDate'>
-                                        <dp-date-picker 
+                                        <dp-date-picker
                                             [config]="datePickerConfig"
-                                            [(ngModel)]="endDate" 
-                                            mode="month" 
+                                            [(ngModel)]="endDate"
+                                            mode="month"
                                             [theme]="'dp-material dp-main'"></dp-date-picker>
                                     </div>
                                 </div>
@@ -83,9 +83,10 @@
                                         [time-segment]="timeSegment"
                                         *ngIf="selectedInputMethod == 'expression'"
                                         [branch-id]="branchId"
+                                        [variable-name]="variableName"
                                         [input-method]="selectedInputMethod"></variable-expression>
 
-                               
+
 
                                 <variable-breakdown
                                         *ngIf="selectedInputMethod == 'breakdown'"
@@ -127,7 +128,7 @@
                         <label for="">Comment</label>
                         <textarea name="" [(ngModel)]="comment" id="comment" class="form-control"></textarea>
                     </div>
-                    <variable-table 
+                    <variable-table
                         id="inputTable"
                         *ngIf="selectedInputMethod == 'table'"
                         [branch-id]="branchId"

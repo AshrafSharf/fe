@@ -15,7 +15,7 @@ export class AutocompleteInputComponent implements OnInit, VariableComponentBeha
     mathExpressions = [
         "*", "+", "/", "%", "-", "^", "(", ")"
     ];
-
+    @Input('variable-name') variableName: String;
     @Input('variables') variables: KeyValuePair[] = Array<KeyValuePair>();
 
     expression: String[] = Array<String>();
@@ -61,7 +61,7 @@ export class AutocompleteInputComponent implements OnInit, VariableComponentBeha
 
         this.variables.forEach(element => {
             if (event.target.value.length > 0) {
-                if (element.title.toLowerCase().indexOf(event.target.value.toLowerCase().trim()) !== -1) {
+                if (element.title !== this.variableName && element.title.toLowerCase().indexOf(event.target.value.toLowerCase().trim()) !== -1) {
                     this.suggestions.push(element);
                 }
             }

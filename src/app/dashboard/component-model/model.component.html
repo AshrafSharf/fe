@@ -16,8 +16,19 @@
             (zoom-in)="zoomPlus()"
             (zoom-out)="zoomMinus()"
             (save)="saveModel($event)"
+            (group)="groupTemplates()"
+
+            (ungroup)="ungroupTemplates()"
+            (copy-group)="copyGroup()"
+            (delete-group)="deleteGroup()"
+
+            (start-group-selection)="startGroupSelection()"
+            (stop-group-selection)="stopGroupSelection()"
             (cancel)="cancelModel()"
-            (verify)="saveModel($event)"></app-drawing-tools-header>
+            (verify)="saveModel($event)"
+            [ungroup-disabled]="selectedGroup == null"
+            [copy-group-disabled]="selectedGroup == null"
+            [delete-group-disabled]="selectedGroup == null"></app-drawing-tools-header>
     </div>
 
     <div class="row">
@@ -119,29 +130,50 @@
                                         </td>
                                     </tr>
 
-                                    <tr>
-                                        <td colspan="2">
-                                            <table class="table table-bordered">
-                                                <tr>
-                                                    <td class="table_column">Name:</td>
-                                                    <td class="table_column"><input type="text" class="property_value" [(ngModel)]="intf.name" ></td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="table_column">Latency:</td>
-                                                    <td class="table_column"><input type="text" class="property_value" [(ngModel)]="intf.latency" ></td>
-                                                </tr>
-                                                <tr *ngFor="let prop of intf.properties; let propertyIndex = index">
-                                                    <td class="table_column"><input type="text" class="property_value" [(ngModel)]="prop.name" ></td>
-                                                    <td class="table_column">
-                                                        <input type="text" class="custom_property_value" [(ngModel)]="prop.value" >
-                                                        <fa name="times" (click)="onDeleteProperty(i,  propertyIndex)" class="delete_property"></fa>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
+                                <tr>
+                                    <td colspan="2">
+                                        <table class="table table-bordered">
+                                            <tr>
+                                                <td class="table_column">Name:</td>
+                                                <td class="table_column"><input type="text" class="property_value" [(ngModel)]="intf.name" ></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="table_column">Latency:</td>
+                                                <td class="table_column"><input type="text" class="property_value" [(ngModel)]="intf.latency" ></td>
+                                            </tr>
+                                            <tr *ngFor="let prop of intf.properties; let propertyIndex = index">
+                                                <td class="table_column"><input type="text" class="property_value" [(ngModel)]="prop.name" ></td>
+                                                <td class="table_column">
+                                                    <input type="text" class="custom_property_value" [(ngModel)]="prop.value" >
+                                                    <fa name="times" (click)="onDeleteProperty(i,  propertyIndex)" class="delete_property"></fa>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <h4 *ngIf="getDownstreamInterfaces(intf.name).length > 0">Downstream Interfaces:</h4>               
+                                        <div class="panel-group" id="accordion">
+                                                <div class="panel panel-default" *ngFor="let dsIf of getDownstreamInterfaces(intf.name); let i = index;">
+                                                  <div class="panel-heading">
+                                                    <h4 class="panel-title">
+                                                      <a data-toggle="collapse" data-parent="#accordion" [attr.href]="'#ds_' + dsIf.outputInterfaceName + i">
+                                                      {{dsIf.outputInterfaceName}}  </a>
+                                                    </h4>
+                                                  </div>
+                                                  <div [attr.id]="'ds_'+ dsIf.outputInterfaceName + i" class="panel-collapse collapse">
+                                                    <div class="panel-body">
+                                                        <table class="table table-bordered" *ngIf="dsIf.connectionProperties.length >0 ">
+                                                            <tr *ngFor="let prop of dsIf.connectionProperties">
+                                                                <td class="table_column">{{prop.key}}</td>
+                                                                <td class="table_column"><input type="text" class="property_value" [(ngModel)]="prop.value"></td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+
                         </div>
 
                         <!-- visaul properties -->

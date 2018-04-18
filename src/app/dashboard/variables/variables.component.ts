@@ -3,7 +3,17 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AppVariableService } from './../../services/variable.services';
 import { UserService } from './../../services/user.service';
 import { Project } from './../../shared/interfaces/project';
-import { Component, Input, OnInit, ViewChildren, ElementRef, NgZone, ViewChild, SimpleChanges } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    ViewChildren,
+    ElementRef,
+    NgZone,
+    ViewChild,
+    SimpleChanges,
+    OnChanges
+} from '@angular/core';
 import { ProjectService } from '../../services/project.service';
 import { Branch } from './../../shared/interfaces/branch';
 import { BranchService } from '../../services/branch.service';
@@ -26,7 +36,7 @@ import { Config } from '../../shared/config';
     styleUrls: ['./variables.component.css']
 })
 
-export class VariablesComponent implements OnInit {
+export class VariablesComponent implements OnChanges, OnInit {
     @ViewChildren(TimeSegmentComponent) timeSegmentWidgets: TimeSegmentComponent[];
 
     projects: Project[] = Array<Project>();
@@ -174,16 +184,27 @@ export class VariablesComponent implements OnInit {
     }
 
     createTable() {
-        this.columns.splice(0, this.columns.length);
         if (this.startDate != undefined && this.endDate != undefined) {
+            var obj = {};
+            this.columns.forEach( function (item) {
+                obj[item.key.toLowerCase()] = item.value;
+            });
+
+            this.columns.splice(0, this.columns.length);
+
             let date = this.startDate.clone();
             let endDate = this.endDate.clone();
-
             let count = endDate.diff(date, 'M') + 1;
-            for (var index = 0; index < count; index++) {
+
+            for (let index = 0; index < count; index++) {
                 let year = date.year();
                 let month = date.format('MMM');
-                this.columns.push({ key: month + " - " + year, value: '0' });
+                let oldValue = '0';
+                let _key = month + " - " + year;
+                if(_key.toLowerCase() in obj){
+                    oldValue = obj[_key.toLowerCase()];
+                }
+                this.columns.push({ key: _key, value: oldValue });
                 date.add(1, 'M');
             }
         }

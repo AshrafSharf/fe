@@ -2,6 +2,7 @@ import { ValidationResult } from './../interfaces/variables';
 import { SelectedWord } from './../interfaces/auto-complete-input';
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { KeyValuePair, VariableComponentBehavior } from '../interfaces/variables';
+// import { VariablesComponent } from '../../dashboard/variables/variables.component';
 
 @Component({
     selector: 'autocomplete-input',
@@ -10,9 +11,7 @@ import { KeyValuePair, VariableComponentBehavior } from '../interfaces/variables
 })
 
 export class AutocompleteInputComponent implements OnInit, VariableComponentBehavior {
-
     @ViewChild('input') input:any;
-
     mathExpressions = [
         "*", "+", "/", "%", "-", "^", "(", ")"
     ];
@@ -62,14 +61,28 @@ export class AutocompleteInputComponent implements OnInit, VariableComponentBeha
 
         this.variables.forEach(element => {
             if (event.target.value.length > 0) {
-                if (element.title.toLowerCase().indexOf(event.target.value.toLowerCase()) !== -1) {
+                if (element.title.toLowerCase().indexOf(event.target.value.toLowerCase().trim()) !== -1) {
                     this.suggestions.push(element);
                 }
             }
         });
 
         if (event.code == "Space") {
+            this.suggestions.sort(function(a, b){
+                // Use toUpperCase() to ignore character casing
+                const titleA = a.title.toUpperCase();
+                const titleB = b.title.toUpperCase();
+
+                let comparison = 0;
+                if (titleA > titleB) {
+                    comparison = 1;
+                } else if (titleA < titleB) {
+                    comparison = -1;
+                }
+                return comparison;
+            });
             if (this.input.nativeElement.value.trim().length != 0) {
+                this.selectWord(this.suggestions[0]);
                 this.onSpacePressed();
             }
         }
@@ -111,6 +124,7 @@ export class AutocompleteInputComponent implements OnInit, VariableComponentBeha
         if (this.completedWords == undefined) {
             this.completedWords = Array<SelectedWord>();
         }
+        console.log(word);
         this.completedWords.push({
             title: word.title,
             type: 'variable',

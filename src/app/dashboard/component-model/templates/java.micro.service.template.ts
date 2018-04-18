@@ -9,7 +9,7 @@ export class JavaMicroServiceTemplate extends GenericMicroServiceTemplate {
     }
 
     public getType(): String {
-        return 'Java Micro Service Template';
+        return 'JavaMicroServiceTemplate';
     }
 
     public clone() {

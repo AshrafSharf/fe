@@ -1,3 +1,5 @@
+import { ModelProperty } from "./model-property";
+
 export interface ModelInterfaceEndpoint{
     id:string;
     inputModelInterfaceId:string;
@@ -6,5 +8,6 @@ export interface ModelInterfaceEndpoint{
     outputModelComponentName: string;
     inputModelInterfaceName: string;
     outputModelInterfaceName: string;
+    endpointProperties:ModelProperty[];
     modelId: string;
 }

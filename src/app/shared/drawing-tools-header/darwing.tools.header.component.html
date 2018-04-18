@@ -5,7 +5,7 @@
         <button [disabled]="gmsTemplateDisabled" (click)="drawGenericMicroService()" type="button" class="btn btn-default">GMS</button>
         <button [disabled]="jmsTemplateDisabled" (click)="drawJavaMicroService()" type="button" class="btn btn-default">JMS</button>
         <button [disabled]="ipTemplateDisabled" (click)="drawInputTemplate()" type="button" class="btn btn-default">IP</button>
-        <button (click)="drawEc2MicroServiceTemplate()" type="button" class="btn btn-default">POD</button>
+       <!-- <button (click)="drawEc2MicroServiceTemplate()" type="button" class="btn btn-default">POD</button> -->
         <button (click)="drawEc2ComponentTemplate()" type="button" class="btn btn-default">EC2</button>
     </div>
     <div class="btn-group" role="group" aria-label="shapes" *ngIf="showModifyButtons==true">

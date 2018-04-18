@@ -1,6 +1,8 @@
 import { GenericMicroServiceTemplate } from "./generic.micro.service.template";
 
 export class JavaMicroServiceTemplate extends GenericMicroServiceTemplate {
+    //default instance type
+    public instanceType = "none";
 
     public constructor(callback) {
         super(callback)
@@ -17,7 +19,9 @@ export class JavaMicroServiceTemplate extends GenericMicroServiceTemplate {
         obj.identifier = this.identifier;
         obj.name = this.name;
         obj.interfaces = this.interfaces;
+        obj.instanceType = this.instanceType;
         obj.modelComponentPropertiesList = this.modelComponentPropertiesList;
+        obj.fixedProperties = this.fixedProperties;
         obj.connectors = this.connectors;
         return obj;
     }

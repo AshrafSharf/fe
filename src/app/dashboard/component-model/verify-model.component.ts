@@ -1,12 +1,8 @@
 import { Component, OnInit, AfterViewInit, ViewChild, Output } from '@angular/core';
-import { CptEnvironment } from '../../shared/modelling/cpt-environment';
-import { CptMicroserviceComponent, CptMicroserviceInterface } from '../../shared/modelling/templates/cpt-microservice';
-import { CptOutput } from '../../shared/modelling/cpt-output';
 import { Branch } from '../../shared/interfaces/branch';
 import { BranchService } from '../../services/branch.service';
 import { MatchTableComponenet } from './match-table.component';
 import { Modal } from 'ngx-modialog/plugins/bootstrap';
-import { CptLoad } from '../../shared/modelling/cpt-load';
 import { ActivatedRoute, Router } from "@angular/router";
 import {Location} from "@angular/common";
 
@@ -19,9 +15,7 @@ import { Moment } from 'moment';
 import { AppVariableService } from '../../services/variable.services';
 import { GenericMicroServiceTemplate } from '../component-model/templates/generic.micro.service.template';
 import { TemplateInterface, Template, Connection, ConnectorType } from '../component-model/templates/templates';
-import { CptComponent } from '../../shared/modelling/cpt-component';
 import { SystemModel } from '../../shared/interfaces/system-model';
-import { CptInterface, CptInterfaceOutput } from '../../shared/modelling/cpt-interface';
 import { Config } from '../../shared/config';
 import { ComponentModel } from '../../shared/interfaces/component.model';
 import { JavaMicroServiceTemplate } from './templates/java.micro.service.template';
@@ -32,11 +26,11 @@ import { CircleShape } from './shapes/circle.shape';
 import { DiamondShape } from './shapes/diamond.shape';
 import { SquareShape } from './shapes/square.shape';
 import { TriangleShape } from './shapes/triangle.shape';
-import { CptInputVariable } from '../../shared/modelling/cpt-input-variable';
-import { InputVariable } from '../../shared/modelling/templates/input-variable';
 import { InputTemplate } from './templates/input.template';
 import { Ec2MicroServiceTemplate } from './templates/ec2.micro.service.template';
 import { Ec2ComponentTemplate } from './templates/ec2.component.template';
+import { ModelComponent } from '../../shared/interfaces/model-component';
+import { SimulationService } from '../../services/simulation.service';
 
 @Component({
     selector: 'verify-model',
@@ -53,7 +47,6 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
     
     branches:Branch[] = Array<Branch>();
     models:SystemModel[] = Array<SystemModel>();
-    environment:CptEnvironment =  CptEnvironment.get();
     simOutput:string;
     forecastBranchId:String=null;
     
@@ -64,7 +57,6 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
     selectedModelId:string = null;
     systemModel:SystemModel = null;
     selectedModel = null;
-    selectedComponent:CptComponent = null;
     modelTitle:string = "";
 
     // list of templatea
@@ -74,7 +66,9 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
      // drawing area
     public width = 4000;
     public height = 4000;
-     private fontSize = 15;
+    private fontSize = 15;
+
+    inputVars:ModelComponent[] = new Array<ModelComponent>();
 
     //graphical arrow info
     public connectionSourceInterface: string = '';
@@ -92,6 +86,7 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
         private modal:Modal,
         private variableService:AppVariableService,
         private modelService:ModelService,
+        private simService:SimulationService,
         private route:ActivatedRoute,
         private router:Router,
         private location: Location) {
@@ -132,100 +127,21 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
             console.log(this.systemModel);
             this.modelTitle = this.systemModel.title;
             this.drawDiagram(this.selectedModelId);
-            this.clearEnvironment();
-            this.setupEnvironment();
+            this.getInputVariables();
         });
     }
 
     /** 
      * Set up the System Model environment
     */
-    setupEnvironment(){
-        this.environment = CptEnvironment.get();
-
+    getInputVariables(){
         for (let component of this.systemModel.modelComponentList){
             let cptComp;
-            if (component.templateName == "GenericMicroServiceTemplate"){
-                cptComp = new CptMicroserviceComponent();
-                cptComp.setName(component.title);
-            }
-            if (component.templateName == "Ec2MicroServiceTemplate"){
-                cptComp = new CptMicroserviceComponent();
-                cptComp.setName(component.title);
-            }
-            else if (component.templateName == "InputTemplate" ){
+            if (component.templateName == "InputTemplate" ){
                 //give input variables name for matching, along with a display name      
-                cptComp = new InputVariable();
-                cptComp.setName( component.displayName);  
-                cptComp.name = component.title;          
-                this.environment.addInputVariable(cptComp);        
+                this.inputVars.push(component);
             }
-            //TODO: add more if cases with for other templates
-
-            cptComp.order = component.order;
-            cptComp.id = component.id;
-            
-            
-            //set up interfaces
-            for (let interf of component.modelComponentInterfaceList){
-                let cptInt = cptComp.addInterface(interf.title);
-                cptInt.id = interf.id;
-                cptInt.componentId = component.id;
-                cptInt.latency = Number(interf.latency);
-                
-                //add custom properties
-                for (let property of interf.modelInterfacePropertiesList){
-                    cptInt.addProperty( property.key,  property.value);
-                }
-            }
-            
-            this.environment.registerComponent(cptComp);
         }
-       
-        this.connectInterfaces();
-       console.log(this.environment.envComponents);
-      
-
-        // let hookCode = "if (load.loadValues['tps'] < 700 ){ return latency; } " +
-        //     "else{ return latency*2; } ";
-       //c3if1.addHookCode("adjustLatencyToLoad", hookCode);
-
-      //  });
-    }
-
-    /** 
-     * Connect Interfaces to their downstream interfaces
-    */
-    connectInterfaces(){
-        for (let connection of this.systemModel.modelInterfaceEndPointsList){
-            let interf = this.environment.getInterface(connection.inputModelInterfaceId);
-            let cptOutput = interf.addOutput() as CptInterfaceOutput;
-            cptOutput.downstreamInterfaceId = connection.outputModelInterfaceId;
-        }
-
-    }
-
-    /** 
-     * Reset the attributes of each interface to their inital state
-    */
-    resetEnvironment(){
-       for (let component of this.systemModel.modelComponentList){
-           for (let interf of component.modelComponentInterfaceList){
-               let cptIf = this.environment.getInterface(interf.id) as CptMicroserviceInterface;
-               cptIf.latency = Number(interf.latency);
-               cptIf.load.loadValues["tps"] = 0;
-               for (let property of interf.modelInterfacePropertiesList){
-                   if(cptIf.load.loadValues.hasOwnProperty(property.key)){
-                        cptIf.load.loadValues[property.key] = 0;
-                    }
-               }
-           }
-       }
-    }
-
-    clearEnvironment(){
-        this.environment.envComponents = [];
-        this.environment.inputVars = [];
     }
 
     /** 
@@ -243,8 +159,6 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
      * Run the simulation on the environment
      */
     onRunSimulation(){
-        this.resetEnvironment();
-
         //dont run simulation if a forecast branch has not been inported
         if (this.matchTable.inputVariableMatchings.length == 0){
             this.modal.alert()
@@ -255,6 +169,8 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
         }
 
         //show warning if no value defined for an input variable
+        let inputVarValues:{[key:string]:number} = {};
+        let matchings= [];
         for (let inputVar of this.matchTable.inputVariableMatchings){
             if (inputVar.hasForecastMatch == false
             && inputVar.overrideValue == ""){
@@ -265,22 +181,37 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
                  .open();
                  return;
             }
-           
-            //set input variable load to the value of the matching forecast variable value
+  
+            /*//set input variable load to the value of the matching forecast variable value
             if (inputVar.forecastValue != null && inputVar.overrideValue == ""){
-                console.log("setting input var with id: " + inputVar.inputVarId + "to " +  inputVar.forecastValue);
-                this.environment.setInputVariableComponent(inputVar.inputVarId, inputVar.forecastValue);
+                inputVarValues[inputVar.inputVariableName] = Number(inputVar.forecastValue);
             }
 
             //set input variable load to the override value
             else{
-                this.environment.setInputVariableComponent(inputVar.inputVarId, inputVar.overrideValue);
+                inputVarValues[inputVar.inputVariableName] = Number(inputVar.overrideValue);
+            }*/
+            let matching = {
+                "forecastVariableValue": inputVar.forecastValue,
+			    "forecastVariableId": inputVar.forecastVarId,
+			    "title": inputVar.inputVariableName,
+			    "id":inputVar.inputVarId,
+			    "modelId":this.selectedModelId
             }
+            matchings.push(matching);
+            
+            
         }
-    
-        let o = this.environment.runSim();
-        console.log(o);
-        this.simOutput =  this.displayOutput();
+        let body = {
+            "modelInputList": matchings
+        }
+        console.log(body);
+        this.simService.runSimulation(this.selectedModelId, body)
+            .subscribe(result =>{
+                this.simOutput = result.data;
+            });
+        //let o = this.environment.runSim();
+        //this.simOutput =  this.displayOutput();
     } 
 
     reloadBranches(projectId:String = null, forceReload = false) {
@@ -302,41 +233,6 @@ export class VerifyModelComponent implements OnInit, AfterViewInit {
         }
     }
 
-    displayOutput(){
-        let outputString = "";
-        let comps = this.environment.envComponents;
-        for (let comp of comps){
-            if (!(comp instanceof InputVariable)){
-                outputString+= comp.displayName+": \n";
-                let interfaces = comp.getInterfaces();
-                for (let interf of interfaces){
-                    outputString+=interf.displayName + ": \n" ;
-                    for (let key in interf.load.loadValues){
-                        outputString += key+ ":" + interf.load.loadValues[key] + " \n";
-                    }
-                    if (comp instanceof CptMicroserviceComponent){
-                        outputString += "latency: " + interf.getStats().val["lat"] + " \n";       
-                    }   
-                }
-            }
-            
-        }
-        return outputString;
-    }
-
-    public showComponentOutput(componentId:string){
-        let comp = this.environment.getComponent(componentId);
-        console.log(comp.getOutput());
-       // this.selectedTemplateOutput = comp.getOutput();
-        for(let interf of comp.getInterfaces()){
-            let output = interf.getOutput();
-            for (let property in output.getVal()){
-                console.log(property, output.getVal()[property]);
-            }
-        }
-        console.log(comp.toJSON());
-
-    }
     public onEdit(){
         this.location.back();
     }
@@ -439,7 +335,7 @@ so that the the drawing functions below can be removed*/
                                 // get properties of component
                                 if (tempTemplate.modelComponentPropertiesList !=null){
                                     for (let propertyIndex = 0; propertyIndex < tempTemplate.modelComponentPropertiesList.length; propertyIndex ++) {
-                                        let property = tempTemplate.modelComponentPropertiesList[propertyIndex];
+                                        let property = tempTemplate.modelComponentPropertiesList[propertyIndex];  
                                         template.modelComponentPropertiesList.push({ name: property.key, value: property.value});
                                     }
                                 }
@@ -449,7 +345,9 @@ so that the the drawing functions below can be removed*/
                                     for (let propertyIndex = 0; propertyIndex < tempTemplate.fixedProperties.length; propertyIndex ++) {
                                         let property = tempTemplate.fixedProperties[propertyIndex];
                                         console.log(property);
-                                        template.fixedProperties.push({ name: property.key, value: property.value});
+                                        if (property !=null){
+                                            template.fixedProperties.push({ name: property.key, value: property.value});
+                                        }
                                     }
                                     console.log(template.fixedProperties);
                                 }
@@ -566,7 +464,6 @@ so that the the drawing functions below can be removed*/
             
         }
         this.selectedTemplate = template.clone();
-        this.selectedComponent = this.environment.getComponent(template.identifier);
        // this.showComponentOutput(template.identifier);
         this.layer.draw(); 
     }

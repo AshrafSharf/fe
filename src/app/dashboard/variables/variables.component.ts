@@ -89,6 +89,7 @@ export class VariablesComponent implements OnChanges, OnInit {
     subvariableName: string = '';
     subvariableValue: string = '';
     subvariablePercentage: string = '';
+    createdAt = '';
 
     subvariableList: Subvariable[];
     subvariableListPercentage = [];
@@ -448,6 +449,7 @@ export class VariablesComponent implements OnChanges, OnInit {
     }
 
     selectVariable(variable: Variable) {
+        this.createdAt = (variable.createdAt).toString();
         this.subvariableListPercentage = [];
         this.isOwner = false;
         this.title = variable.title;
@@ -851,6 +853,8 @@ export class VariablesComponent implements OnChanges, OnInit {
     }
 
     onSave(event) {
+        var a = new Date();
+        console.log((Date()).toString());
         let negative = false;
         let finalValue = 0, finalPercentage = 0, value = 0;
 
@@ -969,7 +973,10 @@ export class VariablesComponent implements OnChanges, OnInit {
                 if (timeSegmentValues.length != this.timeSegmentWidgets.length) {
                     this.modal.showError(lastResult.reason.toString(), 'Incomplete definition');
                 } else {
-
+                    if (this.selectedVariable == null) {
+                        //let a = new Date();
+                        this.createdAt = Date().toString();
+                    }
                     let tempCompositeVariables: { id: String }[] = Array<{ id: String }>();
                     this.compositeVariableList.forEach(variable => {
                         if (variable.isSelected) {
@@ -1021,7 +1028,8 @@ export class VariablesComponent implements OnChanges, OnInit {
                         compositeVariables: tempCompositeVariables,
                         compositeType: this.compositType,
                         hasActual: this.shouldDefineActualValues,
-                        actualTimeSegment: actualTimeSegment
+                        actualTimeSegment: actualTimeSegment,
+                        createdAt: this.createdAt
                     };
 
                     if (this.selectedVariable == null) {

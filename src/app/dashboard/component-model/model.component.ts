@@ -164,11 +164,30 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
         return '-';
     }
 
+    private removeTemplate(id) {
+        for (var index = 0; index < this.templates.length; index++) {
+            if (this.templates[index].identifier == id) {
+                this.templates.splice(index, 1);
+                break;
+            }
+        }
+    }
+
     public groupTemplates() {
         if (this.selectedTemplates.length == 0) return;
 
         var group = new TemplateGroup();
-        group.addTemplates(this.selectedTemplates);
+        //group.addTemplates(this.selectedTemplates);
+        for (var index = 0; index < this.selectedTemplates.length; index++) {
+            var oldTemplate = this.selectedTemplates[index];
+            var newTemplate = group.addTemplate(oldTemplate);
+
+            // update existing connection
+            this.updateConnectionParams(oldTemplate.identifier.toString(), newTemplate.identifier.toString());
+
+            this.removeTemplate(oldTemplate.identifier.toString());
+            this.templates.push(newTemplate);
+        }
         this.templateGroups.push(group);
 
         for (var index = 0;index < this.selectedTemplates.length; index++) {
@@ -182,8 +201,35 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
         this.groupSelectionStarted = false;
     }
 
+    private updateConnectionParams(oldId, newId) {
+        for (let index = 0; index < this.connections.length; index++) {
+            var connection = this.connections[index];
+            if (connection.inputComponentName == oldId) {
+                connection.inputComponentName = newId;
+            }
+
+            if (connection.outputComponentName == oldId) {
+                connection.outputComponentName = newId;
+            }
+        }
+    }
+
     public ungroupTemplates() {
         if (this.selectedGroup == null) return;
+
+        var groupTemplates = this.selectedGroup.getTemplates();
+        for (var index = 0; index < groupTemplates.length; index++) {
+            let template = groupTemplates[index];
+            var newTemplate = template.clone();
+            newTemplate.createUI(template.getX(), template.getY(), true);
+            this.removeTemplate(template.identifier);
+            this.templates.push(newTemplate);
+            this.layer.add(newTemplate.uiGroup);
+        }
+
+        this.selectedGroup.group.remove();
+        this.layer.draw();
+        /*
         this.selectedGroup.ungroup();
         for (var index = 0; index < this.templateGroups.length; index++) {
             if  (this.templateGroups[index].identifer == this.selectedGroup.identifer) {
@@ -191,6 +237,7 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                 break;
             }
         }
+        */
         this.selectedGroup = null;
     }
 
@@ -287,9 +334,7 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                                     for (let propertyIndex = 0; propertyIndex < tempTemplate.fixedProperties.length; propertyIndex ++) {
                                         let property = tempTemplate.fixedProperties[propertyIndex];
                                         console.log(property);
-                                        if (property != null){
-                                            template.fixedProperties.push({ name: property.key, value: property.value});
-                                        }
+                                        template.fixedProperties.push({ name: property.key, value: property.value});
                                     }
                                     console.log(template.fixedProperties);
                                 }
@@ -574,18 +619,17 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
     public copyGroup() {
         if (this.selectedGroup == null) return;
 
+        
         var newGroup = new TemplateGroup();
-        let templates:Template[] = this.selectedGroup.getTemplates();
-        for (var index = 0; index < templates.length; index++) {
-            let temp = templates[index];
-            var template: Template = temp.cloneWithoutId();
-            var ui = template.createUI(temp.getX() + 5, temp.getY() + 5);
-            newGroup.addTemplate(template);
-            this.templates.push(template);
-            this.layer.add(ui);
+        let groupTemplates:Template[] = this.selectedGroup.getTemplates();
+        for (var index = 0; index < groupTemplates.length; index++) {
+            let oldTemplate = groupTemplates[index];
+            var newTemplate = newGroup.addTemplate(oldTemplate, false);
+            this.templates.push(newTemplate);
         }
 
         this.templateGroups.push(newGroup);
+        this.layer.add(newGroup.group);
 
         this.layer.draw();
     }
@@ -603,12 +647,27 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                 .open();
         dialog.then(promise => {
             promise.result.then(result => {
-                this.selectedGroup.deleteGroup();
+                let groupTemplates:Template[] = this.selectedGroup.getTemplates();
+                for (var index = 0; index < groupTemplates.length; index++) {
+                    let oldTemplate = groupTemplates[index];
+                    oldTemplate.uiGroup.remove();
+                }
+                this.selectedGroup.group.remove();
+                this.deleteExistingGroup(this.selectedGroup.identifer);
                 this.selectedTemplate = null;
                 this.selectedGroup = null;
                 this.layer.draw();
             });
         });
+    }
+
+    private deleteExistingGroup(id) {
+        for (var index = 0; index < this.templateGroups.length; index++) {
+            if (this.templateGroups[index].identifer == id) {
+                this.templateGroups.splice(index, 1);
+                break;
+            }
+        }
     }
 
     public makeConnection() {
@@ -645,6 +704,12 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
 
         this.connections.push(connection);
 
+        var sourceTemplate = this.getTemplateById(source.identifier.toString());
+        sourceTemplate.connections.push(connection);
+
+        var targetTemplate = this.getTemplateById(target.identifier.toString());
+        targetTemplate.connections.push(connection);
+
         this.drawConnections();
 
         this.arrowTargetTemplate.hideConnectors();
@@ -673,6 +738,7 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
         }
         return selectedIfConnections;
     }
+    
     private haveIntersection(r1, r2) {
 
         return (((r1.x > (r2.x - 10)) && (r1.x < (r2.x + r2.width + 10))) &&

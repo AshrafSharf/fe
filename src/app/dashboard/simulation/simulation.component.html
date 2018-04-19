@@ -116,11 +116,11 @@
                                                 <div class="form-group">
                                                     <label class="form-check-label" for="">Run Frequency</label>
                                                     <select  [(ngModel)]="runFrequency" (change)="checkFrequency()" class="form-control">
-                                                            <option value="once"> Once</option>
-                                                            <option value="hourly"> Hourly</option>
-                                                            <option value="daily"> Daily</option>
-                                                            <option value="weekly"> Weekly</option>
-                                                            <option value="monthly"> Monthly</option>
+                                                            <option value="ONCE"> Once</option>
+                                                            <option value="HOURLY"> Hourly</option>
+                                                            <option value="DAILY"> Daily</option>
+                                                            <option value="WEEKLY"> Weekly</option>
+                                                            <option value="MONTHLY"> Monthly</option>
                                                     </select>
                                                 </div>
                                         </div>
@@ -153,7 +153,8 @@
                         </div>
                 </div>
                 <div class="panel-footer">
-                    <button class="btn btn-success" (click)="onSave()">Save</button>
+                    <button class="btn btn-success" (click)="onSave(false)">Plan</button>
+                    <button class="btn btn-primary" (click)="onSave(true)">Instant Queue</button>
                     <button class="btn btn-danger" (click)="clearInputs()">Cancel</button>
                 </div>
             </div>

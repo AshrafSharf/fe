@@ -45,8 +45,9 @@ export class SimulationComponent implements OnInit{
     selectedSimulation:Simulation;
     selectedSimulationId:string;
 
-    runFrequency:string ="once";
+    runFrequency:string ="ONCE";
     isContinuous:boolean =false;
+   
     
     users: User[] = Array<User>();
     forecastBranches: Branch[] = Array<Branch>();
@@ -83,13 +84,15 @@ export class SimulationComponent implements OnInit{
                 .getDetails(simulationId)
                 .subscribe(result => {
                     this.selectedSimulation = result.data as Simulation;
-
                     this.title = this.selectedSimulation.title;
                     this.description = this.selectedSimulation.description;
                     this.ownerId = this.selectedSimulation.ownerId;
                     this.startDate = moment(this.selectedSimulation.startDate, "MM-YYYY");
                     this.endDate = moment(this.selectedSimulation.endDate, "MM-YYYY");
-                    this.iterations = this.selectedSimulation.iterations
+                    this.iterations = this.selectedSimulation.iterations;
+                    this.isContinuous = this.selectedSimulation.continous;
+                    this.performMC = this.selectedSimulation.performMonteCarloCalc;
+                    this.runFrequency = this.selectedSimulation.frequency;
                 });
         });
 
@@ -151,7 +154,7 @@ export class SimulationComponent implements OnInit{
     this.modelService.getModels(this.modelBranchId)
     .subscribe(result=>{
         //TODO rmove hardcoded model retrieval
-        let model = result.data[4] as SystemModel;
+        let model = result.data[0] as SystemModel;
         console.log(result);
        for (let template of model.modelComponentList){
             if (template.templateName == "InputTemplate"){
@@ -176,12 +179,13 @@ export class SimulationComponent implements OnInit{
    }
 
    checkFrequency(){
-       if (this.runFrequency == 'once'){
+       if (this.runFrequency == 'ONCE'){
            this.isContinuous = false;
        }
    }
 
-   onSave(){
+   onSave(instantRun:boolean){
+       console.log(instantRun);
        this.users.forEach(user => {
            if (user.id == this.ownerId) {
                this.ownerName = (user.userName).toString();
@@ -205,14 +209,16 @@ export class SimulationComponent implements OnInit{
            let endDate = null
             if (this.isContinuous == true){
                 endDate = this.endDate.format(Config.getDateFormat());
+            }else{
+                endDate = this.startDate.format(Config.getDateFormat());
             }
 
            let body = {
                modelProjectId:this.selectedProjectId,
                title:this.title,
                description:this.description,
-               runFrequency: this.runFrequency,
-               performMC: this.performMC,
+               frequency: this.runFrequency,
+               performMonteCarloCalc: this.performMC,
                startDate: this.startDate.format(Config.getDateFormat()),
                endDate:endDate,
                ownerId:this.ownerId,
@@ -220,7 +226,8 @@ export class SimulationComponent implements OnInit{
                forecastBranchId:this.forecastBranchId,
                modelBranchId:this.modelBranchId,
                iterations:this.iterations,
-               isContinuous:this.isContinuous,
+               continous:this.isContinuous,
+               instantRun:instantRun,
                inputVariableMatchings:this.variableMatchings
            };
 

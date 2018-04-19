@@ -175,6 +175,12 @@ export class SimulationComponent implements OnInit{
 
    }
 
+   checkFrequency(){
+       if (this.runFrequency == 'once'){
+           this.isContinuous = false;
+       }
+   }
+
    onSave(){
        this.users.forEach(user => {
            if (user.id == this.ownerId) {
@@ -196,17 +202,25 @@ export class SimulationComponent implements OnInit{
                .open();
        }
        else {
+           let endDate = null
+            if (this.isContinuous == true){
+                endDate = this.endDate.format(Config.getDateFormat());
+            }
+
            let body = {
                modelProjectId:this.selectedProjectId,
                title:this.title,
                description:this.description,
+               runFrequency: this.runFrequency,
+               performMC: this.performMC,
                startDate: this.startDate.format(Config.getDateFormat()),
-               endDate:this.endDate.format(Config.getDateFormat()),
+               endDate:endDate,
                ownerId:this.ownerId,
                ownerName:this.ownerName,
                forecastBranchId:this.forecastBranchId,
                modelBranchId:this.modelBranchId,
                iterations:this.iterations,
+               isContinuous:this.isContinuous,
                inputVariableMatchings:this.variableMatchings
            };
 

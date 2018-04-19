@@ -115,7 +115,7 @@
                                         <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label class="form-check-label" for="">Run Frequency</label>
-                                                    <select  [(ngModel)]="runFrequency" class="form-control">
+                                                    <select  [(ngModel)]="runFrequency" (change)="checkFrequency()" class="form-control">
                                                             <option value="once"> Once</option>
                                                             <option value="hourly"> Hourly</option>
                                                             <option value="daily"> Daily</option>
@@ -124,7 +124,7 @@
                                                     </select>
                                                 </div>
                                         </div>
-                                        <div  class="col-md-6" *ngIf="isContinuous==false && runFrequency!= 'once'">
+                                        <div  class="col-md-6" *ngIf="isContinuous==false">
                                             
                                                     <div class="form-group">
                                                             <label for="">End Date</label>

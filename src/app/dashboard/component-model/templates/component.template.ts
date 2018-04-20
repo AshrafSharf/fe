@@ -2,15 +2,15 @@ import { StageComponent } from 'ng2-konva';
 import { Layer, Stage, Node, Shape, Rect, Transform, Circle, Star, RegularPolygon, Label, Tag, Text, Group } from 'konva';
 import { Template, TemplateInterface } from './templates';
 
-export class GenericMicroServiceTemplate extends Template {
+export class ComponentTemplate extends Template {
 
     private containerWidth = 150;
     private interfaceContainerHeight = 40;
 
     public constructor(callback) {
         super(callback);
-        this.name = 'Generic Micro Service';
-        this.type = 'GenericMicroServiceTemplate';
+        this.name = 'Component';
+        this.type = 'ComponentTemplate';
     }
 
     public getTitle():string {
@@ -258,7 +258,7 @@ export class GenericMicroServiceTemplate extends Template {
     }
 
     public clone() {
-        let obj = new GenericMicroServiceTemplate(this.callback);
+        let obj = new ComponentTemplate(this.callback);
         obj.identifier = this.identifier;
         obj.name = this.name;
         obj.interfaces = this.interfaces;

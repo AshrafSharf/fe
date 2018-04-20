@@ -1,6 +1,6 @@
-import { GenericMicroServiceTemplate } from "./generic.micro.service.template";
+import { ComponentTemplate } from "./component.template";
 
-export class JavaMicroServiceTemplate extends GenericMicroServiceTemplate {
+export class JavaMicroServiceTemplate extends ComponentTemplate {
     //default instance type
     public instanceType = "none";
 

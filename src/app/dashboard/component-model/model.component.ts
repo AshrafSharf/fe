@@ -6,7 +6,6 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { StageComponent } from 'ng2-konva';
 import { Layer, Stage, Node, Shape, Rect, Transform, Circle, Star, RegularPolygon, Label, Tag, Text, Group, Arrow } from 'konva';
 import { ActivatedRoute, Router } from "@angular/router";
-import { GenericMicroServiceTemplate } from './templates/generic.micro.service.template';
 import { Template, TemplateEventsCallback, TemplateInterface, ConnectorType, Connection, TemplateGroup } from './templates/templates';
 import { StaticTemplate } from './templates/static.template';
 import { SingleInterfaceTemplate } from './templates/single.interface.template';
@@ -19,7 +18,6 @@ import { DiamondShape } from './shapes/diamond.shape';
 import { InputTemplate } from './templates/input.template';
 import { Modal } from 'ngx-modialog/plugins/bootstrap';
 import { ModelShape } from './shapes/model.shape';
-import { Ec2MicroServiceTemplate } from './templates/ec2.micro.service.template';
 import { Ec2ComponentTemplate } from './templates/ec2.component.template';
 
 
@@ -218,9 +216,7 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                                 // create template
                                 let tempTemplate = this.selectedModel.modelComponentList[index];
                                 var template: Template;
-                                if (tempTemplate.templateName == 'GenericMicroServiceTemplate') {
-                                    template = new GenericMicroServiceTemplate(this);
-                                } else if (tempTemplate.templateName == 'Ec2ComponentTemplate') {
+                                if (tempTemplate.templateName == 'Ec2ComponentTemplate') {
                                     template = new Ec2ComponentTemplate(this);
                                 } else if (tempTemplate.templateName == 'JavaMicroServiceTemplate') {
                                     template = new JavaMicroServiceTemplate(this);
@@ -230,8 +226,6 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                                     template = new SingleInterfaceTemplate(this);
                                 } else if (tempTemplate.templateName == 'InputTemplate') {
                                     template = new InputTemplate(this);
-                                } else if (tempTemplate.templateName == 'Ec2MicroServiceTemplate') {
-                                    template = new Ec2MicroServiceTemplate(this);
                                 }
 
                                 template.name = tempTemplate.title;
@@ -844,12 +838,6 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
         this.addGroup(t.createUI());
     }
 
-    public addGenericMicroService() {
-        let t = new GenericMicroServiceTemplate(this);
-        this.templates.push(t);
-        this.addGroup(t.createUI());
-    }
-
     public addJavaMicroService() {
         let t = new JavaMicroServiceTemplate(this);
          //add EC2/Pod Properties
@@ -873,26 +861,6 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
             name: 'Volume per instance',
             value: "0"
         });
-        this.templates.push(t);
-        console.log(t);
-        this.addGroup(t.createUI());
-    }
-
-    public addEc2MicroService(){
-        let t = new Ec2MicroServiceTemplate(this);
-
-        //add EC2/Pod Properties
-        t.fixedProperties.push({
-                name: 'Volume per Pod (tps)',
-                value: "0"
-            }
-        );
-
-        t.fixedProperties.push( {
-            name: '# Pods per Instance',
-            value: "0"
-        });
-
         this.templates.push(t);
         console.log(t);
         this.addGroup(t.createUI());

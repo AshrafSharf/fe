@@ -89,7 +89,7 @@ export class VariablesComponent implements OnChanges, OnInit {
     subvariableName: string = '';
     subvariableValue: string = '';
     subvariablePercentage: string = '';
-    createdAt = '';
+    createdAt:string = '';
 
     subvariableList: Subvariable[];
     subvariableListPercentage = [];
@@ -449,7 +449,7 @@ export class VariablesComponent implements OnChanges, OnInit {
     }
 
     selectVariable(variable: Variable) {
-        this.createdAt = (variable.createdAt).toString();
+        this.createdAt = variable.createdAt;
         this.subvariableListPercentage = [];
         this.isOwner = false;
         this.title = variable.title;
@@ -853,10 +853,12 @@ export class VariablesComponent implements OnChanges, OnInit {
     }
 
     onSave(event) {
-        var a = new Date();
-        console.log((Date()).toString());
         let negative = false;
         let finalValue = 0, finalPercentage = 0, value = 0;
+
+        if (this.valueType == 'discrete') {
+            this.shouldDefineActualValues = false;
+        }
 
         if (this.subvariableList != undefined) {
             this.subvariableList.forEach((variable) => {
@@ -993,7 +995,7 @@ export class VariablesComponent implements OnChanges, OnInit {
                             this.endDate = this.endDate.format(Config.getDateFormat());
                         }
                     }
-
+                    
                     let actualTimeSegment: TimeSegment = {
                         userSelectedParametrics: '',
                         startTime: this.startDate,

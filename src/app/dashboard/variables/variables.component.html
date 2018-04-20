@@ -96,7 +96,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="">Value</label>
-                                        <input type="text" [(ngModel)]="subvariableName" class="form-control" placeholder="subvariable name">
+                                        <input type="text" [(ngModel)]="subvariableName" class="form-control" placeholder="subvariable value">
                                     </div>
 
                                     <button class="btn btn-success" (click)="addVariable()">Save</button>
@@ -179,7 +179,7 @@
                         </div>
                     </div>
 
-                    <div *ngIf="variableType == 'variable'">
+                    <div *ngIf="(variableType == 'variable') && (valueType != 'discrete')">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label><input type="checkbox" (click)="defineActualValues($event)" [(ngModel)]="shouldDefineActualValues"> Define Actual Values</label>

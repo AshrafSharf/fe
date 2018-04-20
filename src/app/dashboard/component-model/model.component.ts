@@ -9,7 +9,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { Template, TemplateEventsCallback, TemplateInterface, ConnectorType, Connection, TemplateGroup } from './templates/templates';
 import { StaticTemplate } from './templates/static.template';
 import { SingleInterfaceTemplate } from './templates/single.interface.template';
-import { JavaMicroServiceTemplate } from './templates/java.micro.service.template';
+import { MicroServiceTemplate } from './templates/micro.service.template';
 import { ModelService } from '../../services/model.service';
 import { CircleShape } from './shapes/circle.shape';
 import { TriangleShape } from './shapes/triangle.shape';
@@ -218,8 +218,8 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                                 var template: Template;
                                 if (tempTemplate.templateName == 'Ec2ComponentTemplate') {
                                     template = new Ec2ComponentTemplate(this);
-                                } else if (tempTemplate.templateName == 'JavaMicroServiceTemplate') {
-                                    template = new JavaMicroServiceTemplate(this);
+                                } else if (tempTemplate.templateName == 'MicroServiceTemplate') {
+                                    template = new MicroServiceTemplate(this);
                                 } else if (tempTemplate.templateName == 'StaticTemplate') {
                                     template = new StaticTemplate(this);
                                 } else if (tempTemplate.templateName == 'SingleInterfaceTemplate') {
@@ -230,7 +230,7 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
 
                                 template.name = tempTemplate.title;
 
-                                if (template instanceof JavaMicroServiceTemplate || template instanceof Ec2ComponentTemplate){
+                                if (template instanceof MicroServiceTemplate || template instanceof Ec2ComponentTemplate){
                                     console.log(tempTemplate.instanceType);
                                     template.instanceType = tempTemplate.instanceType;
                                     console.log(template.instanceType);
@@ -619,7 +619,7 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
         connection.inputInterfaceName = this.connectionSourceInterface;
         connection.outputInterfaceName =  this.connectionTargetInterface;
         console.log(source.getType());
-        if (source.getType()=="JavaMicroServiceTemplate"){
+        if (source.getType()=="MicroServiceTemplate"){
             connection.connectionProperties.push({
                 key:"sequence #",
                 value:"-1"
@@ -838,8 +838,8 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
         this.addGroup(t.createUI());
     }
 
-    public addJavaMicroService() {
-        let t = new JavaMicroServiceTemplate(this);
+    public addMicroService() {
+        let t = new MicroServiceTemplate(this);
          //add EC2/Pod Properties
          t.fixedProperties.push({
             name: 'Volume per Pod (tps)',
@@ -975,7 +975,7 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                 // found the one to update
                 template.name = this.selectedTemplate.name;
                 //save instanceType if applicable
-                if(this.selectedTemplate instanceof JavaMicroServiceTemplate && template instanceof JavaMicroServiceTemplate){
+                if(this.selectedTemplate instanceof MicroServiceTemplate && template instanceof MicroServiceTemplate){
                     template.instanceType = this.selectedTemplate.instanceType;
                 }else if (this.selectedTemplate instanceof Ec2ComponentTemplate && template instanceof Ec2ComponentTemplate){
                         template.instanceType = this.selectedTemplate.instanceType;
@@ -1193,7 +1193,7 @@ export class ComponentModelComponent implements OnInit, TemplateEventsCallback {
                     
                     }
 
-                    if (template instanceof JavaMicroServiceTemplate || template instanceof Ec2ComponentTemplate){
+                    if (template instanceof MicroServiceTemplate || template instanceof Ec2ComponentTemplate){
                         instanceType = template.instanceType;
                     }
 

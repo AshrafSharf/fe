@@ -11,8 +11,7 @@ export class DrawingToolsHeaderComponent implements OnInit {
 
     @Output('static-template') staticTemplate = new EventEmitter();
     @Output('single-inheritance-template') singleInheritanceTemplate = new EventEmitter();
-    @Output('generic-micro-service-template') genericMicroTemplate = new EventEmitter();
-    @Output('java-micro-service-template') javaMicroServiceTemplate = new EventEmitter();
+    @Output('micro-service-template') MicroServiceTemplate = new EventEmitter();
     @Output('shape-circle') shapeCircle = new EventEmitter();
     @Output('shape-diamond') shapeDiamond = new EventEmitter();
     @Output('shape-triangle') shapeTriangle = new EventEmitter();
@@ -135,12 +134,8 @@ export class DrawingToolsHeaderComponent implements OnInit {
         this.singleInheritanceTemplate.emit();
     }
 
-    public drawGenericMicroService() {
-        this.genericMicroTemplate.emit();
-    }
-
-    public drawJavaMicroService() {
-        this.javaMicroServiceTemplate.emit();
+    public drawMicroService() {
+        this.MicroServiceTemplate.emit();
     }
     
     public drawEc2MicroServiceTemplate(){

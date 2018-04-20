@@ -17,7 +17,7 @@ import { TemplateInterface, Template, Connection, ConnectorType } from '../compo
 import { SystemModel } from '../../shared/interfaces/system-model';
 import { Config } from '../../shared/config';
 import { ComponentModel } from '../../shared/interfaces/component.model';
-import { JavaMicroServiceTemplate } from './templates/java.micro.service.template';
+import { MicroServiceTemplate } from './templates/micro.service.template';
 import { StaticTemplate } from './templates/static.template';
 import { SingleInterfaceTemplate } from './templates/single.interface.template';
 import { ModelService } from '../../services/model.service';
@@ -268,8 +268,8 @@ so that the the drawing functions below can be removed*/
                                 var template: Template;
                                 if (tempTemplate.templateName == 'Ec2ComponentTemplate') {
                                     template = new Ec2ComponentTemplate(this);
-                                } else if (tempTemplate.templateName == 'JavaMicroServiceTemplate') {
-                                    template = new JavaMicroServiceTemplate(this);
+                                } else if (tempTemplate.templateName == 'MicroServiceTemplate') {
+                                    template = new MicroServiceTemplate(this);
                                 } else if (tempTemplate.templateName == 'StaticTemplate') {
                                     template = new StaticTemplate(this);
                                 } else if (tempTemplate.templateName == 'SingleInterfaceTemplate') {

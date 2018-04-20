@@ -3,10 +3,7 @@
         <app-drawing-tools-header
             (static-template)="addStatic()"
             (single-inheritance-template)="addSingleInterface()"
-            (generic-micro-service-template)="addGenericMicroService()"
-            (java-micro-service-template)="addJavaMicroService()"
-            (ec2-micro-service-template)="addEc2MicroService()"
-            (ec2-component-template)="addEc2Component()"
+            (micro-service-template)="addMicroService()"
             (input-value)="addInputTemplate()"
             (shape-circle)="addCircle()"
             (shape-diamond)="addDiamond()"
@@ -85,7 +82,7 @@
                                         <td class="table_column">Name</td>
                                         <td class="table_column"><input type="text" class="property_value" [(ngModel)]="selectedTemplate.name"></td>
                                     </tr>
-                                    <tr *ngIf="selectedTemplate.type == 'JavaMicroServiceTemplate' || selectedTemplate.type == 'Ec2ComponentTemplate'">
+                                    <tr *ngIf="selectedTemplate.type == 'MicroServiceTemplate' || selectedTemplate.type == 'Ec2ComponentTemplate'">
                                         <td class="table_column">Instance Type</td>
                                         <td class="table_column"> 
                                             <select  class="app-select" [(ngModel)]="selectedTemplate.instanceType" style="width:100%">

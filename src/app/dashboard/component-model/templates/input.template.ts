@@ -1,7 +1,7 @@
-import { GenericMicroServiceTemplate } from "./generic.micro.service.template";
 import { TemplateInterface } from "./templates";
+import { ComponentTemplate } from "./component.template";
 
-export class InputTemplate extends GenericMicroServiceTemplate {
+export class InputTemplate extends ComponentTemplate{
 
     public constructor(callback) {
         super(callback)

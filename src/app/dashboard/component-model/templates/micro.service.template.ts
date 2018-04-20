@@ -1,21 +1,21 @@
-import { GenericMicroServiceTemplate } from "./generic.micro.service.template";
+import { ComponentTemplate } from "./component.template";
 
-export class JavaMicroServiceTemplate extends GenericMicroServiceTemplate {
+export class MicroServiceTemplate extends ComponentTemplate {
     //default instance type
     public instanceType = "none";
 
     public constructor(callback) {
         super(callback)
-        this.name = 'Java Micro Service';
-        this.type = 'JavaMicroServiceTemplate';
+        this.name = ' Micro Service';
+        this.type = 'MicroServiceTemplate';
     }
 
     public getType(): String {
-        return 'JavaMicroServiceTemplate';
+        return 'MicroServiceTemplate';
     }
 
     public clone() {
-        let obj = new JavaMicroServiceTemplate(this.callback);
+        let obj = new MicroServiceTemplate(this.callback);
         obj.identifier = this.identifier;
         obj.name = this.name;
         obj.interfaces = this.interfaces;

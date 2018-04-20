@@ -13,12 +13,11 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import { Moment } from 'moment';
 import { AppVariableService } from '../../services/variable.services';
-import { GenericMicroServiceTemplate } from '../component-model/templates/generic.micro.service.template';
 import { TemplateInterface, Template, Connection, ConnectorType } from '../component-model/templates/templates';
 import { SystemModel } from '../../shared/interfaces/system-model';
 import { Config } from '../../shared/config';
 import { ComponentModel } from '../../shared/interfaces/component.model';
-import { JavaMicroServiceTemplate } from './templates/java.micro.service.template';
+import { MicroServiceTemplate } from './templates/micro.service.template';
 import { StaticTemplate } from './templates/static.template';
 import { SingleInterfaceTemplate } from './templates/single.interface.template';
 import { ModelService } from '../../services/model.service';
@@ -27,7 +26,6 @@ import { DiamondShape } from './shapes/diamond.shape';
 import { SquareShape } from './shapes/square.shape';
 import { TriangleShape } from './shapes/triangle.shape';
 import { InputTemplate } from './templates/input.template';
-import { Ec2MicroServiceTemplate } from './templates/ec2.micro.service.template';
 import { Ec2ComponentTemplate } from './templates/ec2.component.template';
 import { ModelComponent } from '../../shared/interfaces/model-component';
 import { SimulationService } from '../../services/simulation.service';
@@ -268,18 +266,14 @@ so that the the drawing functions below can be removed*/
                                 // create template
                                 let tempTemplate = this.selectedModel.modelComponentList[index];
                                 var template: Template;
-                                if (tempTemplate.templateName == 'GenericMicroServiceTemplate') {
-                                    template = new GenericMicroServiceTemplate(this);
-                                } else if (tempTemplate.templateName == 'Ec2ComponentTemplate') {
+                                if (tempTemplate.templateName == 'Ec2ComponentTemplate') {
                                     template = new Ec2ComponentTemplate(this);
-                                } else if (tempTemplate.templateName == 'JavaMicroServiceTemplate') {
-                                    template = new JavaMicroServiceTemplate(this);
+                                } else if (tempTemplate.templateName == 'MicroServiceTemplate') {
+                                    template = new MicroServiceTemplate(this);
                                 } else if (tempTemplate.templateName == 'StaticTemplate') {
                                     template = new StaticTemplate(this);
                                 } else if (tempTemplate.templateName == 'SingleInterfaceTemplate') {
                                     template = new SingleInterfaceTemplate(this);
-                                } else if (tempTemplate.templateName == 'Ec2MicroServiceTemplate') {
-                                    template = new Ec2MicroServiceTemplate(this);
                                 } else if (tempTemplate.templateName == 'InputTemplate') {
                                     template = new InputTemplate(this);
                                 } else if (tempTemplate.templateName == 'Circle') {
@@ -293,10 +287,6 @@ so that the the drawing functions below can be removed*/
                                 }
                                 
                                 template.name = tempTemplate.title;
-
-                                if (template instanceof Ec2MicroServiceTemplate || template instanceof Ec2ComponentTemplate){
-                                    template.instanceType = tempTemplate.instanceType;
-                                }
 
 
                                 // get interfaces from template

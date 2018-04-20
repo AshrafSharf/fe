@@ -1,6 +1,6 @@
-import { GenericMicroServiceTemplate } from "./generic.micro.service.template";
+import {ComponentTemplate } from "./component.template";
 
-export class StaticTemplate extends GenericMicroServiceTemplate {
+export class StaticTemplate extends ComponentTemplate {
 
     public constructor(callback) {
         super(callback)

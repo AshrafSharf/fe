@@ -66,6 +66,7 @@ export abstract class Template {
     protected callback: TemplateEventsCallback;
     public uiGroup:Group = null;
     public connectors:Connectors = new Connectors();
+    public connections: Connection[] = new Array<Connection>();
 
     constructor (callback) {
         this.callback = callback;
@@ -81,6 +82,9 @@ export abstract class Template {
     public cloneWithoutId(): Template {
         var template:Template = this.clone();
         template.identifier = Guid.newGuid().toString();
+        for (let index = 0; index < this.connections.length; index++) {
+            template.connections.push(this.connections[index]);
+        }
         return template;
     }
 
@@ -274,9 +278,25 @@ export class TemplateGroup {
         }
     }
 
-    public addTemplate(template:Template) {
-        this.group.add(template.uiGroup);
-        this.templates.push(template);
+    public showConnections() {
+        for (let index = 0; index < this.templates.length; index++) {
+            let template = this.templates[index];            
+        }
+    }
+
+    public addTemplate(template:Template, deleteOriginal:boolean = true) {
+        
+        var newTemplate = template.cloneWithoutId();
+        newTemplate.createUI(template.getX(), template.getY(), false);
+
+        if(deleteOriginal == true) {
+            template.uiGroup.remove();
+        }
+
+        this.group.add(newTemplate.uiGroup);        
+        this.templates.push(newTemplate);
+
+        return newTemplate;
     }
 
     public addTemplates(templates:Template[]) {

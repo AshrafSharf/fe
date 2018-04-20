@@ -28,6 +28,7 @@ export interface Variable {
     compositeType: String;
     isSelected: Boolean;
     hasActual: Boolean;
+    createdAt: string;
     actualTimeSegment?: TimeSegment;
     allTimesegmentsResultList:{title:String, data:{title:String, value:number|string}[], calculationType:String}[];
 }

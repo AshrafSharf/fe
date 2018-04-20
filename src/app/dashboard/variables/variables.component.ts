@@ -89,6 +89,7 @@ export class VariablesComponent implements OnChanges, OnInit {
     subvariableName: string = '';
     subvariableValue: string = '';
     subvariablePercentage: string = '';
+    createdAt:string = '';
 
     subvariableList: Subvariable[];
     subvariableListPercentage = [];
@@ -448,6 +449,7 @@ export class VariablesComponent implements OnChanges, OnInit {
     }
 
     selectVariable(variable: Variable) {
+        this.createdAt = variable.createdAt;
         this.subvariableListPercentage = [];
         this.isOwner = false;
         this.title = variable.title;
@@ -854,6 +856,10 @@ export class VariablesComponent implements OnChanges, OnInit {
         let negative = false;
         let finalValue = 0, finalPercentage = 0, value = 0;
 
+        if (this.valueType == 'discrete') {
+            this.shouldDefineActualValues = false;
+        }
+
         if (this.subvariableList != undefined) {
             this.subvariableList.forEach((variable) => {
                 value = parseFloat(variable.value.toString())*100;
@@ -969,7 +975,10 @@ export class VariablesComponent implements OnChanges, OnInit {
                 if (timeSegmentValues.length != this.timeSegmentWidgets.length) {
                     this.modal.showError(lastResult.reason.toString(), 'Incomplete definition');
                 } else {
-
+                    if (this.selectedVariable == null) {
+                        //let a = new Date();
+                        this.createdAt = Date().toString();
+                    }
                     let tempCompositeVariables: { id: String }[] = Array<{ id: String }>();
                     this.compositeVariableList.forEach(variable => {
                         if (variable.isSelected) {
@@ -986,7 +995,7 @@ export class VariablesComponent implements OnChanges, OnInit {
                             this.endDate = this.endDate.format(Config.getDateFormat());
                         }
                     }
-
+                    
                     let actualTimeSegment: TimeSegment = {
                         userSelectedParametrics: '',
                         startTime: this.startDate,
@@ -1021,7 +1030,8 @@ export class VariablesComponent implements OnChanges, OnInit {
                         compositeVariables: tempCompositeVariables,
                         compositeType: this.compositType,
                         hasActual: this.shouldDefineActualValues,
-                        actualTimeSegment: actualTimeSegment
+                        actualTimeSegment: actualTimeSegment,
+                        createdAt: this.createdAt
                     };
 
                     if (this.selectedVariable == null) {

@@ -59,11 +59,10 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
     isSubvariableAdded(name) {
         for (var index = 0; index < this.variableTypeList.length; index++) {
             if (this.variableTypeList[index].name == name) {
-                return true;
+                return false;
             }
         }
-
-        return false;
+        return true;
     }
 
     isSubvariableRemoved(name) {
@@ -81,7 +80,7 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
         //if (this.timeSegment.subVariables == undefined || this.timeSegment.subVariables.length == 0) {
             if (this.compositVariableTypeList != undefined) {
                 this.compositVariableTypeList.forEach(type => {
-                    if (!this.isSubvariableAdded(type.name)) {
+                    if (this.isSubvariableAdded(type.name)) {
                         if (this.variableType == 'breakdown') {
                             this.variableTypeList.push({name: type.name, value: type.value, probability: type.probability});
                             this.variableTypeListPercentage.push({name: type.name, value: (parseFloat(type.value.toString())*100).toString(), probability: type.probability});
@@ -173,7 +172,7 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
 
             if (this.timeSegment.subVariables != undefined) {
                 this.timeSegment.subVariables.forEach(type => {
-                    if (!this.isSubvariableAdded(type.name)) {
+                    if (this.isSubvariableAdded(type.name)) {
                         this.variableTypeList.push({name: type.name, value: type.value, probability: type.probability});
                         this.variableTypeListPercentage.push({name: type.name, value: (parseFloat(type.value.toString())*100).toString(), probability: type.probability});
                     }
@@ -187,16 +186,19 @@ export class TimeSegmentComponent implements OnInit, OnChanges, DoCheck {
         if ((this.variableType == 'breakdown') || (this.valueType == 'discrete')) {
 
             let finalValue = 0, finalPercentage = 0, value = 0;
-            this.variableTypeListPercentage.forEach((variable) => {
-                if (this.variableType == 'breakdown') {
+            if (this.variableType == 'breakdown') {
+                this.variableTypeListPercentage.forEach((variable) => {
                     value = parseFloat(variable.value.toString());
 
                     finalValue += value;
-                }
-                if (this.valueType == 'discrete') {
+                });
+            }
+            if (this.valueType == 'discrete') {
+                this.variableTypeList.forEach(variable => {
                     finalPercentage += parseFloat(variable.probability.toString());
-                }
-            });
+                });
+            }
+
             finalValue = finalValue / 100;
             if (this.variableType == 'breakdown' && finalValue != 1) {
                 result.result = false;

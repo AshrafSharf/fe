@@ -1,0 +1,252 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-dialog/paper-dialog.html">
+<link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../dfw-styles/dfw-styles.html">
+<link rel="import" href="../dfw-styles/dfw-icon-styles.html">
+
+<!--
+`dfw-status-dialog`
+
+This component is a specialized dialog for simple acknowledgement responses or confirmations. It
+is a wrapper around the `paper-dialog` component and is specialized for 4 types of dialogs:
+success, warning, error and info.
+
+## Installation
+`bower install http://developer-ui.ds.dtveng.net/cdn/data/web-components/dfw-status-dialog.tar.gz --save`
+
+This will install `<dfw-status-dialog>` in directory `bower_components/dfw-status-dialog`. To include
+in an application
+
+```html
+<link rel="import" href="bower_components/dfw-status-dialog/dfw-status-dialog.html">
+```
+
+## Usage
+For a confirmation dialog:
+```html
+<dfw-status-dialog
+  confirm
+  confirm-button-text="Yes"
+  cancel-button-text="No"
+  status-type="error"
+  message="This is the message for the dialog" answer="{{answer}}"></dfw-status-dialog>
+```
+For an acknowledgement dialog:
+```html
+<dfw-status-dialog
+  status-type="success"
+  message="This is the message for the dialog"></dfw-status-dialog>
+```
+@demo demo/index.html
+-->
+
+<dom-module id="dfw-status-dialog">
+  <template>
+    <style include="dfw-styles dfw-icon-styles">
+      :host {
+        display: block;
+      }
+      .d-header, .d-header span  {
+        vertical-align: middle;
+        text-align: left;
+      }
+      .a-header, .a-header span  {
+        vertical-align: middle;
+        text-align: center;
+      }
+
+      #plainDialog > *:first-child {
+        margin-top: 5px !important;
+      }
+      .close {
+        margin-bottom: 20px;
+      }
+      .close span {
+        margin-right: -15px;
+        float: right;
+      }
+      .close span:hover {
+        margin-right: -15px;
+      }
+      .message {
+        display: flex;
+        min-width: 400px;
+      }
+      .message span {
+        width: 10%;
+      }
+      .message p {
+        width: 85%;
+      }
+      .hr {
+        margin: 20px;
+      }
+      paper-button.primary {
+        background-color: #0367ae;
+        color: #ffffff;
+      }
+      paper-button.primary:hover {
+        background-color: #025284;
+      }
+      paper-button.secondary {
+        background-color: #f2f2f2;
+        color: #191919;
+        border: 1px solid #b5b5b5;
+      }
+      paper-button.secondary:hover {
+        background-color: #d2d2d2;
+      }
+    </style>
+    <template is="dom-if" if="[[confirm]]">
+      <paper-dialog  modal id="confDialog" on-iron-overlay-closed="_closeDialogHandler">
+        <h2 class="d-header">[[_showHeader(statusType)]]</h2>
+        <div class="message">
+          <span class$="[[_showIcon(statusType)]]"></span><p>[[message]]</p>
+        </div>
+        <hr class="hr"/>
+        <div class="buttons">
+
+          <paper-button noink class="secondary" dialog-dismiss>[[cancelButtonText]]</paper-button>
+          <paper-button noink class="primary" dialog-confirm autofocus>[[confirmButtonText]]</paper-button>
+        </div>
+      </paper-dialog>
+    </template>
+    <template is="dom-if" if="[[!confirm]]">
+      <paper-dialog  id="plainDialog">
+        <div class="close"><span class="dfw-close-icon-16" on-tap="_closePlainDialog"></span></div>
+          <h2 class="a-header"><span class$="[[_showIcon(statusType)]] icon-header"></span></h2>
+          <p>[[message]]</p>
+      </paper-dialog>
+    </template>
+  </template>
+  <script>
+    Polymer({
+      /**
+       * This event is fired when the confirm paper-dialog is closed. The data that is
+       * attached to this event is either true or false depending on which button was clicked.
+       * in the event listener this is retrieved with event.detail.
+       * @event dfw-status-dialog-closed
+       */
+      is: 'dfw-status-dialog',
+
+      properties: {
+        /**
+         * This is the answer of a confirm dialog. It returns the text of the button that
+         * was clicked. For example if the confirmButtonText is 'Yes', 'Yes' is returned.
+         */
+        answer: {
+          type: String,
+          notify: true
+        },
+        /**
+         * A flag indicating if the dialog has two buttons, one for confirm the other for cancel.
+         */
+        confirm: {
+          type: Boolean,
+          value: false
+        },
+        /**
+         * The button text for the confirm button.
+         */
+        confirmButtonText: {
+          type: String,
+          value: "Confirm"
+        },
+        /**
+         * The button text for the cancel button.
+         */
+        cancelButtonText: {
+          type: String,
+          value: "Cancel"
+        },
+        /**
+         * The type of dialog. The 4 choices are `success, info, warning, error`.
+         */
+        statusType: {
+          type: String,
+          value: 'info'
+        },
+        /**
+         * The message to display in the body of the dialog.
+         */
+        message: {
+          type: String,
+          value: "Please add a message!"
+        }
+      },
+      /**
+       * This function will open up the appropriate `paper-dialog` depending on the `confirm` flag.
+       */
+      open: function() {
+        var dialog = this.confirm ? this.$$('#confDialog') : this.$$('#plainDialog');
+        dialog.open();
+      },
+      /**
+       * This function will close up the appropriate `paper-dialog` depending on the `confirm` flag.
+       */
+      close: function() {
+        var dialog = this.confirm ? this.$$('#confDialog') : this.$$('#plainDialog');
+        dialog.close();
+      },
+      /**
+       * This will close the dialog when the `close icon` is clicked. Note that only the plainDialog
+       * has this icon in the upper right corner.
+       */
+      _closePlainDialog: function() {
+        this.close();
+      },
+      /**
+       * This function will convert the type of dialog to upper case to be shown in the
+       * header of the dialog.
+       */
+      _showHeader: function(type) {
+        var header;
+        switch (type) {
+        case 'success':
+          header = 'Success';
+          break;
+        case 'warning':
+          header = 'Warning';
+          break;
+        case 'error':
+          header = 'Error';
+          break;
+        case 'info':
+          header = 'Info';
+          break;
+        }
+        return header;
+      },
+      /**
+       * This function is used to compute the appropriate icon based on the type of dialog.
+       */
+      _showIcon: function(type) {
+        var iconClass = '';
+        switch (type) {
+        case 'success':
+          iconClass = 'dfw-success-solid-icon-32';
+          break;
+        case 'warning':
+          iconClass = 'dfw-alert-icon-32';
+          break;
+        case 'error':
+          iconClass = 'dfw-error-icon-32';
+          break;
+        case 'info':
+          iconClass = 'dfw-info-solid-icon-32';
+          break;
+        }
+        return iconClass;
+      },
+      /**
+       * This function get called when the confirm dialog is closed. It sets the `answer` property and
+       * fires the `dfw-status-dialog-closed` event.
+       */
+      _closeDialogHandler: function(evt, answer) {
+        evt.preventDefault();
+        this.answer = answer.confirmed ? this.confirmButtonText : this.cancelButtonText;
+        this.fire('dfw-status-dialog-closed', answer.confirmed);
+      },
+    });
+  </script>
+</dom-module>

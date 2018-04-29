@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 39.1 (31720) - http://www.bohemiancoding.com/sketch -->
+    <title>icon-move-32x32</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="icon-move-32x32">
+            <g id="Group-5">
+                <path d="M15.4074074,3.85185185 L15.4074074,28.1770381" id="Line-Copy-2" stroke="#5B5B5B" stroke-width="2" stroke-linecap="square"></path>
+                <polygon id="Triangle-Copy-4" fill="#5B5B5B" points="15.4074074 0 17.7777778 3.55555556 13.037037 3.55555556"></polygon>
+                <polygon id="Triangle-Copy-5" fill="#5B5B5B" points="13.037037 28.4444444 17.7777778 28.4444444 15.4074074 32"></polygon>
+                <g id="Group-Copy" transform="translate(16.000000, 15.870370) rotate(-90.000000) translate(-16.000000, -15.870370) translate(13.500000, -0.129630)">
+                    <path d="M2.37037037,3.85185185 L2.37037037,28.1770381" id="Line-Copy" stroke="#5B5B5B" stroke-width="2" stroke-linecap="square"></path>
+                    <polygon id="Triangle-Copy-2" fill="#5B5B5B" points="4.74074074 3.55555556 0 3.55555556 2.37037037 0"></polygon>
+                    <polygon id="Triangle-Copy-3" fill="#5B5B5B" points="0 28.4444444 4.74074074 28.4444444 2.37037037 32"></polygon>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

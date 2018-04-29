@@ -1,0 +1,413 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+<link rel="import" href="../iron-localstorage/iron-localstorage.html">
+<link rel="import" href="../iron-ajax/iron-request.html">
+
+<!--
+`dfw-login`
+TThis component uses the sso api to insure the user is logged in. The default behavior is if the user is not logged in, it will
+redirect to the OpenAM login page. After login it will return to this page. If the allow-guest property is set, it will
+not redirect. This will allow areas of the current page to be seen. If the offline property is used, it will
+return a user `name` of "Offline User" and `failed` to false. It is dependent on the the main html file of an application
+to include the config.js file.
+
+## Installation
+`bower install http://developer-ui.ds.dtveng.net/cdn/data/web-components/dfw-login.tar.gz --save`
+
+This will install  `<dfw-login>` in directory `bower_components/dfw-login`. To include
+in an application
+
+```html
+<link rel="import" href="bower_components/dfw-login/dfw-login.html">
+```
+## Usage
+
+```HTML
+  <dfw-login  id="dfw-login" failed="{{failed}}" user-name="{{userName}}"></dfw-login>
+  <template is="dom-if" if="{{!failed}}">
+    <div>Hello {{userName}}</div>
+  </template>
+  <template is="dom-if" if="{{failed}}">
+    <div>Sorry. Login failed</div>
+  </template>
+```
+## Example with allow-guest property
+
+```HTML
+<dfw-login id="dfw-login" allow-guest failed="{{failed}}" user-name="{{userName}}"></dfw-login>
+  <template is="dom-if" if="{{!failed}}">
+    <div>Hello {{userName}}</div>
+  </template>
+  <template is="dom-if" if="{{failed}}">
+    <div>Content for guest</div>
+  </template>
+```
+## Example with offline property
+
+```HTML
+  <dfw-login  id="dfw-login" offline failed="{{failed}}" user-name="{{userName}}"></dfw-login>
+  <template is="dom-if" if="{{!failed}}">
+    <div>Hello {{userName}}</div>
+  </template>
+  <template is="dom-if" if="{{failed}}">
+    <div>Sorry. Login failed</div>
+  </template>
+```
+
+@demo demo/index.html
+-->
+
+<dom-module id="dfw-login">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <iron-localstorage
+      name="dfw-uid"
+      value="{{uid}}"  on-iron-localstorage-load-empty="_initializeDefaultUid">
+    </iron-localstorage>
+    <iron-ajax id="xhrTimeLeft" method="POST"  on-error="_errorHandlerQuery"  on-response="_timeLeftResponseHandler"></iron-ajax>
+    <iron-ajax  id="xhr" method="POST" timeout="3000" on-error="_errorHandlerValidation"  on-response="_validationResponseHandler"></iron-ajax>
+    <iron-ajax  id="xhrUser" on-error="_errorHandlerUser" on-response="_getUserResponseHandler"></iron-ajax>
+  </template>
+
+  <script>
+    Polymer({
+      /**
+       * The Configuration object as read from the config.json file.
+       */
+      cfg : {},
+
+      /**
+       * The url paths based on the type of call (either rest or oauth).
+       */
+    	paths : {
+    		rest: {
+    			loginA : "XUI/#login",
+    			loginB : "&goto="
+
+    		},
+    		oauth: {
+    			loginA : "oauth2",
+    			loginB : "/authorize?response_type=code&client_id=test123&scope=openid&redirect_uri="
+    		}
+    	},
+      /**
+       * The current path to use. It is reset if the authType parameter is set.
+       */
+    	currentPath : {
+        loginA : "XUI/#login",
+        loginB : "&goto="
+      },
+
+
+      is: 'dfw-login',
+
+      properties: {
+        /**
+         * A flag indicating if it is being used in an offline mode.
+         */
+        offline : {
+          type: Boolean,
+          value: false,
+          // observer: '_propObserver'
+        },
+        /**
+         * The config file.
+         */
+        config: {
+          type: Object,
+          notify: true,
+          value: {}
+        },
+        /**
+         * The authorization type to use. This will change the path to the auth backend services.
+         */
+        authType: {
+          type: String,
+          notify: true,
+          value: "rest"
+        },
+        /**
+         * The user name that is returned from the service. It could also be "Offline User" or "Guest".
+         */
+        userName: {
+          type: String,
+          notify: true,
+          value: ""
+        },
+        /**
+         * A flag indicating if the login was successful or not.
+         */
+        failed: {
+          type: Boolean,
+          notify: true,
+          value: true,
+          //observer: '_propObserver'
+        },
+        /**
+         * A flag indicating if a guest mode is allowed.
+         */
+        allowGuest: {
+          type: Boolean,
+          value: false
+        },
+        /**
+         * This indicates the number of minutes before the session timeout to fire an event
+         */
+        notifyMinutes: {
+          type: Number,
+          value: 10
+        },
+      },
+      observers: [
+          '_propObserver(offline)'
+      ],
+      _propObserver: function(offline) {
+        // console.info("@@@@@@@@@ dfw-login _propObserver this.offline, offline", this.offline);
+        // console.info("@@@@@@@@@ dfw-login _propObserver this.notifyMinutes", this.notifyMinutes);
+        if (dfwPlatformUIAppConfig != undefined) {
+          this.cfg = dfwPlatformUIAppConfig;
+          if (!offline) {
+            if (this.authType === "rest" || this.authType === "oauth") {
+              this.currentPath = this.paths[this.authType];
+            }
+            // console.info("@@@@@@@@@ dfw-login _propObserver call _validateSession @@@@@@@@@ ");
+            this._validateSession();
+          }
+          else {
+            // console.info("@@@@@@@@@ dfw-login _propObserver resolve url:", this.resolveUrl('./config/login.json'));
+            var iajax = this.$.xhrUser; //this.$$('#xhrUser');
+            iajax.url = this.resolveUrl('./config/login.json');
+            console.info("@@@@@@@@@ dfw-login _propObserver generateRequest url:", iajax.url);
+            iajax.generateRequest();
+          }
+        }
+        else {
+          console.error("ERROR dfw-login dfwPlatformUIAppConfig not found!");
+        }
+      },
+      /**
+       * A function that will redirect to the login page if not in offline mode.
+       */
+      login: function() {
+        if (!this.offline) {
+          var port = window.location.port=="" ? "" : ":" + window.location.port;
+          var redirectURL = window.location.protocol + "//" + window.location.hostname + port + window.location.pathname;
+        	var path = this.cfg.openamHost + this.currentPath.loginA + this.cfg.openamRealm + this.currentPath.loginB + redirectURL;
+    			try {
+    				window.location = path;
+    			} catch (exception) {
+    				this.failed = true;
+            console.error("dfw-login login set failed to", this.failed);
+    				console.error("dfw-login: login failed with path ", path);
+    			}
+        }
+      },
+      /**
+       * A function that will redirect to the login page if not in offline mode.
+       */
+      logout: function() {
+        if (!this.offline) {
+          var port = window.location.port=="" ? "" : ":" + window.location.port;
+          var pathname = window.location.pathname;
+          var redirectURL;
+          if (pathname.indexOf('components') == -1) {
+            pathname = window.location.pathname.split("/")[1];
+            redirectURL = window.location.protocol + "//" + window.location.hostname + port + "/" + pathname;
+          }
+          else {
+            redirectURL = window.location.protocol + "//" + window.location.hostname + port + pathname;
+          }
+          var path = this.cfg.openamHost + "XUI/#logout" + this.cfg.openamRealm + "&goto=" + redirectURL;
+          if (!this.allowGuest) {
+            path +=  "?logout=true";
+          }
+    			try {
+    				window.location = path;
+    			} catch (exception) {
+    				this.failed = true;
+            console.error("dfw-login logout set failed to", this.failed);
+    				alert("Logout failed");
+    				console.error("dfw-login logout: logout failed with path ", path);
+    			}
+        }
+      },
+      /**
+       * A function used to get the appropriate cookie.
+       */
+      _getCookie: function (name) {
+    		var value = " " + document.cookie;
+    		var cStart = value.indexOf(" " + name + "=");
+    		if (cStart === -1) {
+    			value = null;
+    		} else {
+    			cStart = value.indexOf("=", cStart) + 1;
+    			var cEnd = value.indexOf(";", cStart);
+    			if (cEnd === -1) {
+    				cEnd = value.length;
+    			}
+    			value = unescape(value.substring(cStart, cEnd));
+    		}
+    		return value;
+    	},
+      /**
+       * A function to handle the response from the user information service.
+       */
+      _getUserResponseHandler: function(response) {
+        var parsedUser = response.detail.response;
+        var username = parsedUser.hasOwnProperty('username') ? [parsedUser.username] : ["Unknown User!"];
+        var givenNameArr = parsedUser.hasOwnProperty('givenName') ? (parsedUser.givenName.length > 0 ? parsedUser.givenName : [username]) : [username];
+        // var givenNameArr = parsedUser.hasOwnProperty('givenName') ? parsedUser.givenName : [username];
+        var userid = parsedUser.hasOwnProperty('uid') ? parsedUser.uid : ["unknown"];
+
+        this.userName = givenNameArr.join(' ');
+        this.set('uid.uid', userid);
+        this.set('uid.userName', this.userName);
+        this.failed = false;
+        if (userid == 'offline') {
+          console.info("dfw-login _getUserResponseHandler user is offline");
+          return;
+        }
+        // console.info("dfw-login _getUserResponseHandler call _timeLeft");
+        var token = this._getCookie(this.cfg.openamSessionCookieName);
+        console.info("dfw-login _getUserResponseHandler cookie:", token);
+        console.info("dfw-login _getUserResponseHandler response:", parsedUser);
+        this._timeLeft(token);
+      },
+      _errorHandlerUser: function(e, detail) {
+        console.error("dfw-login _errorHandlerUser");
+        this._errorHandler(e,detail);
+        this.failed = true;
+      },
+      _errorHandlerValidation: function(e, detail) {
+        console.error("dfw-login _errorHandlerValidation");
+        this._errorHandler(e,detail);
+        this.failed = true;
+      },
+      _errorHandlerQuery: function(e, detail) {
+        console.error("dfw-login _errorHandlerQuery");
+        this._errorHandler(e,detail);
+      },
+      _errorHandler: function(e, detail) {
+        if (detail.error.message == undefined) {
+          console.error("Error type:",detail.error.type);
+        }
+        else {
+          console.error("Error message :", detail.error.message); //the error object
+          console.error("Status text: ", detail.request.statusText);  //the error status text
+        }
+        // this.failed = true;
+      },
+
+      _timeLeft: function(token) {
+        var iajax = this.$.xhrTimeLeft;
+        var header = {};
+        var params;
+
+        header[this.cfg.openamSessionCookieName] = token;
+        iajax.headers = header;
+        params = {
+          _action:"getTimeLeft",
+          tokenId:token
+        };
+        var url = this.cfg.openamHost + "json/sessions/";
+        iajax.url = url;
+        iajax.params = params;
+        iajax.contentType = "application/json";
+        console.info("dfw-login _timeLeft url:", url);
+        iajax.generateRequest();
+      },
+      _timeLeftResponseHandler: function(evt, response) {
+        var maxTime = this.cfg.sessionTimeoutMinutes * 60;
+        var timeLeft = response.xhr.response.maxtime;
+
+        var timeoutTime = this.notifyMinutes * 60;
+        var timeLeftForSetTimeout = timeLeft - timeoutTime;
+        var that = this;
+        // console.info("_timeLeftResponseHandler maxTime in seconds:", maxTime);
+        // console.info("_timeLeftResponseHandler timeLeft in seconds:", timeLeft);
+        // console.info("_timeLeftResponseHandler timeoutTime in seconds:", timeoutTime);
+        // console.info("_timeLeftResponseHandler timeLeftForSetTimeout in seconds:", timeLeftForSetTimeout);
+        if (timeLeft <= timeoutTime) {
+          var minutes = Math.floor(timeLeft/60);
+          var seconds = Math.round((timeLeft/60 - minutes) * 60);
+          console.info("_timeLeftResponseHandler fire immediately seconds left:", timeLeft,"in seconds. mm:ss", minutes+":"+seconds);
+          setTimeout(function timerSet() {
+             that.fire('dfw-login-timeout', {timeLeft:timeLeft});
+          },1000);
+        }
+        else {
+          setTimeout(function timerSet() {
+             that.fire('dfw-login-timeout', {timeLeft:timeoutTime});
+           },timeLeftForSetTimeout * 1000);
+        }
+      },
+      /**
+       * A function to handle the response from the validation service.
+       */
+      _validationResponseHandler: function(evt, response) {
+        var logout = window.location.href.indexOf('?logout') != -1;
+        var isValid = evt.detail.response.valid; //response.detail.response.valid;
+        console.info("dfw-login _validationResponseHandler response:", response.xhr.response);
+        if (!logout && isValid) {
+          var token = this._getCookie(this.cfg.openamSessionCookieName);
+          //console.info("dfw-login _validationResponseHandler cookie:", token);
+          var iajax = this.$.xhrUser; //this.$$('#xhrUser');
+          var header = {};
+          header[this.cfg.openamSessionCookieName] = token;
+          iajax.headers = header;
+          iajax.url = this.cfg.openamHost + "json" + this.cfg.openamRealm + "/users/" + evt.detail.response.uid; // + "?_prettyPrint=true";
+          console.info("dfw-login _validationResponseHandler generateRequest url:", iajax.url);
+          iajax.generateRequest();
+        }
+        else {
+          if (this.allowGuest) {
+            this.failed = true;
+            console.info("dfw-login: _validationResponseHandler set this.failed to ", this.failed);
+            this.userName = "Guest";
+            this.set('uid.uid', ["guest"]);
+            this.set('uid.userName', "Guest");
+          }
+          else {
+            this.login();
+          }
+        }
+      },
+      /**
+       * A private function to inialize the default user to Unknow User
+       */
+      _initializeDefaultUid: function() {
+        this.uid = {
+          uid: ["unknown"],
+          userName: "Unknown User"
+        };
+      },
+      _validateSession: function() {
+        var token = this._getCookie(this.cfg.openamSessionCookieName);
+        var ia = this.$.xhr;
+        ia.url = this.cfg.openamHost + "json/sessions/" + token + "?_action=validate";
+        // console.info("@@@@@@@@@ dfw-login _validateSession call generateRequest url:", ia.url);
+        try {
+          ia.generateRequest();
+        } catch (e) {
+          console.error("@@@@@@@@@ dfw-login _validateSession failed request e", e);
+        }
+      },
+
+      attached: function() {
+        console.info("dfw-login attached dfwPlatformUIAppConfig", dfwPlatformUIAppConfig);
+        // console.info("@@@@@@@@@ dfw-login attached offline", this.offline);
+        if (dfwPlatformUIAppConfig != undefined) {
+          this.cfg = dfwPlatformUIAppConfig;
+        }
+        else {
+          console.error("ERROR dfw-login dfwPlatformUIAppConfig not found!");
+        }
+
+      }
+    });
+  </script>
+</dom-module>

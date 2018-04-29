@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+
+<Project>
+<Name>login expires at N minutes</Name>
+<Version>V2</Version>
+<Notes></Notes>
+<ActiveConfig>{{LISA_RELATIVE_PROJ_ROOT}}/Configs/dev-int.config</ActiveConfig>
+</Project>

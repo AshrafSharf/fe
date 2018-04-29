@@ -20,7 +20,21 @@ export class ProjectsComponent implements OnInit {
     description: String = '';
     ownerId: String = '';
     ownerName: String = '';
+    filteredUsers: User[] = new Array<User>();
+    private exludedUsers: String[] = new Array<String>();
+    searchName: String = '';
+    nameId:Number;    
+    isOwner:Boolean = false;
+    privateProject: Boolean = false;
+    usersWithAccess: User[] = Array<User>();
     users: User[] = Array<User>();
+    groups: Array<{id: number, text: string}> = [   
+                {id: 1, text: 'Admin'},
+                {id: 2, text: 'Read Branch'},
+                {id: 3, text: 'Create Branch'},
+                {id: 4, text: 'Delete Branch'},
+                {id: 5, text: 'Read Model'},
+                ];
 
     selectedProject: Project = null;
     createdProject: Project = null;
@@ -53,8 +67,9 @@ export class ProjectsComponent implements OnInit {
         this.userService
             .getOwners((users => {
                 this.users = users;
-                if (this.ownerId == "") {
-                    this.ownerId = Utils.getUserId();
+                 this.ownerId = (this.ownerId == "") ? Utils.getUserId() : '';
+                if (this.ownerId == Utils.getUserId()) {
+                    this.isOwner = true;
                 }
             }));
     }
@@ -143,5 +158,82 @@ export class ProjectsComponent implements OnInit {
               this.router.navigate(['/home/project-list']);
         }
     }
+  
+      defineAccess(event) {
+        this.privateProject = event.target.checked;
+        if (this.privateProject == true) {
+            if (this.isOwner) {
+                this.users.forEach(user => {
+                    if (user.id == this.ownerId) {
+                        this.usersWithAccess.push(user);
+                    }
+                });
+            }
+        }
+        else {
+            this.usersWithAccess.splice(0, this.usersWithAccess.length);
+        }
+    }
+  
+      hasAccess(user) {
+        for(var index = 0; index < this.usersWithAccess.length; index ++) {
+            if (this.usersWithAccess[index].id == user.id) {
+                return true;
+            }
+        }
+    }
+
+    setAccess(event, user) {
+        var access = event.target.checked;
+        if (access == true) {
+            this.usersWithAccess.push(user);
+        }
+        else {
+            var position = this.usersWithAccess.findIndex(accessUser => accessUser.id == user.id);
+
+            this.usersWithAccess.splice(position, 1);
+
+        }
+
+    }
+    filterResult(event, type) {
+    this.filteredUsers.splice(0, this.filteredUsers.length);
+
+    for (var index = 0; index < this.users.length; index++) {
+      var usr = this.users[index];
+      if (usr.userName.toLowerCase().indexOf(this.searchName.toLowerCase()) >= 0) 
+      {
+
+        if (this.shouldSkipUser(usr) == true) {
+          continue;
+        }
+
+        this.filteredUsers.push(usr);
+      }
+    }
+  }
+    shouldSkipUser(usr): Boolean {
+    if (usr == this.isOwner)  {
+      return true;
+    }
+
+    return false;
+  }
+    excludeUser(event) {
+    if (event.target.checked == false) {
+      this.exludedUsers.push(event.target.value);
+    } else {
+      for (var index = 0; index < this.exludedUsers.length; index++) {
+        if (this.exludedUsers[index] == event.target.value) {
+          this.exludedUsers.splice(index, 1);
+          break;
+        }
+      }
+    }
+  }
+  selectName()
+{
+alert(this.nameId);
+}  
 
 }

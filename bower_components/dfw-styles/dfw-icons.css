@@ -1,0 +1,2419 @@
+.dfw-16 {
+	width: 16px;
+	height: 16px;
+}
+.dfw-24 {
+	width: 24px;
+	height: 24px;
+}
+.dfw-32 {
+	width: 32px;
+	height: 32px;
+}
+.dfw-64 {
+	width: 64px;
+	height: 64px;
+}
+.dfw-add-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-add-32x32.png) no-repeat 0 0;
+	background: url(images/icon-add.svg) no-repeat 0 0;
+}
+.dfw-add-hover-icon, .dfw-add-icon:hover {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-add-hover-32x32.png) no-repeat 0 0;
+	background: url(images/icon-add-hover.svg) no-repeat 0 0;
+}
+.dfw-add-disable-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-add-disable-32x32.png) no-repeat 0 0;
+	background: url(images/icon-add-disable.svg) no-repeat 0 0;
+}
+.dfw-add-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-add-16x16.png) no-repeat 0 0;
+}
+.dfw-add-hover-icon-16, .dfw-add-icon-16:hover {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-add-hover-16x16.png) no-repeat 0 0;
+}
+.dfw-add-disable-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-add-disable-16x16.png) no-repeat 0 0;
+}
+.dfw-add-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-add-32x32.png) no-repeat 0 0;
+}
+.dfw-add-hover-icon-32, .dfw-add-icon-32:hover {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-add-hover-32x32.png) no-repeat 0 0;
+}
+.dfw-add-disable-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-add-disable-32x32.png) no-repeat 0 0;
+}
+.dfw-add-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-add-64x64.png) no-repeat 0 0;
+}
+.dfw-add-hover-icon-64, .dfw-add-icon-64:hover {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-add-hover-64x64.png) no-repeat 0 0;
+}
+.dfw-add-disable-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-add-disable-64x64.png) no-repeat 0 0;
+}
+.dfw-alert-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-alert-32x32.png) no-repeat 0 0;
+	background: url(images/icon-alert.svg) no-repeat 0 0;
+}
+.dfw-alert-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-alert-16x16.png) no-repeat 0 0;
+}
+.dfw-alert-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-alert-32x32.png) no-repeat 0 0;
+}
+.dfw-alert-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-alert-64x64.png) no-repeat 0 0;
+}
+.dfw-audit-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-audit-32x32.png) no-repeat 0 0;
+	background: url(images/icon-audit.svg) no-repeat 0 0;
+}
+.dfw-audit-hover-icon, .dfw-audit-icon:hover {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-audit-hover-32x32.png) no-repeat 0 0;
+	background: url(images/icon-audit-hover.svg) no-repeat 0 0;
+}
+.dfw-audit-disable-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-audit-disable-32x32.png) no-repeat 0 0;
+	background: url(images/icon-audit-disable.svg) no-repeat 0 0;
+}
+.dfw-audit-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-audit-16x16.png) no-repeat 0 0;
+}
+.dfw-audit-hover-icon-16, .dfw-audit-icon-16:hover {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-audit-hover-16x16.png) no-repeat 0 0;
+}
+.dfw-audit-disable-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-audit-disable-16x16.png) no-repeat 0 0;
+}
+.dfw-audit-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-audit-32x32.png) no-repeat 0 0;
+}
+.dfw-audit-hover-icon-32, .dfw-audit-icon-32:hover {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-audit-hover-32x32.png) no-repeat 0 0;
+}
+.dfw-audit-disable-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-audit-disable-32x32.png) no-repeat 0 0;
+}
+.dfw-audit-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-audit-64x64.png) no-repeat 0 0;
+}
+.dfw-audit-hover-icon-64, .dfw-audit-icon-64:hover {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-audit-hover-64x64.png) no-repeat 0 0;
+}
+.dfw-audit-disable-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-audit-disable-64x64.png) no-repeat 0 0;
+}
+.dfw-calendar-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-calendar-32x32.png) no-repeat 0 0;
+	background: url(images/icon-calendar.svg) no-repeat 0 0;
+}
+.dfw-calendar-hover-icon, .dfw-calendar-icon:hover {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-calendar-hover-32x32.png) no-repeat 0 0;
+	background: url(images/icon-calendar-hover.svg) no-repeat 0 0;
+}
+.dfw-calendar-disable-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-calendar-disable-32x32.png) no-repeat 0 0;
+	background: url(images/icon-calendar-disable.svg) no-repeat 0 0;
+}
+.dfw-calendar-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-calendar-16x16.png) no-repeat 0 0;
+}
+.dfw-calendar-hover-icon-16, .dfw-calendar-icon-16:hover {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-calendar-hover-16x16.png) no-repeat 0 0;
+}
+.dfw-calendar-disable-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-calendar-disable-16x16.png) no-repeat 0 0;
+}
+.dfw-calendar-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-calendar-32x32.png) no-repeat 0 0;
+}
+.dfw-calendar-hover-icon-32, .dfw-calendar-icon-32:hover {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-calendar-hover-32x32.png) no-repeat 0 0;
+}
+.dfw-calendar-disable-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-calendar-disable-32x32.png) no-repeat 0 0;
+}
+.dfw-calendar-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-calendar-64x64.png) no-repeat 0 0;
+}
+.dfw-calendar-hover-icon-64, .dfw-calendar-icon-64:hover {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-calendar-hover-64x64.png) no-repeat 0 0;
+}
+.dfw-calendar-disable-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-calendar-disable-64x64.png) no-repeat 0 0;
+}
+.dfw-close-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-close-32x32.png) no-repeat 0 0;
+	background: url(images/icon-close.svg) no-repeat 0 0;
+}
+.dfw-close-hover-icon, .dfw-close-icon:hover {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-close-hover-32x32.png) no-repeat 0 0;
+	background: url(images/icon-close-hover.svg) no-repeat 0 0;
+}
+.dfw-close-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-close-16x16.png) no-repeat 0 0;
+}
+.dfw-close-hover-icon-16, .dfw-close-icon-16:hover {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-close-hover-16x16.png) no-repeat 0 0;
+}
+.dfw-close-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-close-32x32.png) no-repeat 0 0;
+}
+.dfw-close-hover-icon-32, .dfw-close-icon-32:hover {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-close-hover-32x32.png) no-repeat 0 0;
+}
+.dfw-close-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-close-64x64.png) no-repeat 0 0;
+}
+.dfw-close-hover-icon-64, .dfw-close-icon-64:hover {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-close-hover-64x64.png) no-repeat 0 0;
+}
+.dfw-crop-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-crop-32x32.png) no-repeat 0 0;
+	background: url(images/icon-crop.svg) no-repeat 0 0;
+}
+.dfw-crop-hover-icon, .dfw-crop-icon:hover {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-crop-hover-32x32.png) no-repeat 0 0;
+	background: url(images/icon-crop-hover.svg) no-repeat 0 0;
+}
+.dfw-crop-disable-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-crop-disable-32x32.png) no-repeat 0 0;
+	background: url(images/icon-crop-disable.svg) no-repeat 0 0;
+}
+.dfw-crop-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-crop-16x16.png) no-repeat 0 0;
+}
+.dfw-crop-hover-icon-16, .dfw-crop-icon-16:hover {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-crop-hover-16x16.png) no-repeat 0 0;
+}
+.dfw-crop-disable-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-crop-disable-16x16.png) no-repeat 0 0;
+}
+.dfw-crop-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-crop-32x32.png) no-repeat 0 0;
+}
+.dfw-crop-hover-icon-32, .dfw-crop-icon-32:hover {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-crop-hover-32x32.png) no-repeat 0 0;
+}
+.dfw-crop-disable-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-crop-disable-32x32.png) no-repeat 0 0;
+}
+.dfw-crop-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-crop-64x64.png) no-repeat 0 0;
+}
+.dfw-crop-hover-icon-64, .dfw-crop-icon-64:hover {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-crop-hover-64x64.png) no-repeat 0 0;
+}
+.dfw-crop-disable-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-crop-disable-64x64.png) no-repeat 0 0;
+}
+.dfw-date-time-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-date-time-32x32.png) no-repeat 0 0;
+	background: url(images/icon-date-time.svg) no-repeat 0 0;
+}
+.dfw-date-time-hover-icon, .dfw-date-time-icon:hover {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-date-time-hover-32x32.png) no-repeat 0 0;
+	background: url(images/icon-date-time-hover.svg) no-repeat 0 0;
+}
+.dfw-date-time-disable-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-date-time-disable-32x32.png) no-repeat 0 0;
+	background: url(images/icon-date-time-disable.svg) no-repeat 0 0;
+}
+.dfw-date-time-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-date-time-16x16.png) no-repeat 0 0;
+}
+.dfw-date-time-hover-icon-16, .dfw-date-time-icon-16:hover {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-date-time-hover-16x16.png) no-repeat 0 0;
+}
+.dfw-date-time-disable-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-date-time-disable-16x16.png) no-repeat 0 0;
+}
+.dfw-date-time-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-date-time-32x32.png) no-repeat 0 0;
+}
+.dfw-date-time-hover-icon-32, .dfw-date-time-icon-32:hover {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-date-time-hover-32x32.png) no-repeat 0 0;
+}
+.dfw-date-time-disable-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-date-time-disable-32x32.png) no-repeat 0 0;
+}
+.dfw-date-time-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-date-time-64x64.png) no-repeat 0 0;
+}
+.dfw-date-time-hover-icon-64, .dfw-date-time-icon-64:hover {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-date-time-hover-64x64.png) no-repeat 0 0;
+}
+.dfw-date-time-disable-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-date-time-disable-64x64.png) no-repeat 0 0;
+}
+.dfw-disable-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-disable-32x32.png) no-repeat 0 0;
+	background: url(images/icon-disable.svg) no-repeat 0 0;
+}
+.dfw-disable-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-disable-16x16.png) no-repeat 0 0;
+}
+.dfw-disable-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-disable-32x32.png) no-repeat 0 0;
+}
+.dfw-disable-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-disable-64x64.png) no-repeat 0 0;
+}
+.dfw-edit-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-edit-32x32.png) no-repeat 0 0;
+	background: url(images/icon-edit.svg) no-repeat 0 0;
+}
+.dfw-edit-hover-icon, .dfw-edit-icon:hover {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-edit-hover-32x32.png) no-repeat 0 0;
+	background: url(images/icon-edit-hover.svg) no-repeat 0 0;
+}
+.dfw-edit-disable-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-edit-disable-32x32.png) no-repeat 0 0;
+	background: url(images/icon-edit-disable.svg) no-repeat 0 0;
+}
+.dfw-edit-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-edit-16x16.png) no-repeat 0 0;
+}
+.dfw-edit-hover-icon-16, .dfw-edit-icon-16:hover {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-edit-hover-16x16.png) no-repeat 0 0;
+}
+.dfw-edit-disable-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-edit-disable-16x16.png) no-repeat 0 0;
+}
+.dfw-edit-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-edit-32x32.png) no-repeat 0 0;
+}
+.dfw-edit-hover-icon-32, .dfw-edit-icon-32:hover {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-edit-hover-32x32.png) no-repeat 0 0;
+}
+.dfw-edit-disable-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-edit-disable-32x32.png) no-repeat 0 0;
+}
+.dfw-edit-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-edit-64x64.png) no-repeat 0 0;
+}
+.dfw-edit-hover-icon-64, .dfw-edit-icon-64:hover {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-edit-hover-64x64.png) no-repeat 0 0;
+}
+.dfw-edit-disable-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-edit-disable-64x64.png) no-repeat 0 0;
+}
+.dfw-error-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-error-32x32.png) no-repeat 0 0;
+	background: url(images/icon-error.svg) no-repeat 0 0;
+}
+.dfw-error-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-error-16x16.png) no-repeat 0 0;
+}
+.dfw-error-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-error-32x32.png) no-repeat 0 0;
+}
+.dfw-error-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-error-64x64.png) no-repeat 0 0;
+}
+.dfw-filter-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-filter-32x32.png) no-repeat 0 0;
+	background: url(images/icon-filter.svg) no-repeat 0 0;
+}
+.dfw-filter-hover-icon, .dfw-filter-icon:hover {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-filter-hover-32x32.png) no-repeat 0 0;
+	background: url(images/icon-filter-hover.svg) no-repeat 0 0;
+}
+.dfw-filter-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-filter-16x16.png) no-repeat 0 0;
+}
+.dfw-filter-hover-icon-16, .dfw-filter-icon-16:hover {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-filter-hover-16x16.png) no-repeat 0 0;
+}
+.dfw-filter-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-filter-32x32.png) no-repeat 0 0;
+}
+.dfw-filter-hover-icon-32, .dfw-filter-icon-32:hover {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-filter-hover-32x32.png) no-repeat 0 0;
+}
+.dfw-filter-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-filter-64x64.png) no-repeat 0 0;
+}
+.dfw-filter-hover-icon-64, .dfw-filter-icon-64:hover {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-filter-hover-64x64.png) no-repeat 0 0;
+}
+.dfw-info-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-info-32x32.png) no-repeat 0 0;
+	background: url(images/icon-info.svg) no-repeat 0 0;
+}
+.dfw-info-hover-icon, .dfw-info-icon:hover {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-info-hover-32x32.png) no-repeat 0 0;
+	background: url(images/icon-info-hover.svg) no-repeat 0 0;
+}
+.dfw-info-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-info-16x16.png) no-repeat 0 0;
+}
+.dfw-info-hover-icon-16, .dfw-info-icon-16:hover {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-info-hover-16x16.png) no-repeat 0 0;
+}
+.dfw-info-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-info-32x32.png) no-repeat 0 0;
+}
+.dfw-info-hover-icon-32, .dfw-info-icon-32:hover {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-info-hover-32x32.png) no-repeat 0 0;
+}
+.dfw-info-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-info-64x64.png) no-repeat 0 0;
+}
+.dfw-info-hover-icon-64, .dfw-info-icon-64:hover {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-info-hover-64x64.png) no-repeat 0 0;
+}
+.dfw-lock-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-lock-32x32.png) no-repeat 0 0;
+	background: url(images/icon-lock.svg) no-repeat 0 0;
+}
+.dfw-lock-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-lock-16x16.png) no-repeat 0 0;
+}
+.dfw-lock-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-lock-32x32.png) no-repeat 0 0;
+}
+.dfw-lock-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-lock-64x64.png) no-repeat 0 0;
+}
+.dfw-menu-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-menu-32x32.png) no-repeat 0 0;
+	background: url(images/icon-menu.svg) no-repeat 0 0;
+}
+.dfw-menu-hover-icon, .dfw-menu-icon:hover {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-menu-hover-32x32.png) no-repeat 0 0;
+	background: url(images/icon-menu-hover.svg) no-repeat 0 0;
+}
+.dfw-menu-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-menu-16x16.png) no-repeat 0 0;
+}
+.dfw-menu-hover-icon-16, .dfw-menu-icon-16:hover {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-menu-hover-16x16.png) no-repeat 0 0;
+}
+.dfw-menu-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-menu-32x32.png) no-repeat 0 0;
+}
+.dfw-menu-hover-icon-32, .dfw-menu-icon-32:hover {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-menu-hover-32x32.png) no-repeat 0 0;
+}
+.dfw-menu-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-menu-64x64.png) no-repeat 0 0;
+}
+.dfw-menu-hover-icon-64, .dfw-menu-icon-64:hover {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-menu-hover-64x64.png) no-repeat 0 0;
+}
+.dfw-move-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-move-32x32.png) no-repeat 0 0;
+	background: url(images/icon-move.svg) no-repeat 0 0;
+}
+.dfw-move-hover-icon, .dfw-move-icon:hover {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-move-hover-32x32.png) no-repeat 0 0;
+	background: url(images/icon-move-hover.svg) no-repeat 0 0;
+}
+.dfw-move-disable-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-move-disable-32x32.png) no-repeat 0 0;
+	background: url(images/icon-move-disable.svg) no-repeat 0 0;
+}
+.dfw-move-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-move-16x16.png) no-repeat 0 0;
+}
+.dfw-move-hover-icon-16, .dfw-move-icon-16:hover {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-move-hover-16x16.png) no-repeat 0 0;
+}
+.dfw-move-disable-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-move-disable-16x16.png) no-repeat 0 0;
+}
+.dfw-move-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-move-32x32.png) no-repeat 0 0;
+}
+.dfw-move-hover-icon-32, .dfw-move-icon-32:hover {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-move-hover-32x32.png) no-repeat 0 0;
+}
+.dfw-move-disable-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-move-disable-32x32.png) no-repeat 0 0;
+}
+.dfw-move-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-move-64x64.png) no-repeat 0 0;
+}
+.dfw-move-hover-icon-64, .dfw-move-icon-64:hover {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-move-hover-64x64.png) no-repeat 0 0;
+}
+.dfw-move-disable-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-move-disable-64x64.png) no-repeat 0 0;
+}
+.dfw-refresh-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-refresh-32x32.png) no-repeat 0 0;
+	background: url(images/icon-refresh.svg) no-repeat 0 0;
+}
+.dfw-refresh-hover-icon, .dfw-refresh-icon:hover {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-refresh-hover-32x32.png) no-repeat 0 0;
+	background: url(images/icon-refresh-hover.svg) no-repeat 0 0;
+}
+.dfw-refresh-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-refresh-16x16.png) no-repeat 0 0;
+}
+.dfw-refresh-hover-icon-16, .dfw-refresh-icon-16:hover {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-refresh-hover-16x16.png) no-repeat 0 0;
+}
+.dfw-refresh-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-refresh-32x32.png) no-repeat 0 0;
+}
+.dfw-refresh-hover-icon-32, .dfw-refresh-icon-32:hover {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-refresh-hover-32x32.png) no-repeat 0 0;
+}
+.dfw-refresh-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-refresh-64x64.png) no-repeat 0 0;
+}
+.dfw-refresh-hover-icon-64, .dfw-refresh-icon-64:hover {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-refresh-hover-64x64.png) no-repeat 0 0;
+}
+.dfw-remove-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-remove-32x32.png) no-repeat 0 0;
+	background: url(images/icon-remove.svg) no-repeat 0 0;
+}
+.dfw-remove-hover-icon, .dfw-remove-icon:hover {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-remove-hover-32x32.png) no-repeat 0 0;
+	background: url(images/icon-remove-hover.svg) no-repeat 0 0;
+}
+.dfw-remove-disable-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-remove-disable-32x32.png) no-repeat 0 0;
+	background: url(images/icon-remove-disable.svg) no-repeat 0 0;
+}
+.dfw-remove-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-remove-16x16.png) no-repeat 0 0;
+}
+.dfw-remove-hover-icon-16, .dfw-remove-icon-16:hover {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-remove-hover-16x16.png) no-repeat 0 0;
+}
+.dfw-remove-disable-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-remove-disable-16x16.png) no-repeat 0 0;
+}
+.dfw-remove-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-remove-32x32.png) no-repeat 0 0;
+}
+.dfw-remove-hover-icon-32, .dfw-remove-icon-32:hover {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-remove-hover-32x32.png) no-repeat 0 0;
+}
+.dfw-remove-disable-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-remove-disable-32x32.png) no-repeat 0 0;
+}
+.dfw-remove-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-remove-64x64.png) no-repeat 0 0;
+}
+.dfw-remove-hover-icon-64, .dfw-remove-icon-64:hover {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-remove-hover-64x64.png) no-repeat 0 0;
+}
+.dfw-remove-disable-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-remove-disable-64x64.png) no-repeat 0 0;
+}
+.dfw-rotate-left-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-rotate-left-32x32.png) no-repeat 0 0;
+	background: url(images/icon-rotate-left.svg) no-repeat 0 0;
+}
+.dfw-rotate-left-hover-icon, .dfw-rotate-left-icon:hover {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-rotate-left-hover-32x32.png) no-repeat 0 0;
+	background: url(images/icon-rotate-left-hover.svg) no-repeat 0 0;
+}
+.dfw-rotate-left-disable-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-rotate-left-disable-32x32.png) no-repeat 0 0;
+	background: url(images/icon-rotate-left-disable.svg) no-repeat 0 0;
+}
+.dfw-rotate-left-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-rotate-left-16x16.png) no-repeat 0 0;
+}
+.dfw-rotate-left-hover-icon-16, .dfw-rotate-left-icon-16:hover {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-rotate-left-hover-16x16.png) no-repeat 0 0;
+}
+.dfw-rotate-left-disable-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-rotate-left-disable-16x16.png) no-repeat 0 0;
+}
+.dfw-rotate-left-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-rotate-left-32x32.png) no-repeat 0 0;
+}
+.dfw-rotate-left-hover-icon-32, .dfw-rotate-left-icon-32:hover {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-rotate-left-hover-32x32.png) no-repeat 0 0;
+}
+.dfw-rotate-left-disable-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-rotate-left-disable-32x32.png) no-repeat 0 0;
+}
+.dfw-rotate-left-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-rotate-left-64x64.png) no-repeat 0 0;
+}
+.dfw-rotate-left-hover-icon-64, .dfw-rotate-left-icon-64:hover {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-rotate-left-hover-64x64.png) no-repeat 0 0;
+}
+.dfw-rotate-left-disable-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-rotate-left-disable-64x64.png) no-repeat 0 0;
+}
+.dfw-rotate-right-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-rotate-right-32x32.png) no-repeat 0 0;
+	background: url(images/icon-rotate-right.svg) no-repeat 0 0;
+}
+.dfw-rotate-right-hover-icon, .dfw-rotate-right-icon:hover {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-rotate-right-hover-32x32.png) no-repeat 0 0;
+	background: url(images/icon-rotate-right-hover.svg) no-repeat 0 0;
+}
+.dfw-rotate-right-disable-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-rotate-right-disable-32x32.png) no-repeat 0 0;
+	background: url(images/icon-rotate-right-disable.svg) no-repeat 0 0;
+}
+.dfw-rotate-right-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-rotate-right-16x16.png) no-repeat 0 0;
+}
+.dfw-rotate-right-hover-icon-16, .dfw-rotate-right-icon-16:hover {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-rotate-right-hover-16x16.png) no-repeat 0 0;
+}
+.dfw-rotate-right-disable-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-rotate-right-disable-16x16.png) no-repeat 0 0;
+}
+.dfw-rotate-right-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-rotate-right-32x32.png) no-repeat 0 0;
+}
+.dfw-rotate-right-hover-icon-32, .dfw-rotate-right-icon-32:hover {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-rotate-right-hover-32x32.png) no-repeat 0 0;
+}
+.dfw-rotate-right-disable-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-rotate-right-disable-32x32.png) no-repeat 0 0;
+}
+.dfw-rotate-right-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-rotate-right-64x64.png) no-repeat 0 0;
+}
+.dfw-rotate-right-hover-icon-64, .dfw-rotate-right-icon-64:hover {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-rotate-right-hover-64x64.png) no-repeat 0 0;
+}
+.dfw-rotate-right-disable-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-rotate-right-disable-64x64.png) no-repeat 0 0;
+}
+.dfw-row-handle-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-row-handle-32x32.png) no-repeat 0 0;
+	background: url(images/icon-row-handle.svg) no-repeat 0 0;
+}
+.dfw-row-handle-hover-icon, .dfw-row-handle-icon:hover {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-row-handle-hover-32x32.png) no-repeat 0 0;
+	background: url(images/icon-row-handle-hover.svg) no-repeat 0 0;
+}
+.dfw-row-handle-disable-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-row-handle-disable-32x32.png) no-repeat 0 0;
+	background: url(images/icon-row-handle-disable.svg) no-repeat 0 0;
+}
+.dfw-row-handle-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-row-handle-16x16.png) no-repeat 0 0;
+}
+.dfw-row-handle-hover-icon-16, .dfw-row-handle-icon-16:hover {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-row-handle-hover-16x16.png) no-repeat 0 0;
+}
+.dfw-row-handle-disable-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-row-handle-disable-16x16.png) no-repeat 0 0;
+}
+.dfw-row-handle-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-row-handle-32x32.png) no-repeat 0 0;
+}
+.dfw-row-handle-hover-icon-32, .dfw-row-handle-icon-32:hover {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-row-handle-hover-32x32.png) no-repeat 0 0;
+}
+.dfw-row-handle-disable-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-row-handle-disable-32x32.png) no-repeat 0 0;
+}
+.dfw-row-handle-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-row-handle-64x64.png) no-repeat 0 0;
+}
+.dfw-row-handle-hover-icon-64, .dfw-row-handle-icon-64:hover {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-row-handle-hover-64x64.png) no-repeat 0 0;
+}
+.dfw-row-handle-disable-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-row-handle-disable-64x64.png) no-repeat 0 0;
+}
+.dfw-search-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-search-32x32.png) no-repeat 0 0;
+	background: url(images/icon-search.svg) no-repeat 0 0;
+}
+.dfw-search-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-search-16x16.png) no-repeat 0 0;
+}
+.dfw-search-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-search-32x32.png) no-repeat 0 0;
+}
+.dfw-search-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-search-64x64.png) no-repeat 0 0;
+}
+.dfw-settings-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-settings-32x32.png) no-repeat 0 0;
+	background: url(images/icon-settings.svg) no-repeat 0 0;
+}
+.dfw-settings-hover-icon, .dfw-settings-icon:hover {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-settings-hover-32x32.png) no-repeat 0 0;
+	background: url(images/icon-settings-hover.svg) no-repeat 0 0;
+}
+.dfw-settings-disable-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-settings-disable-32x32.png) no-repeat 0 0;
+	background: url(images/icon-settings-disable.svg) no-repeat 0 0;
+}
+.dfw-settings-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-settings-16x16.png) no-repeat 0 0;
+}
+.dfw-settings-hover-icon-16, .dfw-settings-icon-16:hover {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-settings-hover-16x16.png) no-repeat 0 0;
+}
+.dfw-settings-disable-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-settings-disable-16x16.png) no-repeat 0 0;
+}
+.dfw-settings-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-settings-32x32.png) no-repeat 0 0;
+}
+.dfw-settings-hover-icon-32, .dfw-settings-icon-32:hover {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-settings-hover-32x32.png) no-repeat 0 0;
+}
+.dfw-settings-disable-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-settings-disable-32x32.png) no-repeat 0 0;
+}
+.dfw-settings-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-settings-64x64.png) no-repeat 0 0;
+}
+.dfw-settings-hover-icon-64, .dfw-settings-icon-64:hover {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-settings-hover-64x64.png) no-repeat 0 0;
+}
+.dfw-settings-disable-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-settings-disable-64x64.png) no-repeat 0 0;
+}
+.dfw-success-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-success-32x32.png) no-repeat 0 0;
+	background: url(images/icon-success.svg) no-repeat 0 0;
+}
+.dfw-success-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-success-16x16.png) no-repeat 0 0;
+}
+.dfw-success-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-success-32x32.png) no-repeat 0 0;
+}
+.dfw-success-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-success-64x64.png) no-repeat 0 0;
+}
+.dfw-trash-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-trash-32x32.png) no-repeat 0 0;
+	background: url(images/icon-trash.svg) no-repeat 0 0;
+}
+.dfw-trash-hover-icon, .dfw-trash-icon:hover {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-trash-hover-32x32.png) no-repeat 0 0;
+	background: url(images/icon-trash-hover.svg) no-repeat 0 0;
+}
+.dfw-trash-disable-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-trash-disable-32x32.png) no-repeat 0 0;
+	background: url(images/icon-trash-disable.svg) no-repeat 0 0;
+}
+.dfw-trash-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-trash-16x16.png) no-repeat 0 0;
+}
+.dfw-trash-hover-icon-16, .dfw-trash-icon-16:hover {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-trash-hover-16x16.png) no-repeat 0 0;
+}
+.dfw-trash-disable-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-trash-disable-16x16.png) no-repeat 0 0;
+}
+.dfw-trash-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-trash-32x32.png) no-repeat 0 0;
+}
+.dfw-trash-hover-icon-32, .dfw-trash-icon-32:hover {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-trash-hover-32x32.png) no-repeat 0 0;
+}
+.dfw-trash-disable-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-trash-disable-32x32.png) no-repeat 0 0;
+}
+.dfw-trash-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-trash-64x64.png) no-repeat 0 0;
+}
+.dfw-trash-hover-icon-64, .dfw-trash-icon-64:hover {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-trash-hover-64x64.png) no-repeat 0 0;
+}
+.dfw-trash-disable-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-trash-disable-64x64.png) no-repeat 0 0;
+}
+.dfw-zoom-in-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-zoom-in-32x32.png) no-repeat 0 0;
+	background: url(images/icon-zoom-in.svg) no-repeat 0 0;
+}
+.dfw-zoom-in-hover-icon, .dfw-zoom-in-icon:hover {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-zoom-in-hover-32x32.png) no-repeat 0 0;
+	background: url(images/icon-zoom-in-hover.svg) no-repeat 0 0;
+}
+.dfw-zoom-in-disable-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-zoom-in-disable-32x32.png) no-repeat 0 0;
+	background: url(images/icon-zoom-in-disable.svg) no-repeat 0 0;
+}
+.dfw-zoom-in-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-zoom-in-16x16.png) no-repeat 0 0;
+}
+.dfw-zoom-in-hover-icon-16, .dfw-zoom-in-icon-16:hover {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-zoom-in-hover-16x16.png) no-repeat 0 0;
+}
+.dfw-zoom-in-disable-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-zoom-in-disable-16x16.png) no-repeat 0 0;
+}
+.dfw-zoom-in-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-zoom-in-32x32.png) no-repeat 0 0;
+}
+.dfw-zoom-in-hover-icon-32, .dfw-zoom-in-icon-32:hover {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-zoom-in-hover-32x32.png) no-repeat 0 0;
+}
+.dfw-zoom-in-disable-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-zoom-in-disable-32x32.png) no-repeat 0 0;
+}
+.dfw-zoom-in-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-zoom-in-64x64.png) no-repeat 0 0;
+}
+.dfw-zoom-in-hover-icon-64, .dfw-zoom-in-icon-64:hover {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-zoom-in-hover-64x64.png) no-repeat 0 0;
+}
+.dfw-zoom-in-disable-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-zoom-in-disable-64x64.png) no-repeat 0 0;
+}
+.dfw-zoom-out-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-zoom-out-32x32.png) no-repeat 0 0;
+	background: url(images/icon-zoom-out.svg) no-repeat 0 0;
+}
+.dfw-zoom-out-hover-icon, .dfw-zoom-out-icon:hover {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-zoom-out-hover-32x32.png) no-repeat 0 0;
+	background: url(images/icon-zoom-out-hover.svg) no-repeat 0 0;
+}
+.dfw-zoom-out-disable-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-zoom-out-disable-32x32.png) no-repeat 0 0;
+	background: url(images/icon-zoom-out-disable.svg) no-repeat 0 0;
+}
+.dfw-zoom-out-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-zoom-out-16x16.png) no-repeat 0 0;
+}
+.dfw-zoom-out-hover-icon-16, .dfw-zoom-out-icon-16:hover {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-zoom-out-hover-16x16.png) no-repeat 0 0;
+}
+.dfw-zoom-out-disable-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-zoom-out-disable-16x16.png) no-repeat 0 0;
+}
+.dfw-zoom-out-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-zoom-out-32x32.png) no-repeat 0 0;
+}
+.dfw-zoom-out-hover-icon-32, .dfw-zoom-out-icon-32:hover {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-zoom-out-hover-32x32.png) no-repeat 0 0;
+}
+.dfw-zoom-out-disable-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-zoom-out-disable-32x32.png) no-repeat 0 0;
+}
+.dfw-zoom-out-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-zoom-out-64x64.png) no-repeat 0 0;
+}
+.dfw-zoom-out-hover-icon-64, .dfw-zoom-out-icon-64:hover {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-zoom-out-hover-64x64.png) no-repeat 0 0;
+}
+.dfw-zoom-out-disable-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-zoom-out-disable-64x64.png) no-repeat 0 0;
+}
+.dfw-arrow-down-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-down-32x32.png) no-repeat 0 0;
+	background: url(images/icon-arrow-down.svg) no-repeat 0 0;
+}
+.dfw-arrow-down-hover-icon, .dfw-arrow-down-icon:hover {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-down-hover-32x32.png) no-repeat 0 0;
+	background: url(images/icon-arrow-down-hover.svg) no-repeat 0 0;
+}
+.dfw-arrow-down-disable-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-down-disable-32x32.png) no-repeat 0 0;
+	background: url(images/icon-arrow-down-disable.svg) no-repeat 0 0;
+}
+.dfw-arrow-down-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-down-16x16.png) no-repeat 0 0;
+}
+.dfw-arrow-down-hover-icon-16, .dfw-arrow-down-icon-16:hover {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-down-hover-16x16.png) no-repeat 0 0;
+}
+.dfw-arrow-down-disable-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-down-disable-16x16.png) no-repeat 0 0;
+}
+.dfw-arrow-down-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-down-32x32.png) no-repeat 0 0;
+}
+.dfw-arrow-down-hover-icon-32, .dfw-arrow-down-icon-32:hover {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-down-hover-32x32.png) no-repeat 0 0;
+}
+.dfw-arrow-down-disable-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-down-disable-32x32.png) no-repeat 0 0;
+}
+.dfw-arrow-down-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-down-64x64.png) no-repeat 0 0;
+}
+.dfw-arrow-down-hover-icon-64, .dfw-arrow-down-icon-64:hover {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-down-hover-64x64.png) no-repeat 0 0;
+}
+.dfw-arrow-down-disable-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-down-disable-64x64.png) no-repeat 0 0;
+}
+.dfw-arrow-left-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-left-32x32.png) no-repeat 0 0;
+	background: url(images/icon-arrow-left.svg) no-repeat 0 0;
+}
+.dfw-arrow-left-hover-icon, .dfw-arrow-left-icon:hover {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-left-hover-32x32.png) no-repeat 0 0;
+	background: url(images/icon-arrow-left-hover.svg) no-repeat 0 0;
+}
+.dfw-arrow-left-disable-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-left-disable-32x32.png) no-repeat 0 0;
+	background: url(images/icon-arrow-left-disable.svg) no-repeat 0 0;
+}
+.dfw-arrow-left-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-left-16x16.png) no-repeat 0 0;
+}
+.dfw-arrow-left-hover-icon-16, .dfw-arrow-left-icon-16:hover {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-left-hover-16x16.png) no-repeat 0 0;
+}
+.dfw-arrow-left-disable-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-left-disable-16x16.png) no-repeat 0 0;
+}
+.dfw-arrow-left-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-left-32x32.png) no-repeat 0 0;
+}
+.dfw-arrow-left-hover-icon-32, .dfw-arrow-left-icon-32:hover {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-left-hover-32x32.png) no-repeat 0 0;
+}
+.dfw-arrow-left-disable-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-left-disable-32x32.png) no-repeat 0 0;
+}
+.dfw-arrow-left-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-left-64x64.png) no-repeat 0 0;
+}
+.dfw-arrow-left-hover-icon-64, .dfw-arrow-left-icon-64:hover {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-left-hover-64x64.png) no-repeat 0 0;
+}
+.dfw-arrow-left-disable-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-left-disable-64x64.png) no-repeat 0 0;
+}
+.dfw-arrow-right-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-right-32x32.png) no-repeat 0 0;
+	background: url(images/icon-arrow-right.svg) no-repeat 0 0;
+}
+.dfw-arrow-right-hover-icon, .dfw-arrow-right-icon:hover {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-right-hover-32x32.png) no-repeat 0 0;
+	background: url(images/icon-arrow-right-hover.svg) no-repeat 0 0;
+}
+.dfw-arrow-right-disable-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-right-disable-32x32.png) no-repeat 0 0;
+	background: url(images/icon-arrow-right-disable.svg) no-repeat 0 0;
+}
+.dfw-arrow-right-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-right-16x16.png) no-repeat 0 0;
+}
+.dfw-arrow-right-hover-icon-16, .dfw-arrow-right-icon-16:hover {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-right-hover-16x16.png) no-repeat 0 0;
+}
+.dfw-arrow-right-disable-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-right-disable-16x16.png) no-repeat 0 0;
+}
+.dfw-arrow-right-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-right-32x32.png) no-repeat 0 0;
+}
+.dfw-arrow-right-hover-icon-32, .dfw-arrow-right-icon-32:hover {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-right-hover-32x32.png) no-repeat 0 0;
+}
+.dfw-arrow-right-disable-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-right-disable-32x32.png) no-repeat 0 0;
+}
+.dfw-arrow-right-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-right-64x64.png) no-repeat 0 0;
+}
+.dfw-arrow-right-hover-icon-64, .dfw-arrow-right-icon-64:hover {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-right-hover-64x64.png) no-repeat 0 0;
+}
+.dfw-arrow-right-disable-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-right-disable-64x64.png) no-repeat 0 0;
+}
+.dfw-arrow-up-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-up-32x32.png) no-repeat 0 0;
+	background: url(images/icon-arrow-up.svg) no-repeat 0 0;
+}
+.dfw-arrow-up-hover-icon, .dfw-arrow-up-icon:hover {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-up-hover-32x32.png) no-repeat 0 0;
+	background: url(images/icon-arrow-up-hover.svg) no-repeat 0 0;
+}
+.dfw-arrow-up-disable-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-up-disable-32x32.png) no-repeat 0 0;
+	background: url(images/icon-arrow-up-disable.svg) no-repeat 0 0;
+}
+.dfw-arrow-up-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-up-16x16.png) no-repeat 0 0;
+}
+.dfw-arrow-up-hover-icon-16, .dfw-arrow-up-icon-16:hover {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-up-hover-16x16.png) no-repeat 0 0;
+}
+.dfw-arrow-up-disable-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-up-disable-16x16.png) no-repeat 0 0;
+}
+.dfw-arrow-up-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-up-32x32.png) no-repeat 0 0;
+}
+.dfw-arrow-up-hover-icon-32, .dfw-arrow-up-icon-32:hover {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-up-hover-32x32.png) no-repeat 0 0;
+}
+.dfw-arrow-up-disable-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-up-disable-32x32.png) no-repeat 0 0;
+}
+.dfw-arrow-up-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-up-64x64.png) no-repeat 0 0;
+}
+.dfw-arrow-up-hover-icon-64, .dfw-arrow-up-icon-64:hover {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-up-hover-64x64.png) no-repeat 0 0;
+}
+.dfw-arrow-up-disable-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-arrow-up-disable-64x64.png) no-repeat 0 0;
+}
+.dfw-column-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-column-32x32.png) no-repeat 0 0;
+	background: url(images/icon-column.svg) no-repeat 0 0;
+}
+.dfw-column-hover-icon, .dfw-column-icon:hover {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-column-hover-32x32.png) no-repeat 0 0;
+	background: url(images/icon-column-hover.svg) no-repeat 0 0;
+}
+.dfw-column-disable-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-column-disable-32x32.png) no-repeat 0 0;
+	background: url(images/icon-column-disable.svg) no-repeat 0 0;
+}
+.dfw-column-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-column-16x16.png) no-repeat 0 0;
+}
+.dfw-column-hover-icon-16, .dfw-column-icon-16:hover {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-column-hover-16x16.png) no-repeat 0 0;
+}
+.dfw-column-disable-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-column-disable-16x16.png) no-repeat 0 0;
+}
+.dfw-column-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-column-32x32.png) no-repeat 0 0;
+}
+.dfw-column-hover-icon-32, .dfw-column-icon-32:hover {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-column-hover-32x32.png) no-repeat 0 0;
+}
+.dfw-column-disable-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-column-disable-32x32.png) no-repeat 0 0;
+}
+.dfw-column-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-column-64x64.png) no-repeat 0 0;
+}
+.dfw-column-hover-icon-64, .dfw-column-icon-64:hover {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-column-hover-64x64.png) no-repeat 0 0;
+}
+.dfw-column-disable-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-column-disable-64x64.png) no-repeat 0 0;
+}
+.dfw-help-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-help-32x32.png) no-repeat 0 0;
+	background: url(images/icon-help.svg) no-repeat 0 0;
+}
+.dfw-help-hover-icon, .dfw-help-icon:hover {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-help-hover-32x32.png) no-repeat 0 0;
+	background: url(images/icon-help-hover.svg) no-repeat 0 0;
+}
+.dfw-help-disable-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-help-disable-32x32.png) no-repeat 0 0;
+	background: url(images/icon-help-disable.svg) no-repeat 0 0;
+}
+.dfw-help-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-help-16x16.png) no-repeat 0 0;
+}
+.dfw-help-hover-icon-16, .dfw-help-icon-16:hover {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-help-hover-16x16.png) no-repeat 0 0;
+}
+.dfw-help-disable-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-help-disable-16x16.png) no-repeat 0 0;
+}
+.dfw-help-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-help-32x32.png) no-repeat 0 0;
+}
+.dfw-help-hover-icon-32, .dfw-help-icon-32:hover {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-help-hover-32x32.png) no-repeat 0 0;
+}
+.dfw-help-disable-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-help-disable-32x32.png) no-repeat 0 0;
+}
+.dfw-help-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-help-64x64.png) no-repeat 0 0;
+}
+.dfw-help-hover-icon-64, .dfw-help-icon-64:hover {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-help-hover-64x64.png) no-repeat 0 0;
+}
+.dfw-help-disable-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-help-disable-64x64.png) no-repeat 0 0;
+}
+.dfw-pushpin-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-pushpin-32x32.png) no-repeat 0 0;
+	background: url(images/icon-pushpin.svg) no-repeat 0 0;
+}
+.dfw-pushpin-hover-icon, .dfw-pushpin-icon:hover {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-pushpin-hover-32x32.png) no-repeat 0 0;
+	background: url(images/icon-pushpin-hover.svg) no-repeat 0 0;
+}
+.dfw-pushpin-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-pushpin-16x16.png) no-repeat 0 0;
+}
+.dfw-pushpin-hover-icon-16, .dfw-pushpin-icon-16:hover {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-pushpin-hover-16x16.png) no-repeat 0 0;
+}
+.dfw-pushpin-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-pushpin-32x32.png) no-repeat 0 0;
+}
+.dfw-pushpin-hover-icon-32, .dfw-pushpin-icon-32:hover {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-pushpin-hover-32x32.png) no-repeat 0 0;
+}
+.dfw-pushpin-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-pushpin-64x64.png) no-repeat 0 0;
+}
+.dfw-pushpin-hover-icon-64, .dfw-pushpin-icon-64:hover {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-pushpin-hover-64x64.png) no-repeat 0 0;
+}
+.dfw-download-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-download-32x32.png) no-repeat 0 0;
+	background: url(images/icon-download.svg) no-repeat 0 0;
+}
+.dfw-download-hover-icon, .dfw-download-icon:hover {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-download-hover-32x32.png) no-repeat 0 0;
+	background: url(images/icon-download-hover.svg) no-repeat 0 0;
+}
+.dfw-download-disable-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-download-disable-32x32.png) no-repeat 0 0;
+	background: url(images/icon-download-disable.svg) no-repeat 0 0;
+}
+.dfw-download-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-download-16x16.png) no-repeat 0 0;
+}
+.dfw-download-hover-icon-16, .dfw-download-icon-16:hover {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-download-hover-16x16.png) no-repeat 0 0;
+}
+.dfw-download-disable-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-download-disable-16x16.png) no-repeat 0 0;
+}
+.dfw-download-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-download-32x32.png) no-repeat 0 0;
+}
+.dfw-download-hover-icon-32, .dfw-download-icon-32:hover {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-download-hover-32x32.png) no-repeat 0 0;
+}
+.dfw-download-disable-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-download-disable-32x32.png) no-repeat 0 0;
+}
+.dfw-download-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-download-64x64.png) no-repeat 0 0;
+}
+.dfw-download-hover-icon-64, .dfw-download-icon-64:hover {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-download-hover-64x64.png) no-repeat 0 0;
+}
+.dfw-download-disable-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-download-disable-64x64.png) no-repeat 0 0;
+}
+.dfw-upload-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-upload-32x32.png) no-repeat 0 0;
+	background: url(images/icon-upload.svg) no-repeat 0 0;
+}
+.dfw-upload-hover-icon, .dfw-upload-icon:hover {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-upload-hover-32x32.png) no-repeat 0 0;
+	background: url(images/icon-upload-hover.svg) no-repeat 0 0;
+}
+.dfw-upload-disable-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-upload-disable-32x32.png) no-repeat 0 0;
+	background: url(images/icon-upload-disable.svg) no-repeat 0 0;
+}
+.dfw-upload-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-upload-16x16.png) no-repeat 0 0;
+}
+.dfw-upload-hover-icon-16, .dfw-upload-icon-16:hover {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-upload-hover-16x16.png) no-repeat 0 0;
+}
+.dfw-upload-disable-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-upload-disable-16x16.png) no-repeat 0 0;
+}
+.dfw-upload-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-upload-32x32.png) no-repeat 0 0;
+}
+.dfw-upload-hover-icon-32, .dfw-upload-icon-32:hover {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-upload-hover-32x32.png) no-repeat 0 0;
+}
+.dfw-upload-disable-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-upload-disable-32x32.png) no-repeat 0 0;
+}
+.dfw-upload-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-upload-64x64.png) no-repeat 0 0;
+}
+.dfw-upload-hover-icon-64, .dfw-upload-icon-64:hover {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-upload-hover-64x64.png) no-repeat 0 0;
+}
+.dfw-upload-disable-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-upload-disable-64x64.png) no-repeat 0 0;
+}
+.dfw-info-solid-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-info-solid-32x32.png) no-repeat 0 0;
+	background: url(images/icon-info-solid.svg) no-repeat 0 0;
+}
+.dfw-info-solid-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-info-solid-16x16.png) no-repeat 0 0;
+}
+.dfw-info-solid-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-info-solid-32x32.png) no-repeat 0 0;
+}
+.dfw-info-solid-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-info-solid-64x64.png) no-repeat 0 0;
+}
+.dfw-success-solid-icon {
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-success-solid-32x32.png) no-repeat 0 0;
+	background: url(images/icon-success-solid.svg) no-repeat 0 0;
+}
+.dfw-success-solid-icon-16 {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-success-solid-16x16.png) no-repeat 0 0;
+}
+.dfw-success-solid-icon-32 {
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-success-solid-32x32.png) no-repeat 0 0;
+}
+.dfw-success-solid-icon-64 {
+	height: 64px;
+	width: 64px;
+	display: inline-block;
+	margin: 3px;
+	background: url(images/icon-success-solid-64x64.png) no-repeat 0 0;
+}

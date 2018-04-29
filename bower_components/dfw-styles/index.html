@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>dfw-styles and dfw-icon-styles demo</title>
+    <script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+    <link rel="import" href="bower_components/polymer/polymer.html">
+    <link rel="import" href="dfw-icon-styles.html">
+    <link rel="import" href="dfw-styles.html">
+    <style is="custom-style" include="dfw-styles dfw-icon-styles">
+    table {
+        border-spacing: 0;
+        border-collapse: collapse;
+      }
+      .panel-body {
+        padding: 15px;
+      }
+      .container-fluid {
+        padding-right: 15px;
+        padding-left: 15px;
+        margin-right: auto;
+        margin-left: auto;
+      }
+      .my-head {
+      	padding-bottom: 20px;
+      }
+      .icon-table th, .icon-table td {
+      	margin: 2px;
+      	padding: 10px;
+      	width: auto;
+      	border: 1px solid #ddd;
+      	text-align: center;
+      }
+      .td-desc {
+      	text-align: left !important;
+      }
+      .desc-table {
+      	width: 700px;
+      }
+      th {
+      	background-color: #f2f2f2;
+      }
+      .file-type {
+      	margin-top: 5px;
+      	font-weight: normal;
+      	font-size: 10px;
+      	color: #191919;
+      	width: 75px;
+      	height: 1em;
+      }
+      .icon-sub {
+      	float: left;
+      	font-weight: normal;
+      }
+      .icon-cell {
+      	display: table-cell;
+      	vertical-align: bottom;
+      	text-align: center;
+      }
+      .icon-icon {
+      	display: table-cell;
+      	vertical-align: bottom;
+      	height: 100px;
+      }
+      .icon-cell img {
+      	display: block;
+      	margin: 0 auto;
+      }
+      .icon-grp td {
+      	border: none;
+      }
+      .icon-head {
+      	background-color: #f2f2f2;
+      }
+      .icon-title {
+      	margin: 20px;
+      	border-bottom: 1px solid #b5b5b5;
+      }
+      .download-div {
+      	float: right;
+      	margin-right: 20px;
+      	margin-bottom: 20px;
+      }
+      .icon-example td {
+      	text-align: left;
+      }
+      .my-own-24-pix-class {
+      	height: 24px;
+      	width: 24px;
+      }
+      .code > pre {
+        margin: 0;
+        padding: 0 0 10px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="vertical-section-container centered">
+      <h3>dfw-styles and dfw-icon-styles demo</h3>
+      <template  id="t3" is="dom-bind">
+        <div class="panel-body">
+          <table id="main-icon-table" class="icon-table">
+            <thead>
+              <tr>
+                <th>Icon File Name</th>
+                <th>State</th>
+                <th>16 x 16<div class="file-type">(.PNG)</div></th>
+                <th>32 x 32<div class="file-type">(.PNG)</div></th>
+                <th>64 x 64<div class="file-type">(.PNG)</div></th>
+                <th>32 x 32<div class="file-type">(.SVG)</div></th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <template is="dom-repeat" id="icon-table" items="{{data.icons}}" as="nameArr">
+                <template is="dom-repeat" id="icon-states" items="{{data.states}}" as="state">
+                  <tr>
+                    <td class="dfw-h4 row-name">{{nameArr.name}}</td>
+                    <td class="dfw-h4 row-name">{{state.title}}</td>
+                    <template is="dom-repeat" id="icon-img" items="{{data.sizes}}" as="size">
+                      <td>
+                          <span class$="{{_concatImageName(nameArr.name,state.value,size)}}"></span>
+                      </td>
+                    </template>
+                    <td>
+                        <span class$="{{_concatImageSvg(nameArr.name,state.value)}}"></span>
+                    </td>
+                    <td class="td-desc">{{nameArr.desc}}</td>
+                  </tr>
+                </template>
+            </template>
+          </table>
+        </div>
+      </template>
+    </div>
+    <script>
+      (function() {
+        var _concatImageName = function(name, state,size) {
+          var stateName = state == "" ? "" : '-' + state;
+          return "dfw-" + name + stateName + "-icon-" + size;
+        };
+        var _concatImageSvg = function(name, state) {
+          var stateName = state == "" ? "" : '-' + state;
+          return "dfw-" + name + stateName + "-icon dfw-32";
+        };
+        var data = {
+          states : [
+            {title:"Default",value:""},
+            {title:"Hover",value:"hover"},
+            {title:"Disabled",value:"disable"}
+          ],
+          sizes : ["16","32","64"],
+          icons : [
+            {name:"add",desc:"To add to the content"},
+      			{name:"alert",desc:"To support scannability in text-heavy interfaces and Warn the user"},
+      			{name:"audit",desc:"Audit"},
+      			{name:"calendar",desc:"To support the date picking from the calendar. This will be used where user needs to enter the date"},
+      			{name:"close",desc:"It can be used to close the modal windows"},
+      			{name:"crop",desc:"To Crop the picture"},
+      			{name:"date-time",desc:"To support the date and time picking from the calendar. This will be used where user needs to enter the date and time"},
+      			{name:"disable",desc:"To Block the data or customer"},
+      			{name:"edit",desc:"To edit the content"},
+      			{name:"error",desc:"Critical error message"},
+      			{name:"filter",desc:"To filter the content"},
+      			{name:"info",desc:"To support scannability in text-heavy interfaces and Information which are  needed for user "},
+      			{name:"lock",desc:"To Support the secured feature like password, encrypted data. This will be used when we communicate the secured features "},
+      			{name:"menu",desc:"Used for a slide-out menu"},
+      			{name:"move",desc:"To move the photo for cropping"},
+      			{name:"refresh",desc:"To refresh page content or data table"},
+      			{name:"remove",desc:"To remove an item"},
+      			{name:"rotate-left",desc:"To rotate the picture counter-clockwise"},
+      	    {name:"rotate-right",desc:"To rotate the picture clockwise"},
+      			{name:"row-handle",desc:"An icon to show a draggable item"},
+      			{name:"search",desc:"It can be used to search the data"},
+      			{name:"settings",desc:"Hidden menu like Tools, Settings, Configuration"},
+      			{name:"success",desc:"To communicate successful transaction message"},
+            {name:"trash",desc:"Delete the data. This can be used at multiple instances like selecting data and delete etc.. "},
+            {name:"zoom-in",desc:"To Zoom into the content"},
+            {name:"zoom-out",desc:"To Zoom out of the content"},
+      			{name:"arrow-down",desc:"This indicates an open expandable panel or move down"},
+      			{name:"arrow-up",desc:"This indicates a move up"},
+      			{name:"arrow-left",desc:"This indicates a move to the left"},
+      			{name:"arrow-right",desc:"This indicates a closed expandable panel or a move to the right"},
+      			{name:"column",desc:"Indicates a pulldown for column changes in a data table"},
+      			{name:"help",desc:"A help icon"},
+      			{name:"pushpin",desc:"A pushpin"},
+      			{name:"success-solid",desc:"A solid version of the success icon"},
+            {name:"info-solid",desc:"A solid version of the information icon"}
+          ]
+        };
+        var t3 = document.querySelector('#t3');
+        t3.data = data;
+        t3._concatImageName = _concatImageName;
+        t3._concatImageSvg = _concatImageSvg;
+      })();
+    </script>
+  </body>
+</html>

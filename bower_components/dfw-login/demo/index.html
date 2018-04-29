@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>dfw-login demo</title>
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script>
+        window.Polymer = window.Polymer || {};
+        window.Polymer.dom = 'shadow';
+    </script>
+    <link rel="import" href="../../polymer/polymer.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+    <link rel="import" href="../../iron-ajax/iron-ajax.html">
+    <link rel="import" href="../../dfw-status-dialog/dfw-status-dialog.html">
+    <link rel="import" href="../dfw-login.html">
+    <script src="config/config.js"></script>
+    <style is="custom-style" include="demo-pages-shared-styles">
+    .vertical-section-container {
+        max-width: 1200px;
+      }
+      demo-snippet.horizontal {
+        --demo-snippet-demo: {
+          @apply(--layout-horizontal);
+          @apply(--layout-justified);
+          @apply(--layout-wrap);
+        }
+      }
+      demo-snippet.horizontal paper-input {
+        display: inline-block;
+      }
+      .output {
+        margin-top: 20px;
+        word-wrap: break-word;
+        @apply(--paper-font-common-code);
+      }
+      .dtv-branding {
+        	height: 50px;
+        	position: relative;
+        	z-index: 999;
+          background-color: #222;
+        }
+        .bar {
+            color: #f2f2f2;
+            font-size: 14px;
+            font-weight: normal;
+        }
+        .project-name {
+            font-size: 16px !important;
+            margin-left: 10px;
+            margin-top: 16px;
+            float: left;
+            display: block;
+            text-transform: uppercase;
+        }
+
+        .welcome-name {
+        	font-weight: bold;
+        	display: block;
+        	float: right;
+        	margin-right:10px;
+        	margin-top: 15px;
+        }
+        .gear {
+            display: block;
+            float: right;
+            margin-top: 15px;
+            margin-right:10px;
+            cursor: pointer;
+        }
+        .gear:hover {
+            margin-top: 15px;
+            margin-right:10px;
+        }
+        .welcome-logout {
+        	display: block;
+        	float: right;
+        	margin-right:20px;
+        	margin-top: 15px;
+        }
+        .welcome-title {
+        	display: block;
+        	float: right;
+        	margin-top: 15px;
+            margin-right: 5px;
+        }
+        .header-anchor {
+        	color: #f2f2f2;
+        	font-size: 14px;
+        	text-decoration: none;
+        	cursor: pointer;
+        }
+        .header-anchor:link {
+        	text-decoration: none;
+        }
+        .header-anchor:hover {
+            color: #99c2df !important;
+        }
+        .header-anchor:visited  {
+        	color: #f2f2f2;
+        }
+        .sorry {
+          color: white;
+        }
+    </style>
+  </head>
+  <body>
+
+    <div class="vertical-section-container centered">
+      <h3>Basic dfw-login demo</h3>
+      <demo-snippet>
+        <template id="t1" is="dom-bind">
+          <!-- <iron-ajax url="./config/offline.json" last-response="{{data}}" auto></iron-ajax> -->
+          <dfw-login  id="dfw-login" notify-minutes="115" offline="{{offline}}" allow-guest="{{guest}}" failed="{{failed}}" user-name="{{userName}}"></dfw-login>
+          <template is="dom-if" if="{{!failed}}">
+            <div class="dtv-branding">
+                <div class="bar">
+                    <span class="welcome-logout"> |&nbsp;&nbsp;<a class="header-anchor" on-tap="_logout"> Logout</a></span>
+                    <span class="welcome-name">{{userName}}</span>
+                    <span class="welcome-title">Welcome, </span>
+                </div>
+            </div>
+          </template>
+          <template is="dom-if" if="{{failed}}">
+            <div class="dtv-branding">
+                <div class="bar">
+                    <span class="welcome-logout"> |&nbsp;&nbsp;<a class="header-anchor" on-tap="_login"> Login</a></span>
+                    <span class="welcome-name">Guest</span>
+                    <span class="welcome-title">Welcome, </span>
+                </div>
+            </div>
+          </template>
+          <dfw-status-dialog id="warn" status-type="warning" message="test"></dfw-status-dialog>
+        </template>
+      </demo-snippet>
+    </div>
+    <script>
+    (function() {
+      var _logout = function() {
+        var login = document.querySelector('dfw-login');
+        login.logout();
+      };
+      var _login = function() {
+        var login = document.querySelector('dfw-login');
+        login.login();
+      };
+      var t1 = document.querySelector('#t1');
+      t1._logout = _logout;
+      t1._login = _login;
+      t1.offline = dfwPlatformUIAppConfig.offline;
+      t1.guest = dfwPlatformUIAppConfig.guest;
+      console.info("dfw-login index t1.offline:", t1.offline);
+      console.info("dfw-login index t1.guest:", t1.guest);
+      document.addEventListener('dfw-login-timeout', function timeEventFunc(data) {
+        console.info("listener data:", data.detail.timeLeft);
+        var timeLeft = data.detail.timeLeft;
+        var minutes = Math.floor(timeLeft/60);
+
+        var warn = document.querySelector("#warn");
+        warn.message = "Session timeout in " + minutes + " minutes ";
+        console.info("warn:", warn, "   message:", warn.message);
+        warn.open();
+      });
+    })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>dfw-status-dialog demo</title>
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script>
+      window.Polymer = window.Polymer || {};
+      window.Polymer.dom = 'shadow';
+    </script>
+    <link rel="import" href="../../polymer/polymer.html">
+    <link rel="import" href="../../dfw-styles/dfw-styles.html">
+    <link rel="import" href="../../paper-button/paper-button.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+    <link rel="import" href="../dfw-status-dialog.html">
+
+    <style is="custom-style" include="demo-pages-shared-styles dfw-styles">
+      .answ {
+        margin: 10px;
+        padding: 20px;
+        border: 1px solid #eaeaea;
+        width: 300px;
+        color: #0367ae;
+      }
+      .answ span {
+        color: #222;
+      }
+      .title {
+        margin-right: 10px;
+        font-weight: bold;
+      }
+      .btns {
+        .margin: 10px;
+        overflow: auto;
+        padding: 5px;
+        display: flex;
+      }
+      .vertical-section-container {
+        max-width: 1200px;
+      }
+      demo-snippet.horizontal {
+        --demo-snippet-demo: {
+          @apply(--layout-horizontal);
+          @apply(--layout-justified);
+          @apply(--layout-wrap);
+        }
+      }
+      demo-snippet.horizontal paper-input {
+        display: inline-block;
+      }
+      paper-button {
+        width: 22%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="vertical-section-container centered">
+      <h3>Basic dfw-status-dialog demo</h3>
+      <demo-snippet>
+        <template id="temp" is="dom-bind">
+          <div class="btns">
+            <paper-button raised onclick="confirmError.open()">Open Error Confirm</paper-button>
+            <paper-button raised onclick="confirmSuccess.open()">Open Success Confirm</paper-button>
+            <paper-button raised onclick="confirmWarn.open()">Open Warning Confirm</paper-button>
+            <paper-button raised onclick="confirmInfo.open()">Open Info Confirm</paper-button>
+          </div>
+          <div class="btns">
+            <paper-button raised onclick="plainError.open()">Open Error Ack</paper-button>
+            <paper-button raised onclick="plainSuccess.open()">Open Success Ack</paper-button>
+            <paper-button raised onclick="plainWarn.open()">Open Warning Ack</paper-button>
+            <paper-button raised onclick="plainInfo.open()">Open Info Ack</paper-button>
+          </div>
+          <dfw-status-dialog id="confirmError"
+            confirm
+            confirm-button-text="Yes"
+            cancel-button-text="No"
+            status-type="error"
+            message="This is the message for the dialog" answer="{{answer1}}"></dfw-status-dialog>
+            <div class="answ" ><span class="title">Error Confirm Dialog Answer:</span>{{answer1}}</div>
+            <dfw-status-dialog id="confirmSuccess"
+              confirm
+              status-type="success"
+              message="This is the message for the dialog This is the message for the dialog This is the message for the dialog This is the message for the dialog This is the message for the dialog" answer="{{answer2}}"></dfw-status-dialog>
+            <div class="answ" ><span class="title">Success Confirm Dialog Answer:</span> {{answer2}}</div>
+            <dfw-status-dialog id="confirmWarn"
+              confirm
+              status-type="warning"
+              message="This is the message for the dialog" answer="{{answer3}}"></dfw-status-dialog>
+            <div class="answ" ><span class="title">Warning Confirm Dialog Answer:</span> {{answer3}}</div>
+            <dfw-status-dialog id="confirmInfo"
+              confirm
+              status-type="info"
+              message="This is the message for the dialog" answer="{{answer4}}"></dfw-status-dialog>
+            <div class="answ" ><span class="title">Info Confirm Dialog Answer:</span> {{answer4}}</div>
+
+            <dfw-status-dialog id="plainError"
+              status-type="error"
+              message="This is the message for the dialog"></dfw-status-dialog>
+              <dfw-status-dialog id="plainSuccess"
+                status-type="success"
+                message="This is the message for the dialog"></dfw-status-dialog>
+              <dfw-status-dialog id="plainWarn"
+                status-type="warning"
+                message="This is the message for the dialog"></dfw-status-dialog>
+              <dfw-status-dialog id="plainInfo"
+                status-type="info"
+                message="This is the message for the dialog"></dfw-status-dialog>
+        </template>
+      </demo-snippet>
+    </div>
+    <script>
+      document.addEventListener('dfw-status-dialog-closed',function(data) {
+
+        console.info("event fired confirmed = ", data.detail);
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>dfw-status-dialog test</title>
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+
+    <link rel="import" href="../dfw-status-dialog.html">
+  </head>
+  <body>
+    <test-fixture id="confirm-info">
+      <template>
+        <dfw-status-dialog
+        confirm
+        confirm-button-text="Yes"
+        cancel-button-text="No"
+        status-type="info"
+        message="This is the message for the dialog"></dfw-status-dialog>
+      </template>
+    </test-fixture>
+    <test-fixture id="ack-error">
+      <template>
+        <dfw-status-dialog
+        status-type="error"
+        message="This is the message for the dialog"></dfw-status-dialog>
+      </template>
+    </test-fixture>
+    <script>
+      suite('dfw-status-dialog', function() {
+        var confirmInfo;
+        var ackError;
+        setup(function() {
+          confirmInfo = fixture('confirm-info');
+          ackError = fixture('ack-error');
+        });
+        test('instantiating the element works', function(done) {
+          flush(function() {
+            assert.equal(confirmInfo.is, 'dfw-status-dialog');
+            done();
+          });
+        });
+        test('has info icon', function(done) {
+          flush(function() {
+            var icon = Polymer.dom(confirmInfo.root).querySelector('.dfw-info-icon-32');
+            assert.notEqual(icon, null);
+            done();
+          });
+        });
+        test('has two buttons', function(done) {
+          flush(function() {
+            var buttons = Polymer.dom(confirmInfo.root).querySelectorAll('paper-button');
+            assert.equal(buttons.length, 2);
+            done();
+          });
+        });
+        test('insure cancel button text is the same as passed in', function(done) {
+          flush(function() {
+            var buttons = Polymer.dom(confirmInfo.root).querySelectorAll('paper-button');
+            assert.equal(buttons[0].innerText, confirmInfo.cancelButtonText);
+            done();
+          });
+        });
+        test('insure confirm button text is the same as passed in', function(done) {
+          flush(function() {
+            var buttons = Polymer.dom(confirmInfo.root).querySelectorAll('paper-button');
+            assert.equal(buttons[1].innerText, confirmInfo.confirmButtonText);
+            done();
+          });
+        });
+        test('insure message text is the same as passed in', function(done) {
+          flush(function() {
+            var p = Polymer.dom(confirmInfo.root).querySelector('p');
+            assert.equal(p.innerText, confirmInfo.message);
+            done();
+          });
+        });
+        test('check custom event is fired on cancel button', function(done) {
+          confirmInfo.addEventListener('dfw-status-dialog-closed', function(event) {
+            var pdialog = Polymer.dom(confirmInfo.root).querySelector('paper-dialog');
+            assert.equal(pdialog.opened, false);
+            assert.equal(event.detail,false);
+            assert.equal(confirmInfo.answer, confirmInfo.cancelButtonText);
+            done();
+          });
+          flush(function() {
+            confirmInfo.open();
+            var buttons = Polymer.dom(confirmInfo.root).querySelectorAll('paper-button');
+            buttons[0].click();
+          });
+        });
+        test('check custom event is fired on confirm button', function(done) {
+          confirmInfo.addEventListener('dfw-status-dialog-closed', function(event) {
+            var pdialog = Polymer.dom(confirmInfo.root).querySelector('paper-dialog');
+            assert.equal(pdialog.opened, false);
+            assert.equal(event.detail,true);
+            assert.equal(confirmInfo.answer, confirmInfo.confirmButtonText);
+            done();
+          });
+          flush(function() {
+            confirmInfo.open();
+            var buttons = Polymer.dom(confirmInfo.root).querySelectorAll('paper-button');
+            buttons[1].click();
+          });
+        });
+        test('instantiating the acknowledgement type element works', function(done) {
+          flush(function() {
+            assert.equal(ackError.is, 'dfw-status-dialog');
+            done();
+          });
+        });
+        test('has error icon', function(done) {
+          flush(function() {
+            var icon = Polymer.dom(ackError.root).querySelector('.dfw-error-icon-32');
+            assert.notEqual(icon, null);
+            done();
+          });
+        });
+        test('has no buttons', function(done) {
+          flush(function() {
+            var buttons = Polymer.dom(ackError.root).querySelectorAll('paper-button');
+            assert.equal(buttons.length, 0);
+            done();
+          });
+        });
+        test('insure message text is the same as passed in', function(done) {
+          flush(function() {
+            var p = Polymer.dom(ackError.root).querySelector('p');
+            assert.equal(p.innerText, ackError.message);
+            done();
+          });
+        });
+        test('has small close icon', function(done) {
+          flush(function() {
+            var icon = Polymer.dom(ackError.root).querySelector('.dfw-close-icon-16');
+            assert.notEqual(icon, null);
+            done();
+          });
+        });
+
+      test('verify that the dialog is closed when close icon is clicked', function(done) {
+        flush(function() {
+
+          var pdialog = Polymer.dom(ackError.root).querySelector('paper-dialog');
+          var icon = Polymer.dom(ackError.root).querySelector('.dfw-close-icon-16');
+          ackError.open();
+          icon.click();
+          assert.equal(pdialog.opened, false);
+          done();
+        });
+      });
+    });
+    </script>
+  </body>
+</html>

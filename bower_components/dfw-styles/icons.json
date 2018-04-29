@@ -1,0 +1,187 @@
+[
+  {
+    "name": "add",
+    "disable": true,
+    "hover": true
+  },
+  {
+    "name": "alert",
+    "disable": false,
+    "hover": false
+  },
+  {
+    "name": "audit",
+    "disable": true,
+    "hover": true
+  },
+  {
+    "name": "calendar",
+    "disable": true,
+    "hover": true
+  },
+  {
+    "name": "close",
+    "disable": false,
+    "hover": true
+  },
+  {
+    "name": "crop",
+    "disable": true,
+    "hover": true
+  },
+  {
+    "name": "date-time",
+    "disable": true,
+    "hover": true
+  },
+  {
+    "name": "disable",
+    "disable": false,
+    "hover": false
+  },
+  {
+    "name": "edit",
+    "disable": true,
+    "hover": true
+  },
+  {
+    "name": "error",
+    "disable": false,
+    "hover": false
+  },
+  {
+    "name": "filter",
+    "disable": false,
+    "hover": true
+  },
+  {
+    "name": "info",
+    "disable": false,
+    "hover": true
+  },
+  {
+    "name": "lock",
+    "disable": false,
+    "hover": false
+  },
+  {
+    "name": "menu",
+    "disable": false,
+    "hover": true
+  },
+  {
+    "name": "move",
+    "disable": true,
+    "hover": true
+  },
+  {
+    "name": "refresh",
+    "disable": false,
+    "hover": true
+  },
+  {
+    "name": "remove",
+    "disable": true,
+    "hover": true
+  },
+  {
+    "name": "rotate-left",
+    "disable": true,
+    "hover": true
+  },
+  {
+    "name": "rotate-right",
+    "disable": true,
+    "hover": true
+  },
+  {
+    "name": "row-handle",
+    "disable": true,
+    "hover": true
+  },
+  {
+    "name": "search",
+    "disable": false,
+    "hover": false
+  },
+  {
+    "name": "settings",
+    "disable": true,
+    "hover": true
+  },
+  {
+    "name": "success",
+    "disable": false,
+    "hover": false
+  },
+  {
+    "name": "trash",
+    "disable": true,
+    "hover": true
+  },
+  {
+    "name": "zoom-in",
+    "disable": true,
+    "hover": true
+  },
+  {
+    "name": "zoom-out",
+    "disable": true,
+    "hover": true
+  },
+  {
+    "name": "arrow-down",
+    "disable": true,
+    "hover": true
+  },
+  {
+    "name": "arrow-left",
+    "disable": true,
+    "hover": true
+  },
+  {
+    "name": "arrow-right",
+    "disable": true,
+    "hover": true
+  },
+  {
+    "name": "arrow-up",
+    "disable": true,
+    "hover": true
+  },
+  {
+    "name": "column",
+    "disable": true,
+    "hover": true
+  },
+  {
+    "name": "help",
+    "disable": true,
+    "hover": true
+  },
+  {
+    "name": "pushpin",
+    "disable": false,
+    "hover": true
+  },
+  {
+    "name": "download",
+    "disable": true,
+    "hover": true
+  },
+  {
+    "name": "upload",
+    "disable": true,
+    "hover": true
+  },
+  {
+    "name": "info-solid",
+    "disable": false,
+    "hover": false
+  },
+  {
+    "name": "success-solid",
+    "disable": false,
+    "hover": false
+  }
+]

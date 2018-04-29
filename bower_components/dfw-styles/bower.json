@@ -1,0 +1,7 @@
+{
+  "name": "dfw-styles",
+  "main": "dfw-styles.html",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.4.0"
+  }
+}

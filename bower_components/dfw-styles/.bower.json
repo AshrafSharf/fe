@@ -1,0 +1,17 @@
+{
+  "name": "dfw-styles",
+  "main": "dfw-styles.html",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.4.0"
+  },
+  "_cacheHeaders": {
+    "ETag": "\"6248e-4cc03-548adca53de51\"",
+    "Last-Modified": "Thu, 16 Feb 2017 23:02:24 GMT",
+    "Content-Length": "314371",
+    "Content-Type": "application/x-gzip"
+  },
+  "_release": "e-tag:6248e-4cc",
+  "_source": "http://developer-ui.ds.dtveng.net/cdn/data/web-components/dfw-styles.tar.gz",
+  "_target": "*",
+  "_originalSource": "http://developer-ui.ds.dtveng.net/cdn/data/web-components/dfw-styles.tar.gz"
+}

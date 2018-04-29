@@ -4,10 +4,14 @@ import { UserService } from '../services/user.service';
 import { Modal } from 'ngx-modialog/plugins/bootstrap';
 
 @Component({
-    selector: 'login',
-    templateUrl: './login.component.html',
+    selector: 'dfw-login',
+  // template:`<div> <dfw-login></dfw-login> </div>`,
+   templateUrl: './login.component.html',
+   //templateUrl: '../../../bower_components/dfw-login/dfw-login.html',
     styleUrls: ['./login.component.css']
+   
 })
+
 
 export class LoginComponent implements OnInit {
     userName:String = '';

@@ -1,0 +1,219 @@
+<dom-module id="dfw-styles">
+	<template>
+		<style is="custom-style">
+    html, body, :host {
+      font-family: "Helvetica", "Arial", "Verdana", sans-serif;
+      font-weight: normal;
+      font-size: 14px;
+      line-height: 16px;
+      color: #222;
+      text-transform: none;
+    }
+    /*
+     * Typography
+     */
+		 .dfw-h1, .dfw-h2, .dfw-h3, .dfw-h4, .dfw-h5, .dfw-h6, .dfw-p, p, h1, h2, h3, h4, h5, h6 {
+			font-family: Helvetica, Arial, Verdana, sans-serif;
+			font-weight: normal;
+		}
+    .dfw-h1, h1 {
+      font-size: 28px;
+      line-height: 32px;
+      color: #222;
+    }
+    .dfw-h2, h2 {
+      font-size: 24px;
+      line-height: 26px;
+      color: #222;
+    }
+    .dfw-h3, h3 {
+      font-size: 20px;
+      line-height: 24px;
+      color: #222;
+    }
+    .dfw-h4, h4 {
+      font-size: 18px;
+      line-height: 22px;
+      color: #222;
+    }
+    .dfw-h5, h5 {
+      font-size: 16px;
+      line-height: 22px;
+      color: #222;
+    }
+    .dfw-h6, h6 {
+      font-weight: bold;
+      text-transform: uppercase;
+      font-size: 14px;
+      line-height: 20px;
+      color: #222;
+    }
+    .dfw-p, p {
+      font-size: 14px;
+      line-height: 20px;
+      color: #222;
+      letter-spacing: 0px;
+    }
+    /*
+     * Color Palette
+     */
+
+    .dfw-default, .dfw-primary {
+       background-color: #0367AE;
+       color: #fff;
+    }
+    .dfw-success {
+      background-color: #4BA910;
+      color: #fff;
+    }
+
+    .dfw-info {
+      background-color: #71C3E7;
+      color: #fff;
+    }
+
+    .dfw-warning {
+      background-color: #FFB71B;
+      color: #222;
+    }
+
+    .dfw-error {
+      background-color: #CF292B;
+      color: #fff;
+    }
+    .dfw-error-text {
+      color: #CF292B;
+    }
+    /*
+     * Shades of grey
+     */
+    .dfw-darkest-grey {
+      background-color: #191919;
+      color: #F9F9F9;
+    }
+    .dfw-dark-grey {
+      background-color: #B5B5B5;
+      color: #191919;
+    }
+    .dfw-grey {
+      background-color: #D2D2D2;
+      color: #191919;
+    }
+    .dfw-light-grey {
+      background-color: #F2F2F2;
+      color: #191919;
+    }
+    .dfw-lightest-grey {
+      background-color: #F9F9F9;
+      color: #191919;
+    }
+    .dfw-text-disabled {
+      color: #777777;
+    }
+    /*
+     * Text links
+     */
+    a, .dfw-anchor {
+      color: #0367AE;
+      font-size: 14px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .dfw-anchor[disabled] {
+      color: #777777;
+      text-decoration:none !important;
+      cursor: default !important;
+    }
+
+    a:link, .dfw-anchor:link {
+      text-decoration: none;
+    }
+    .dfw-anchor:link:hover {
+      text-decoration: underline;
+    }
+    a:visited, .dfw-anchor:visited  {
+      color: #0367AE;
+    }
+
+    /*
+     * Buttons
+     */
+    .btn-small {
+      font-size: 12px !important;
+      height: 32px !important;
+    }
+
+    .btn-primary {
+        background: none repeat scroll 0 0 #0367AE;
+        border: 0 none;
+        border-radius: 3px;
+      text-transform:uppercase;
+      color: #fff;
+        cursor: pointer;
+        font-size: 14px;
+        padding: 5px 25px;
+        width: auto;
+        margin: 3px;
+        height: 40px;
+    }
+
+    .btn-primary:enabled:hover {
+      background: none repeat scroll 0 0 #025284 !important;
+      color: #fff !important;
+      border: 0 none;
+    }
+
+    .btn-primary:disabled{
+      background: none repeat scroll 0 0 #99c2df !important;
+      color: #f2f2f2;
+    }
+
+
+
+    button {
+      background: none repeat scroll 0 0 #F2F2F2;
+        border: 1px solid #b5b5b5;
+        border-radius: 3px;
+      text-transform:uppercase;
+        cursor: pointer;
+      color: #191919;
+        font-size: 14px;
+        padding: 5px 25px;
+        width: auto;
+        margin: 3px;
+        height: 40px;
+    }
+    .btn-secondary, .btn-default {
+        background: none repeat scroll 0 0 #F2F2F2;
+        border: 1px solid #b5b5b5 !important;
+        border-radius: 3px;
+      text-transform:uppercase;
+      color: #191919;
+        cursor: pointer;
+        font-size: 14px;
+        padding: 5px 25px;
+        width: auto;
+        margin: 3px;
+    }
+
+    button:enabled:hover, .btn-secondary:enabled:hover, .btn-default:enabled:hover {
+      background: none repeat scroll 0 0 #d2d2d2 !important;
+      color: #191919 !important;
+      border: 1px solid #b5b5b5;
+    }
+
+    button:disabled, .btn-secondary:disabled, .btn-default:disabled  {
+      background: none repeat scroll 0 0 #f9f9f9 !important;
+      color: #a3a3a3;
+    }
+    /*
+     * Bootstrap widget primary color overrides
+     */
+    a {
+      color: #0367ae;
+    }
+
+
+    </style>
+  </template>
+</dom-module>

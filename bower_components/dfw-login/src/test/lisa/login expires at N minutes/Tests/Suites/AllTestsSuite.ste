@@ -1,0 +1,167 @@
+<?xml version="1.0" ?>
+
+<Suite>
+
+<meta>
+   <create version="9.5.1" buildNumber="9.5.1.6" author="admin" date="04/17/2017" host="CACDTL02RK216W" />
+   <lastEdited version="9.5.1" buildNumber="9.5.1.6" author="admin" date="04/21/2017" host="CACDTL02RK216W" />
+</meta>
+
+<Name>AllTestsSuite</Name>
+<Id>9B94B4FB239611E793EEBE2520524153</Id>
+<Documentation>Put documentation of the suite here.</Documentation>
+<IsInProject>true</IsInProject>
+<DefAudit>{{LISA_RELATIVE_PROJ_ROOT}}/Tests/AuditDocs/DefaultAudit.aud</DefAudit>
+<DefStaging>{{LISA_RELATIVE_PROJ_ROOT}}/Tests/StagingDocs/Run1User1Cycle.stg</DefStaging>
+<DefCS></DefCS>
+<BasePath></BasePath>
+<RunType>serial</RunType>
+<AllowDupes>false</AllowDupes>
+<baseline>false</baseline>
+<Run name="Staging Description" think="100" pathfinder="true" >
+
+<meta>
+   <create version="9.5.1" buildNumber="9.5.1.6" author="admin" date="04/17/2017" host="CACDTL02RK216W" />
+   <lastEdited version="9.5.1" buildNumber="9.5.1.6" author="admin" date="04/21/2017" host="CACDTL02RK216W" />
+</meta>
+
+<id>9B91CECA239611E793EEBE2520524153</id>
+<IsInProject>true</IsInProject>
+<paceTime>0</paceTime>
+<paceTrans>0</paceTrans>
+<EventConsumer type="com.itko.lisa.report.DefaultReportToDataModel" filter="0,1,2,3,6,7,8,9,10,14,15,17,18,19,21,22,23,24,25,26,27,28,30,31,32,37,38,39,40,42,43,44,45,46,47,48,49,51,61,62,63,64,65,66,67,76,79,80,0" >
+<params>
+    <watchAllEvents>false</watchAllEvents>
+    <watchProps>false</watchProps>
+    <watchMetrics>true</watchMetrics>
+    <watchReqResp>true</watchReqResp>
+    <maxErrors>100</maxErrors>
+    <includeWarnings>true</includeWarnings>
+</params>
+</EventConsumer>
+<LoadPattern>
+<type>com.itko.lisa.coordinator.runpatterns.RunNTimesPattern</type>
+<cycles>1</cycles>
+<runfor>0</runfor>
+<ssinstances>1</ssinstances>
+</LoadPattern>
+<Distribution>
+<type>com.itko.lisa.coordinator.runpatterns.PercentDistribution</type>
+<Simulator>
+<name>auto</name>
+<percent>100</percent>
+<shortname>auto</shortname>
+</Simulator>
+</Distribution>
+<Metrics >
+<SampleRate>1</SampleRate>
+<IntervalRate>10</IntervalRate>
+<Metric type="com.itko.lisa.stats.TestEventCollector">
+<scale>0.0</scale>
+<valueType>1</valueType>
+<color>#c00000</color>
+<eventid>13</eventid>
+<keyexpr>*</keyexpr>
+<counter>true</counter>
+</Metric>
+<Metric type="com.itko.lisa.stats.TestEventCollector">
+<scale>0.0</scale>
+<valueType>1</valueType>
+<color>#ff0000</color>
+<eventid>20</eventid>
+<keyexpr>*</keyexpr>
+<counter>true</counter>
+</Metric>
+<Metric type="com.itko.lisa.stats.TestEventCollector">
+<scale>0.0</scale>
+<valueType>1</valueType>
+<color>#0000ff</color>
+<eventid>15</eventid>
+<keyexpr>*</keyexpr>
+<counter>true</counter>
+</Metric>
+<Metric type="com.itko.lisa.stats.TestEventCollector">
+<scale>0.0</scale>
+<valueType>1</valueType>
+<color>#c00000</color>
+<eventid>50</eventid>
+<keyexpr>*</keyexpr>
+<counter>true</counter>
+</Metric>
+<Metric type="com.itko.lisa.stats.TRIMetricCollector">
+<scale>0.0</scale>
+<valueType>2</valueType>
+<color>#ff00ff</color>
+<metric>0</metric>
+</Metric>
+<Metric type="com.itko.lisa.stats.TRIMetricCollector">
+<scale>0.0</scale>
+<valueType>2</valueType>
+<color>#af00a6</color>
+<metric>1</metric>
+</Metric>
+<Metric type="com.itko.lisa.stats.TRIMetricCollector">
+<scale>0.0</scale>
+<valueType>2</valueType>
+<color>#00a6af</color>
+<metric>5</metric>
+</Metric>
+</Metrics>
+<ipspoofing>
+<ipSpoofingEnabled>false</ipSpoofingEnabled>
+<useIPv4>true</useIPv4>
+<useIPv6>false</useIPv6>
+<selectionAlgorithm>ROUND_ROBIN</selectionAlgorithm>
+</ipspoofing>
+</Run>
+<SuiteEntry>
+<type>dirTree</type>
+<spec>{{LISA_RELATIVE_PROJ_ROOT}}/Tests</spec>
+<active>true</active>
+</SuiteEntry>
+<SuiteEntry>
+<type>test</type>
+<spec>{{LISA_RELATIVE_PROJ_ROOT}}/Tests/web component login expires at N minutes/NGP-TC-16081 - Verify that login is able to give the warning when session is about to expired.tst</spec>
+<active>true</active>
+</SuiteEntry>
+<SuiteEntry>
+<type>test</type>
+<spec>{{LISA_RELATIVE_PROJ_ROOT}}/Tests/web component login expires at N minutes/NGP-TC-16100 - Verify that login is able to give the warning immediately aftre refreshthe page.tst</spec>
+<active>true</active>
+</SuiteEntry>
+<SuiteEntry>
+<type>test</type>
+<spec>{{LISA_RELATIVE_PROJ_ROOT}}/Tests/web component login expires at N minutes/NGP-TC-16101 -Verify that login is able to signed out when session has expired.tst</spec>
+<active>true</active>
+</SuiteEntry>
+<SuiteEntry>
+<type>test</type>
+<spec>{{LISA_RELATIVE_PROJ_ROOT}}/Tests/web component login expires at N minutes/NGP-TC-16102 - Verify that login page should be in Guest mode when close the browser after warning message.tst</spec>
+<active>true</active>
+</SuiteEntry>
+<SuiteEntry>
+<type>test</type>
+<spec>{{LISA_RELATIVE_PROJ_ROOT}}/Tests/web component login expires at N minutes/NGP-TC-16608 login when no activity.tst</spec>
+<active>true</active>
+</SuiteEntry>
+<SuiteEntry>
+<type>test</type>
+<spec>{{LISA_RELATIVE_PROJ_ROOT}}/Tests/web component login expires at N minutes/NGP-TC-16673 login when offline false guest true.tst</spec>
+<active>true</active>
+</SuiteEntry>
+<SuiteEntry>
+<type>test</type>
+<spec>{{LISA_RELATIVE_PROJ_ROOT}}/Tests/web component login expires at N minutes/NGP-TC-16674 login when offline as false and guest as false.tst</spec>
+<active>true</active>
+</SuiteEntry>
+<SuiteEntry>
+<type>test</type>
+<spec>{{LISA_RELATIVE_PROJ_ROOT}}/Tests/web component login expires at N minutes/NGP-TC-16675 login when offline and Guest as true.tst</spec>
+<active>true</active>
+</SuiteEntry>
+<SuiteEntry>
+<type>test</type>
+<spec>{{LISA_RELATIVE_PROJ_ROOT}}/Tests/web component login expires at N minutes/NGP-TC-16676 login when offline as true and Guest as false.tst</spec>
+<active>true</active>
+</SuiteEntry>
+</Suite>

@@ -1,0 +1,2871 @@
+//current test step is: Click on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Guest Option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/dfw-showcase/app-header/div/app-toolbar/dfw-header/div[2]/div/span[5]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Guest Option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on login on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP username
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken1");
+inputList.add("iconics1");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP password
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken2");
+inputList.add("123123a");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Login on CSP Page
+
+inputList.add("click");
+inputList.add("id");
+inputList.add("loginButton_0");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Guest Option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on login on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP username
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken1");
+inputList.add("iconics1");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP password
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken2");
+inputList.add("123123a");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Login on CSP Page
+
+inputList.add("click");
+inputList.add("id");
+inputList.add("loginButton_0");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Guest Option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on login on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP username
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken1");
+inputList.add("iconics1");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP password
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken2");
+inputList.add("123123a");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Login on CSP Page
+
+inputList.add("click");
+inputList.add("id");
+inputList.add("loginButton_0");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Guest Option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on login on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP username
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken1");
+inputList.add("iconics1");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP password
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken2");
+inputList.add("123123a");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Login on CSP Page
+
+inputList.add("click");
+inputList.add("id");
+inputList.add("loginButton_0");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Actions
+
+inputList.add("isElementVisible");
+inputList.add("id");
+inputList.add("plainDialog");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Guest Option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on login on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP username
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken1");
+inputList.add("iconics1");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP password
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken2");
+inputList.add("123123a");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Login on CSP Page
+
+inputList.add("click");
+inputList.add("id");
+inputList.add("loginButton_0");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Actions
+
+inputList.add("isElementVisible");
+inputList.add("id");
+inputList.add("plainDialog");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Guest Option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on login on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP username
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken1");
+inputList.add("iconics1");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP password
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken2");
+inputList.add("123123a");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Login on CSP Page
+
+inputList.add("click");
+inputList.add("id");
+inputList.add("loginButton_0");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Guest Option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on login on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP username
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken1");
+inputList.add("iconics1");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP password
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken2");
+inputList.add("123123a");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Login on CSP Page
+
+inputList.add("click");
+inputList.add("id");
+inputList.add("loginButton_0");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Guest Option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on login on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP username
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken1");
+inputList.add("iconics1");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP password
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken2");
+inputList.add("123123a");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Login on CSP Page
+
+inputList.add("click");
+inputList.add("id");
+inputList.add("loginButton_0");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Actions
+
+inputList.add("isElementVisible");
+inputList.add("id");
+inputList.add("plainDialog");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Guest Option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on login on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP username
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken1");
+inputList.add("iconics1");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP password
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken2");
+inputList.add("123123a");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Login on CSP Page
+
+inputList.add("click");
+inputList.add("id");
+inputList.add("loginButton_0");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Guest Option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on login on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP username
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken1");
+inputList.add("iconics1");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP password
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken2");
+inputList.add("123123a");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Login on CSP Page
+
+inputList.add("click");
+inputList.add("id");
+inputList.add("loginButton_0");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Guest Option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on login on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP username
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken1");
+inputList.add("iconics1");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP password
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken2");
+inputList.add("123123a");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Login on CSP Page
+
+inputList.add("click");
+inputList.add("id");
+inputList.add("loginButton_0");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Guest Option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on login on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP username
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken1");
+inputList.add("iconics1");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP password
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken2");
+inputList.add("123123a");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Login on CSP Page
+
+inputList.add("click");
+inputList.add("id");
+inputList.add("loginButton_0");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Warning i sthere
+
+inputList.add("isElementVisible");
+inputList.add("id");
+inputList.add("plainDialog");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Get the Warning message
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/dfw-status-dialog/paper-dialog/p");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there still
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Logout option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo~1
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Warning will come immediately
+
+inputList.add("isElementVisible");
+inputList.add("id");
+inputList.add("plainDialog");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Guest Option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on login on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP username
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken1");
+inputList.add("iconics1");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP password
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken2");
+inputList.add("123123a");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Login on CSP Page
+
+inputList.add("click");
+inputList.add("id");
+inputList.add("loginButton_0");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Warning i sthere
+
+inputList.add("isElementVisible");
+inputList.add("id");
+inputList.add("plainDialog");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Get the Warning message
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/dfw-status-dialog/paper-dialog/p");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there still
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Logout option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo~1
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Warning will come immediately
+
+inputList.add("isElementVisible");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/dfw-status-dialog/paper-dialog");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Guest Option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on login on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP username
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken1");
+inputList.add("iconics1");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP password
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken2");
+inputList.add("123123a");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Login on CSP Page
+
+inputList.add("click");
+inputList.add("id");
+inputList.add("loginButton_0");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Warning i sthere
+
+inputList.add("isElementVisible");
+inputList.add("id");
+inputList.add("plainDialog");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Get the Warning message
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/dfw-status-dialog/paper-dialog/p");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there still
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Logout option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo~1
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Warning will come immediately
+
+inputList.add("isElementVisible");
+inputList.add("id");
+inputList.add("plainDialog");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Guest Option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on login on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP username
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken1");
+inputList.add("iconics1");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP password
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken2");
+inputList.add("123123a");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Login on CSP Page
+
+inputList.add("click");
+inputList.add("id");
+inputList.add("loginButton_0");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Warning i sthere
+
+inputList.add("isElementVisible");
+inputList.add("id");
+inputList.add("plainDialog");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Get the Warning message
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/dfw-status-dialog/paper-dialog/p");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there still
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Logout option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo~1
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Guest Option is there~1
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify login option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Guest Option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on login on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP username
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken1");
+inputList.add("iconics1");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP password
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken2");
+inputList.add("123123a");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Login on CSP Page
+
+inputList.add("click");
+inputList.add("id");
+inputList.add("loginButton_0");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Warning i sthere
+
+inputList.add("isElementVisible");
+inputList.add("id");
+inputList.add("plainDialog");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Get the Warning message
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/dfw-status-dialog/paper-dialog/p");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there still
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Logout option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo~1
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Warning will come immediately
+
+inputList.add("isElementVisible");
+inputList.add("id");
+inputList.add("plainDialog");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Get the Warning message~1
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/dfw-status-dialog/paper-dialog/p");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there still~1
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Logout option is there~1
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Guest Option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on login on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP username
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken1");
+inputList.add("iconics1");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP password
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken2");
+inputList.add("123123a");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Login on CSP Page
+
+inputList.add("click");
+inputList.add("id");
+inputList.add("loginButton_0");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify that Warning i sthere
+
+inputList.add("isElementVisible");
+inputList.add("id");
+inputList.add("plainDialog");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Get the Warning message
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/dfw-status-dialog/paper-dialog/p");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there still
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Logout option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Guest Option is there~1
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Guest Option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on login on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP username
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken1");
+inputList.add("iconics1");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP password
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken2");
+inputList.add("123123a");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Login on CSP Page
+
+inputList.add("click");
+inputList.add("id");
+inputList.add("loginButton_0");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify that Warning i sthere
+
+inputList.add("isElementVisible");
+inputList.add("id");
+inputList.add("plainDialog");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Get the Warning message
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/dfw-status-dialog/paper-dialog/p");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there still
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Logout option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Guest Option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on login on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP username
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken1");
+inputList.add("iconics1");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP password
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken2");
+inputList.add("123123a");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Login on CSP Page
+
+inputList.add("click");
+inputList.add("id");
+inputList.add("loginButton_0");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify that Warning i sthere
+
+inputList.add("isElementVisible");
+inputList.add("id");
+inputList.add("plainDialog");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Get the Warning message
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/dfw-status-dialog/paper-dialog/p");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there still
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Logout option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo~1
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Guest Option is there~1
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Guest Option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on login on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP username
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken1");
+inputList.add("iconics1");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP password
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken2");
+inputList.add("123123a");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Login on CSP Page
+
+inputList.add("click");
+inputList.add("id");
+inputList.add("loginButton_0");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify that Warning i sthere
+
+inputList.add("isElementVisible");
+inputList.add("id");
+inputList.add("plainDialog");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Get the Warning message
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/dfw-status-dialog/paper-dialog/p");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Cancel the warning
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/dfw-status-dialog/paper-dialog/div/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there~1
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Logout option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Guest Option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on login on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP username
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken1");
+inputList.add("iconics1");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP password
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken2");
+inputList.add("123123a");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Login on CSP Page
+
+inputList.add("click");
+inputList.add("id");
+inputList.add("loginButton_0");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Warning i sthere
+
+inputList.add("isElementVisible");
+inputList.add("id");
+inputList.add("plainDialog");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Get the Warning message
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/dfw-status-dialog/paper-dialog/p");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there still
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Logout option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo~1
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Warning will come immediately
+
+inputList.add("isElementVisible");
+inputList.add("id");
+inputList.add("plainDialog");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Get the Warning message~1
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/dfw-status-dialog/paper-dialog/p");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there still~1
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Logout option is there~1
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Guest Option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on login on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP username
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken1");
+inputList.add("iconics1");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP password
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken2");
+inputList.add("123123a");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Login on CSP Page
+
+inputList.add("click");
+inputList.add("id");
+inputList.add("loginButton_0");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Warning i sthere
+
+inputList.add("isElementVisible");
+inputList.add("id");
+inputList.add("plainDialog");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Get the Warning message
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/dfw-status-dialog/paper-dialog/p");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there still
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Logout option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo~1
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Guest Option is there~1
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify login option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Guest Option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on login on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP username
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken1");
+inputList.add("iconics1");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP password
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken2");
+inputList.add("123123a");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Login on CSP Page
+
+inputList.add("click");
+inputList.add("id");
+inputList.add("loginButton_0");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify that Warning i sthere
+
+inputList.add("isElementVisible");
+inputList.add("id");
+inputList.add("plainDialog");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Get the Warning message
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/dfw-status-dialog/paper-dialog/p");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there still
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Logout option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo~1
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Guest Option is there~1
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify login option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Guest Option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Guest Option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on login on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP username
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken1");
+inputList.add("iconics1");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP password
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken2");
+inputList.add("123123a");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Login on CSP Page
+
+inputList.add("click");
+inputList.add("id");
+inputList.add("loginButton_0");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Guest Option is not there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP username
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken1");
+inputList.add("iconics1");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP password
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken2");
+inputList.add("123123a");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Login on CSP Page
+
+inputList.add("click");
+inputList.add("id");
+inputList.add("loginButton_0");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify that Warning i sthere
+
+inputList.add("isElementVisible");
+inputList.add("id");
+inputList.add("plainDialog");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP username
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken1");
+inputList.add("iconics1");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP password
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken2");
+inputList.add("123123a");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Login on CSP Page
+
+inputList.add("click");
+inputList.add("id");
+inputList.add("loginButton_0");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify that Warning i sthere
+
+inputList.add("isElementVisible");
+inputList.add("id");
+inputList.add("plainDialog");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP username
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken1");
+inputList.add("iconics1");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP password
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken2");
+inputList.add("123123a");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Login on CSP Page
+
+inputList.add("click");
+inputList.add("id");
+inputList.add("loginButton_0");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify that Warning i sthere
+
+inputList.add("isElementVisible");
+inputList.add("id");
+inputList.add("plainDialog");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Guest Option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on login on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP username
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken1");
+inputList.add("iconics1");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP password
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken2");
+inputList.add("123123a");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Login on CSP Page
+
+inputList.add("click");
+inputList.add("id");
+inputList.add("loginButton_0");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify that Warning i sthere
+
+inputList.add("isElementVisible");
+inputList.add("id");
+inputList.add("plainDialog");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Get the Warning message
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/dfw-status-dialog/paper-dialog/p");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Cancel the warning
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/dfw-status-dialog/paper-dialog/div/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there~1
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Logout option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP username
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken1");
+inputList.add("iconics1");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP password
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken2");
+inputList.add("123123a");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Login on CSP Page
+
+inputList.add("click");
+inputList.add("id");
+inputList.add("loginButton_0");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify that Warning i sthere
+
+inputList.add("isElementVisible");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/dfw-status-dialog/paper-dialog");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Guest Option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on login on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP username
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken1");
+inputList.add("iconics1");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP password
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken2");
+inputList.add("123123a");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Login on CSP Page
+
+inputList.add("click");
+inputList.add("id");
+inputList.add("loginButton_0");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify that Warning i sthere
+
+inputList.add("isElementVisible");
+inputList.add("id");
+inputList.add("plainDialog");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Get the Warning message
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/dfw-status-dialog/paper-dialog/p");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Cancel the warning
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/dfw-status-dialog/paper-dialog/div/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there~1
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Logout option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Guest Option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Guest Option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Guest Option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify login otion is not there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Offline user is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify login otion is not there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Offline user is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify login otion is not there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Demo
+
+inputList.add("click");
+inputList.add("xPath");
+inputList.add("/html/body/iron-component-page/paper-header-panel/paper-toolbar/div[1]/iron-selector/a[2]/span");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP username
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken1");
+inputList.add("iconics1");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Send the CSP password
+
+inputList.add("sendKeys");
+inputList.add("id");
+inputList.add("idToken2");
+inputList.add("123123a");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Click on Login on CSP Page
+
+inputList.add("click");
+inputList.add("id");
+inputList.add("loginButton_0");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Welcome,Username message is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[2]");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+
+//current test step is: Verify Logout option is there
+
+inputList.add("getText");
+inputList.add("xPath");
+inputList.add("/html/body/div/demo-snippet/div[1]/div[1]/div/span[1]/a");
+inputList.add("null");
+act.selectMethod(inputList);
+inputList.clear();
+

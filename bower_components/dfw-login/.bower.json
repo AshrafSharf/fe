@@ -1,0 +1,27 @@
+{
+  "name": "dfw-login",
+  "main": "dfw-login.html",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.4.0",
+    "iron-localstorage": "PolymerElements/iron-localstorage#^1.0.6",
+    "dfw-status-dialog": "http://developer-ui.ds.dtveng.net/cdn/data/web-components/dfw-status-dialog.tar.gz"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.0.0",
+    "web-component-tester": "^4.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0",
+    "paper-button": "^1.0.14"
+  },
+  "_cacheHeaders": {
+    "ETag": "\"6002b-4dbc-55d168f09904f\"",
+    "Last-Modified": "Fri, 03 Nov 2017 16:25:53 GMT",
+    "Content-Length": "19900",
+    "Content-Type": "application/x-gzip"
+  },
+  "_release": "e-tag:6002b-4db",
+  "_source": "http://developer-ui.ds.dtveng.net/cdn/data/web-components/dfw-login.tar.gz",
+  "_target": "*",
+  "_originalSource": "http://developer-ui.ds.dtveng.net/cdn/data/web-components/dfw-login.tar.gz",
+  "_direct": true
+}

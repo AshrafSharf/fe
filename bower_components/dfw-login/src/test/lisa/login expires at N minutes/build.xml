@@ -1,0 +1,35 @@
+<project name="web-component-login" default="Tests" basedir="." xmlns:if="ant:if" xmlns:unless="ant:unless">
+    <property environment="env"/>
+    <property name="LISA_RELATIVE_PROJ_ROOT" value="${basedir}"/>
+    <property name="LISA_HOME" value="/opt/CA/DevTest"/>
+    <property name="testReportDir" value="JUnit_Result/junit"/>
+    <property name="projectConfig" value="Configs/project.config"/>
+
+    <taskdef resource="AntTasks.properties">
+        <classpath>
+            <fileset dir="${LISA_HOME}/lib/core" includes="*.jar"/>
+            <fileset dir="${LISA_HOME}/lib/endorsed" includes="*.jar"/>
+            <fileset dir="${LISA_HOME}/lib/shared" includes="*.jar"/>
+        </classpath>
+    </taskdef>
+
+        <target name="AllTestsSuite" description="Executes a LISA Test Suite as JUnit tests." >
+                <!-- make sure old reports are deleted and that we have a place to report... -->
+                <delete dir="${testReportDir}"/>
+                <mkdir dir="${testReportDir}"/>
+                <!-- run the lisa suite in junit mode -->
+                <junitlisa toDir="${testReportDir}" user="admin" password="admin" config="${basedir}/${projectConfig}">
+                        <lisatest suite="${basedir}/Tests/Suites/AllTestsSuite.ste"/>
+                </junitlisa>
+                <!-- generate junit style html report -->
+                <junitlisareport toDir="${testReportDir}"/>
+                <echo  message="The JUnit report is available at ${testReportDir}/index.html"/>
+                <!-- creating properties-->
+                <property name="mapping" location="./Tests/mapping.xml" relative="true"/>
+                <!-- exec integration-->
+                <!--<antcall target="Integration3">-->
+                   <!-- <param name="param1" value="mapping"/>-->
+                <!--</antcall>-->
+        </target>
+
+</project>

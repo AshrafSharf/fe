@@ -118,7 +118,8 @@ import { SimulationService } from './services/simulation.service';
     SettingsComponent,
     LoaderComponent,
 
-    DrawingToolsHeaderComponent
+    DrawingToolsHeaderComponent,
+
   ],
   imports: [
     ChartsModule,

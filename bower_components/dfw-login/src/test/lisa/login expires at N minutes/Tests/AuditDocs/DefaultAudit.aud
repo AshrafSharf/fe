@@ -1,0 +1,39 @@
+<?xml version="1.0" ?>
+
+<TestAudit>
+
+    <Name>Default Audit Doc</Name>
+
+    <MustNotExecute>
+          <node>fail</node>
+          <fail>The test case failed (executed the fail node).</fail>
+      </MustNotExecute>
+
+    <MustNotExecute>
+          <node>abort</node>
+          <fail>The test case failed (executed the abort node).</fail>
+      </MustNotExecute>
+
+      <MustSeeEvent>
+        <event>Cycle started</event>
+        <fail>The test case never started. This is usually a problem staging the test (not in the system under test).</fail>
+    </MustSeeEvent>
+
+    <MustNotSeeEvent>
+        <event>Cycle failed</event>
+        <fail>Test case failed (raised the "Cycle failed" event).</fail>
+    </MustNotSeeEvent>
+
+    <MustNotSeeEvent>
+        <event>Abort</event>
+        <fail>The test case failed (executed the abort node).</fail>
+    </MustNotSeeEvent>
+
+    <MustNotSeeEvent>
+        <event>Suite aborted</event>
+        <fail>A error occured that prevented the test from continuing.  This is usually a problem with the test case connection to the system under test.</fail>
+    </MustNotSeeEvent>
+
+   
+
+</TestAudit>

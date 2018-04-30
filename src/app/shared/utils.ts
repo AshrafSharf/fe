@@ -20,6 +20,8 @@ export class Utils {
     static routeSystemModel:String = "model"
     static routeModel:String = "model";
     static routeSimulation:String = "modelsimulation";
+    static routeUserGroup:String = "userGroup";
+
 
 
     static buffer:Array<TableInputPair>;

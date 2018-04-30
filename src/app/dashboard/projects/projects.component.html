@@ -39,16 +39,16 @@
                     <input type="text" [(ngModel)]="searchName" *ngIf="(isOwner)" (keyup)="filterResult($event, 'name')" class="col-md-2" placeholder="user name">
                     <input type="text" [(ngModel)]="searchName" *ngIf="(!isOwner)" (keyup)="filterResult($event, 'name')" class="col-md-2" placeholder="user name" disabled>
 <!--               			 <label for="" class="col-md-2"> Select Name</label>   -->
-             				  <div class="col-md-1" *ngIf="(isOwner)">  
-               					    <select id="Id" #Id="ngModel" class="hideLabel form-control col-md-2" [(ngModel)]="nameId" name="Id" (change)="selectName();">  
-                   				        <option selected="Admin" value=""></option>  
+             				  <div class="col-sm-2 col-md-2" *ngIf="(isOwner)">  
+               					    <select *ngIf="(isOwner)" id="Id" #Id="ngModel" class="hideLabel form-control col-md-2" [(ngModel)]="nameId" name="Id" (change)="selectName();">  
+                   				        <option selected="Admin" value="Admin"></option>  
                      				    <option [ngValue]="k.Id" *ngFor="let k of groups">  
                        							     {{k.text}}  
                     				   </option>  
               					  </select>  
                				</div> 
-               				<div class="col-md-1" *ngIf="(!isOwner)" disabled>  
-               					    <select id="Id" #Id="ngModel" class="hideLabel form-control col-md-2" [(ngModel)]="nameId" name="Id" (change)="selectName();">  
+               				<div class="col-sm-2 col-md-2" *ngIf="(!isOwner)" disabled>  
+               					    <select *ngIf="(!isOwner)" id="Id" #Id="ngModel" class="hideLabel form-control col-md-2" [(ngModel)]="nameId" name="Id" (change)="selectName();" disabled>  
                    				        <option selected="Admin" value=""></option>  
                      				    <option [ngValue]="k.Id" *ngFor="let k of groups">  
                        							     {{k.text}}  

@@ -6,7 +6,10 @@ import { Overlay } from 'ngx-modialog';
 import { Modal } from 'ngx-modialog/plugins/bootstrap';
 import { ProjectService } from '../../services/project.service';
 import { User } from '../../shared/interfaces/user';
+import { UserGroup } from '../../shared/interfaces/user-group';
 import { UserService } from '../../services/user.service';
+import { UserGroupService } from '../../services/usergroup.service';
+
 import { Utils } from '../../shared/utils';
 
 @Component({
@@ -28,6 +31,8 @@ export class ProjectsComponent implements OnInit {
     privateProject: Boolean = false;
     usersWithAccess: User[] = Array<User>();
     users: User[] = Array<User>();
+    usergroup: UserGroup[] = Array<UserGroup>();
+    usergroupId: String = '';
     groups: Array<{id: number, text: string}> = [   
                 {id: 1, text: 'Admin'},
                 {id: 2, text: 'Read Branch'},
@@ -44,7 +49,8 @@ export class ProjectsComponent implements OnInit {
         private router: Router,
         private modal:Modal,
         private userService: UserService,
-        private projectService: ProjectService) {
+        private projectService: ProjectService,
+        private usergroupService: UserGroupService) {
     }
 
     ngOnInit(): void {
@@ -72,6 +78,15 @@ export class ProjectsComponent implements OnInit {
                     this.isOwner = true;
                 }
             }));
+      
+       this.usergroupService.getUserGroup().subscribe(result => {
+            if (result.status = 'OK') {
+                this.usergroup = result.data as Array<UserGroup>;
+                if (this.selectedUser == null) {
+                     this.usergroupId = this.usergroup[0].id;
+                }
+            }
+        });
     }
 
     // create project

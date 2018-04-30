@@ -70,6 +70,9 @@ import { ComponentModelListComponent } from './dashboard/component-model/model.l
 import { DrawingToolsHeaderComponent } from './shared/drawing-tools-header/darwing.tools.header.component';
 import { SimulationListComponent } from './dashboard/simulation/simulation-list.component';
 import { SimulationService } from './services/simulation.service';
+import { UserGroupService } from './services/usergroup.service';
+
+
 
 
 @NgModule({
@@ -151,7 +154,9 @@ import { SimulationService } from './services/simulation.service';
     SettingsService,
     LoaderService,
     ModelService,
-    SimulationService
+    SimulationService,
+    UserGroupService
+
 
   ],
   bootstrap: [AppComponent]

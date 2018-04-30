@@ -6,11 +6,11 @@ import { Overlay } from 'ngx-modialog';
 import { Modal } from 'ngx-modialog/plugins/bootstrap';
 import { ProjectService } from '../../services/project.service';
 import { User } from '../../shared/interfaces/user';
-import { UserGroup } from '../../shared/interfaces/user-group';
 import { UserService } from '../../services/user.service';
+import { Utils } from '../../shared/utils';
+import { UserGroup } from '../../shared/interfaces/user-group';
 import { UserGroupService } from '../../services/usergroup.service';
 
-import { Utils } from '../../shared/utils';
 
 @Component({
     selector: 'projects',
@@ -23,16 +23,15 @@ export class ProjectsComponent implements OnInit {
     description: String = '';
     ownerId: String = '';
     ownerName: String = '';
+    users: User[] = Array<User>();
+  //newly added
     filteredUsers: User[] = new Array<User>();
     private exludedUsers: String[] = new Array<String>();
     searchName: String = '';
-    nameId:Number;    
-    isOwner:Boolean = false;
-    privateProject: Boolean = false;
     usersWithAccess: User[] = Array<User>();
-    users: User[] = Array<User>();
-    usergroup: UserGroup[] = Array<UserGroup>();
-    usergroupId: String = '';
+    privateProject: Boolean = false;
+    nameId: String = '';  
+    usergroup: UserGroup[] = Array<UserGroup>();  
     groups: Array<{id: number, text: string}> = [   
                 {id: 1, text: 'Admin'},
                 {id: 2, text: 'Read Branch'},
@@ -40,6 +39,8 @@ export class ProjectsComponent implements OnInit {
                 {id: 4, text: 'Delete Branch'},
                 {id: 5, text: 'Read Model'},
                 ];
+    isOwner:Boolean = false;
+
 
     selectedProject: Project = null;
     createdProject: Project = null;
@@ -73,21 +74,29 @@ export class ProjectsComponent implements OnInit {
         this.userService
             .getOwners((users => {
                 this.users = users;
-                 this.ownerId = (this.ownerId == "") ? Utils.getUserId() : '';
-                if (this.ownerId == Utils.getUserId()) {
+                if (this.ownerId == "") {
+                    this.ownerId = Utils.getUserId();
+                }
+               if (this.ownerId !== "" && this.ownerId == Utils.getUserId()) {
                     this.isOwner = true;
-                }
+               }
+              else if (this.ownerId == "")
+                 {
+                this.isOwner = true;
+               }
             }));
+        
+       
+          let roles = [];
+          this.usergroupService
+          .getUserGroup().subscribe(result => {
+            let usergroupData = result.data;
+            usergroupData.forEach(role => {
+                this.usergroup.push(role);
+            });
       
-       this.usergroupService.getUserGroup().subscribe(result => {
-            if (result.status = 'OK') {
-                this.usergroup = result.data as Array<UserGroup>;
-                if (this.selectedUser == null) {
-                     this.usergroupId = this.usergroup[0].id;
-                }
-            }
-        });
-    }
+    });
+  }
 
     // create project
     onSave() {
@@ -174,7 +183,7 @@ export class ProjectsComponent implements OnInit {
         }
     }
   
-      defineAccess(event) {
+   defineAccess(event) {
         this.privateProject = event.target.checked;
         if (this.privateProject == true) {
             if (this.isOwner) {
@@ -246,9 +255,25 @@ export class ProjectsComponent implements OnInit {
       }
     }
   }
-  selectName()
+  selectName(event, type)
 {
-alert(this.nameId);
+//this.nameId = this.role.id;
+        //this.usergroup.splice(0, this.usergroup.length);
+    
+    for (var index = 0; index < this.usergroup.length; index++) {
+       this.nameId  = this.usergroup[index].id;
+//     if (access.userGroupName.toLowerCase().indexOf(this.searchName.toLowerCase()) >= 0) 
+//      {
+//
+//        if (this.shouldSkipUser(usr) == true) {
+//          continue;
+//        }
+//
+//        this.filteredUsers.push(usr);
+//      }
+    }
+
 }  
+  
 
 }

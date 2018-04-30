@@ -275,5 +275,8 @@ export class ProjectsComponent implements OnInit {
 
 }  
   
+ isPrivateVariable(event) {
+   alert(this.nameId);
 
+ }
 }

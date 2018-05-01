@@ -26,7 +26,7 @@ export class ProjectsComponent implements OnInit {
     users: User[] = Array<User>();
   //newly added
     filteredUsers: User[] = new Array<User>();
-    private exludedUsers: String[] = new Array<String>();
+    private addUsers: String[] = new Array<String>();
     searchName: String = '';
     usersWithAccess: User[] = Array<User>();
     privateProject: Boolean = false;
@@ -243,25 +243,31 @@ export class ProjectsComponent implements OnInit {
 
     return false;
   }
-    excludeUser(event) {
-    if (event.target.checked == false) {
-      this.exludedUsers.push(event.target.value);
-    } else {
-      for (var index = 0; index < this.exludedUsers.length; index++) {
-        if (this.exludedUsers[index] == event.target.value) {
-          this.exludedUsers.splice(index, 1);
-          break;
-        }
-      }
-    }
+    accessUser(event) {
+             this.addUsers.push(event.target.value);
+
+    
+//    if (event.target.checked == false) {
+//      this.addUsers.push(event.target.value);
+//    } else {
+//      for (var index = 0; index < this.addUsers.length; index++) {
+//        if (this.addUsers[index] == event.target.value) {
+//          this.addUsers.splice(index, 1);
+//          break;
+//        }
+//      }
+//    }                   
+
   }
+  
+  
   selectName(event, type)
 {
 //this.nameId = this.role.id;
         //this.usergroup.splice(0, this.usergroup.length);
     
     for (var index = 0; index < this.usergroup.length; index++) {
-       this.nameId  = this.usergroup[index].id;
+       this.nameId  = this.usergroup[index-1].id;
 //     if (access.userGroupName.toLowerCase().indexOf(this.searchName.toLowerCase()) >= 0) 
 //      {
 //

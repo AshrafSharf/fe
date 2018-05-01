@@ -52,7 +52,7 @@ export class VariableListComponent implements OnInit {
             let roleData = result.data;
             roleData.forEach(role => {
                 roles.push(role);
-            });
+            })
 
             this.userService.getLoggedInUser().subscribe(result => {
                 if (result.status == "OK") {

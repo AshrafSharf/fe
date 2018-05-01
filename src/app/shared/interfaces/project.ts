@@ -4,4 +4,6 @@ export interface Project {
     description: String;
     ownerName: String;
     ownerId: String;   
+    isPrivate: Boolean;   
+
 }

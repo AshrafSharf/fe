@@ -30,8 +30,11 @@ export class ProjectsComponent implements OnInit {
     searchName: String = '';
     usersWithAccess: User[] = Array<User>();
     privateProject: Boolean = false;
-    nameId: String = '';  
-    usergroup: UserGroup[] = Array<UserGroup>();  
+    nameId: String = '';
+    usergroupaccess: UserGroup[] = Array<UserGroup>();  
+    usergroup: UserGroup[] = Array<UserGroup>(); 
+    isPrivate: Boolean = false;
+ 
     groups: Array<{id: number, text: string}> = [   
                 {id: 1, text: 'Admin'},
                 {id: 2, text: 'Read Branch'},
@@ -106,6 +109,7 @@ export class ProjectsComponent implements OnInit {
             }
         });
 
+        this.isPrivate = this.privateProject;
         if (this.title.length == 0) {
             this.modal.alert()
                 .title('Warning')
@@ -128,7 +132,7 @@ export class ProjectsComponent implements OnInit {
             if (this.selectedProject != null) {
                 // update existing
                 this.projectService
-                    .updateProject(this.selectedProject.id, this.title, this.description, this.ownerId)
+                    .updateProject(this.selectedProject.id, this.title, this.description, this.ownerId, this.isPrivate)
                     .subscribe(result => {
                         console.log('result', result);
                         if (result.status == "UNPROCESSABLE_ENTITY"){
@@ -144,7 +148,7 @@ export class ProjectsComponent implements OnInit {
             } else {
                 // create new
                 this.projectService
-                    .createProject(this.title, this.description, this.ownerId, this.ownerName)
+                    .createProject(this.title, this.description, this.ownerId, this.ownerName, this.isPrivate)
                     .subscribe(result => {
                         console.log('result',result);
 
@@ -165,7 +169,9 @@ export class ProjectsComponent implements OnInit {
                     });
             }
         }
-    }
+
+  }
+      
 
     // clear inputs
     clearInputs() {
@@ -243,46 +249,39 @@ export class ProjectsComponent implements OnInit {
 
     return false;
   }
-    accessUser(event) {
-             this.addUsers.push(event.target.value);
-
-    
-//    if (event.target.checked == false) {
-//      this.addUsers.push(event.target.value);
-//    } else {
-//      for (var index = 0; index < this.addUsers.length; index++) {
-//        if (this.addUsers[index] == event.target.value) {
-//          this.addUsers.splice(index, 1);
-//          break;
-//        }
-//      }
-//    }                   
-
-  }
   
-  
-  selectName(event, type)
-{
-//this.nameId = this.role.id;
-        //this.usergroup.splice(0, this.usergroup.length);
-    
+  selectName(event, type){
     for (var index = 0; index < this.usergroup.length; index++) {
-       this.nameId  = this.usergroup[index-1].id;
-//     if (access.userGroupName.toLowerCase().indexOf(this.searchName.toLowerCase()) >= 0) 
-//      {
+           this.nameId = this.usergroup[index-1].id;
+         }
+        //this.nameId = this.role.id;
+//        this.usergroupaccess.splice(0, this.usergroup.length);
+//    
+//    for (var index = 0; index < this.usergroup.length; index++) {
+//             this.nameId  = this.usergroup[index-1].id;
+//             //this.usergroupaccess  = this.usergroup[index-1];
 //
+//     if (access.userGroupName.toLowerCase().indexOf(this.searchName.toLowerCase()) >= 0) 
+//     {
 //        if (this.shouldSkipUser(usr) == true) {
 //          continue;
 //        }
 //
 //        this.filteredUsers.push(usr);
 //      }
-    }
+//    }
 
 }  
   
- isPrivateVariable(event) {
-   alert(this.nameId);
+  onAdd(event) {
+  
+   this.privateProject = true;
+   let body = {
+         ownerId: this.ownerId,
+         usersWithAccess: this.usersWithAccess
+           };
+  
+  }
 
- }
+  
 }

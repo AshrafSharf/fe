@@ -26,10 +26,10 @@ export class ProjectService {
     }
 
     // create a new project
-    createProject(title:String, description:String, ownerId:String, ownerName:String) {
+    createProject(title:String, description:String, ownerId:String, ownerName:String, isPrivate:Boolean) {
         this.loaderService.show();
         let url = Utils.createUrl(Utils.routeProject);
-        let body = { title: title, description: description, ownerId: ownerId, ownerName: ownerName };
+        let body = { title: title, description: description, ownerId: ownerId, ownerName: ownerName, isPrivate: isPrivate };
 
         return this.http
                 .post(url, body, Utils.getRequestOptions())
@@ -63,7 +63,7 @@ export class ProjectService {
     }
 
     // update project
-    updateProject(id:String, title:String, description:String, owner: String) {
+    updateProject(id:String, title:String, description:String, owner: String, isPrivate: Boolean) {
         this.loaderService.show();
         let url = Utils.createUrl(Utils.routeProject) + "/" + id;
 

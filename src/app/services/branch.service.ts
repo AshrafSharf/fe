@@ -73,7 +73,9 @@ export class BranchService {
             endTime: endTime,
             actuals: actuals,
             timeUnit: timeUnit,
-            isMaster:false 
+            isMaster:false,
+            isPrivate: false
+
         };
         console.log(body);
         return this.http
@@ -100,7 +102,8 @@ export class BranchService {
             endTime: endTime,
             actuals: actuals,
             timeUnit: timeUnit,
-            isMaster:false 
+            isMaster:false,
+            isPrivate: false
         };
 
         console.log(body);

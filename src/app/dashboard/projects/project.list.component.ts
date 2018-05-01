@@ -34,6 +34,8 @@ export class ProjectListComponent implements OnInit {
         this.columns.push(new TableViewHeader("name", "Project Name", "col-md-3", "", ""));
         this.columns.push(new TableViewHeader("owner", "Owner", "col-md-3", "", ""));
         this.columns.push(new TableViewHeader("description", "Description", "col-md-5", "", ""));
+        this.columns.push(new TableViewHeader("private", "Private", "col-md-1", "", ""));
+
     }
 
     ngOnInit() {
@@ -113,10 +115,24 @@ export class ProjectListComponent implements OnInit {
                     this.rows = new Array<TableViewRow>();
                     this.projects.forEach(project => {
                         var row = new TableViewRow(project.id);
+                        row.setPrivate(project.isPrivate);
                         row.addColumn(new TableViewColumn("name", project.title));
                         row.addColumn(new TableViewColumn("owner", project.ownerName));
                         row.addColumn(new TableViewColumn("description", project.description));
+                        row.addColumn(new TableViewColumn("private", project.isPrivate.toString()));
+
                         this.rows.push(row);
+                                //adding for defining private projects      
+//               if (project.isPrivate) {                           
+//               if (!this.privateProject) {
+//            this.privateProject = true;
+//            this.users.forEach(user => {
+//            if(user.id == Utils.getUserId()) {
+//                this.usersWithAccess.push(user);
+//                      }
+//                   });
+//                }
+//    }
                     });
                 }
                 this.isLoading = false;

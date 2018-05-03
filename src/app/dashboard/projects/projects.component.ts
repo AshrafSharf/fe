@@ -34,7 +34,7 @@ export class ProjectsComponent implements OnInit {
     privateProject: Boolean = false;
     nameId: String = '';
     usergroupsId: String = ''; 
-    usergroupaccess: UserGroup[] = Array<UserGroup>();  
+    usergroupaccess: String[] = Array<String>();  
     usergroup: UserGroup ;  
     isPrivate: Boolean = false;
  
@@ -232,12 +232,12 @@ export class ProjectsComponent implements OnInit {
       setUsergroupRole(event, value) {   
         var access = event.target.checked;
         //if (access == true) {
-            this.usergroupaccess.push(value);
+           this.usergroupaccess.push(value); 
         //}
        // else {
            // var position = this.usergroupaccess.findIndex(accessUser => accessUser.id == value.id);
 
-           // this.usergroupaccess.splice(position, 1);
+          // this.usergroupaccess.splice(0, 1);
 
         //}
     }
@@ -316,7 +316,7 @@ export class ProjectsComponent implements OnInit {
 
 }  
   
-  onAdd(event) {
+  onAdd() {
        if(this.usersWithAccess.length > 0)
          {
            if(this.nameId != null) { 

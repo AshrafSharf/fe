@@ -36,10 +36,10 @@
                 <div class="row" style="margin-top: 10px" style="margin-left: 3px">
                     <label for="">User access</label>              
                    <div class="col-md-12">
-                       <input type="text" [(ngModel)]="searchName" *ngIf="(isOwner)" (keyup)="filterResult($event, 'name')" class="col-md-2" placeholder="user name">
+                       <input type="text" *ngIf="(isOwner)" (keyup)="filterResult($event, 'name')" class="col-md-2" placeholder="user name">
 
                              <div class="col-sm-2 col-md-2">  
-               					    <select class="hideLabel form-control col-md-2" (change)="setUsergroupRole($event, k.id)">  
+               					    <select [(ngModel)]="k" class="hideLabel form-control col-md-2" (change)="setUsergroupRole($event, k)">  
                      				    <option [ngValue]="k.id" *ngFor="let k of exludedUsergroups">  
                        							     {{k.userGroupName}}  
                     				   </option>  
@@ -77,7 +77,7 @@
                				</div> 
                				 
                              <div class="col-sm-2 col-md-2">  
-               					    <select  class="hideLabel form-control col-md-2">  
+               					    <select  id="Id" #Id="ngModel" class="hideLabel form-control col-md-2" [(ngModel)]="nameId" name="id">  
                      				    <option [ngValue]="k.id" *ngFor="let k of usergroupaccess">  
                        							     {{k}}  
                     				   </option>  

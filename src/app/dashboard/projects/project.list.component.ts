@@ -116,6 +116,7 @@ export class ProjectListComponent implements OnInit {
                     this.projects.forEach(project => {
                         var row = new TableViewRow(project.id);
                         row.setPrivate(project.isPrivate);
+                        row.setUsersWithAccess(project.usersWithAccess);
                         row.addColumn(new TableViewColumn("name", project.title));
                         row.addColumn(new TableViewColumn("owner", project.ownerName));
                         row.addColumn(new TableViewColumn("description", project.description));

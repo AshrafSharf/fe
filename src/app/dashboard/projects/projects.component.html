@@ -34,52 +34,41 @@
                 </div>
           
                 <div class="row" style="margin-top: 10px" style="margin-left: 3px">
-                <label for="">User access</label>
-<!--                   <label *ngIf="(isOwner)" class="pull-left"><input type="checkbox" (click)="isPrivateVariable($event)" [(ngModel)]="privateVariable">User access</label> -->
-<!--                   <label *ngIf="(!isOwner)" class="pull-left"><input type="checkbox" (click)="isPrivateVariable($event)" [(ngModel)]="privateVariable" disabled>User access</label> -->
-                <div class="col-md-12">
-                    <input type="text" [(ngModel)]="searchName" *ngIf="(isOwner)" (keyup)="filterResult($event, 'name')" (keyup.enter)="isprivateProject($event)" class="col-md-2" placeholder="user name">
-                    <input type="text" [(ngModel)]="searchName" *ngIf="(!isOwner)" (keyup)="filterResult($event, 'name')" class="col-md-2" placeholder="user name" disabled>
-<!--               			 <label for="" class="col-md-2"> Select Name</label>   -->
-             				  <div class="col-sm-2 col-md-2" *ngIf="(isOwner)">  
-               					    <select *ngIf="(isOwner)" id="id" #Id="ngModel" class="hideLabel form-control col-md-2" [(ngModel)]="nameId" name="id" (change)="selectName($event, 'name');">  
-<!--                    				        <option selected="Admin" value="Admin"></option>   -->
-                     				    <option [ngValue]="k.id" *ngFor="let k of usergroup">  
+                    <label for="">User access</label>              
+                   <div class="col-md-12">
+                       <input type="text" [(ngModel)]="searchName" *ngIf="(isOwner)" (keyup)="filterResult($event, 'name')" class="col-md-2" placeholder="user name">
+
+                             <div class="col-sm-2 col-md-2">  
+               					    <select class="hideLabel form-control col-md-2" (change)="setUsergroupRole($event, k.id)">  
+                     				    <option [ngValue]="k.id" *ngFor="let k of exludedUsergroups">  
                        							     {{k.userGroupName}}  
                     				   </option>  
               					  </select>  
                				</div> 
-               				<div class="col-sm-2 col-md-2" *ngIf="(!isOwner)" disabled>  
-               					    <select *ngIf="(!isOwner)" id="Id" #Id="ngModel" class="hideLabel form-control col-md-2" [(ngModel)]="nameId" name="id" (change)="selectName();" disabled>  
-                     				    <option [ngValue]="k.id" *ngFor="let k of usergroup">  
-                       							     {{k.userGroupName}}  
-                    				   </option>  
-              					  </select>  
-               				</div> 
+               	
+                  				
                				<button class="btn btn-add"  *ngIf="(isOwner)" (click)="onAdd()">Add</button>
                				<button class="btn btn-add"  *ngIf="(!isOwner)" (click)="onAdd()" disabled>Add</button>
-               				                       
                				
-							 <div *ngIf="(privateProject == true) && (isOwner == true)">
-                            <table class="table">
-                                <thead>
-                                <tr *ngFor="let user of users">
-                                    <th *ngIf="(user.id != loggedInUser)" class="users">{{user.userName}}</th>
-                                    <th *ngIf="(user.id != loggedInUser)" class="private"><input type="checkbox" value="{{private}}" name="private" [checked]="hasAccess(user)" (click)="setAccess($event, user)"></th>
-                                </tr>
-                                </thead>
-                            </table>
-                        </div>
-               	</div>
-               				
-            </div>
+                       </div>
+               				</div>       
+<!--                             <div *ngFor="let v of filteredUsers" class="checkbox"> -->
+<!--                				  <label>  -->
+<!--                  				   <input type="checkbox" (click)="excludeUser($event)" [value]="v.id"> {{v.title | slice:0:30}}{{v.title.length > 30 ? '&hellip;' : ''}} -->
+<!--                				  </label>  -->
+<!--                  		     </div>  				 -->
             <div *ngFor="let u of filteredUsers" class="checkbox">
                 <label>
                     <input type="checkbox" (click)="setAccess($event, u.id)" [value]="u.id"> {{u.userName | slice:0:30}}{{u.userName.length > 30 ? '&hellip;' : ''}}
                 </label>
             </div>
+<!--             <div *ngFor="let r of filteredUsergroups" class="checkbox"> -->
+<!--                 <label> -->
+<!--                     <input type="checkbox" (click)="setUsergroupRole($event, r.id)" [value]="r.id"> {{r.userGroupName | slice:0:30}}{{r.userGroupName.length > 30 ? '&hellip;' : ''}} -->
+<!--                 </label> -->
+<!--             </div> -->
  
-                               				<div class="col-sm-2 col-md-2">  
+                            <div class="col-sm-2 col-md-2">  
                					    <select  id="Id" #Id="ngModel" class="hideLabel form-control col-md-2" [(ngModel)]="nameId" name="id">  
                      				    <option [ngValue]="k.id" *ngFor="let k of usersWithAccess">  
                        							     {{k}}  
@@ -87,13 +76,14 @@
               					  </select>  
                				</div> 
                				 
-                               				<div class="col-sm-2 col-md-2">  
-               					    <select  id="Id" #Id="ngModel" class="hideLabel form-control col-md-2" [(ngModel)]="nameId" name="id">  
-                     				    <option [ngValue]="k.id" *ngFor="let k of usersWithAccess">  
-                       							     {{nameId}}  
+                             <div class="col-sm-2 col-md-2">  
+               					    <select  class="hideLabel form-control col-md-2">  
+                     				    <option [ngValue]="k.id" *ngFor="let k of usergroupaccess">  
+                       							     {{k}}  
                     				   </option>  
               					  </select>  
                				</div> 
+
             </div>
             <div class="panel-footer">
                 <button class="btn btn-success" (click)="onSave()">Save</button>

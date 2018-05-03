@@ -29,19 +29,22 @@ export class ProjectsComponent implements OnInit {
     private addUsers: String[] = new Array<String>();
     searchName: String = '';
     usersWithAccess: User[] = Array<User>();
+    exludedUsers: User[] = Array<User>();
+    exludedUsergroups: UserGroup[] = Array<UserGroup>();
     privateProject: Boolean = false;
     nameId: String = '';
+    usergroupsId: String = ''; 
     usergroupaccess: UserGroup[] = Array<UserGroup>();  
-    usergroup: UserGroup[] = Array<UserGroup>(); 
+    usergroup: UserGroup ;  
     isPrivate: Boolean = false;
  
-    groups: Array<{id: number, text: string}> = [   
-                {id: 1, text: 'Admin'},
-                {id: 2, text: 'Read Branch'},
-                {id: 3, text: 'Create Branch'},
-                {id: 4, text: 'Delete Branch'},
-                {id: 5, text: 'Read Model'},
-                ];
+//    groups: Array<{id: number, text: string}> = [   
+//                {id: 1, text: 'Admin'},
+//                {id: 2, text: 'Read Branch'},
+//                {id: 3, text: 'Create Branch'},
+//                {id: 4, text: 'Delete Branch'},
+//                {id: 5, text: 'Read Model'},
+//                ];
     isOwner:Boolean = false;
 
 
@@ -95,7 +98,7 @@ export class ProjectsComponent implements OnInit {
           .getUserGroup().subscribe(result => {
             let usergroupData = result.data;
             usergroupData.forEach(role => {
-                this.usergroup.push(role);
+                this.exludedUsergroups.push(role);
             });
       
     });
@@ -109,7 +112,6 @@ export class ProjectsComponent implements OnInit {
             }
         });
 
-        this.isPrivate = this.privateProject;
         if (this.title.length == 0) {
             this.modal.alert()
                 .title('Warning')
@@ -132,7 +134,7 @@ export class ProjectsComponent implements OnInit {
             if (this.selectedProject != null) {
                 // update existing
                 this.projectService
-                    .updateProject(this.selectedProject.id, this.title, this.description, this.ownerId, this.isPrivate)
+                    .updateProject(this.selectedProject.id, this.title, this.description, this.ownerId, this.isPrivate, this.usersWithAccess)
                     .subscribe(result => {
                         console.log('result', result);
                         if (result.status == "UNPROCESSABLE_ENTITY"){
@@ -148,7 +150,7 @@ export class ProjectsComponent implements OnInit {
             } else {
                 // create new
                 this.projectService
-                    .createProject(this.title, this.description, this.ownerId, this.ownerName, this.isPrivate)
+                    .createProject(this.title, this.description, this.ownerId, this.ownerName, this.isPrivate, this.usersWithAccess)
                     .subscribe(result => {
                         console.log('result',result);
 
@@ -169,6 +171,7 @@ export class ProjectsComponent implements OnInit {
                     });
             }
         }
+                                      
 
   }
       
@@ -226,6 +229,19 @@ export class ProjectsComponent implements OnInit {
         }
 
     }
+      setUsergroupRole(event, value) {   
+        var access = event.target.checked;
+        //if (access == true) {
+            this.usergroupaccess.push(value);
+        //}
+       // else {
+           // var position = this.usergroupaccess.findIndex(accessUser => accessUser.id == value.id);
+
+           // this.usergroupaccess.splice(position, 1);
+
+        //}
+    }
+  
     filterResult(event, type) {
     this.filteredUsers.splice(0, this.filteredUsers.length);
 
@@ -242,6 +258,18 @@ export class ProjectsComponent implements OnInit {
       }
     }
   }
+    excludeUser(event) {
+    if (event.target.checked == false) {
+      this.exludedUsers.push(event.target.value);
+    } else {
+      for (var index = 0; index < this.exludedUsers.length; index++) {
+        if (this.exludedUsers[index] == event.target.value) {
+          this.exludedUsers.splice(index, 1);
+          break;
+        }
+      }
+    }
+  }
     shouldSkipUser(usr): Boolean {
     if (usr == this.isOwner)  {
       return true;
@@ -249,11 +277,26 @@ export class ProjectsComponent implements OnInit {
 
     return false;
   }
+  excludeUsergroup(event) {
+//    if (event.target.value == false) {
+      this.usergroupsId = this.nameId;
+//    } else {
+//      for (var index = 0; index < this.exludedUsergroups.length; index++) {
+//        if (this.exludedUsergroups[index] == event.target.value) {
+//          this.exludedUsergroups.splice(index, 1);
+//          break;
+//        }
+//      }
+//    }
+  }
   
   selectName(event, type){
-    for (var index = 0; index < this.usergroup.length; index++) {
-           this.nameId = this.usergroup[index-1].id;
-         }
+ //  for (var index = 0; index < this.usergroup.length; index++) {
+
+           //this.nameId = this.usergroup[index-1].id;
+             //this.nameId = this.usergroup;
+//    }
+         
         //this.nameId = this.role.id;
 //        this.usergroupaccess.splice(0, this.usergroup.length);
 //    
@@ -274,14 +317,58 @@ export class ProjectsComponent implements OnInit {
 }  
   
   onAdd(event) {
-  
-   this.privateProject = true;
-   let body = {
-         ownerId: this.ownerId,
-         usersWithAccess: this.usersWithAccess
-           };
-  
-  }
+       if(this.usersWithAccess.length > 0)
+         {
+           if(this.nameId != null) { 
+                 this.privateProject = true;
+                     if (this.privateProject == true) {
+                         if (this.isOwner) {
+                         this.users.forEach(user => {
+                            if (user.id == this.ownerId) {
+                              this.usersWithAccess.push(user);
+                            }
+                            });
+                            }
+                     }
+                 this.projectService
+                    .createProject(this.title, this.description, this.ownerId, this.ownerName, this.isPrivate, this.usersWithAccess)
+                    .subscribe(result => {
+                        console.log('result',result);
 
+                        if (result.status == "UNPROCESSABLE_ENTITY"){
+                            this.modal.alert()
+                              .title("Warning")
+                              .body("Failed to create project called \"" + this.title +
+                                    "\". This name is already associated with another project")
+                              .open();
+                        } else {
+                          this.projectService.getProjectByName(this.title)
+                          .subscribe(result =>{
+                                console.log('result', result);
+                                this.createdProject = result.data as Project
+                                this.clearInputs();
+                          }); 
+                        }
+                    });
+         }
+             else{
+       
+                              this.modal.alert()
+                              .title("Warning")
+                              .body("no access defined\"" + this.title +
+                                    "\". please select a access")
+                              .open();
+       }
+  }
+    else{
+       
+                              this.modal.alert()
+                              .title("Warning")
+                              .body("no username defined\"" + this.title +
+                                    "\". please select a username " +":  "+ this.usergroupaccess.length)
+                              .open();
+       }
+    
+  }
   
 }

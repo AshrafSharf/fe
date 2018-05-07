@@ -17,6 +17,11 @@ import { Config } from '../../shared/config';
     styleUrls: ['./branches.component.css']
 })
 export class BranchesComponent implements OnInit {
+  
+    isPrivate: Boolean = false;
+    PrivateBranch: Boolean = false;
+    usersWithAccess: User[] = Array<User>();
+ 
     isLoading:Boolean = false;
 
     users: User[] = Array<User>();
@@ -86,6 +91,8 @@ export class BranchesComponent implements OnInit {
                     this.startDate = this.selectedBranch.startTime;
                     this.endDate = this.selectedBranch.endTime;
                     this.actualsDate = this.selectedBranch.actuals;
+                    this.isPrivate = this.selectedBranch.isPrivate;
+                    this.usersWithAccess = this.selectedBranch.usersWithAccess;
                 });
         });
 

@@ -2,6 +2,8 @@ import { Utils } from './../shared/utils';
 import { Injectable } from '@angular/core';
 import { Http, Response, RequestOptions, Headers } from '@angular/http';
 import { LoaderService } from './loader.service';
+import { User } from "../shared/interfaces/user";
+
 
 @Injectable()
 export class BranchService {
@@ -59,7 +61,7 @@ export class BranchService {
     // create a new project
     createBranch(title:String, description:String, projectId:String,
         actuals:String, startTime:String, endTime:String, 
-        owner:String, timeUnit:String) {
+        owner:String, timeUnit:String, isPrivate:Boolean, usersWithAccess:Array<User>) {
 
         this.loaderService.show();
         let url = Utils.createUrl(Utils.routeBranch);
@@ -74,7 +76,8 @@ export class BranchService {
             actuals: actuals,
             timeUnit: timeUnit,
             isMaster:false,
-            isPrivate: false
+            isPrivate: isPrivate,
+            usersWithAccess: usersWithAccess
 
         };
         console.log(body);
@@ -89,9 +92,9 @@ export class BranchService {
     // update project
     updateBranch(title:String, description:String, projectId:String,
         actuals:String, startTime:String, endTime:String, 
-        owner:String, timeUnit:String, branchId:String) {
+        owner:String, timeUnit:String, branchId:String, isPrivate: Boolean, usersWithAccess:Array<User>) {
         this.loaderService.show();
-        let url = Utils.createUrl(Utils.routeBranch) + "/" + branchId;
+        let url = Utils.createUrl(Utils.routeBranch) + "/" + branchId; 
 
         let body = { 
             projectId:projectId,
@@ -103,7 +106,8 @@ export class BranchService {
             actuals: actuals,
             timeUnit: timeUnit,
             isMaster:false,
-            isPrivate: false
+            isPrivate: isPrivate,
+            usersWithAccess: usersWithAccess
         };
 
         console.log(body);

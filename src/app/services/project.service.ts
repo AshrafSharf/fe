@@ -45,7 +45,7 @@ export class ProjectService {
         this.loaderService.show();
         let url = Utils.createUrl(Utils.routeProject) + "/" + id;
         return this.http
-            .get(url, Utils.getRequestOptions())
+            .get(url, Utils.getRequestOptions()) 
             .map(result => {
                 this.loaderService.hide()
                 return result.json();
@@ -63,7 +63,7 @@ export class ProjectService {
             });
     }
 
-    // update project
+    // update project 
     updateProject(id:String, title:String, description:String, owner: String, isPrivate: Boolean, usersWithAccess: Array<User>) {
         this.loaderService.show();
         let url = Utils.createUrl(Utils.routeProject) + "/" + id;

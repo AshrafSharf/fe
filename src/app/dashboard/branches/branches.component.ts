@@ -10,6 +10,8 @@ import { User } from '../../shared/interfaces/user';
 import { UserService } from '../../services/user.service';
 import { Utils } from '../../shared/utils';
 import { Config } from '../../shared/config';
+import {UserGroup} from '../../shared/interfaces/user-group';
+import {UserGroupService} from '../../services/usergroup.service';
 
 @Component({
     selector: 'branches',
@@ -60,7 +62,8 @@ export class BranchesComponent implements OnInit {
         private userService: UserService,
         private branchService:BranchService,
         private projectService:ProjectService,
-        public modal:Modal) {
+        public modal:Modal,
+        private usergroupService: UserGroupService) {
 
     }
 
@@ -76,8 +79,9 @@ export class BranchesComponent implements OnInit {
                 .getDetails(this.selectedProjectId)
                 .subscribe(result => {
                     this.selectedProject = result.data as Project;
-
                     this.projectTitle = this.selectedProject.title;
+                    this.isPrivate = this.selectedProject.isPrivate;
+                    this.PrivateBranch = this.isPrivate;
                 });
 
             this.branchService
@@ -92,8 +96,10 @@ export class BranchesComponent implements OnInit {
                     this.endDate = this.selectedBranch.endTime;
                     this.actualsDate = this.selectedBranch.actuals;
                     this.isPrivate = this.selectedBranch.isPrivate;
-                    this.usersWithAccess = this.selectedBranch.usersWithAccess;
-                });
+                    if(this.selectedBranch.isMaster == true){                            
+                        this.usersWithAccess = this.selectedProject.usersWithAccess;
+                        }
+                      });
         });
 
         // get all the users
@@ -129,6 +135,7 @@ export class BranchesComponent implements OnInit {
         this.actualsWeek = '';
         this.datePickerMode = 'month';
         this.timeUnit = 'month';
+        
 
          if (this.createdBranch != null){
              Utils.selectProject(this.createdBranch.projectId);
@@ -164,10 +171,11 @@ export class BranchesComponent implements OnInit {
             var actuals = this.actualsDate;
 
             if (this.selectedBranch != null) {
+              if(this.selectedBranch.isMaster != true){
                 // update existing
                 this.branchService
                     .updateBranch(this.title, this.description, this.selectedProjectId,
-                        actuals, start, end, this.ownerId, this.timeUnit, this.selectedBranch.id)
+                        actuals, start, end, this.ownerId, this.timeUnit, this.selectedBranch.id, this.isPrivate, this.usersWithAccess)
                     .subscribe(result => {
                         console.log(result);
                         if (  result.status == "UNPROCESSABLE_ENTITY"){
@@ -180,12 +188,32 @@ export class BranchesComponent implements OnInit {
                             this.clearInputs();
                         }
                     });
-            } else {
+            }
+              else{
+                // update existing master
+                this.branchService
+                    .updateBranch(this.title, this.description, this.selectedProjectId,
+                        actuals, start, end, this.ownerId, this.timeUnit, this.selectedBranch.id, this.selectedProject.isPrivate, this.selectedProject.usersWithAccess)
+                    .subscribe(result => {
+                        console.log(result);
+                        if (  result.status == "UNPROCESSABLE_ENTITY"){
+                            this.modal.alert()
+                              .title("Warning")
+                              .body("Failed to update branch called \"" + this.title +
+                                    "\". This name is already associated with another branch in this project")
+                              .open();
+                        } else {
+                            this.clearInputs();
+                        }
+                    });
+              
+              } 
+          }else {
 
                 // create new
                 this.branchService
                     .createBranch(this.title, this.description, this.selectedProjectId,
-                            actuals, start, end, this.ownerId, this.timeUnit)
+                            actuals, start, end, this.ownerId, this.timeUnit, this.isPrivate, this.usersWithAccess)
                     .subscribe(result => {
                           console.log(result);
                           if (  result.status == "UNPROCESSABLE_ENTITY"){

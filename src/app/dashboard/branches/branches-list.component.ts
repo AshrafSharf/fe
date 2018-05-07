@@ -25,6 +25,7 @@ export class BranchListComponent implements OnInit {
     rows: TableViewRow[] = new Array<TableViewRow>();
     projects: Project[] = new Array<Project>();
     branches:Branch[] = Array<Branch>();
+    currentProject: Project;
     
     isLoading: Boolean = false;
     userRole:String;
@@ -43,6 +44,7 @@ export class BranchListComponent implements OnInit {
         this.columns.push(new TableViewHeader("name", "Branch Name", "col-md-3", "", ""));
         this.columns.push(new TableViewHeader("owner", "Owner", "col-md-3", "", ""));
         this.columns.push(new TableViewHeader("description", "Description", "col-md-5", "", ""));
+        this.columns.push(new TableViewHeader("private", "Private", "col-md-1", "", ""));
     }
 
     ngOnInit() {
@@ -128,6 +130,7 @@ export class BranchListComponent implements OnInit {
 
         console.log(id);
         if (id != null) {
+ 
             this.branchService
                 .getBranches(id)
                 .subscribe(result => {
@@ -139,12 +142,21 @@ export class BranchListComponent implements OnInit {
                         var row = new TableViewRow(branch.id);
                         if (branch.isMaster == true){
                              row.addColumn(new TableViewColumn("name", branch.title + " (master)"));
+                             row.setPrivate(this.projects[0].isPrivate);
+                             row.setUsersWithAccess(this.projects[0].usersWithAccess);
+                             row.addColumn(new TableViewColumn("owner", branch.ownerName));
+                             row.addColumn(new TableViewColumn("description", branch.description));
+                             row.addColumn(new TableViewColumn("private", this.projects[0].isPrivate.toString()));
+
                         } else {
                              row.addColumn(new TableViewColumn("name", branch.title));
-                        }
+                             row.setPrivate(branch.isPrivate);
+                             row.setUsersWithAccess(branch.usersWithAccess);
+                             row.addColumn(new TableViewColumn("owner", branch.ownerName));
+                             row.addColumn(new TableViewColumn("description", branch.description));
+                             row.addColumn(new TableViewColumn("private", branch.isPrivate.toString()));
+                           }
 
-                        row.addColumn(new TableViewColumn("owner", branch.ownerName));
-                        row.addColumn(new TableViewColumn("description", branch.description));
                         this.rows.push(row);
                     });
                 });

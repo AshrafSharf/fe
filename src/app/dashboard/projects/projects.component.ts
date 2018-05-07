@@ -12,6 +12,7 @@ import {UserGroup} from '../../shared/interfaces/user-group';
 import {UserGroupService} from '../../services/usergroup.service';
 
 
+
 @Component({
   selector: 'projects',
   templateUrl: './projects.component.html',
@@ -35,12 +36,13 @@ export class ProjectsComponent implements OnInit {
   isOwner: Boolean = false;
   loggedInUser: String = '';
   projects: Project[] = Array<Project>();
-
+  isLoading: Boolean = false;
 
 
 
   selectedProject: Project = null;
   createdProject: Project = null;
+  updatedProject: Project = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -141,9 +143,15 @@ export class ProjectsComponent implements OnInit {
                 "\". This name is already associated with another project")
                 .open();
             } else {
-              this.clearInputs();
+                 this.projectService.getProjectByName(this.title)
+                .subscribe(result => {
+                  console.log('result', result);
+                  this.updatedProject = result.data as Project
+                  this.clearInputs();
+                });
             }
           });
+          
       } else {
         // create new
         this.projectService
@@ -179,7 +187,7 @@ export class ProjectsComponent implements OnInit {
     this.description = '';
     this.ownerId = '';
     this.selectedProject = null;
-    if (this.createdProject != null) {
+    if (this.createdProject != null || this.updatedProject != null) {
       Utils.selectProject(this.createdProject.id);
       this.router.navigate(['/home/branches-list'], {
         queryParams: {
@@ -195,6 +203,8 @@ export class ProjectsComponent implements OnInit {
     this.privateProject = event.target.checked;
     if (this.privateProject == true) {
       if (this.isOwner) {
+        this.isPrivate = true;
+        this.privateProject = true;
         this.users.forEach(user => {
           if (user.id == this.ownerId && this.usersWithAccess.length == 0) {
             this.usersWithAccess.push(user);
@@ -268,6 +278,7 @@ export class ProjectsComponent implements OnInit {
   }
 
   onAdd() {
+    this.isLoading = true;
 
     this.users.forEach(user => {
       if (user.id == this.ownerId) {
@@ -335,5 +346,7 @@ export class ProjectsComponent implements OnInit {
 
     }
   }
+      this.isLoading = false;
+
 
 }

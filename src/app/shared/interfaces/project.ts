@@ -1,6 +1,5 @@
 import { User } from "./user";
 
-
 export interface Project {
     id: String;
     title: String;

@@ -5,4 +5,5 @@ export interface User {
     id: String;
     projectId: String;
     branchId: String;
+    usergroupId: String;
 }

@@ -1,3 +1,5 @@
+import { User } from "./user";
+
 export interface Branch {
     id: String;
     projectId: String;
@@ -10,4 +12,6 @@ export interface Branch {
     actuals: String;
     startTime: String;
     endTime: String;
+    isPrivate: Boolean;  
+    usersWithAccess: Array<User>;
 }
